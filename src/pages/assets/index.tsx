@@ -66,15 +66,15 @@ export default function AssetListPage() {
               </Table.Heading>
 
               <Table.Heading>
-                <T string="assets.headingName" />
+                <T string="assets.headingTitle" />
+              </Table.Heading>
+
+              <Table.Heading>
+                <T string="assets.headingDescription" />
               </Table.Heading>
 
               <Table.Heading>
                 <T string="assets.headingVersion" />
-              </Table.Heading>
-
-              <Table.Heading>
-                <T string="assets.headingContentType" />
               </Table.Heading>
 
               <Table.Heading>
@@ -115,17 +115,20 @@ export default function AssetListPage() {
                         />
                       </span>
                     </Table.Cell>
+
+                    <Table.Cell>
+                      <span className="font-semibold">
+                        <AssetsList.Asset.Properties.MandatoryValue
+                            prefix="purl"
+                            name="description"
+                        />
+                      </span>
+                    </Table.Cell>
+
                     <Table.Cell>
                       <AssetsList.Asset.Properties.MandatoryValue
                         prefix="dcat"
                         name="version"
-                      />
-                    </Table.Cell>
-                    <Table.Cell>
-                      <AssetsList.Asset.Properties.MandatoryValue
-                        prefix="dcat"
-                        parent="distribution"
-                        name="mediaType"
                       />
                     </Table.Cell>
                     <Table.Cell>

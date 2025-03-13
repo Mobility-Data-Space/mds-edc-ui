@@ -22,6 +22,8 @@ export const en = {
         "List all of the assets available on owned connectors. Assets are the sharing unit and can point to one or more physical elements.",
       buttonAdd: "Add asset",
       headingName: "Name",
+      headingTitle: "Title",
+      headingDescription: "Description",
       headingVersion: "Version",
       headingContentType: "Content type",
       headingDataAddressName: "Data address name",
