@@ -22,6 +22,8 @@ export const cn = {
         "列出自有连接器上可用的所有资产。 资产是共享单元，可以指向一个或多个物理元素。",
       buttonAdd: "添加资产",
       headingName: "姓名",
+      headingTitle: "标题",
+      headingDescription: "描述",
       headingContentType: "内容类型",
       headingDataAddressName: "数据地址名称",
       headingDataAddressType: "数据地址类型",
