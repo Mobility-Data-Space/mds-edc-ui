@@ -1,0 +1,182 @@
+version: "3.9"
+
+services:
+  bmw-circular-economy-integration:
+    build: connector
+    restart: always
+    platform: ${DOCKER_PLATFORM:-linux/amd64}
+    ports:
+      - "8800:9191" # connector default
+      - "8801:9192" # connector control
+      - "3007:9193" # connector management
+      - "8803:9194" # connector protocol
+      - "8804:9291" # data-plane public
+    environment:
+      EDC_VAULT: /config/vault.properties
+      EDC_KEYSTORE: /config/vault-keys.p12
+      EDC_KEYSTORE_PASSWORD: 123456
+      EDC_FS_CONFIG: /config/configuration.properties
+    volumes:
+      - ./conf/bmw-circular-economy-integration.config:/config
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  bmw-circular-economy-production:
+    build: connector
+    restart: always
+    platform: ${DOCKER_PLATFORM:-linux/amd64}
+    ports:
+      - "8810:9191" # connector default
+      - "8811:9192" # connector control
+      - "8812:9193" # connector management
+      - "8813:9194" # connector protocol
+      - "8814:9291" # data-plane public
+    environment:
+      EDC_VAULT: /config/vault.properties
+      EDC_KEYSTORE: /config/vault-keys.p12
+      EDC_KEYSTORE_PASSWORD: 123456
+      EDC_FS_CONFIG: /config/configuration.properties
+    volumes:
+      - ./conf/bmw-circular-economy-production.config:/config
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  bmw-quality-development:
+    build: connector
+    restart: always
+    platform: ${DOCKER_PLATFORM:-linux/amd64}
+    ports:
+      - "8820:9191" # connector default
+      - "8821:9192" # connector control
+      - "3005:9193" # connector management
+      - "8823:9194" # connector protocol
+      - "8824:9291" # data-plane public
+    environment:
+      EDC_VAULT: /config/vault.properties
+      EDC_KEYSTORE: /config/vault-keys.p12
+      EDC_KEYSTORE_PASSWORD: 123456
+      EDC_FS_CONFIG: /config/configuration.properties
+    volumes:
+      - ./conf/bmw-quality-development.config:/config
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  bmw-quality-integration:
+    build: connector
+    restart: always
+    platform: ${DOCKER_PLATFORM:-linux/amd64}
+    ports:
+      - "8830:9191" # connector default
+      - "8831:9192" # connector control
+      - "3004:9193" # connector management
+      - "8833:9194" # connector protocol
+      - "8834:9291" # data-plane public
+    environment:
+      EDC_VAULT: /config/vault.properties
+      EDC_KEYSTORE: /config/vault-keys.p12
+      EDC_KEYSTORE_PASSWORD: 123456
+      EDC_FS_CONFIG: /config/configuration.properties
+    volumes:
+      - ./conf/bmw-quality-integration.config:/config
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  bosh-quality-development:
+    build: connector
+    restart: always
+    platform: ${DOCKER_PLATFORM:-linux/amd64}
+    ports:
+      - "8840:9191" # connector default
+      - "8841:9192" # connector control
+      - "3006:9193" # connector management
+      - "8843:9194" # connector protocol
+      - "8844:9291" # data-plane public
+    environment:
+      EDC_VAULT: /config/vault.properties
+      EDC_KEYSTORE: /config/vault-keys.p12
+      EDC_KEYSTORE_PASSWORD: 123456
+      EDC_FS_CONFIG: /config/configuration.properties
+    volumes:
+      - ./conf/bosh-quality-development.config:/config
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  bosh-quality-integration:
+    build: connector
+    restart: always
+    platform: ${DOCKER_PLATFORM:-linux/amd64}
+    ports:
+      - "8850:9191" # connector default
+      - "8851:9192" # connector control
+      - "3008:9193" # connector management
+      - "8853:9194" # connector protocol
+      - "8854:9291" # data-plane public
+    environment:
+      EDC_VAULT: /config/vault.properties
+      EDC_KEYSTORE: /config/vault-keys.p12
+      EDC_KEYSTORE_PASSWORD: 123456
+      EDC_FS_CONFIG: /config/configuration.properties
+    volumes:
+      - ./conf/bosh-quality-integration.config:/config
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  zf-circular-economy-integration:
+    build: connector
+    restart: always
+    platform: ${DOCKER_PLATFORM:-linux/amd64}
+    ports:
+      - "8860:9191" # connector default
+      - "8861:9192" # connector control
+      - "3001:9193" # connector management
+      - "8863:9194" # connector protocol
+      - "8864:9291" # data-plane public
+    environment:
+      EDC_VAULT: /config/vault.properties
+      EDC_KEYSTORE: /config/vault-keys.p12
+      EDC_KEYSTORE_PASSWORD: 123456
+      EDC_FS_CONFIG: /config/configuration.properties
+    volumes:
+      - ./conf/zf-circular-economy-integration.config:/config
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  zf-circular-economy-production:
+    build: connector
+    restart: always
+    platform: ${DOCKER_PLATFORM:-linux/amd64}
+    ports:
+      - "8870:9191" # connector default
+      - "8871:9192" # connector control
+      - "3003:9193" # connector management
+      - "8873:9194" # connector protocol
+      - "8874:9291" # data-plane public
+    environment:
+      EDC_VAULT: /config/vault.properties
+      EDC_KEYSTORE: /config/vault-keys.p12
+      EDC_KEYSTORE_PASSWORD: 123456
+      EDC_FS_CONFIG: /config/configuration.properties
+    volumes:
+      - ./conf/zf-circular-economy-production.config:/config
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  zf-quality-development:
+    build: connector
+    restart: always
+    platform: ${DOCKER_PLATFORM:-linux/amd64}
+    ports:
+      - "8880:9191" # connector default
+      - "8881:9192" # connector control
+      - "3009:9193" # connector management
+      - "8883:9194" # connector protocol
+      - "8884:9291" # data-plane public
+    environment:
+      EDC_VAULT: /config/vault.properties
+      EDC_KEYSTORE: /config/vault-keys.p12
+      EDC_KEYSTORE_PASSWORD: 123456
+      EDC_FS_CONFIG: /config/configuration.properties
+    volumes:
+      - ./conf/zf-quality-development.config:/config
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

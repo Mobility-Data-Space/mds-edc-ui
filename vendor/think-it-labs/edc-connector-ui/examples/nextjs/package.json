@@ -1,0 +1,34 @@
+{
+  "name": "edc-connector-ui-examples-nextjs",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "seed": "node --loader ts-node/esm src/seed.ts"
+  },
+  "dependencies": {
+    "@tailwindcss/forms": "^0.5.7",
+    "@think-it-labs/edc-connector-client": "^0.4.0",
+    "@think-it-labs/edc-connector-ui": "file:../../src",
+    "clsx": "^2.1.1",
+    "formik": "^2.4.6",
+    "next": "14.2.3",
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.3",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5"
+  }
+}

@@ -1,0 +1,5 @@
+export NEXT_PUBLIC_EDC_ID="bmw-circular-economy-integration"
+export NEXT_PUBLIC_EDC_NAME="Circular economy (integration)"
+export NEXT_PUBLIC_EDC_MANAGEMENT_URL="http://localhost:3000/api/3007/management"
+export NEXT_PUBLIC_EDC_DEFAULT_URL="http://localhost:3000/api/8800/api"
+export NEXT_PUBLIC_EDC_PROTOCOL_URL="http://bmw-quality-integration:9194/protocol"
