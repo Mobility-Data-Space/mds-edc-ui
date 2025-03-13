@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  edc-connector-ui-examples-nextjs:
+    build: connector
+    restart: always
+    platform: ${DOCKER_PLATFORM:-linux/amd64}
+    ports:
+      - "3001:9191" # connector default
+      - "3002:9192" # connector control
+      - "3003:9193" # connector management
+      - "3004:9194" # connector protocol
+      - "3005:9291" # data-plane public
+    environment:
+      EDC_VAULT: /config/vault.properties
+      EDC_KEYSTORE: /config/vault-keys.p12
+      EDC_KEYSTORE_PASSWORD: 123456
+      EDC_FS_CONFIG: /config/configuration.properties
+    volumes:
+      - ./conf:/config
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
