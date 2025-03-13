@@ -1,0 +1,3 @@
+[submodule "vendor/think-it-labs/edc-connector-ui"]
+	path = vendor/think-it-labs/edc-connector-ui
+	url = git@github.com:Think-iT-Labs/edc-connector-ui.git

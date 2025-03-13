@@ -1,0 +1,107 @@
+import {
+  ContractAgreement,
+  PolicyDefinition,
+  QuerySpec,
+} from "@think-it-labs/edc-connector-client";
+import React, { PropsWithChildren, useCallback } from "react";
+import { AssetView } from "./asset-view";
+import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
+import { List } from "./list";
+import { Local } from "./local";
+
+interface ContractAgreementsListProps {
+  managementUrl: string;
+}
+
+export function ContractAgreementsList({
+  children,
+  managementUrl,
+}: PropsWithChildren<ContractAgreementsListProps>) {
+  const client = useEdcConnectorClient({
+    management: managementUrl,
+  });
+
+  const queryAll = useCallback(
+    (querySpec: QuerySpec) =>
+      client.management.contractAgreements.queryAll(querySpec),
+    [client],
+  );
+
+  return (
+    <List<ContractAgreement>
+      queryAll={queryAll}
+      getId={(contractAgreement: ContractAgreement) => contractAgreement.id}
+      managementUrl={managementUrl}
+    >
+      {children}
+    </List>
+  );
+}
+
+interface ContractAgreementsListAssetProps {
+  id: string;
+  managementUrl: string;
+}
+
+function ContractAgreementsListAsset(
+  props: PropsWithChildren<ContractAgreementsListAssetProps>,
+) {
+  return <AssetView {...props} />;
+}
+
+ContractAgreementsListAsset.Id = AssetView.Id;
+ContractAgreementsListAsset.Name = AssetView.Name;
+ContractAgreementsListAsset.ContentType = AssetView.ContentType;
+ContractAgreementsListAsset.DataAddress = AssetView.DataAddress;
+
+ContractAgreementsList.Asset = ContractAgreementsListAsset;
+
+ContractAgreementsList.Items = List.Items<ContractAgreement>;
+
+ContractAgreementsList.Loading = List.Loading;
+
+ContractAgreementsList.Search = List.Search;
+
+ContractAgreementsList.SearchTrigger = List.SearchTrigger;
+
+interface ContractAgreementsListContractAgreementProps {
+  contractAgreement?: ContractAgreement;
+}
+
+function ContractAgreementsListContractAgreement(
+  { contractAgreement, children }: PropsWithChildren<
+    ContractAgreementsListContractAgreementProps
+  >,
+) {
+  return (
+    <Local
+      item={contractAgreement}
+    >
+      {children}
+    </Local>
+  );
+}
+
+ContractAgreementsList.ContractAgreement =
+  ContractAgreementsListContractAgreement;
+
+interface ContractAgreementsListContractAgreementPolicyProps {
+  policyDefinition?: PolicyDefinition;
+}
+
+function ContractAgreementsListContractAgreementPolicy(
+  { policyDefinition, children }: PropsWithChildren<
+    ContractAgreementsListContractAgreementPolicyProps
+  >,
+) {
+  return (
+    <Local
+      item={policyDefinition}
+    >
+      {children}
+    </Local>
+  );
+}
+
+ContractAgreementsListContractAgreement.Policy =
+  ContractAgreementsListContractAgreementPolicy;
