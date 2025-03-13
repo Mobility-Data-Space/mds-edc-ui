@@ -22,6 +22,8 @@ export const de = {
         "Listen Sie alle Assets auf, die auf eigenen Connectors verfügbar sind. Assets sind die gemeinsame Einheit und können auf ein oder mehrere physische Elemente verweisen.",
       buttonAdd: "Asset erstellen",
       headingName: "Name",
+      headingTitle: "Titel",
+      headingDescription: "Beschreibung",
       headingContentType: "Inhaltstyp",
       headingDataAddressName: "Name der Datenadresse",
       headingDataAddressType: "Datenadresstyp",
