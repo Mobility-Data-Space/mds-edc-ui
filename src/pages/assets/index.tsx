@@ -35,6 +35,8 @@ export default function AssetListPage() {
               </button>
             </div>
           </div>
+{/*
+
           <div className="sm:col-span-1">
             <label
               htmlFor="hs-as-table-product-review-search"
@@ -56,6 +58,8 @@ export default function AssetListPage() {
               </AssetsList.SearchTrigger>
             </div>
           </div>
+
+*/}
         </ConnectorDashboard.Section>
 
         <Table className="table table-fixed">
