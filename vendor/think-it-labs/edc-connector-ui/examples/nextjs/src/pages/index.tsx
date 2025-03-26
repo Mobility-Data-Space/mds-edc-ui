@@ -10,7 +10,7 @@ export default function AssetListPage() {
         <div className="flex flex-col">
           <div className="-m-1.5 overflow-x-auto">
             <div className="p-1.5 min-w-full inline-block align-middle">
-              <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden dark:bg-neutral-900 dark:border-neutral-700">
+              <div className="bg-white border border-gray-200 rounded-xl shadow-xs overflow-hidden dark:bg-neutral-900 dark:border-neutral-700">
                 <div className="px-6 py-4 flex justify-between items-center border-b border-gray-200 dark:border-neutral-700">
                   <h2 className="text-xl font-semibold text-gray-800 dark:text-neutral-200">
                     Assets

@@ -3,13 +3,6 @@ import { USE_CASES } from "@/constants/use-cases";
 import { useRouter } from "next/router";
 
 type ConnectorDashboardState = {
-  useCase?: string;
-  environment?: string;
-  connector: undefined;
-  push: (href: string) => void;
-} | {
-  useCase: string;
-  environment: string;
   connector: Participant;
   push: (href: string) => void;
 };
