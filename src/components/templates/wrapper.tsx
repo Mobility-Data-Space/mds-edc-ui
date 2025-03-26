@@ -1,13 +1,9 @@
-import { USE_CASES } from "@/constants/use-cases";
-import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-state";
 import { T } from "@/i18n";
-import { Menu } from "@headlessui/react";
-import { ChevronDown, User } from "lucide-react";
+import { User } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { PropsWithChildren } from "react";
 import { Select } from "../atoms/select";
-import { ConnectorStatus } from "../organisms/connector-status";
 
 export function Wrapper({ children }: PropsWithChildren<{}>) {
   const router = useRouter();

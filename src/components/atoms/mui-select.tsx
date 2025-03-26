@@ -39,11 +39,12 @@ export function renderSelectValue(value: unknown, placeholder: string = "", opti
 
 export function MuiSelect({ label, options, highlights = [], defaultValue = "", name, value = "", error = false, onChange, placeholder = "", required = false }: SelectProps): JSX.Element {
   const hasHighlights = highlights && highlights.length > 0;
+  const notValue = ! value;
   useEffect(() => {
-    if (defaultValue && name && ! value) {
+    if (defaultValue && name && notValue) {
       onChange(defaultValue)
     }
-  }, []);
+  }, [defaultValue, name, onChange, notValue]);
 
   return (
     <FormControl fullWidth>
