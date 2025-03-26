@@ -6,7 +6,7 @@ import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-stat
 import { T } from "@/i18n";
 
 export default function CatalogsPage() {
-  const { push, useCase, environment } = useConnectorDashboardState();
+  const { push } = useConnectorDashboardState();
 
   return (
     <ConnectorDashboard>
@@ -37,35 +37,7 @@ export default function CatalogsPage() {
         </Table.Head>
 
         <Table.Body>
-          {DATASPACE.map(useCase as any, environment as any, (
-            { id, name, defaultUrl },
-            index,
-          ) => (
-            <Table.Row
-              key={id}
-              onClick={() => push(`/catalog/${id}`)}
-            >
-              <Table.Cell>
-                <button
-                  type="button"
-                  className="flex items-center gap-x-2"
-                >
-                  <span className="text-sm text-gray-800">
-                    {index + 1}
-                  </span>
-                </button>
-              </Table.Cell>
-              <Table.Cell>
-                {name}
-              </Table.Cell>
-              <Table.Cell>
-                <ConnectorStatus
-                  className="grid grid-cols-4 gap-1 w-20"
-                  defaultUrl={defaultUrl}
-                />
-              </Table.Cell>
-            </Table.Row>
-          ))}
+
         </Table.Body>
       </Table>
     </ConnectorDashboard>

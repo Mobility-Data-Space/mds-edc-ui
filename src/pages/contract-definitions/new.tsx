@@ -2,7 +2,6 @@ import { Button } from "@/components/atoms/button";
 import { ConnectorDashboard } from "@/components/templates/connector-dashboard";
 import {
   ContractDefinitionForm,
-  useContractDefinitionFormContext,
 } from "@think-it-labs/edc-connector-ui/contract-definition-form";
 import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-state";
 import { T } from "@/i18n";
@@ -13,8 +12,6 @@ import { useState } from "react";
 function Policy() {
   // const [selected, setSelected] = useState(people[0]);
   const [query, setQuery] = useState("");
-  const a = useContractDefinitionFormContext();
-  a;
   // const filteredPeople = query === ""
   //   ? people
   //   : people.filter((person) =>
@@ -25,9 +22,10 @@ function Policy() {
   // );
 
   return (
-    <Combobox value={selected} onChange={setSelected}>
+//    <Combobox value={selected} onChange={setSelected}>
+    <Combobox>
       <div className="relative mt-1">
-        <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
+        <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
           <Combobox.Input
             className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
             // displayValue={(person) => person.name}
@@ -41,7 +39,7 @@ function Policy() {
           </Combobox.Button>
         </div>
 
-        <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+        <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-hidden sm:text-sm">
           {
             /* {filteredPeople.length === 0 && query !== ""
               ? (

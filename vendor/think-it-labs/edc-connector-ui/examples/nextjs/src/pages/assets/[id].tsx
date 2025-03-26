@@ -5,13 +5,13 @@ import {
 import { useRouter } from "next/router";
 
 function DeleteAsset() {
-  const { deleteAsset } = useAssetContext();
+//  const { deleteAsset } = useAssetContext();
   const { push } = useRouter();
 
   return (
     <button
       onClick={async () => {
-        await deleteAsset();
+//        await deleteAsset();
         push("/");
       }}
     >
@@ -28,7 +28,7 @@ export default function AssetPage() {
         id={id}
         managementUrl="http://localhost:3000/api/3003/management"
       >
-        <div className="flex flex-col bg-white border shadow-sm rounded-xl p-4 md:p-5 dark:bg-neutral-900 dark:border-neutral-700 dark:shadow-neutral-700/70">
+        <div className="flex flex-col bg-white border shadow-xs rounded-xl p-4 md:p-5 dark:bg-neutral-900 dark:border-neutral-700 dark:shadow-neutral-700/70">
           <h3 className="text-lg font-bold text-gray-800 dark:text-white">
             <AssetView.Name />
           </h3>

@@ -22,14 +22,14 @@ export default function CreateAssetPage() {
               <AssetForm.Id
                 id="id"
                 type="text"
-                className="py-2 px-3 sm:col-span-6 pe-11 block w-full border-gray-200 shadow-sm text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                className="py-2 px-3 sm:col-span-6 pe-11 block w-full border-gray-200 shadow-xs text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
                 placeholder="Unique asset identifier"
               />
               <AssetForm.Properties.Input
                 name="['http://www.w3.org/ns/dcat#version']"
                 id="properties-version"
                 type="text"
-                className="py-2 px-3 sm:col-span-6 pe-11 block w-full border-gray-200 shadow-sm text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                className="py-2 px-3 sm:col-span-6 pe-11 block w-full border-gray-200 shadow-xs text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
                 placeholder="The asset version"
               />
             </div>
@@ -49,7 +49,7 @@ export default function CreateAssetPage() {
               name="['http://purl.org/dc/terms/title']"
               id="properties-title"
               type="text"
-              className="py-2 px-3 pe-11 block w-full border-gray-200 shadow-sm text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+              className="py-2 px-3 pe-11 block w-full border-gray-200 shadow-xs text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
               placeholder="Human readable asset identifier"
             />
           </div>
@@ -78,7 +78,7 @@ export default function CreateAssetPage() {
                   value: "text/xml",
                 },
               ]}
-              className="py-2 px-3 pe-11 block w-full border-gray-200 shadow-sm text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+              className="py-2 px-3 pe-11 block w-full border-gray-200 shadow-xs text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
             />
           </div>
 
@@ -122,7 +122,7 @@ export default function CreateAssetPage() {
                   value: "HttpData",
                 },
               ]}
-              className="py-2 px-3 pe-11 block w-full border-gray-200 shadow-sm text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+              className="py-2 px-3 pe-11 block w-full border-gray-200 shadow-xs text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
             />
           </div>
 
@@ -141,14 +141,14 @@ export default function CreateAssetPage() {
                 name="baseUrl"
                 id="data-address-base-url"
                 type="text"
-                className="sm:col-span-6 py-2 px-3 pe-11 block w-full border-gray-200 shadow-sm text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                className="sm:col-span-6 py-2 px-3 pe-11 block w-full border-gray-200 shadow-xs text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
                 placeholder="The base URL (e.g., https://example.com)"
               />
               <AssetForm.DataAddress.Input
                 name="path"
                 id="data-address-path"
                 type="text"
-                className="sm:col-span-6 py-2 px-3 pe-11 block w-full border-gray-200 shadow-sm text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                className="sm:col-span-6 py-2 px-3 pe-11 block w-full border-gray-200 shadow-xs text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
                 placeholder="The default path suffix (e.g., /content)"
               />
             </div>
@@ -176,7 +176,7 @@ export default function CreateAssetPage() {
                     value: "POST",
                   },
                 ]}
-                className="sm:col-span-6 py-2 px-3 pe-11 block w-full border-gray-200 shadow-sm text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                className="sm:col-span-6 py-2 px-3 pe-11 block w-full border-gray-200 shadow-xs text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
               />
               <AssetForm.DataAddress.Select
                 name="contentType"
@@ -192,7 +192,7 @@ export default function CreateAssetPage() {
                     value: "text/xml",
                   },
                 ]}
-                className="sm:col-span-6 py-2 px-3 pe-11 block w-full border-gray-200 shadow-sm text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                className="sm:col-span-6 py-2 px-3 pe-11 block w-full border-gray-200 shadow-xs text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
               />
             </div>
           </div>
@@ -212,14 +212,14 @@ export default function CreateAssetPage() {
                 name="authKey"
                 id="data-address-auth-key"
                 type="text"
-                className="sm:col-span-6 py-2 px-3 pe-11 block w-full border-gray-200 shadow-sm text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                className="sm:col-span-6 py-2 px-3 pe-11 block w-full border-gray-200 shadow-xs text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
                 placeholder="Header authorization key"
               />
               <AssetForm.DataAddress.Input
                 name="authCode"
                 id="data-address-auth-code"
                 type="text"
-                className="sm:col-span-6 py-2 px-3 pe-11 block w-full border-gray-200 shadow-sm text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                className="sm:col-span-6 py-2 px-3 pe-11 block w-full border-gray-200 shadow-xs text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
                 placeholder="Authorisation code"
               />
             </div>
@@ -249,11 +249,12 @@ export default function CreateAssetPage() {
           </div>
         </div>
         <Button
+          variant="secondary"
           onClick={() => push("/")}
         >
           Cancel
         </Button>
-        <Button type="submit">
+        <Button type="submit" variant="primary">
           Add asset
         </Button>
       </AssetForm>
