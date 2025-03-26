@@ -175,10 +175,10 @@ ConnectorDashboard.Section = function ConnectorDashboardSection(
 };
 
 ConnectorDashboard.Title = function ConnectorDashboardDescription(
-  { children }: PropsWithChildren<{}>,
+  { children, className = '' }: PropsWithChildren<{ className?: string }>,
 ) {
   return (
-    <h2 className="text-xl font-bold text-gray-800">
+    <h2 className={`text-xl font-bold text-gray-800 ${className}`}>
       {children}
     </h2>
   );
