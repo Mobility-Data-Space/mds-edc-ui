@@ -9,14 +9,14 @@ import { T } from "@/i18n";
 import { useRouter } from "next/router";
 
 function DeleteAsset() {
-//  const { deleteItem } = useAssetContext();
+  const { deleteItem } = useAssetContext();
   const { push } = useRouter();
 
   return (
     <Button
       variant="unstyled"
       onClick={async () => {
-//        await deleteItem();
+        await deleteItem();
         push("/assets");
       }}
     >
