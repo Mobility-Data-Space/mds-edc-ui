@@ -24,7 +24,7 @@ jobs:
     - name: Configure npm
       run: |
         npm set @think-it-labs:registry=https://npm.pkg.github.com/ 
-        npm set //npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
+        npm set //npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}
 
     - name: Install dependencies
       run: yarn install --frozen-lockfile
