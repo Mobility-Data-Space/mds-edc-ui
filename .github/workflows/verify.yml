@@ -21,10 +21,10 @@ jobs:
       with:
         node-version: '18'
 
-    - name: Create .npmrc
+    - name: Configure npm
       run: |
-        echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > .npmrc
-        echo "@think-it:registry=https://npm.pkg.github.com" >> .npmrc
+        npm set @think-it-labs:registry=https://npm.pkg.github.com/ 
+        npm set //npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
 
     - name: Install dependencies
       run: yarn install --frozen-lockfile
