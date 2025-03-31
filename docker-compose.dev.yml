@@ -1,0 +1,51 @@
+services:
+  edc-ui:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        GITHUB_TOKEN: ${GITHUB_TOKEN}
+    environment:
+      # Environment variables from .envrc.example
+      NEXT_PUBLIC_EDC_ID: "participant_1"
+      NEXT_PUBLIC_EDC_NAME: "participant_1_edc_name"
+      NEXT_PUBLIC_EDC_MANAGEMENT_URL: "http://edc:8182/management"
+      NEXT_PUBLIC_EDC_DEFAULT_URL: "http://edc:8181/api"
+      NEXT_PUBLIC_EDC_PROTOCOL_URL: "http://edc:8183/protocol"
+
+    ports:
+      - "3000:3000"
+      
+  edc:
+    image: ghcr.io/mobility-data-space/next-mds-edc/connector-inmemory:latest
+    environment:
+      # Participant Configuration
+      EDC_PARTICIPANT_ID: "participant_1"
+      EDC_COMPONENT_ID: "participant_1_MDS_COMPONENT"
+      EDC_HOSTNAME: "edc-participant-1"
+
+      # Web Server Configuration
+      WEB_HTTP_PATH: "/api"
+      WEB_HTTP_PORT: "8181"
+      WEB_HTTP_CONTROL_PATH: "/control"
+      WEB_HTTP_CONTROL_PORT: "8186"
+      WEB_HTTP_MANAGEMENT_PATH: "/management"
+      WEB_HTTP_MANAGEMENT_PORT: "8182"
+      WEB_HTTP_PROTOCOL_PATH: "/protocol"
+      WEB_HTTP_PROTOCOL_PORT: "8183"
+      WEB_HTTP_VERSION_PATH: "/version"
+      WEB_HTTP_VERSION_PORT: "8184"
+      WEB_HTTP_PUBLIC_PATH: "/public"
+      WEB_HTTP_PUBLIC_PORT: "8185"
+
+      # Transfer Proxy Configuration
+      EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: "transfer-proxy-token-signer-public-key"
+      EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: "transfer-proxy-token-signer-private-key"
+
+    ports:
+      - "8181:8181"  # API
+      - "8186:8186"  # Control
+      - "8182:8182"  # Management
+      - "8183:8183"  # Protocol
+      - "8184:8184"  # Version
+      - "8185:8185"  # Public
