@@ -27,3 +27,5 @@ jobs:
           file: Dockerfile
           push: true
           tags: ghcr.io/${{ github.repository }}/mds-connector-ui:latest
+          build-args: |
+            GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
