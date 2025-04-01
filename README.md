@@ -9,6 +9,10 @@ First, set up your GITHUB TOKEN:
     ```bash
     export GITHUB_TOKEN=your_github_token_here
     ```
+- Connect to Github Container Registry:
+   ```bash
+   echo $GITHUB_TOKEN | docker login ghcr.io -u USERNAME --password-stdin
+   ```
 
 ### Setup Options
 
@@ -58,4 +62,3 @@ This setup simulates 2 participants. Provide configuration as environment variab
    ```bash
    docker-compose up -d
    ```
-
