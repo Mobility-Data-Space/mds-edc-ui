@@ -21,13 +21,7 @@ jobs:
       with:
         node-version: 18
 
-    - name: Setup .yarnrc.yml
-      run: |
-        yarn config set npmScopes.@think-it-labs.npmRegistryServer "https://npm.pkg.github.com"
-        yarn config set npmScopes.@think-it-labs.npmAlwaysAuth true
-        yarn config set npmScopes.@think-it-labs.npmAuthToken $NPM_AUTH_TOKEN
-      env:
-        NPM_AUTH_TOKEN: ${{ secrets.THINKIT_TOKEN }}
+    - run: echo -e "@think-it-labs:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.THINKIT_TOKEN }}" >> ./.npmrc
 
     - name: Install dependencies
       run: yarn install --frozen-lockfile
