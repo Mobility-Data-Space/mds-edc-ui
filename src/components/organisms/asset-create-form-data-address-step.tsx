@@ -118,6 +118,7 @@ export function AssetCreateFormDataAddressStep({ formData, errors, onChange, tra
             <Input
               name={ASSET_DATA_ADDRESS_BASE_URL}
               id="data-address-base-url"
+              data-testid="data-address-base-url"
               type="url"
               required
               placeholder={"https://"}

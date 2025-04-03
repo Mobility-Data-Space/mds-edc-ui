@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {MouseEventHandler, useRef, useState} from "react";
 import { ConnectorDashboard } from "@/components/templates/connector-dashboard";
 import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-state";
 import { T, useTranslator } from "@/i18n";
@@ -140,8 +140,6 @@ export default function CreateAssetForm() {
 
     // TODO: asset id already exist
 
-    // @ts-ignore
-    console.log("btn form", submitButtonRef.current.form)
     if (submitButtonRef.current && submitButtonRef.current.form) {
       submitButtonRef.current.form.requestSubmit();
     }
@@ -158,7 +156,9 @@ export default function CreateAssetForm() {
   return (
     <ConnectorDashboard>
       <ConnectorDashboard.Title className="p-5 text-3xl">
-        <T string="assets.new.title" />
+        <span data-testid="asset-create-modal-title">
+          <T string="assets.new.title" />
+        </span>
       </ConnectorDashboard.Title>
 
       <AssetForm
@@ -169,7 +169,7 @@ export default function CreateAssetForm() {
       >
         <Stepper activeStep={activeStep} orientation="vertical" className="p-5">
           <Step>
-            <div className="my-2">
+            <div className="my-2" data-testid="asset-create-general-info-step-title">
               <MuiButton fullWidth>
                 <StepLabel onClick={() => setActiveStep(0)} className={"w-full justify-start p-4"} >
                   <T string="assets.new.generalInformation"/>
@@ -177,17 +177,19 @@ export default function CreateAssetForm() {
               </MuiButton>
             </div>
             <StepContent>
-              <AssetCreateFormGeneralInfoStepContent
-                formData={formData.properties}
-                onChange={generalInfoFormOnChange}
-                errors={errors.properties}
-                translator={translator}
-              />
+              <div data-testid="asset-create-general-info-step-content">
+                <AssetCreateFormGeneralInfoStepContent
+                  formData={formData.properties}
+                  onChange={generalInfoFormOnChange}
+                  errors={errors.properties}
+                  translator={translator}
+                />
+              </div>
             </StepContent>
           </Step>
 
           <Step>
-            <div className="my-2">
+            <div className="my-2" data-testid="asset-create-advanced-info-step-title">
               <MuiButton fullWidth>
                 <StepLabel onClick={tryGoToAdvancedStep} className={"w-full justify-start p-4"}>
                   <T string="assets.new.advancedInformation"/>
@@ -195,17 +197,19 @@ export default function CreateAssetForm() {
               </MuiButton>
             </div>
             <StepContent>
-              <AssetCreateFormAdvancedInfoStepContent
-                translator={translator}
-                formData={formData.advancedInfo}
-                onChange={advancedInfoFormOnChange}
-                errors={errors.advancedInfo}
-              />
+              <div data-testid="asset-create-advanced-info-step-content">
+                <AssetCreateFormAdvancedInfoStepContent
+                  translator={translator}
+                  formData={formData.advancedInfo}
+                  onChange={advancedInfoFormOnChange}
+                  errors={errors.advancedInfo}
+                />
+              </div>
             </StepContent>
           </Step>
 
           <Step>
-            <div className="my-2">
+            <div className="my-2" data-testid="asset-create-data-address-step-title">
               <MuiButton fullWidth>
                 <StepLabel onClick={tryGoingToDataSourceStep} className={"w-full justify-start p-4"}>
                   <T string="assets.new.datasourceInformation"/>
@@ -213,31 +217,33 @@ export default function CreateAssetForm() {
               </MuiButton>
             </div>
             <StepContent>
-              <AssetCreateFormDataAddressStep
-                translator={translator}
-                formData={formData.dataAddress}
-                onChange={dataAddressFormOnChange}
-                errors={errors.dataAddress}
-              />
+              <div data-testid="asset-create-data-address-step-content">
+                <AssetCreateFormDataAddressStep
+                  translator={translator}
+                  formData={formData.dataAddress}
+                  onChange={dataAddressFormOnChange}
+                  errors={errors.dataAddress}
+                />
+              </div>
             </StepContent>
           </Step>
         </Stepper>
 
-        <div className="flex justify-between px-6 py-4">
-          <Button
-            variant="secondary"
+        <div className="flex justify-end gap-x-2 px-6 py-4">
+          <MuiButton
             onClick={() => push("/assets")}
           >
             <T string="buttonCancel"/>
-          </Button>
-          <Button
-            variant="primary"
+          </MuiButton>
+          <MuiButton
+            data-testid="asset-create-submit"
+            variant="contained"
+            ref={submitButtonRef}
             onClick={onSubmit}
             disabled={cannotSubmit()}
           >
             <T string="buttonSave"/>
-          </Button>
-          <button ref={submitButtonRef} className="hidden" type="submit" ></button>
+          </MuiButton>
         </div>
       </AssetForm>
 

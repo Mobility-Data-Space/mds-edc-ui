@@ -69,7 +69,7 @@ export function AssetCreateFormAdvancedInfoStepContent({ translator, formData, o
           </label>
           <MuiSelect
             name={ASSET_ADVANCED_INFO_DATA_SUBCATEGORY}
-            id="advanced-info-data-category"
+            id="advanced-info-data-subcategory"
             placeholder={translator("assets.new.fieldAdvancedInfoDataSubcategoryPlaceholder")}
             options={DATA_SUBCATEGORIES_DATA[formData[ASSET_ADVANCED_INFO_DATA_CATEGORY] as TYPE_DATA_CATEGORY] || []}
             value={formData[ASSET_ADVANCED_INFO_DATA_SUBCATEGORY]}
