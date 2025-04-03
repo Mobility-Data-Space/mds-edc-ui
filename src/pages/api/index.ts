@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Readable } from "node:stream";
+import {removeProxyPrefix} from "@/hooks/use-connector-dashboard-state.ts";
 
 type Data = {
   name: string;
@@ -9,14 +10,14 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>,
 ) {
+  const url = removeProxyPrefix(req.url);
+
   if (req.method?.toLowerCase() === "head") {
     return res.status(200).end();
   }
 
   const proxy = await fetch(
-    `http://localhost:${req.query.port}${
-      req.url?.replace(`/api/${req.query.port}/`, "/")
-    }`,
+    url,
     {
       method: req.method,
       // headers: req.headers as any,
