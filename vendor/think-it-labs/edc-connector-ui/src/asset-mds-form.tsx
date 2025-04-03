@@ -50,15 +50,19 @@ export function AssetForm(
   });
 
   const action = useCallback(
-    async (event: FormEvent<HTMLFormElement>, formData: AssetInput) => {
-      event.preventDefault();
+    async (formData: AssetInput) => {
       const cleanFormDataObject = cleanFormData(formData);
-      const formDataToSubmit = { properties: { ...cleanFormDataObject.properties, ...cleanFormDataObject.advancedInfo }, dataAddress: cleanFormDataObject.dataAddress }; // TODO: extract advancedInfo out of the component
+      const formDataToSubmit = { "@id": cleanFormDataObject.properties["@id"], properties: { ...cleanFormDataObject.properties, ...cleanFormDataObject.advancedInfo }, dataAddress: cleanFormDataObject.dataAddress };
+
       try {
         const result = await client.management.assets.create(formDataToSubmit);
         onSuccess?.(result);
-      } catch (error) {
-        onFailure?.(error as any);
+      } catch (error: any) {
+        const badRequestPrefix = 'request was malformed: ';
+        if (0 === error.message.indexOf(badRequestPrefix)) {
+          error.stack = JSON.parse(error.message.replace(badRequestPrefix, ''));
+        }
+        onFailure?.(error);
       }
     },
     [client],
@@ -66,7 +70,10 @@ export function AssetForm(
 
   return (
     <form
-      onSubmit={(event) => action(event, formData)}
+      onSubmit={(event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        return action(formData)
+      }}
     >
       {children}
     </form>
