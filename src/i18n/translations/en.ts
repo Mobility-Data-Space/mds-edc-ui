@@ -98,6 +98,8 @@ export const en = {
         fieldAdvancedInfoConditionsForUsePlaceholder: "Please cite the dataset as...",
         fieldAdvancedInfoConditionsForUse: "Conditions for use",
         fieldAdvancedInfoConditionsForUseSupport: "Additional not legally relevant usage instructions (e.g. how to cite the dataset). The field supports",
+        fieldAdvancedInfoTemporalCoverage: "Temporal coverage",
+        fieldAdvancedInfoTemporalCoverageHelper: "Start and/or end date when the dataset is available for consumption. DD/MM/YYYY (optional) – DD/MM/YYYY (optional)",
 
         fieldDataAddressType: "Type",
         fieldDataAddressMethodAndContentType: "Method",

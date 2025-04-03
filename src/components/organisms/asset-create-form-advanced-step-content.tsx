@@ -15,6 +15,7 @@ import {
   ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION,
   ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS,
   ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME,
+  ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE,
   ASSET_ADVANCED_INFO_TRANSPORT_MODE,
   CreateAssetAdvancedInfoFormData,
 } from "@/schema/asset.ts";
@@ -26,6 +27,7 @@ import {
 import {KeyValuePairInputList} from "@/components/molecules/key-value-pair-input-list.tsx";
 import {FormHelperText, IconButton, Link, Tooltip} from "@mui/material";
 import {InfoOutlined} from "@mui/icons-material";
+import DateRangePicker from "@/components/molecules/date-range-picker.tsx";
 
 export interface AssetCreateFormAdvancedInfoStepProps {
   translator: (key: string) => string;
@@ -266,7 +268,19 @@ export function AssetCreateFormAdvancedInfoStepContent({ translator, formData, o
         </FormHelperText>
       </div>
 
-      {/* TODO: Date picker */}
+      <div>
+        <DateRangePicker
+          name={ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE}
+          id="advanced-info-temporal-coverage"
+          label={<T string="assets.new.fieldAdvancedInfoTemporalCoverage"/>}
+          helperText={translator('assets.new.fieldAdvancedInfoTemporalCoverageHelper')}
+          onChange={(value) => onChange({
+            ...formData,
+            [ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE]: value
+          })}
+          error={errors[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE]}
+          value={formData[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE]} />
+      </div>
 
       <div>
         <Input
