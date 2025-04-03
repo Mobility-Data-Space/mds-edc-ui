@@ -44,6 +44,7 @@ export const USE_CASES: UseCases = new UseCases([
       integration: {
         id: "bmw-circular-economy-integration",
         name: "Circular economy (integration)",
+        edcUrl: "http://localhost:3000",
         managementUrl: "http://localhost:3000/api/3007/management",
         defaultUrl: "http://localhost:3000/api/8800/api",
         protocolUrl: "http://bmw-quality-integration:9194/protocol",
@@ -51,6 +52,7 @@ export const USE_CASES: UseCases = new UseCases([
       production: {
         id: "bmw-circular-economy-production",
         name: "Circular economy (production)",
+        edcUrl: "http://localhost:3000",
         managementUrl: "http://localhost:3000/api/8812/management",
         defaultUrl: "http://localhost:3000/api/8810/api",
         protocolUrl: "http://bmw-circular-economy-production:9194/protocol",
@@ -64,6 +66,7 @@ export const USE_CASES: UseCases = new UseCases([
       development: {
         id: "bmw-quality-development",
         name: "Quality (development)",
+        edcUrl: "http://localhost:3000",
         managementUrl: "http://localhost:3000/api/3005/management",
         defaultUrl: "http://localhost:3000/api/8830/api",
         protocolUrl: "http://bmw-quality-development:9194/protocol",
@@ -71,6 +74,7 @@ export const USE_CASES: UseCases = new UseCases([
       integration: {
         id: "bmw-quality-integration",
         name: "Quality (integration)",
+        edcUrl: "http://localhost:3000",
         managementUrl: "http://localhost:3000/api/3004/management",
         defaultUrl: "http://localhost:3000/api/8830/api",
         protocolUrl: "http://bmw-quality-integration:9194/protocol",

@@ -5,12 +5,12 @@ services:
       dockerfile: Dockerfile
       args:
         GITHUB_TOKEN: ${GITHUB_TOKEN}
-    environment:
-      NEXT_PUBLIC_EDC_ID: "participant_1"
-      NEXT_PUBLIC_EDC_NAME: "participant_1_edc_name"
-      NEXT_PUBLIC_EDC_MANAGEMENT_URL: "http://edc-1:8182/management"
-      NEXT_PUBLIC_EDC_DEFAULT_URL: "http://edc-1:8181/api"
-      NEXT_PUBLIC_EDC_PROTOCOL_URL: "http://edc-1:8183/protocol"
+        NEXT_PUBLIC_EDC_URL: "http://localhost:3000"
+        NEXT_PUBLIC_EDC_ID: "participant_1"
+        NEXT_PUBLIC_EDC_NAME: "participant_1_edc_name"
+        NEXT_PUBLIC_EDC_MANAGEMENT_URL: "http://edc-1:8182/management"
+        NEXT_PUBLIC_EDC_DEFAULT_URL: "http://edc-1:8181/api"
+        NEXT_PUBLIC_EDC_PROTOCOL_URL: "http://edc-1:8183/protocol"
     ports:
       - "3000:3000"
 
@@ -50,12 +50,12 @@ services:
       dockerfile: Dockerfile
       args:
         GITHUB_TOKEN: ${GITHUB_TOKEN}
-    environment:
-      NEXT_PUBLIC_EDC_ID: "participant_2"
-      NEXT_PUBLIC_EDC_NAME: "participant_2_edc_name"
-      NEXT_PUBLIC_EDC_MANAGEMENT_URL: "http://edc-2:8182/management"
-      NEXT_PUBLIC_EDC_DEFAULT_URL: "http://edc-2:8181/api"
-      NEXT_PUBLIC_EDC_PROTOCOL_URL: "http://edc-2:8183/protocol"
+        NEXT_PUBLIC_EDC_URL: "http://localhost:3001"
+        NEXT_PUBLIC_EDC_ID: "participant_2"
+        NEXT_PUBLIC_EDC_NAME: "participant_2_edc_name"
+        NEXT_PUBLIC_EDC_MANAGEMENT_URL: "http://edc-2:8182/management"
+        NEXT_PUBLIC_EDC_DEFAULT_URL: "http://edc-2:8181/api"
+        NEXT_PUBLIC_EDC_PROTOCOL_URL: "http://edc-2:8183/protocol"
     ports:
       - "3001:3000"
 
