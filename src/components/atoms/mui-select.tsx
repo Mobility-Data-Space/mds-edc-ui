@@ -27,7 +27,6 @@ export function renderSelectOptions(options: Option[]): JSX.Element[] {
 }
 
 export function renderSelectValue(value: unknown, placeholder: string = "", options: Option[] = [], highlights: Option[] = []) {
-  console.log("not value")
   if (!value) {
     return <Typography color="gray">{placeholder}</Typography>;
   }
@@ -37,7 +36,7 @@ export function renderSelectValue(value: unknown, placeholder: string = "", opti
   return <>{option && option.text ? option.text : value}</>;
 }
 
-export function MuiSelect({ label, options, highlights = [], defaultValue = "", name, value = "", error = false, onChange, placeholder = "", required = false }: SelectProps): JSX.Element {
+export function MuiSelect({ label, options, highlights = [], id = "", defaultValue = "", name, value = "", error = false, onChange, placeholder = "", required = false }: SelectProps): JSX.Element {
   const hasHighlights = highlights && highlights.length > 0;
   const notValue = ! value;
   useEffect(() => {
@@ -50,6 +49,8 @@ export function MuiSelect({ label, options, highlights = [], defaultValue = "", 
     <FormControl fullWidth>
       <InputLabel>{label}</InputLabel>
       <Select
+        id={id}
+        inputProps={{ 'data-testid': id }}
         required={required}
         label={label}
         value={value || ""}
@@ -61,7 +62,6 @@ export function MuiSelect({ label, options, highlights = [], defaultValue = "", 
         displayEmpty
         renderValue={(value) => renderSelectValue(value, placeholder, options, highlights)}
       >
-
         {hasHighlights && renderSelectOptions(highlights)}
         {hasHighlights && <Divider />}
         {renderSelectOptions(options)}
