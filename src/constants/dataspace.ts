@@ -1,6 +1,7 @@
 export interface Participant {
   id: string;
   name: string;
+  edcUrl: string;
   managementUrl: string;
   defaultUrl: string;
   protocolUrl: string;
@@ -49,6 +50,7 @@ export const DATASPACE = new Dataspace([
       {
         id: "zf-circular-economy-integration",
         name: "ZF Circular economy (integration)",
+        edcUrl: "localhost:3000",
         managementUrl: "http://localhost:3000/api/3001/management",
         defaultUrl: "http://localhost:3000/api/8860/api",
         protocolUrl: "http://zf-circular-economy-integration:9194/protocol",
@@ -58,6 +60,7 @@ export const DATASPACE = new Dataspace([
       {
         id: "zf-circular-economy-production",
         name: "ZF Circular economy (production)",
+        edcUrl: "localhost:3000",
         managementUrl: "http://localhost:3000/api/3003/management",
         defaultUrl: "http://localhost:3000/api/8870/api",
         protocolUrl: "http://zf-circular-economy-production:9194/protocol",
@@ -69,6 +72,7 @@ export const DATASPACE = new Dataspace([
       {
         id: "bosh-quality-development",
         name: "Bosh Quality (development)",
+        edcUrl: "localhost:3000",
         managementUrl: "http://localhost:3000/api/3006/management",
         defaultUrl: "http://localhost:3000/api/8840/api",
         protocolUrl: "http://bosh-quality-development:9194/protocol",
@@ -76,6 +80,7 @@ export const DATASPACE = new Dataspace([
       {
         id: "zf-quality-development",
         name: "ZF Quality (development)",
+        edcUrl: "localhost:3000",
         managementUrl: "http://localhost:3000/api/3009/management",
         defaultUrl: "http://localhost:3000/api/8880/api",
         protocolUrl: "http://zf-quality-development:9194/protocol",
@@ -85,6 +90,7 @@ export const DATASPACE = new Dataspace([
       {
         id: "bosh-quality-integration",
         name: "Bosh Quality (integration)",
+        edcUrl: "localhost:3000",
         managementUrl: "http://localhost:3000/api/3008/management",
         defaultUrl: "http://localhost:3000/api/8850/api",
         protocolUrl: "http://bosh-quality-integration:9194/protocol",

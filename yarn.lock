@@ -2714,6 +2714,13 @@ next-i18next@^15.3.0:
     hoist-non-react-statics "^3.3.2"
     i18next-fs-backend "^2.3.1"
 
+next-runtime-env@1.x:
+  version "1.8.0"
+  resolved "https://registry.npmjs.org/next-runtime-env/-/next-runtime-env-1.8.0.tgz#f65f183f1d21e2152cb75eef7673704cbf2b8137"
+  integrity sha512-QJVxzmr2gTao/vZKFgcrByFrifl0YOMTvuUVxcI/X7ratlW+9zMvMmA9AGU9cFsumXJtohWkCvwPdBNdkTCYfw==
+  dependencies:
+    chalk "~4"
+
 next@14.2.1:
   version "14.2.1"
   resolved "https://registry.yarnpkg.com/next/-/next-14.2.1.tgz#081509478156407e4c181ad4791fea0a43c6347d"
