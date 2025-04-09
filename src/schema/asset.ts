@@ -55,15 +55,6 @@ export const ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_SELECT_OPTIONS = [
 export const REQUIRED_PROPERTIES: (keyof CreateAssetPropertiesFormData)[] = [ASSET_TITLE, ASSET_ID];
 export const REQUIRED_ADVANCED_INFO: (keyof CreateAssetAdvancedInfoFormData)[] = [ASSET_ADVANCED_INFO_DATA_CATEGORY];
 
-export const computeRequiredDataAddressProperties = (formData: CreateAssetDataAddressFormData): (keyof CreateAssetDataAddressFormData)[] => {
-  const required: (keyof CreateAssetDataAddressFormData)[] = [];
-  if (formData[ASSET_DATA_ADDRESS_TYPE] === DATA_ADDRESS_TYPE_HTTP.value) {
-    required.push(ASSET_DATA_ADDRESS_BASE_URL);
-  }
-
-  return required;
-};
-
 export const defaultCreateAssetFormData = {
   "@type": "https://w3id.org/edc/v0.0.1/ns/Asset",
   [ASSET_ID]: "",
@@ -117,3 +108,49 @@ export type CreateAssetFormData = typeof defaultCreateAssetFormData;
 export type CreateAssetPropertiesFormData = typeof defaultCreateAssetFormData.properties;
 export type CreateAssetAdvancedInfoFormData = typeof defaultCreateAssetFormData.advancedInfo;
 export type CreateAssetDataAddressFormData = typeof defaultCreateAssetFormData.dataAddress;
+
+export const computeRequiredDataAddressProperties = (formData: CreateAssetDataAddressFormData): (keyof CreateAssetDataAddressFormData)[] => {
+  const required: (keyof CreateAssetDataAddressFormData)[] = [];
+  if (formData[ASSET_DATA_ADDRESS_TYPE] === DATA_ADDRESS_TYPE_HTTP.value) {
+    required.push(ASSET_DATA_ADDRESS_BASE_URL);
+  }
+
+  return required;
+};
+
+export const removeEmptyFields = (object: { [key: string]: any }) => {
+  const newFormData: { [key: string]: any } = {};
+  for (const key in object) {
+    if (typeof object[key] === "boolean") {
+      newFormData[key] = "" + object[key];
+      continue;
+    }
+
+    if ((Array.isArray(object[key]))) {
+      if (object[key].length > 0) {
+        newFormData[key] = object[key];
+      }
+      continue;
+    }
+
+    if (typeof object[key] === "object") {
+      newFormData[key] = removeEmptyFields(object[key]);
+      continue;
+    }
+
+    if (object[key]) {
+      newFormData[key] = object[key];
+      continue;
+    }
+  }
+  return newFormData;
+};
+
+export const assetFormDataToSubmitData = (formData: CreateAssetFormData) => {
+  const cleanFormDataObject = removeEmptyFields(formData);
+  return {
+    [ASSET_ID]: cleanFormDataObject.properties[ASSET_ID],
+    properties: { ...cleanFormDataObject.properties, ...cleanFormDataObject.advancedInfo },
+    dataAddress: cleanFormDataObject.dataAddress
+  };
+}
