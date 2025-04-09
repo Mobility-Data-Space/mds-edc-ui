@@ -33,4 +33,4 @@ jobs:
           push: true
           tags: ghcr.io/${{ steps.lowercase_gh_repo.outputs.lowercase }}/mds-connector-ui:latest
           build-args: |
-            GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
+            GITHUB_TOKEN=${{ secrets.THINKIT_TOKEN }}
