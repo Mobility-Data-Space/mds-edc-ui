@@ -19,13 +19,18 @@ jobs:
             registry: ghcr.io
             username: ${{ github.actor }}
             password: ${{ secrets.GITHUB_TOKEN }}
-
+      
+      - id: lowercase_gh_repo
+        uses: ASzc/change-string-case-action@v6
+        with:
+          string: ${{ github.repository }}
+        
       - name: Build and push inmemory image
         uses: docker/build-push-action@v6
         with:
           context: ./
           file: Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository }}/mds-connector-ui:latest
+          tags: ghcr.io/${{ steps.lowercase_gh_repo.outputs.lowercase }}/mds-connector-ui:latest
           build-args: |
             GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
