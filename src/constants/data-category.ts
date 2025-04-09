@@ -1,14 +1,14 @@
-const TRAFFIC_INFORMATION = 'Traffic Information';
-const ROADWORKS_AND_ROAD_CONDITIONS = 'Roadworks and Road Conditions';
-const TRAFFIC_FLOW_INFORMATION = 'Traffic Flow Information';
-const PARKING_INFORMATION = 'Parking Information';
-const ELECTROMOBILITY = 'Electromobility';
-const TRAFFIC_SIGNS_AND_SPEED_INFORMATION = 'Traffic Signs and Speed Information';
-const WEATHER_INFORMATION = 'Weather Information';
-const PUBLIC_TRANSPORT_INFORMATION = 'Public Transport Information';
-const SHARED_AND_ON_DEMAND_MOBILITY = 'Shared and On-Demand Mobility';
-const INFRASTRUCTURE_AND_LOGISTICS = 'Infrastructure and Logistics';
-const VARIOUS = 'Various';
+export const TRAFFIC_INFORMATION = 'Traffic Information';
+export const ROADWORKS_AND_ROAD_CONDITIONS = 'Roadworks and Road Conditions';
+export const TRAFFIC_FLOW_INFORMATION = 'Traffic Flow Information';
+export const PARKING_INFORMATION = 'Parking Information';
+export const ELECTROMOBILITY = 'Electromobility';
+export const TRAFFIC_SIGNS_AND_SPEED_INFORMATION = 'Traffic Signs and Speed Information';
+export const WEATHER_INFORMATION = 'Weather Information';
+export const PUBLIC_TRANSPORT_INFORMATION = 'Public Transport Information';
+export const SHARED_AND_ON_DEMAND_MOBILITY = 'Shared and On-Demand Mobility';
+export const INFRASTRUCTURE_AND_LOGISTICS = 'Infrastructure and Logistics';
+export const VARIOUS = 'Various';
 
 export type TYPE_DATA_CATEGORY = typeof TRAFFIC_INFORMATION | typeof ROADWORKS_AND_ROAD_CONDITIONS | typeof TRAFFIC_FLOW_INFORMATION | typeof PARKING_INFORMATION | typeof ELECTROMOBILITY | typeof TRAFFIC_SIGNS_AND_SPEED_INFORMATION | typeof WEATHER_INFORMATION | typeof PUBLIC_TRANSPORT_INFORMATION | typeof SHARED_AND_ON_DEMAND_MOBILITY | typeof INFRASTRUCTURE_AND_LOGISTICS | typeof VARIOUS
 
