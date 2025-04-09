@@ -30,6 +30,7 @@ export function AssetCreateFormGeneralInfoStepContent({ translator, formData, on
           required
           name={ASSET_TITLE}
           id="properties-title"
+          data-testid="properties-title"
           type="text"
           label={<T string="assets.new.fieldTitle" />}
           placeholder={translator("assets.new.fieldTitlePlaceholder")}
@@ -60,7 +61,8 @@ export function AssetCreateFormGeneralInfoStepContent({ translator, formData, on
         <Input
           required
           name={ASSET_ID}
-          id="id"
+          id="properties-id"
+          data-testid="properties-id"
           type="text"
           label={<T string="assets.new.fieldId" />}
           placeholder={translator("assets.new.fieldIdPlaceholder")}
