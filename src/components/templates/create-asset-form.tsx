@@ -2,14 +2,14 @@ import React, {MouseEventHandler, useRef, useState} from "react";
 import { ConnectorDashboard } from "@/components/templates/connector-dashboard";
 import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-state";
 import { T, useTranslator } from "@/i18n";
-import { AssetForm } from "@think-it-labs/edc-connector-ui/asset-mds-form.tsx";
+import { AssetForm } from "@think-it-labs/edc-connector-ui/asset-html-form.tsx";
 import { Button } from "@/components/atoms/button.tsx";
 import {Button as MuiButton, Step, StepContent, StepLabel, Stepper} from "@mui/material";
 import { AssetCreateFormGeneralInfoStepContent } from "@/components/organisms/asset-create-form-general-info-step-content.tsx";
 import { AssetCreateFormDataAddressStep } from "@/components/organisms/asset-create-form-data-address-step.tsx";
 
 import {
-  ASSET_ID,
+  ASSET_ID, assetFormDataToSubmitData,
   computeRequiredDataAddressProperties, CreateAssetAdvancedInfoFormData,
   CreateAssetDataAddressFormData,
   CreateAssetFormData,
@@ -164,7 +164,7 @@ export default function CreateAssetForm() {
       <AssetForm
         managementUrl={connector.managementUrl}
         onSuccess={() => push("/assets")}
-        formData={formData as any}
+        getFormDataToSubmit={() => assetFormDataToSubmitData(formData)}
         onFailure={onFormSubmitFail}
       >
         <Stepper activeStep={activeStep} orientation="vertical" className="p-5">
