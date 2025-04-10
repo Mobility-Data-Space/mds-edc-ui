@@ -1,4 +1,8 @@
-import {DATA_ADDRESS_TYPE_HTTP} from "@/constants/data-address-types.ts";
+import {
+  DATA_ADDRESS_TYPE_HTTP,
+  DATA_OFFER_TYPE_DATA_SOURCE,
+  DATA_OFFER_TYPE_ON_REQUEST
+} from "@/constants/data-address-types.ts";
 import {ENGLISH_SELECT_DATA} from "@/constants/languages.ts";
 
 export const ASSET_PROPERTIES = "https://w3id.org/edc/v0.0.1/ns/properties";
@@ -12,6 +16,10 @@ export const ASSET_CONTENT_TYPE = "['http://www.w3.org/ns/dcat#distribution'].['
 export const ASSET_ENDPOINT_DOCUMENTATION = "endpointDocumentation";
 export const ASSET_PUBLISHER = "publisher";
 export const ASSET_STANDARD_LICENSE = "http://purl.org/dc/terms/license";
+export const DATA_OFFER_TYPE = "dataSourceAvailability";
+export const DATA_OFFER_CONTACT_EMAIL = "contactEmail";
+export const DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT = "contactPreferredEmailSubject";
+export const DATA_OFFER_PUBLISH_MODE = "publishMode";
 
 export const ASSET_ADVANCED_INFO_DATA_CATEGORY = "dataCategory";
 export const ASSET_ADVANCED_INFO_DATA_SUBCATEGORY = "dataSubcategory";
@@ -53,6 +61,7 @@ export const ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_SELECT_OPTIONS = [
 ];
 
 export const REQUIRED_PROPERTIES: (keyof CreateAssetPropertiesFormData)[] = [ASSET_TITLE, ASSET_ID];
+export const REQUIRED_DATA_OFFER_PROPERTIES: (keyof CreateAssetPropertiesFormData)[] = [ASSET_TITLE, ASSET_ID];
 export const REQUIRED_ADVANCED_INFO: (keyof CreateAssetAdvancedInfoFormData)[] = [ASSET_ADVANCED_INFO_DATA_CATEGORY];
 
 export const defaultCreateAssetFormData = {
@@ -63,12 +72,13 @@ export const defaultCreateAssetFormData = {
     [ASSET_VERSION]: "",
     [ASSET_ID]: "",
     [ASSET_DESCRIPTION]: "",
-    [ASSET_KEYWORDS]: [],
+    [ASSET_KEYWORDS]: [] as string[],
     [ASSET_LANGUAGE]: ENGLISH_SELECT_DATA.value,
     [ASSET_CONTENT_TYPE]: "",
     [ASSET_ENDPOINT_DOCUMENTATION]: "",
     [ASSET_PUBLISHER]: "",
     [ASSET_STANDARD_LICENSE]: "",
+    [DATA_OFFER_PUBLISH_MODE]: "",
   },
   advancedInfo: {
     [ASSET_ADVANCED_INFO_DATA_CATEGORY]: "",
@@ -79,9 +89,9 @@ export const defaultCreateAssetFormData = {
     [ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME]: "",
     [ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY]: "",
     [ASSET_ADVANCED_INFO_GEO_LOCATION]: "",
-    [ASSET_ADVANCED_INFO_NUTS_LOCATIONS]: [],
-    [ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS]: [],
-    [ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS]: [],
+    [ASSET_ADVANCED_INFO_NUTS_LOCATIONS]: [] as any[],
+    [ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS]: [] as any[],
+    [ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS]: [] as any[],
     [ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION]: "",
     [ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE]: ["", ""] satisfies [string, string],
     [ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE]: "",
@@ -101,6 +111,9 @@ export const defaultCreateAssetFormData = {
     [ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE]: ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_VAULT_SECRET,
     [ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_NAME]: "",
     [ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_VALUE]: "",
+    [DATA_OFFER_TYPE]: "",
+    [DATA_OFFER_CONTACT_EMAIL]: "",
+    [DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT]: "",
   },
 };
 
@@ -108,6 +121,19 @@ export type CreateAssetFormData = typeof defaultCreateAssetFormData;
 export type CreateAssetPropertiesFormData = typeof defaultCreateAssetFormData.properties;
 export type CreateAssetAdvancedInfoFormData = typeof defaultCreateAssetFormData.advancedInfo;
 export type CreateAssetDataAddressFormData = typeof defaultCreateAssetFormData.dataAddress;
+
+export const computeRequiredDataOfferAddressProperties = (formData: CreateAssetDataAddressFormData): (keyof CreateAssetDataAddressFormData)[] => {
+  const required: (keyof CreateAssetDataAddressFormData)[] = [];
+  if (formData[DATA_OFFER_TYPE] === DATA_OFFER_TYPE_DATA_SOURCE.value) {
+    if (formData[ASSET_DATA_ADDRESS_TYPE] === DATA_ADDRESS_TYPE_HTTP.value) {
+      required.push(ASSET_DATA_ADDRESS_BASE_URL);
+    }
+  } else if (formData[DATA_OFFER_TYPE] === DATA_OFFER_TYPE_ON_REQUEST.value) {
+    required.push(DATA_OFFER_CONTACT_EMAIL, DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT);
+  }
+
+  return required;
+};
 
 export const computeRequiredDataAddressProperties = (formData: CreateAssetDataAddressFormData): (keyof CreateAssetDataAddressFormData)[] => {
   const required: (keyof CreateAssetDataAddressFormData)[] = [];
