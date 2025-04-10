@@ -4,10 +4,12 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { PickersDay, PickersDayProps } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
-import { useTheme } from '@mui/material/styles';
+import {Theme, useTheme} from '@mui/material/styles';
 import { IconButton, TextField } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
-import { TextFieldProps } from "@mui/material/TextField/TextField";
+import {TextFieldProps} from "@mui/material/TextField";
+import {theme} from "@/theme/ThemeProvider.tsx";
+import {SxProps} from "@mui/system";
 
 const DATE_FORMAT = 'DD/MM/YYYY';
 
@@ -25,6 +27,7 @@ const DateRangePickerTextFieldSlot = React.forwardRef(
   function DateRangePickerTextFieldSlot (props: DateRangePickerTextFieldSlotProps) {
     return (
       <TextField
+        color="secondary"
         id={props.id}
         label={props.label}
         error={props.hasError}
@@ -57,6 +60,7 @@ type DaySlotCustomProps = PickersDayProps<any> & {
   dayjsStartDate: Dayjs,
   dayjsEndDate: Dayjs,
   bothDatesAreSet: boolean,
+  sx: SxProps<Theme>,
 }
 
 const DaySlot = React.forwardRef(
@@ -88,7 +92,7 @@ const DaySlot = React.forwardRef(
             [isStartDate? "right" : "left"]: 0,
           }}></div>
         }
-        <PickersDay {...props} selected={dayHighlighted} style={{ zIndex: 2 }} />
+        <PickersDay {...props} color="secondary" selected={dayHighlighted} style={{ zIndex: 2 }} />
       </div>
     );
   }
@@ -116,7 +120,6 @@ const dateToString = (date?: DateType | string) => {
 }
 
 export default function DateRangePicker({ name = "", id = "", label = "", helperText = "", onChange, value, error }: DateRangePickerProps) {
-  const theme = useTheme();
   const startDate = value[0];
   const endDate = value[1];
   const [datesPicked, setDatesPicked] = React.useState(0);
@@ -179,6 +182,12 @@ export default function DateRangePicker({ name = "", id = "", label = "", helper
             bothDatesAreSet: !!startDate && !! endDate,
             dayjsStartDate,
             dayjsEndDate,
+            sx: {
+              "&.MuiPickersDay-root.Mui-selected": {
+                backgroundColor: theme.palette.secondary.main,
+                color: theme.palette.secondary.light,
+              },
+            } as any
           },
         } as { textField: DateRangePickerTextFieldSlotProps, day: DaySlotCustomProps }}
         slots={{

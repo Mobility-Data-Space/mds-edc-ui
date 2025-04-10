@@ -1,6 +1,6 @@
 import React from "react";
 import { IconButton, Tooltip } from "@mui/material";
-import { TextFieldProps } from "@mui/material/TextField/TextField";
+import { TextFieldProps } from "@mui/material/TextField";
 import { InfoOutlined } from '@mui/icons-material';
 import ChipInput from 'material-ui-chip-input'
 import FormControl from "@mui/material/FormControl";
@@ -10,7 +10,7 @@ const COMMA = 188;
 const SEMICOLON = 186;
 const chipKeyCodes = [ENTER, COMMA, SEMICOLON];
 
-export type KeywordsInputProps = TextFieldProps & {
+export type KeywordsInputProps = Omit<TextFieldProps, "onChange"> & {
   error: boolean;
   tooltip?: string,
   label?: string,

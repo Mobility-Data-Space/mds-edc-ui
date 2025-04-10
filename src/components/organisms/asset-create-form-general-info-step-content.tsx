@@ -94,7 +94,7 @@ export function AssetCreateFormGeneralInfoStepContent({ translator, formData, on
       <div>
         <label
           htmlFor="properties-keywords"
-          className="text-gray-800 mb-1"
+          className="inline-block text-sm text-black font-medium mb-2"
         >
           <T string="assets.new.fieldKeywords"/>
         </label>
@@ -113,7 +113,7 @@ export function AssetCreateFormGeneralInfoStepContent({ translator, formData, on
       <div>
         <label
           htmlFor="properties-language"
-          className="block text-sm text-gray-800 mb-1"
+          className="inline-block text-sm text-black font-medium mb-2"
         >
           <T string="assets.new.fieldLanguage"/>
         </label>

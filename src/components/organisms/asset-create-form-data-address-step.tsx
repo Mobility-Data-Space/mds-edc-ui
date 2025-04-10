@@ -42,7 +42,7 @@ export function AssetCreateFormDataAddressStep({ formData, errors, onChange, tra
       <div className="flex flex-col gap-y-5 items-start">
         <label
           htmlFor="data-address-type"
-          className="block text-sm text-gray-800 mb-1"
+          className="inline-block text-sm text-black font-medium mb-2"
         >
           <T string="assets.new.fieldDataAddressType"/>
         </label>
@@ -76,7 +76,7 @@ export function AssetCreateFormDataAddressStep({ formData, errors, onChange, tra
           <div className="flex flex-col gap-y-5 items-start">
             <label
               htmlFor="data-address-method"
-              className="block text-sm text-gray-800 mb-1"
+              className="inline-block text-sm text-black font-medium mb-2"
             >
               <T string="assets.new.fieldDataAddressMethodAndContentType"/>
             </label>

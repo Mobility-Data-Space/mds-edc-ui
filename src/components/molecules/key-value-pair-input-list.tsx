@@ -1,8 +1,8 @@
-import {TextFieldProps} from "@mui/material/TextField/TextField";
+import {TextFieldProps} from "@mui/material/TextField";
 import {KeyValuePairInput, Tag} from "@/components/atoms/key-value-pair-input.tsx";
 import {Button, FormHelperText} from "@mui/material";
 
-export type KeyValuePairInputListProps =  TextFieldProps & {
+export type KeyValuePairInputListProps =  Omit<TextFieldProps, "onChange"> & {
   addText?: string;
   removeText?: string;
   errorText?: string;
@@ -106,7 +106,7 @@ export function KeyValuePairInputList({
       <FormHelperText>{helperText}</FormHelperText>
 
       <div>
-        <Button onClick={() => onChange(withAddedTag(value))}>
+        <Button onClick={() => onChange(withAddedTag(value))} color="secondary" className="font-medium text-sm">
           {addText}
         </Button>
         {additionalActions}

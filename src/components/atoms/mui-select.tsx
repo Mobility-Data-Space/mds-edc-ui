@@ -36,7 +36,7 @@ export function renderSelectValue(value: unknown, placeholder: string = "", opti
   return <>{option && option.text ? option.text : value}</>;
 }
 
-export function MuiSelect({ label, options, highlights = [], id = "", defaultValue = "", name, value = "", error = false, onChange, placeholder = "", required = false }: SelectProps): JSX.Element {
+export function MuiSelect({ label, options, highlights = [], id = "", defaultValue = "", name, value = "", error = false, onChange, placeholder = "", required = false, disabled = false }: SelectProps): JSX.Element {
   const hasHighlights = highlights && highlights.length > 0;
   const notValue = ! value;
   useEffect(() => {
@@ -46,11 +46,13 @@ export function MuiSelect({ label, options, highlights = [], id = "", defaultVal
   }, [defaultValue, name, onChange, notValue]);
 
   return (
-    <FormControl fullWidth>
+    <FormControl fullWidth disabled={disabled} color="secondary">
       <InputLabel>{label}</InputLabel>
       <Select
         id={id}
         inputProps={{ 'data-testid': id }}
+        disabled={disabled}
+        color="secondary"
         required={required}
         label={label}
         value={value || ""}
