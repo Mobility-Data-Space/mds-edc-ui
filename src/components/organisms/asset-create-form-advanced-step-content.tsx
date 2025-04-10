@@ -97,7 +97,7 @@ export function AssetCreateFormAdvancedInfoStepContent({ translator, formData, o
         <div className="sm:col-span-9">
           <label
             htmlFor="advanced-info-geo-reference-method"
-            className="block text-sm text-gray-800 mb-1"
+            className="inline-block text-sm text-black font-medium mb-2"
           >
             <T string="assets.new.fieldAdvancedInfoTransportMode"/>
           </label>
@@ -262,7 +262,7 @@ export function AssetCreateFormAdvancedInfoStepContent({ translator, formData, o
         />
         <FormHelperText className="flex flex-row gap-x-1">
           <T string="assets.new.fieldAdvancedInfoReferenceFileDescriptionSupport"/>
-          <Link href="https://www.markdownguide.org/basic-syntax" target="_blank">
+          <Link href="https://www.markdownguide.org/basic-syntax" target="_blank" color="secondary" >
             Markdown syntax
           </Link>
         </FormHelperText>

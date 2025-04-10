@@ -170,7 +170,7 @@ export default function CreateAssetForm() {
         <Stepper activeStep={activeStep} orientation="vertical" className="p-5">
           <Step>
             <div className="my-2" data-testid="asset-create-general-info-step-title">
-              <MuiButton fullWidth>
+              <MuiButton fullWidth color="secondary">
                 <StepLabel onClick={() => setActiveStep(0)} className={"w-full justify-start p-4"} >
                   <T string="assets.new.generalInformation"/>
                 </StepLabel>
@@ -190,7 +190,7 @@ export default function CreateAssetForm() {
 
           <Step>
             <div className="my-2" data-testid="asset-create-advanced-info-step-title">
-              <MuiButton fullWidth>
+              <MuiButton fullWidth color="secondary">
                 <StepLabel onClick={tryGoToAdvancedStep} className={"w-full justify-start p-4"}>
                   <T string="assets.new.advancedInformation"/>
                 </StepLabel>
@@ -210,7 +210,7 @@ export default function CreateAssetForm() {
 
           <Step>
             <div className="my-2" data-testid="asset-create-data-address-step-title">
-              <MuiButton fullWidth>
+              <MuiButton fullWidth color="secondary">
                 <StepLabel onClick={tryGoingToDataSourceStep} className={"w-full justify-start p-4"}>
                   <T string="assets.new.datasourceInformation"/>
                 </StepLabel>

@@ -10,6 +10,7 @@ import {
   Store,
   Truck,
 } from "lucide-react";
+import PostAddIcon from '@mui/icons-material/PostAdd';
 import Link from "next/link";
 import { PropsWithChildren } from "react";
 import { Wrapper } from "./wrapper";
@@ -79,6 +80,16 @@ export function ConnectorDashboard({ children }: PropsWithChildren<{}>) {
               </li>
               <li>
                 <hr className="border-gray-200 my-4 mx-3" />
+              </li>
+              <li>
+                <Link
+                  href={`/create-asset`}
+                  title="Data offer"
+                  className="flex items-center py-2 px-4 text-sm text-neutral-700 rounded-lg hover:bg-gray-100"
+                >
+                  <PostAddIcon className="w-6 h-6" />
+                  <span className="sr-only">Data offer</span>
+                </Link>
               </li>
               <li>
                 <Link
