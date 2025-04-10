@@ -1,13 +1,12 @@
 import React, {useEffect} from "react";
-import {Select, MenuItem, InputLabel} from "@mui/material";
+import {Select, SelectProps as MuiSelectProps, MenuItem, InputLabel} from "@mui/material";
 import Divider from '@mui/material/Divider';
-import {SelectInputProps} from "@mui/material/Select/SelectInput";
 import FormControl from "@mui/material/FormControl";
 import Typography from "@mui/material/Typography";
 
 type Option = { text?: string; value: string };
 
-export type SelectProps = Partial<SelectInputProps> & {
+export type SelectProps = Partial<MuiSelectProps> & {
   options: Option[],
   highlights?: Option[],
   defaultValue?: string,
