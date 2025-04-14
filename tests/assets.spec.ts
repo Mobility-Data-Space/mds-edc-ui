@@ -1,7 +1,7 @@
 import { test, expect, } from '@playwright/test';
 import {TRAFFIC_INFORMATION} from "@/constants/data-category.ts";
 
-test("assets modal creates asset", async ({ page,  }) => {
+test("assets modal creates asset", async ({ page }) => {
   await page.goto("http://localhost:3000/assets");
 
   const randomNumber = `${Math.random()}`.replace("0.", "");

@@ -1,25 +1,13 @@
-import React, {MouseEventHandler, useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 import { ConnectorDashboard } from "@/components/templates/connector-dashboard";
 import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-state";
 import { T, useTranslator } from "@/i18n";
 import { AssetForm } from "@think-it-labs/edc-connector-ui/asset-html-form.tsx";
-import { Button } from "@/components/atoms/button.tsx";
-import {Button as MuiButton, Step, StepContent, StepLabel, Stepper} from "@mui/material";
+import {Button, Step, StepContent, StepLabel, Stepper} from "@mui/material";
 import { AssetCreateFormGeneralInfoStepContent } from "@/components/organisms/asset-create-form-general-info-step-content.tsx";
 import { AssetCreateFormDataAddressStep } from "@/components/organisms/asset-create-form-data-address-step.tsx";
-
-import {
-  ASSET_ID, assetFormDataToSubmitData,
-  computeRequiredDataAddressProperties, CreateAssetAdvancedInfoFormData,
-  CreateAssetDataAddressFormData,
-  CreateAssetFormData,
-  CreateAssetPropertiesFormData,
-  defaultCreateAssetFormData, REQUIRED_ADVANCED_INFO,
-  REQUIRED_PROPERTIES
-} from "@/schema/asset.ts";
-import {
-  AssetCreateFormAdvancedInfoStepContent
-} from "@/components/organisms/asset-create-form-advanced-step-content.tsx";
+import {ASSET_ID, assetFormDataToSubmitData, computeRequiredDataAddressProperties, CreateAssetAdvancedInfoFormData, CreateAssetDataAddressFormData, CreateAssetFormData, CreateAssetPropertiesFormData, defaultCreateAssetFormData, REQUIRED_ADVANCED_INFO, REQUIRED_PROPERTIES} from "@/schema/asset.ts";
+import {AssetCreateFormAdvancedInfoStepContent} from "@/components/organisms/asset-create-form-advanced-step-content.tsx";
 
 export default function CreateAssetForm() {
   const { push, connector } = useConnectorDashboardState();
@@ -170,11 +158,11 @@ export default function CreateAssetForm() {
         <Stepper activeStep={activeStep} orientation="vertical" className="p-5">
           <Step>
             <div className="my-2" data-testid="asset-create-general-info-step-title">
-              <MuiButton fullWidth color="secondary">
+              <Button fullWidth color="secondary">
                 <StepLabel onClick={() => setActiveStep(0)} className={"w-full justify-start p-4"} >
                   <T string="assets.new.generalInformation"/>
                 </StepLabel>
-              </MuiButton>
+              </Button>
             </div>
             <StepContent>
               <div data-testid="asset-create-general-info-step-content">
@@ -190,11 +178,11 @@ export default function CreateAssetForm() {
 
           <Step>
             <div className="my-2" data-testid="asset-create-advanced-info-step-title">
-              <MuiButton fullWidth color="secondary">
+              <Button fullWidth color="secondary">
                 <StepLabel onClick={tryGoToAdvancedStep} className={"w-full justify-start p-4"}>
                   <T string="assets.new.advancedInformation"/>
                 </StepLabel>
-              </MuiButton>
+              </Button>
             </div>
             <StepContent>
               <div data-testid="asset-create-advanced-info-step-content">
@@ -210,11 +198,11 @@ export default function CreateAssetForm() {
 
           <Step>
             <div className="my-2" data-testid="asset-create-data-address-step-title">
-              <MuiButton fullWidth color="secondary">
+              <Button fullWidth color="secondary">
                 <StepLabel onClick={tryGoingToDataSourceStep} className={"w-full justify-start p-4"}>
                   <T string="assets.new.datasourceInformation"/>
                 </StepLabel>
-              </MuiButton>
+              </Button>
             </div>
             <StepContent>
               <div data-testid="asset-create-data-address-step-content">
@@ -230,13 +218,13 @@ export default function CreateAssetForm() {
         </Stepper>
 
         <div className="flex justify-end gap-x-2 px-6 py-4">
-          <MuiButton
+          <Button
             color="secondary"
             onClick={() => push("/assets")}
           >
             <T string="buttonCancel"/>
-          </MuiButton>
-          <MuiButton
+          </Button>
+          <Button
             data-testid="asset-create-submit"
             variant="contained"
             ref={submitButtonRef}
@@ -244,7 +232,7 @@ export default function CreateAssetForm() {
             disabled={cannotSubmit()}
           >
             <T string="buttonSave"/>
-          </MuiButton>
+          </Button>
         </div>
       </AssetForm>
 

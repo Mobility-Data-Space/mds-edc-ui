@@ -134,7 +134,7 @@ export default function CreateDataOfferForm() {
       properties: validateGeneralInfo(formData.properties),
       advancedInfo: validateAdvancedInfo(formData.advancedInfo),
       dataAddress: validateDataAddress(formData.dataAddress),
-    }
+    };
   };
 
   const onSubmit = () => {
@@ -659,12 +659,13 @@ export default function CreateDataOfferForm() {
 
         <div className="flex justify-end px-6 py-4">
           <Button
+            data-testid="data-offer-create-submit"
             variant="contained"
             ref={submitButtonRef}
             onClick={onSubmit}
             disabled={cannotSubmit()}
           >
-          <T string="dataOffer.new.publish"/>
+            <T string="dataOffer.new.publish"/>
           </Button>
         </div>
       </div>
