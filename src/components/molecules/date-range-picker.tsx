@@ -1,102 +1,13 @@
-import React, {Ref} from 'react';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { PickersDay, PickersDayProps } from "@mui/x-date-pickers";
-import dayjs, { Dayjs } from "dayjs";
-import {Theme, useTheme} from '@mui/material/styles';
-import { IconButton, TextField } from "@mui/material";
-import CloseIcon from '@mui/icons-material/Close';
-import {TextFieldProps} from "@mui/material/TextField";
-import {theme} from "@/theme/ThemeProvider.tsx";
-import {SxProps} from "@mui/system";
+import React from 'react';
+import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
+import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
+import {DatePicker} from '@mui/x-date-pickers/DatePicker';
+import dayjs from "dayjs";
+import {DATE_FORMAT, dateToString, DateType} from "@/utilities/date.ts";
+import {DateRangePickerTextFieldSlot, DateRangePickerTextFieldSlotProps} from "@/components/molecules/date-range-picker-text-field.tsx";
+import {DatePickerDaySlot, DaySlotCustomProps} from "@/components/atoms/date-picker-day-slot.tsx";
 
-const DATE_FORMAT = 'DD/MM/YYYY';
-
-type DateRangePickerTextFieldSlotProps = TextFieldProps &  {
-  displayedValue: string,
-  onClearClicked: () => void,
-  hasError?: boolean,
-  InputProps: {
-    ref: Ref<HTMLInputElement>,
-    endAdornment: Element,
-  }
-}
-
-const DateRangePickerTextFieldSlot = React.forwardRef(
-  function DateRangePickerTextFieldSlot (props: DateRangePickerTextFieldSlotProps) {
-    return (
-      <TextField
-        color="secondary"
-        id={props.id}
-        label={props.label}
-        error={props.hasError}
-        helperText={props.helperText}
-        fullWidth={props.fullWidth}
-        value={props.displayedValue}
-        onChange={props.onChange}
-        placeholder={props.placeholder}
-        slotProps={{
-          input: {
-            ref: props.InputProps.ref,
-            endAdornment: <>
-              {props.displayedValue && <IconButton
-                aria-label="close"
-                onClick={props.onClearClicked}
-              >
-                <CloseIcon/>
-              </IconButton>}
-              {props.InputProps.endAdornment}
-            </>,
-          }
-        }}
-      />
-    )
-  }
-);
-
-type DaySlotCustomProps = PickersDayProps<any> & {
-  highlightColor: string,
-  dayjsStartDate: Dayjs,
-  dayjsEndDate: Dayjs,
-  bothDatesAreSet: boolean,
-  sx: SxProps<Theme>,
-}
-
-const DaySlot = React.forwardRef(
-  function DaySlot({ highlightColor, dayjsStartDate, dayjsEndDate, bothDatesAreSet, ...props }: DaySlotCustomProps)  {
-    const isStartDate = props.day.isSame(dayjsStartDate, "day");
-    const isEndDate = props.day.isSame(dayjsEndDate, "day");
-    const isWithinPeriod = props.day.isAfter(dayjsStartDate, "day") && props.day.isBefore(dayjsEndDate, "day");
-    const dayHighlighted = props.selected || isEndDate;
-
-    return (
-      <div
-        style={{
-          position: "relative",
-          ...(isWithinPeriod
-            ? {
-              backgroundColor: highlightColor,
-            }
-            : {})
-        }}
-        key={props.day.toString()}
-      >
-        {! dayHighlighted ? "" :
-          <div style={{
-            backgroundColor: highlightColor,
-            width: (bothDatesAreSet) ? "50%" : "",
-            height: "100%",
-            zIndex: 1,
-            position: "absolute",
-            [isStartDate? "right" : "left"]: 0,
-          }}></div>
-        }
-        <PickersDay {...props} color="secondary" selected={dayHighlighted} style={{ zIndex: 2 }} />
-      </div>
-    );
-  }
-);
+type SlotProps = { textField: Partial<DateRangePickerTextFieldSlotProps>, day: Partial<DaySlotCustomProps> };
 
 export interface DateRangePickerProps {
   name?: string;
@@ -106,17 +17,6 @@ export interface DateRangePickerProps {
   onChange: (value: [string, string]) => void,
   value: [string, string],
   error?: boolean,
-}
-
-type DateType = Dayjs | null;
-
-const dateToString = (date?: DateType | string) => {
-  if (typeof date === "string") {
-    return date;
-  }
-
-  const dayjsDate = dayjs(date);
-  return dayjsDate.isValid() ? dayjsDate.format(DATE_FORMAT) : "";
 }
 
 export default function DateRangePicker({ name = "", id = "", label = "", helperText = "", onChange, value, error }: DateRangePickerProps) {
@@ -154,6 +54,23 @@ export default function DateRangePicker({ name = "", id = "", label = "", helper
     setIsOpen(false);
   };
 
+  const slotProps: SlotProps = {
+    textField: {
+      id,
+      hasError: error,
+      helperText,
+      label,
+      fullWidth: true,
+      placeholder: "Start date - end date (inclusive)",
+      displayedValue: ! startDateString && !endDateString ? "" : `${startDateString} - ${endDateString}`,
+      onClearClicked,
+    },
+    day: {
+      bothDatesAreSet: !!startDate && !! endDate,
+      dayjsStartDate,
+      dayjsEndDate,
+    },
+  };
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
@@ -166,34 +83,11 @@ export default function DateRangePicker({ name = "", id = "", label = "", helper
         onOpen={() => setIsOpen(true)}
         onChange={datePickerOnChange}
         closeOnSelect={false}
-        slotProps={{
-          textField: {
-            id,
-            hasError: error,
-            helperText,
-            label,
-            fullWidth: true,
-            placeholder: "Start date - end date (inclusive)",
-            displayedValue: ! startDateString && !endDateString ? "" : `${startDateString} - ${endDateString}`,
-            onClearClicked,
-          },
-          day: {
-            highlightColor: theme.palette.action.disabled,
-            bothDatesAreSet: !!startDate && !! endDate,
-            dayjsStartDate,
-            dayjsEndDate,
-            sx: {
-              "&.MuiPickersDay-root.Mui-selected": {
-                backgroundColor: theme.palette.secondary.main,
-                color: theme.palette.secondary.light,
-              },
-            } as any
-          },
-        } as { textField: DateRangePickerTextFieldSlotProps, day: DaySlotCustomProps }}
         slots={{
           textField: DateRangePickerTextFieldSlot,
-          day: DaySlot as any
+          day: DatePickerDaySlot as any
         }}
+        slotProps={slotProps}
       />
     </LocalizationProvider>
   );
