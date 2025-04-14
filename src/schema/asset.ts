@@ -20,6 +20,7 @@ export const DATA_OFFER_TYPE = "dataSourceAvailability";
 export const DATA_OFFER_CONTACT_EMAIL = "contactEmail";
 export const DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT = "contactPreferredEmailSubject";
 export const DATA_OFFER_PUBLISH_MODE = "publishMode";
+export const DATA_OFFER_CONSTRAINTS = "constraints";
 
 export const ASSET_ADVANCED_INFO_DATA_CATEGORY = "dataCategory";
 export const ASSET_ADVANCED_INFO_DATA_SUBCATEGORY = "dataSubcategory";
@@ -79,6 +80,7 @@ export const defaultCreateAssetFormData = {
     [ASSET_PUBLISHER]: "",
     [ASSET_STANDARD_LICENSE]: "",
     [DATA_OFFER_PUBLISH_MODE]: "",
+    [DATA_OFFER_CONSTRAINTS]: [] as any[],
   },
   advancedInfo: {
     [ASSET_ADVANCED_INFO_DATA_CATEGORY]: "",

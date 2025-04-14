@@ -8,7 +8,7 @@ import {
   computeRequiredDataOfferAddressProperties, CreateAssetAdvancedInfoFormData,
   CreateAssetDataAddressFormData,
   CreateAssetFormData,
-  CreateAssetPropertiesFormData, DATA_OFFER_PUBLISH_MODE, DATA_OFFER_TYPE,
+  CreateAssetPropertiesFormData, DATA_OFFER_CONSTRAINTS, DATA_OFFER_PUBLISH_MODE, DATA_OFFER_TYPE,
   defaultCreateAssetFormData, REQUIRED_ADVANCED_INFO,
   REQUIRED_PROPERTIES
 } from "@/schema/asset.ts";
@@ -46,7 +46,7 @@ import {AssetPublisher} from "@/components/molecules/asset-publisher.tsx";
 import {AssetStandardLicense} from "@/components/molecules/asset-standard-license.tsx";
 import {AssetConditionsForUse} from "@/components/molecules/asset-conditions-for-use.tsx";
 import {AssetTemporalCoverage} from "@/components/molecules/asset-temporal-coverage.tsx";
-import PolicyExpression from "@/components/molecules/policy-expression.tsx";
+import PolicyExpression from "@/components/organisms/policy-expression.tsx";
 
 export default function CreateDataOfferForm() {
   const { push, connector } = useConnectorDashboardState();
@@ -167,227 +167,9 @@ export default function CreateDataOfferForm() {
       getFormDataToSubmit={() => assetFormDataToSubmitData(formData)}
       onFailure={onFormSubmitFail}
     >
-      <div className="flex flex-col gap-y-5">
-        <div className="grid sm:grid-cols-3 gap-2 sm:gap-6">
-          <div className="sm:col-span-1">
-            <label
-              htmlFor="id"
-              className="inline-block text-sm text-black mt-2.5"
-            >
-              <Typography variant="h6">
-                <T string="dataOffer.new.dataOfferTypeTitle"/>
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                <T string="dataOffer.new.dataOfferTypeDescription"/>
-              </Typography>
-            </label>
-          </div>
-          <div className="sm:col-span-2 flex flex-col gap-6">
-            <RadioButtonsGroup
-              name={DATA_OFFER_TYPE}
-              id="data-offer-type"
-              label={<T string="dataOffer.new.type"/>}
-              defaultValue={DATA_OFFER_TYPE_ON_REQUEST.value}
-              options={DATA_OFFER_TYPES}
-              onChange={(value) => dataAddressFormOnChange({...formData.dataAddress, [DATA_OFFER_TYPE]: value})}
-            />
-            {dataOfferTypeIsDataSource ?
-              <AssetCreateFormDataAddressStep
-                translator={translator}
-                formData={formData.dataAddress}
-                onChange={dataAddressFormOnChange}
-                errors={errors.dataAddress}
-                methodAlwaysShowing
-              /> :
-              <AssetContactEmailAndSubject
-                translator={translator}
-                formData={formData.dataAddress}
-                onChange={dataAddressFormOnChange}
-                errors={errors.dataAddress}
-              />}
-          </div>
-        </div>
+      <div className="flex flex-col gap-y-12">
 
-        <Divider/>
-
-        <div className="grid sm:grid-cols-3 gap-2 sm:gap-6">
-          <div className="sm:col-span-1">
-            <label
-              className="inline-block text-sm text-black mt-2.5"
-            >
-              <Typography variant="h6">
-                <T string="dataOffer.new.dataOfferGeneralInfoTitle"/>
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                <T string="dataOffer.new.dataOfferGeneralInfoDescription"/>
-              </Typography>
-            </label>
-          </div>
-          <div className="sm:col-span-2 flex flex-col gap-6">
-            <div>
-              <label
-                htmlFor="properties-title"
-                className="inline-block text-sm text-black font-medium mb-2"
-              >
-                <T string="assets.new.fieldTitle"/>
-              </label>
-              <AssetTitle
-                formData={formData.properties}
-                errors={errors.properties}
-                onChange={generalInfoFormOnChange}
-                translator={translator}
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="properties-id"
-                className="inline-block text-sm text-black font-medium mb-2"
-              >
-                <T string="assets.new.fieldId"/>
-              </label>
-              <AssetId
-                formData={formData.properties}
-                errors={errors.properties}
-                onChange={generalInfoFormOnChange}
-                translator={translator}
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="properties-description"
-                className="inline-block text-sm text-black font-medium mb-2"
-              >
-                <T string="assets.new.fieldDescription"/>
-              </label>
-              <AssetDescription
-                formData={formData.properties}
-                errors={errors.properties}
-                onChange={generalInfoFormOnChange}
-                translator={translator}
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="properties-keywords"
-                className="inline-block text-sm text-black font-medium mb-2"
-              >
-                <T string="assets.new.fieldKeywords"/>
-              </label>
-              <AssetKeywords
-                formData={formData.properties}
-                errors={errors.properties}
-                onChange={generalInfoFormOnChange}
-                translator={translator}
-              />
-            </div>
-
-            <FormControlLabel
-              label={<T string="dataOffer.new.showAdvancedFields"/>}
-              control={
-                <Checkbox
-                  color="secondary"
-                  checked={showAdvancedFields}
-                  onChange={() => setShowAdvancedFields((value) => !value)}
-                />
-              }
-            />
-
-            {!showAdvancedFields ? "" : <>
-              <div>
-                <label
-                  htmlFor="properties-version"
-                  className="inline-block text-sm text-black font-medium mb-2"
-                >
-                  <T string="assets.new.fieldVersion"/>
-                </label>
-                <AssetVersion
-                  formData={formData.properties}
-                  errors={errors.properties}
-                  onChange={generalInfoFormOnChange}
-                  translator={translator}
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="properties-language"
-                  className="inline-block text-sm text-black font-medium mb-2"
-                >
-                  <T string="assets.new.fieldLanguage"/>
-                </label>
-                <AssetLanguage
-                  formData={formData.properties}
-                  errors={errors.properties}
-                  onChange={generalInfoFormOnChange}
-                />
-              </div>
-            </>}
-          </div>
-        </div>
-
-        <Divider/>
-
-        <div className="grid sm:grid-cols-3 gap-2 sm:gap-6">
-          <div className="sm:col-span-1">
-            <label
-              htmlFor="id"
-              className="inline-block text-sm text-black mt-2.5"
-            >
-              <Typography variant="h6">
-                <T string="dataOffer.new.dataOfferMobilityInfoTitle"/>
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                <T string="dataOffer.new.dataOfferMobilityInfoDescription"/>
-              </Typography>
-            </label>
-          </div>
-          <div className="sm:col-span-2 flex flex-col gap-6">
-            <AssetDataCategoryAndSubcategory
-              translator={translator}
-              formData={formData.advancedInfo}
-              onChange={advancedInfoFormOnChange}
-              errors={errors.advancedInfo}
-            />
-
-            {! showAdvancedFields ? "" : <>
-              <div>
-                <label
-                  htmlFor="advanced-info-geo-reference-method"
-                  className="inline-block text-sm text-black font-medium mb-2"
-                >
-                  <T string="assets.new.fieldAdvancedInfoTransportMode"/>
-                </label>
-                <AssetTransportMode
-                  translator={translator}
-                  formData={formData.advancedInfo}
-                  onChange={advancedInfoFormOnChange}
-                  errors={errors.advancedInfo}
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="advanced-data-model"
-                  className="inline-block text-sm text-black font-medium mb-2"
-                >
-                  <T string="assets.new.fieldAdvancedInfoDataModel"/>
-                </label>
-                <AssetDataModel
-                  translator={translator}
-                  formData={formData.advancedInfo}
-                  onChange={advancedInfoFormOnChange}
-                  errors={errors.advancedInfo}
-                />
-              </div>
-            </>}
-          </div>
-        </div>
-
-        {!showAdvancedFields ? "" : <>
-
-          <Divider/>
-
+        <div className="flex flex-col gap-y-5 ">
           <div className="grid sm:grid-cols-3 gap-2 sm:gap-6">
             <div className="sm:col-span-1">
               <label
@@ -395,22 +177,63 @@ export default function CreateDataOfferForm() {
                 className="inline-block text-sm text-black mt-2.5"
               >
                 <Typography variant="h6">
-                  <T string="dataOffer.new.dataOfferDocumentationTitle"/>
+                  <T string="dataOffer.new.dataOfferTypeTitle"/>
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
-                  <T string="dataOffer.new.dataOfferDocumentationDescription"/>
+                  <T string="dataOffer.new.dataOfferTypeDescription"/>
+                </Typography>
+              </label>
+            </div>
+            <div className="sm:col-span-2 flex flex-col gap-6">
+              <RadioButtonsGroup
+                name={DATA_OFFER_TYPE}
+                id="data-offer-type"
+                label={<T string="dataOffer.new.type"/>}
+                defaultValue={DATA_OFFER_TYPE_ON_REQUEST.value}
+                options={DATA_OFFER_TYPES}
+                onChange={(value) => dataAddressFormOnChange({...formData.dataAddress, [DATA_OFFER_TYPE]: value})}
+              />
+              {dataOfferTypeIsDataSource ?
+                <AssetCreateFormDataAddressStep
+                  translator={translator}
+                  formData={formData.dataAddress}
+                  onChange={dataAddressFormOnChange}
+                  errors={errors.dataAddress}
+                  methodAlwaysShowing
+                /> :
+                <AssetContactEmailAndSubject
+                  translator={translator}
+                  formData={formData.dataAddress}
+                  onChange={dataAddressFormOnChange}
+                  errors={errors.dataAddress}
+                />}
+            </div>
+          </div>
+
+          <Divider/>
+
+          <div className="grid sm:grid-cols-3 gap-2 sm:gap-6">
+            <div className="sm:col-span-1">
+              <label
+                className="inline-block text-sm text-black mt-2.5"
+              >
+                <Typography variant="h6">
+                  <T string="dataOffer.new.dataOfferGeneralInfoTitle"/>
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  <T string="dataOffer.new.dataOfferGeneralInfoDescription"/>
                 </Typography>
               </label>
             </div>
             <div className="sm:col-span-2 flex flex-col gap-6">
               <div>
                 <label
-                  htmlFor="advanced-data-model"
+                  htmlFor="properties-title"
                   className="inline-block text-sm text-black font-medium mb-2"
                 >
-                  <T string="assets.new.fieldAdvancedInfoDataModel"/>
+                  <T string="assets.new.fieldTitle"/>
                 </label>
-                <AssetEndpointDocumentation
+                <AssetTitle
                   formData={formData.properties}
                   errors={errors.properties}
                   onChange={generalInfoFormOnChange}
@@ -419,30 +242,90 @@ export default function CreateDataOfferForm() {
               </div>
 
               <div>
-                <AssetContentType
+                <label
+                  htmlFor="properties-id"
+                  className="inline-block text-sm text-black font-medium mb-2"
+                >
+                  <T string="assets.new.fieldId"/>
+                </label>
+                <AssetId
                   formData={formData.properties}
                   errors={errors.properties}
                   onChange={generalInfoFormOnChange}
+                  translator={translator}
                 />
               </div>
 
               <div>
-                <AssetDataSamples
+                <label
+                  htmlFor="properties-description"
+                  className="inline-block text-sm text-black font-medium mb-2"
+                >
+                  <T string="assets.new.fieldDescription"/>
+                </label>
+                <AssetDescription
+                  formData={formData.properties}
+                  errors={errors.properties}
+                  onChange={generalInfoFormOnChange}
                   translator={translator}
-                  formData={formData.advancedInfo}
-                  onChange={advancedInfoFormOnChange}
-                  errors={errors.advancedInfo}
                 />
               </div>
 
               <div>
-                <AssetReferenceFileUrls
+                <label
+                  htmlFor="properties-keywords"
+                  className="inline-block text-sm text-black font-medium mb-2"
+                >
+                  <T string="assets.new.fieldKeywords"/>
+                </label>
+                <AssetKeywords
+                  formData={formData.properties}
+                  errors={errors.properties}
+                  onChange={generalInfoFormOnChange}
                   translator={translator}
-                  formData={formData.advancedInfo}
-                  onChange={advancedInfoFormOnChange}
-                  errors={errors.advancedInfo}
                 />
               </div>
+
+              <FormControlLabel
+                label={<T string="dataOffer.new.showAdvancedFields"/>}
+                control={
+                  <Checkbox
+                    color="secondary"
+                    checked={showAdvancedFields}
+                    onChange={() => setShowAdvancedFields((value) => !value)}
+                  />
+                }
+              />
+
+              {!showAdvancedFields ? "" : <>
+                <div>
+                  <label
+                    htmlFor="properties-version"
+                    className="inline-block text-sm text-black font-medium mb-2"
+                  >
+                    <T string="assets.new.fieldVersion"/>
+                  </label>
+                  <AssetVersion
+                    formData={formData.properties}
+                    errors={errors.properties}
+                    onChange={generalInfoFormOnChange}
+                    translator={translator}
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="properties-language"
+                    className="inline-block text-sm text-black font-medium mb-2"
+                  >
+                    <T string="assets.new.fieldLanguage"/>
+                  </label>
+                  <AssetLanguage
+                    formData={formData.properties}
+                    errors={errors.properties}
+                    onChange={generalInfoFormOnChange}
+                  />
+                </div>
+              </>}
             </div>
           </div>
 
@@ -455,76 +338,275 @@ export default function CreateDataOfferForm() {
                 className="inline-block text-sm text-black mt-2.5"
               >
                 <Typography variant="h6">
-                <T string="dataOffer.new.dataOfferLocationTimeTitle"/>
+                  <T string="dataOffer.new.dataOfferMobilityInfoTitle"/>
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
-                  <T string="dataOffer.new.dataOfferLocationTimeDescription"/>
+                  <T string="dataOffer.new.dataOfferMobilityInfoDescription"/>
                 </Typography>
               </label>
             </div>
             <div className="sm:col-span-2 flex flex-col gap-6">
-              <AssetTemporalCoverage
+              <AssetDataCategoryAndSubcategory
                 translator={translator}
                 formData={formData.advancedInfo}
                 onChange={advancedInfoFormOnChange}
                 errors={errors.advancedInfo}
               />
 
-              <div>
-                <label
-                  htmlFor="advanced-data-update-frequency"
-                  className="inline-block text-sm text-black font-medium mb-2"
-                >
-                  <T string="assets.new.fieldAdvancedDataUpdateFrequency"/>
-                </label>
-                <AssetDataUpdateFrequency
-                  translator={translator}
-                  formData={formData.advancedInfo}
-                  onChange={advancedInfoFormOnChange}
-                  errors={errors.advancedInfo}
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="advanced-data-update-frequency"
-                  className="inline-block text-sm text-black font-medium mb-2"
-                >
-                  <T string="assets.new.fieldAdvancedInfoGeoReferenceMethod"/>
-                </label>
-                <AssetGeoReferenceMethod
-                  translator={translator}
-                  formData={formData.advancedInfo}
-                  onChange={advancedInfoFormOnChange}
-                  errors={errors.advancedInfo}
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="advanced-geo-location"
-                  className="inline-block text-sm text-black font-medium mb-2"
-                >
-                  <T string="assets.new.fieldAdvancedGeoLocation"/>
-                </label>
-                <AssetGeoLocations
-                  translator={translator}
-                  formData={formData.advancedInfo}
-                  onChange={advancedInfoFormOnChange}
-                  errors={errors.advancedInfo}
-                />
-              </div>
-
-              <div>
-                <AssetNutsLocations
-                  translator={translator}
-                  formData={formData.advancedInfo}
-                  onChange={advancedInfoFormOnChange}
-                  errors={errors.advancedInfo}
-                />
-              </div>
+              {! showAdvancedFields ? "" : <>
+                <div>
+                  <label
+                    htmlFor="advanced-info-geo-reference-method"
+                    className="inline-block text-sm text-black font-medium mb-2"
+                  >
+                    <T string="assets.new.fieldAdvancedInfoTransportMode"/>
+                  </label>
+                  <AssetTransportMode
+                    translator={translator}
+                    formData={formData.advancedInfo}
+                    onChange={advancedInfoFormOnChange}
+                    errors={errors.advancedInfo}
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="advanced-data-model"
+                    className="inline-block text-sm text-black font-medium mb-2"
+                  >
+                    <T string="assets.new.fieldAdvancedInfoDataModel"/>
+                  </label>
+                  <AssetDataModel
+                    translator={translator}
+                    formData={formData.advancedInfo}
+                    onChange={advancedInfoFormOnChange}
+                    errors={errors.advancedInfo}
+                  />
+                </div>
+              </>}
             </div>
           </div>
+
+          {!showAdvancedFields ? "" : <>
+
+            <Divider/>
+
+            <div className="grid sm:grid-cols-3 gap-2 sm:gap-6">
+              <div className="sm:col-span-1">
+                <label
+                  htmlFor="id"
+                  className="inline-block text-sm text-black mt-2.5"
+                >
+                  <Typography variant="h6">
+                    <T string="dataOffer.new.dataOfferDocumentationTitle"/>
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    <T string="dataOffer.new.dataOfferDocumentationDescription"/>
+                  </Typography>
+                </label>
+              </div>
+              <div className="sm:col-span-2 flex flex-col gap-6">
+                <div>
+                  <label
+                    htmlFor="advanced-data-model"
+                    className="inline-block text-sm text-black font-medium mb-2"
+                  >
+                    <T string="assets.new.fieldAdvancedInfoDataModel"/>
+                  </label>
+                  <AssetEndpointDocumentation
+                    formData={formData.properties}
+                    errors={errors.properties}
+                    onChange={generalInfoFormOnChange}
+                    translator={translator}
+                  />
+                </div>
+
+                <div>
+                  <AssetContentType
+                    formData={formData.properties}
+                    errors={errors.properties}
+                    onChange={generalInfoFormOnChange}
+                  />
+                </div>
+
+                <div>
+                  <AssetDataSamples
+                    translator={translator}
+                    formData={formData.advancedInfo}
+                    onChange={advancedInfoFormOnChange}
+                    errors={errors.advancedInfo}
+                  />
+                </div>
+
+                <div>
+                  <AssetReferenceFileUrls
+                    translator={translator}
+                    formData={formData.advancedInfo}
+                    onChange={advancedInfoFormOnChange}
+                    errors={errors.advancedInfo}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <Divider/>
+
+            <div className="grid sm:grid-cols-3 gap-2 sm:gap-6">
+              <div className="sm:col-span-1">
+                <label
+                  htmlFor="id"
+                  className="inline-block text-sm text-black mt-2.5"
+                >
+                  <Typography variant="h6">
+                  <T string="dataOffer.new.dataOfferLocationTimeTitle"/>
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    <T string="dataOffer.new.dataOfferLocationTimeDescription"/>
+                  </Typography>
+                </label>
+              </div>
+              <div className="sm:col-span-2 flex flex-col gap-6">
+                <AssetTemporalCoverage
+                  translator={translator}
+                  formData={formData.advancedInfo}
+                  onChange={advancedInfoFormOnChange}
+                  errors={errors.advancedInfo}
+                />
+
+                <div>
+                  <label
+                    htmlFor="advanced-data-update-frequency"
+                    className="inline-block text-sm text-black font-medium mb-2"
+                  >
+                    <T string="assets.new.fieldAdvancedDataUpdateFrequency"/>
+                  </label>
+                  <AssetDataUpdateFrequency
+                    translator={translator}
+                    formData={formData.advancedInfo}
+                    onChange={advancedInfoFormOnChange}
+                    errors={errors.advancedInfo}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="advanced-data-update-frequency"
+                    className="inline-block text-sm text-black font-medium mb-2"
+                  >
+                    <T string="assets.new.fieldAdvancedInfoGeoReferenceMethod"/>
+                  </label>
+                  <AssetGeoReferenceMethod
+                    translator={translator}
+                    formData={formData.advancedInfo}
+                    onChange={advancedInfoFormOnChange}
+                    errors={errors.advancedInfo}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="advanced-geo-location"
+                    className="inline-block text-sm text-black font-medium mb-2"
+                  >
+                    <T string="assets.new.fieldAdvancedGeoLocation"/>
+                  </label>
+                  <AssetGeoLocations
+                    translator={translator}
+                    formData={formData.advancedInfo}
+                    onChange={advancedInfoFormOnChange}
+                    errors={errors.advancedInfo}
+                  />
+                </div>
+
+                <div>
+                  <AssetNutsLocations
+                    translator={translator}
+                    formData={formData.advancedInfo}
+                    onChange={advancedInfoFormOnChange}
+                    errors={errors.advancedInfo}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <Divider/>
+
+            <div className="grid sm:grid-cols-3 gap-2 sm:gap-6">
+              <div className="sm:col-span-1">
+                <label
+                  htmlFor="id"
+                  className="inline-block text-sm text-black mt-2.5"
+                >
+                  <Typography variant="h6">
+                    <T string="dataOffer.new.dataOfferLegalInfoTitle"/>
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    <T string="dataOffer.new.dataOfferLegalInfoDescription"/>
+                  </Typography>
+                </label>
+              </div>
+              <div className="sm:col-span-2 flex flex-col gap-6">
+                <div>
+                  <label
+                    htmlFor="advanced-geo-location"
+                    className="inline-block text-sm text-black font-medium mb-2"
+                  >
+                    <T string="assets.new.fieldAdvancedInfoSovereignLegalName"/>
+                  </label>
+                  <AssetSovereignLegalName
+                    translator={translator}
+                    formData={formData.advancedInfo}
+                    onChange={advancedInfoFormOnChange}
+                    errors={errors.advancedInfo}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="advanced-geo-location"
+                    className="inline-block text-sm text-black font-medium mb-2"
+                  >
+                    <T string="assets.new.fieldPublisher"/>
+                  </label>
+                  <AssetPublisher
+                    translator={translator}
+                    formData={formData.properties}
+                    onChange={generalInfoFormOnChange}
+                    errors={errors.properties}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="advanced-geo-location"
+                    className="inline-block text-sm text-black font-medium mb-2"
+                  >
+                    <T string="assets.new.fieldStandardLicense"/>
+                  </label>
+                  <AssetStandardLicense
+                    translator={translator}
+                    formData={formData.properties}
+                    onChange={generalInfoFormOnChange}
+                    errors={errors.properties}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="advanced-geo-location"
+                    className="inline-block text-sm text-black font-medium mb-2"
+                  >
+                    <T string="assets.new.fieldAdvancedInfoConditionsForUse"/>
+                  </label>
+                  <AssetConditionsForUse
+                    translator={translator}
+                    formData={formData.advancedInfo}
+                    onChange={advancedInfoFormOnChange}
+                    errors={errors.properties}
+                  />
+                </div>
+              </div>
+            </div>
+          </>}
 
           <Divider/>
 
@@ -535,122 +617,58 @@ export default function CreateDataOfferForm() {
                 className="inline-block text-sm text-black mt-2.5"
               >
                 <Typography variant="h6">
-                  <T string="dataOffer.new.dataOfferLegalInfoTitle"/>
+                  <T string="dataOffer.new.dataOfferPublishingTitle"/>
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
-                  <T string="dataOffer.new.dataOfferLegalInfoDescription"/>
+                  <T string="dataOffer.new.dataOfferPublishingDescription"/>
                 </Typography>
               </label>
             </div>
             <div className="sm:col-span-2 flex flex-col gap-6">
-              <div>
+              <RadioButtonsGroup
+                name={DATA_OFFER_PUBLISH_MODE}
+                id="data-offer-type"
+                label={<T string="dataOffer.new.type"/>}
+                defaultValue={PUBLISH_MODE_PUBLISH_UNRESTRICTED.value}
+                options={PUBLISH_MODES}
+                onChange={(value) => generalInfoFormOnChange({
+                  ...formData.properties,
+                  [DATA_OFFER_PUBLISH_MODE]: value
+                })}
+              />
+              {formData.properties[DATA_OFFER_PUBLISH_MODE] !== PUBLISH_MODE_PUBLISH_RESTRICTED.value ? "" : <div>
                 <label
-                  htmlFor="advanced-geo-location"
                   className="inline-block text-sm text-black font-medium mb-2"
                 >
-                  <T string="assets.new.fieldAdvancedInfoSovereignLegalName"/>
+                  <T string="dataOffer.new.policyExpression"/>
                 </label>
-                <AssetSovereignLegalName
-                  translator={translator}
-                  formData={formData.advancedInfo}
-                  onChange={advancedInfoFormOnChange}
-                  errors={errors.advancedInfo}
+                <PolicyExpression
+                  value={formData.properties[DATA_OFFER_CONSTRAINTS]}
+                  onChange={(value) => generalInfoFormOnChange({
+                    ...formData.properties,
+                    [DATA_OFFER_CONSTRAINTS]: value
+                  })}
                 />
               </div>
-
-              <div>
-                <label
-                  htmlFor="advanced-geo-location"
-                  className="inline-block text-sm text-black font-medium mb-2"
-                >
-                  <T string="assets.new.fieldPublisher"/>
-                </label>
-                <AssetPublisher
-                  translator={translator}
-                  formData={formData.properties}
-                  onChange={generalInfoFormOnChange}
-                  errors={errors.properties}
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="advanced-geo-location"
-                  className="inline-block text-sm text-black font-medium mb-2"
-                >
-                  <T string="assets.new.fieldStandardLicense"/>
-                </label>
-                <AssetStandardLicense
-                  translator={translator}
-                  formData={formData.properties}
-                  onChange={generalInfoFormOnChange}
-                  errors={errors.properties}
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="advanced-geo-location"
-                  className="inline-block text-sm text-black font-medium mb-2"
-                >
-                  <T string="assets.new.fieldAdvancedInfoConditionsForUse"/>
-                </label>
-                <AssetConditionsForUse
-                  translator={translator}
-                  formData={formData.advancedInfo}
-                  onChange={advancedInfoFormOnChange}
-                  errors={errors.properties}
-                />
-              </div>
+              }
             </div>
           </div>
-        </>}
+        </div>
 
-        <Divider/>
+        <Divider />
 
-        <div className="grid sm:grid-cols-3 gap-2 sm:gap-6">
-          <div className="sm:col-span-1">
-            <label
-              htmlFor="id"
-              className="inline-block text-sm text-black mt-2.5"
-            >
-              <Typography variant="h6">
-                <T string="dataOffer.new.dataOfferPublishingTitle"/>
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                <T string="dataOffer.new.dataOfferPublishingDescription"/>
-              </Typography>
-            </label>
-          </div>
-          <div className="sm:col-span-2 flex flex-col gap-6">
-            <RadioButtonsGroup
-              name={DATA_OFFER_PUBLISH_MODE}
-              id="data-offer-type"
-              label={<T string="dataOffer.new.type"/>}
-              defaultValue={PUBLISH_MODE_PUBLISH_UNRESTRICTED.value}
-              options={PUBLISH_MODES}
-              onChange={(value) => generalInfoFormOnChange({
-                ...formData.properties,
-                [DATA_OFFER_PUBLISH_MODE]: value
-              })}
-            />
-            {formData.properties[DATA_OFFER_PUBLISH_MODE] !== PUBLISH_MODE_PUBLISH_RESTRICTED.value ? "" :
-              <PolicyExpression />
-            }
-          </div>
+        <div className="flex justify-end px-6 py-4">
+          <Button
+            variant="contained"
+            ref={submitButtonRef}
+            onClick={onSubmit}
+            disabled={cannotSubmit()}
+          >
+          <T string="dataOffer.new.publish"/>
+          </Button>
         </div>
       </div>
 
-      <div className="flex justify-end px-6 py-4">
-        <Button
-          variant="contained"
-          ref={submitButtonRef}
-          onClick={onSubmit}
-          disabled={cannotSubmit()}
-        >
-          <T string="dataOffer.new.publish"/>
-        </Button>
-      </div>
     </AssetForm>
   );
 }

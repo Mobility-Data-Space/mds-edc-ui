@@ -16,6 +16,10 @@ export const en = {
         production: "Production",
       },
     },
+    common: {
+      add: "Add",
+      cancel: "Cancel",
+    },
     assets: {
       title: "My assets",
       description: "Assets shared by my connector",
@@ -197,6 +201,8 @@ export const en = {
         policyExpressionOrTooltip: "Disjunction of several expressions. Evaluates to true if and only if at least one child expression is true",
         policyExpressionXone: "XONE",
         policyExpressionXoneTooltip: "XONE operation. Evaluates to true if and only if exactly one child expression is true",
+        dataOfferTimespanRestriction: "Timespan Restriction",
+        dataOfferDateRange: "Date Range",
       },
     },
     "contract-definitions": {
