@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Image from 'next/image'
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -53,67 +54,65 @@ const RouteNode = ({ href, title, icon }: RouteProps) => {
   );
 }
 
-
 const routes: ReactNode[] = [
   <RouteNode
     key="overview"
     href="/"
     title="Overview"
-    icon={<Gauge className="w-6 h-6" />}
+    icon={<Gauge className="size-6" />}
   />,
   <RouteNode
     key="assets"
     href="/assets"
     title="Assets"
-    icon={<Boxes className="w-6 h-6" />}
+    icon={<Boxes className="size-6" />}
   />,
   <RouteNode
     key="policy-definitions"
     href="/policy-definitions"
     title="Policy definitions"
-    icon={<Ruler className="w-6 h-6" />}
+    icon={<Ruler className="size-6" />}
   />,
   <RouteNode
     key="contract-definitions"
     href="/contract-definitions"
     title="Contract definitions"
-    icon={<ReceiptText className="w-6 h-6" />}
+    icon={<ReceiptText className="size-6" />}
   />,
   <Divider key="devider-1" />,
   <RouteNode
     key="create-asset"
     href="/create-asset"
     title="Data offer"
-    icon={<PostAddIcon className="w-6 h-6" />}
+    icon={<PostAddIcon className="size-6" />}
   />,
   <RouteNode
     key="/catalog"
     href="/catalog"
     title="Catalog"
-    icon={<Store className="w-6 h-6" />}
+    icon={<Store className="size-6" />}
   />,
   <RouteNode
     key="contract-agreements"
     href="/contract-agreements"
     title="Contract agreements"
-    icon={<Handshake className="w-6 h-6" />}
+    icon={<Handshake className="size-6" />}
   />,
   <RouteNode
     key="contract-negotiations"
     href="/contract-negotiations"
     title="Contract negotiations"
-    icon={<SmartphoneNfc className="w-6 h-6" />}
+    icon={<SmartphoneNfc className="size-6" />}
   />,
   <RouteNode
     key="transfer-processes"
     href="/transfer-processes"
     title="Transfer processes"
-    icon={<Truck className="w-6 h-6" />}
+    icon={<Truck className="size-6" />}
   />,
 ];
 
 export default function SideDrawer(props: Props) {
-  const { translator } = useTranslator();
   const { title, children } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
@@ -136,7 +135,7 @@ export default function SideDrawer(props: Props) {
   const drawer = (
     <div>
       <Toolbar >
-        <img src="/mds_logo.svg" alt="Logo" height="57" width="70%" className="my-2" />
+        <Image src="/mds_logo.svg" alt="Logo" height="57" width="0" className="my-2" style={{ width: "70%" }} />
       </Toolbar>
       <Divider />
       <List>
@@ -152,8 +151,8 @@ export default function SideDrawer(props: Props) {
       <AppBar
         position="fixed"
         sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
+          width: { md: `calc(100% - ${drawerWidth}px)` },
+          ml: { md: `${drawerWidth}px` },
         }}
       >
         <Toolbar className="h-[73px]">
@@ -162,7 +161,7 @@ export default function SideDrawer(props: Props) {
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' }, }}
+            sx={{ mr: 2, display: { md: 'none' }, }}
           >
             <MenuIcon />
           </IconButton>
@@ -173,7 +172,7 @@ export default function SideDrawer(props: Props) {
       </AppBar>
       <Box
         component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+        sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
         aria-label="mailbox folders"
       >
         <Drawer
@@ -182,7 +181,7 @@ export default function SideDrawer(props: Props) {
           onTransitionEnd={handleDrawerTransitionEnd}
           onClose={handleDrawerClose}
           sx={{
-            display: { xs: 'block', sm: 'none' },
+            display: { xs: 'block', md: 'none' },
             '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
           }}
           slotProps={{
@@ -196,7 +195,7 @@ export default function SideDrawer(props: Props) {
         <Drawer
           variant="permanent"
           sx={{
-            display: { xs: 'none', sm: 'block' },
+            display: { xs: 'none', md: 'block' },
             '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
           }}
           open
@@ -206,7 +205,7 @@ export default function SideDrawer(props: Props) {
       </Box>
       <Box
         component="main"
-        sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+        sx={{ flexGrow: 1, p: 3, width: { md: `calc(100% - ${drawerWidth}px)` } }}
       >
         <Toolbar />
         {children}
