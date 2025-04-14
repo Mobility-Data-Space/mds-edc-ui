@@ -1,5 +1,5 @@
 import { createInstance } from "i18next";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
 import React, {
   createContext,
@@ -52,10 +52,10 @@ interface TranslateProps {
 
 export function Translate(
   { string, global = false }: TranslateProps,
-): JSX.Element {
+): string {
   const { translator, globalTranslator } = useTranslator();
   const t = global ? globalTranslator : translator;
-  return <span suppressHydrationWarning>{t(string)}</span>;
+  return t(string);
 }
 
 export const T = Translate;
