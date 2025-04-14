@@ -231,6 +231,7 @@ export default function CreateAssetForm() {
 
         <div className="flex justify-end gap-x-2 px-6 py-4">
           <MuiButton
+            color="secondary"
             onClick={() => push("/assets")}
           >
             <T string="buttonCancel"/>
