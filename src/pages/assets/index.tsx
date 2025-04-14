@@ -34,6 +34,7 @@ export default function AssetListPage() {
         <AssetsList managementUrl={connector.managementUrl}>
           <div className="flex justify-end py-4">
             <MuiButton
+              data-testid="create-asset-modal-opener"
               variant="contained"
               className="gap-x-2 font-medium"
               onClick={() => setIsModalOpen(true)}

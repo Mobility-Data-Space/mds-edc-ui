@@ -29,6 +29,7 @@ export function AssetContactEmailAndSubject({ translator, formData, onChange, er
         <Input
           name={DATA_OFFER_CONTACT_EMAIL}
           id="data-offer-contact-email"
+          data-testid="data-offer-contact-email"
           placeholder={translator("dataOffer.new.contactEmail")}
           type="email"
           tooltip={translator("dataOffer.new.contactEmailTooltip")}
@@ -47,6 +48,7 @@ export function AssetContactEmailAndSubject({ translator, formData, onChange, er
         <Input
           name={DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT}
           id="data-offer-contact-preferred-email-subject"
+          data-testid="data-offer-contact-preferred-email-subject"
           placeholder={translator("dataOffer.new.dataOfferContactPreferredEmailSubject")}
           tooltip={translator("dataOffer.new.dataOfferContactPreferredEmailSubjectTooltip")}
           value={formData[DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT]}
