@@ -34,15 +34,16 @@ export interface AssetCreateDataAddressFormStepProps {
   formData: CreateAssetDataAddressFormData,
   onChange: any,
   errors: { [key: string]: boolean },
+  methodAlwaysShowing?: boolean,
 }
 
-export function AssetCreateFormDataAddressStep({ formData, errors, onChange, translator }: AssetCreateDataAddressFormStepProps): JSX.Element {
+export function AssetCreateFormDataAddressStep({ formData, errors, onChange, translator, methodAlwaysShowing = false, }: AssetCreateDataAddressFormStepProps): JSX.Element {
   return (
     <div className="flex flex-col gap-y-5">
       <div className="flex flex-col gap-y-5 items-start">
         <label
           htmlFor="data-address-type"
-          className="block text-sm text-gray-800 mb-1"
+          className="inline-block text-sm text-black font-medium mb-2"
         >
           <T string="assets.new.fieldDataAddressType"/>
         </label>
@@ -76,27 +77,35 @@ export function AssetCreateFormDataAddressStep({ formData, errors, onChange, tra
           <div className="flex flex-col gap-y-5 items-start">
             <label
               htmlFor="data-address-method"
-              className="block text-sm text-gray-800 mb-1"
+              className="inline-block text-sm text-black font-medium mb-2"
             >
               <T string="assets.new.fieldDataAddressMethodAndContentType"/>
             </label>
-            {formData[ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD] ?
-              <FormHelperText>
-                <T string="assets.new.fieldDataAddressHttpProxyMethodHelper" />
-              </FormHelperText> :
-              <MuiSelect
-                name={ASSET_DATA_ADDRESS_METHOD}
-                id="data-address-method"
-                label={translator("assets.new.fieldDataAddressMethod")}
-                options={[
-                  {value: "GET"},
-                  {value: "POST"},
-                ]}
-                error={errors[ASSET_DATA_ADDRESS_METHOD]}
-                value={formData[ASSET_DATA_ADDRESS_METHOD]}
-                onChange={(event) => onChange({ ...formData, [ASSET_DATA_ADDRESS_TYPE]: event.target.value })}
-              />
-            }
+            <div>
+              {methodAlwaysShowing || ! formData[ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD] ?
+                <MuiSelect
+                  name={ASSET_DATA_ADDRESS_METHOD}
+                  id="data-address-method"
+                  label={translator("assets.new.fieldDataAddressMethod")}
+                  options={[
+                    {value: "GET"},
+                    {value: "POST"},
+                  ]}
+                  error={errors[ASSET_DATA_ADDRESS_METHOD]}
+                  value={formData[ASSET_DATA_ADDRESS_METHOD]}
+                  disabled={methodAlwaysShowing && formData[ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD]}
+                  onChange={(event) => onChange({ ...formData, [ASSET_DATA_ADDRESS_TYPE]: event.target.value })}
+                />
+                : ""
+              }
+              {methodAlwaysShowing || formData[ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD] ?
+                <FormHelperText>
+                  <T string="assets.new.fieldDataAddressHttpProxyMethodHelper" />
+                </FormHelperText>
+                : ""
+              }
+            </div>
+
             <RadioButton
               id="data-address-http-proxy-method"
               labelTrue={translator("assets.new.fieldDataAddressHttpProxyMethodTrue")}

@@ -9,19 +9,17 @@ export type RadioButtonProps = {
   onChange: (value: boolean) => void;
   labelTrue: string,
   labelFalse: string
-  trueValueClassName?: string
-  falseValueClassName?: string
 }
 
-export function RadioButton({ id = "", trueValue = true, falseValue = false, value, onChange, labelTrue, labelFalse, trueValueClassName = "text-red-600", falseValueClassName = "" }: RadioButtonProps): JSX.Element {
+export function RadioButton({ id = "", trueValue = true, falseValue = false, value, onChange, labelTrue, labelFalse, }: RadioButtonProps): JSX.Element {
   const valueIsTrue = value === trueValue;
   const onClick = () => {
     return onChange(valueIsTrue ? falseValue : trueValue);
   }
 
   return (
-    <Button id={id} onClick={onClick}>
-      <span className={valueIsTrue ? trueValueClassName : falseValueClassName}>{valueIsTrue ? labelTrue : labelFalse}</span>
+    <Button id={id} onClick={onClick} color={valueIsTrue ? "error" : "secondary"} size="small" >
+      <span className="font-medium text-sm">{valueIsTrue ? labelTrue : labelFalse}</span>
     </Button>
   );
 }

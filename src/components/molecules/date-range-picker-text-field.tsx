@@ -1,0 +1,46 @@
+import React, {Ref} from "react";
+import {IconButton, TextField} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import {TextFieldProps} from "@mui/material/TextField";
+
+export type DateRangePickerTextFieldSlotProps = TextFieldProps & {
+  displayedValue: string,
+  onClearClicked: () => void,
+  hasError?: boolean,
+  InputProps: {
+    ref: Ref<HTMLInputElement>,
+    endAdornment: Element,
+  }
+}
+
+export const DateRangePickerTextFieldSlot = React.forwardRef(
+  function DateRangePickerTextFieldSlot(props: DateRangePickerTextFieldSlotProps) {
+    return (
+      <TextField
+        color="secondary"
+        id={props.id}
+        label={props.label}
+        error={props.hasError}
+        helperText={props.helperText}
+        fullWidth={props.fullWidth}
+        value={props.displayedValue}
+        onChange={props.onChange}
+        placeholder={props.placeholder}
+        slotProps={{
+          input: {
+            ref: props.InputProps.ref,
+            endAdornment: <>
+              {props.displayedValue && <IconButton
+                aria-label="close"
+                onClick={props.onClearClicked}
+              >
+                <CloseIcon/>
+              </IconButton>}
+              {props.InputProps.endAdornment}
+            </>,
+          }
+        }}
+      />
+    )
+  }
+);

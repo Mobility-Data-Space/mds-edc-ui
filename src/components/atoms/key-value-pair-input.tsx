@@ -1,4 +1,4 @@
-import {TextFieldProps} from "@mui/material/TextField/TextField";
+import {TextFieldProps} from "@mui/material/TextField";
 import {Button, FormHelperText, TextField} from "@mui/material";
 import React from "react";
 
@@ -47,6 +47,7 @@ export function KeyValuePairInput({
       <div className={`grid grid-cols-9 gap-x-5`}>
         {valueOnly ? "" :
           <TextField
+            color="secondary"
             className="col-span-2"
             fullWidth
             required
@@ -61,6 +62,7 @@ export function KeyValuePairInput({
           />
         }
         <TextField
+          color="secondary"
           className={valueOnly ? "col-span-8" : "col-span-6"}
           fullWidth
           required={valueOnly}

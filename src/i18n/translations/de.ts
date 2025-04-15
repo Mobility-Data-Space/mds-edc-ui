@@ -20,7 +20,7 @@ export const de = {
       title: "Listen Sie alle Vermögenswerte auf",
       description:
         "Listen Sie alle Assets auf, die auf eigenen Connectors verfügbar sind. Assets sind die gemeinsame Einheit und können auf ein oder mehrere physische Elemente verweisen.",
-      buttonAdd: "Asset erstellen",
+      buttonAdd: "Neues Asset erstellen",
       headingName: "Name",
       headingTitle: "Titel",
       headingDescription: "Beschreibung",
