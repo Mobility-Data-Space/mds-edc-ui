@@ -5,11 +5,12 @@ import { AssetsList } from "@think-it-labs/edc-connector-ui/assets-list";
 import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-state";
 import { usePagination } from "@/hooks/use-pagination";
 import { T } from "@/i18n";
-import { ChevronLeft, ChevronRight, Plus, Search } from "lucide-react";
-import { Modal, Box } from '@mui/material';
+import { ChevronLeft, ChevronRight, PlusCircle } from "lucide-react";
+import { Modal, Box, Button as MuiButton } from '@mui/material';
 
 import {useState} from "react";
 import CreateAssetForm from "@/components/templates/create-asset-form.tsx";
+import SideDrawer from "@/components/organisms/side-drawer.tsx";
 
 export default function AssetListPage() {
   const { push, connector } = useConnectorDashboardState();
@@ -29,30 +30,21 @@ export default function AssetListPage() {
         </Box>
       </Modal>
 
-      <ConnectorDashboard>
+      <SideDrawer title={<T string="assets.title" />}>
         <AssetsList managementUrl={connector.managementUrl}>
-          <ConnectorDashboard.Section>
-            <div className="flex items-center">
-              <div className="flex-1">
-                <ConnectorDashboard.Title>
-                  <T string="assets.title" />
-                </ConnectorDashboard.Title>
-                <ConnectorDashboard.Description>
-                  <T string="assets.description" />
-                </ConnectorDashboard.Description>
-              </div>
-              <div>
-                <button
-                  data-testid="create-asset-modal-opener"
-                  className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-                  onClick={() => setIsModalOpen(true)}
-                >
-                  <Plus className="h-4 w-4" />
-                  <T string="assets.buttonAdd" />
-                </button>
-              </div>
-            </div>
-          </ConnectorDashboard.Section>
+          <div className="flex justify-end py-4">
+            <MuiButton
+              data-testid="create-asset-modal-opener"
+              variant="contained"
+              className="gap-x-2 font-medium"
+              onClick={() => setIsModalOpen(true)}
+            >
+              <PlusCircle className="h-4 w-4" />
+              <T string="assets.buttonAdd" />
+            </MuiButton>
+
+            {/* TODO: move pagination here */}
+          </div>
 
           <Table className="table table-fixed">
             <Table.Head>
@@ -166,7 +158,7 @@ export default function AssetListPage() {
             </div>
           </AssetsList.Loading>
         </AssetsList>
-      </ConnectorDashboard>
+      </SideDrawer>
     </>
   );
 }

@@ -1,16 +1,14 @@
 import React from "react";
 import { IconButton, Tooltip } from "@mui/material";
-import { TextFieldProps } from "@mui/material/TextField/TextField";
+import { TextFieldProps } from "@mui/material/TextField";
 import { InfoOutlined } from '@mui/icons-material';
-import ChipInput from 'material-ui-chip-input'
+import { MuiChipsInput } from 'mui-chips-input'
+
 import FormControl from "@mui/material/FormControl";
 
-const ENTER = 13;
-const COMMA = 188;
-const SEMICOLON = 186;
-const chipKeyCodes = [ENTER, COMMA, SEMICOLON];
+const chipKeyCodes = [",", ";", "Enter"];
 
-export type KeywordsInputProps = TextFieldProps & {
+export type KeywordsInputProps = Omit<TextFieldProps, "onChange"> & {
   error: boolean;
   tooltip?: string,
   label?: string,
@@ -27,23 +25,26 @@ export function KeywordsInput({ tooltip = "", label = "", placeholder = "", erro
 
   return (
     <FormControl fullWidth>
-      <ChipInput
-        newChipKeyCodes={chipKeyCodes}
+      <MuiChipsInput
+        addOnWhichKey={chipKeyCodes}
         fullWidth
         label={label}
-        InputLabelProps={label === "" ? { shrink: true } : {}}
+        color="secondary"
         variant={"outlined"}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        onDelete={onDelete}
         error={error}
-        InputProps={{
-          endAdornment: <Tooltip title={tooltip}>
-            <IconButton classes={{ root: "!-mt-3.5" }}>
-              <InfoOutlined />
-            </IconButton>
-          </Tooltip>
+        slotProps={{
+          inputLabel: (label === "" ? { shrink: true } : {}),
+          input: {
+            classes: { root: "!pr-2.5" },
+            endAdornment: <Tooltip title={tooltip}>
+              <IconButton >
+                <InfoOutlined />
+              </IconButton>
+            </Tooltip>
+          },
         }}
       />
     </FormControl>
