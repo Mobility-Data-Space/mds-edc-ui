@@ -9,14 +9,17 @@ export function Input({ tooltip = "", onChange, value, ...rest }: TextFieldProps
     <TextField
       color="secondary"
       fullWidth
-      slotProps={{ input: {
-        endAdornment: ! tooltip ? "" : <Tooltip title={tooltip}><IconButton><InfoOutlined /></IconButton></Tooltip>
-        },
-      }}
+
       label={rest.label}
       variant="outlined"
       placeholder={rest.placeholder}
       {...rest}
+      slotProps={{
+        input: {
+          endAdornment: ! tooltip ? "" : <Tooltip title={tooltip}><IconButton><InfoOutlined /></IconButton></Tooltip>
+        },
+        ...rest.slotProps
+      }}
       value={value}
       onChange={onChange}
     />
