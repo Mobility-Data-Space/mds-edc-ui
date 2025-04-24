@@ -18,7 +18,8 @@
     "@mui/icons-material": "^7.0.2",
     "@mui/material": "^7.0.2",
     "@mui/x-date-pickers": "^7.28.3",
-    "@think-it-labs/edc-connector-client": "^0.4.0",
+    "@tailwindcss/typography": "^0.5.16",
+    "@think-it-labs/edc-connector-client": "^0.8.0",
     "@think-it-labs/edc-connector-ui": "^0.1.4",
     "clsx": "^2.1.0",
     "date-fns": "2.0.0",
@@ -33,7 +34,10 @@
     "next-runtime-env": "1.x",
     "react": "^18",
     "react-dom": "^18",
-    "react-i18next": "^14.1.0"
+    "react-i18next": "^14.1.0",
+    "react-markdown": "^10.1.0",
+    "rehype-raw": "^7.0.0",
+    "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.51.1",
