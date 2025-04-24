@@ -18,11 +18,16 @@ export const en = {
     },
     common: {
       add: "Add",
+      create: "Create",
       cancel: "Cancel",
+      close: "Close",
+      showMore: "Show more",
+      showLess: "Show less",
     },
     assets: {
       title: "My assets",
       description: "Assets shared by my connector",
+      search: "Search assets",
       buttonAdd: "Create New Asset",
       headingName: "Name",
       headingTitle: "Title",
@@ -157,6 +162,21 @@ export const en = {
         fieldDataAddressHttpHeaderNamePlaceholder: "Header",
         fieldDataAddressHttpHeaderValue: "Header Value",
 
+        participantId: "Participant ID",
+        creatorOrganizationName: "Organization",
+        connectorEndpoint: "Connector Endpoint",
+        httpProxyMethod: "Method",
+        httpProxyPath: "Path",
+        queryParams: "Query Params",
+        enableBodyParameterization: "Body",
+        httpDataSourceParameterization: "HTTP Data Source Parameterization",
+        noDescription: "No description",
+        showDataSamples: "Show Data Samples",
+        urls: "URLs",
+        showReferenceFiles: "Show Reference Files",
+        referenceFileImportant: "This reference file is important",
+        showConditionsForUse: "Show Conditions for Use",
+
         buttonCancel: "Cancel",
         buttonSave: "Add asset",
       },
@@ -245,7 +265,7 @@ export const en = {
       },
     },
     catalog: {
-      title: "List all catalogs",
+      title: "Catalog Browser",
       description:
         "List all participants which you can check their catalogs.",
       headingName: "Name",
