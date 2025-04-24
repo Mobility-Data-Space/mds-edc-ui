@@ -79,7 +79,10 @@ const routes: ReactNode[] = [
     title="Contract definitions"
     icon={<ReceiptText className="size-6" />}
   />,
-  <Divider key="devider-1" />,
+  // TODO: translate
+  <h3 key="devider-1" className="mt-8 mx-5 mb-3 font-medium text-gray-500" >
+    Provide
+  </h3>,
   <RouteNode
     key="create-asset"
     href="/create-asset"
@@ -137,7 +140,6 @@ export default function SideDrawer(props: Props) {
       <Toolbar >
         <Image src="/mds_logo.svg" alt="Logo" height="57" width="0" className="my-2" style={{ width: "70%" }} />
       </Toolbar>
-      <Divider />
       <List>
         {routes}
       </List>
@@ -149,6 +151,7 @@ export default function SideDrawer(props: Props) {
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar
+        elevation={0}
         position="fixed"
         sx={{
           width: { md: `calc(100% - ${drawerWidth}px)` },
