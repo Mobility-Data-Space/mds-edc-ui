@@ -19,6 +19,11 @@ export const DATA_OFFER_TYPE_ON_REQUEST = {
     value: 'On-Request',
 };
 
+export const DATA_OFFER_TYPE_LIVE = {
+    text: 'LIVE',
+    value: 'LIVE',
+};
+
 export const DATA_OFFER_TYPES = [DATA_OFFER_TYPE_DATA_SOURCE, DATA_OFFER_TYPE_ON_REQUEST];
 
 export const PUBLISH_MODE_PUBLISH_UNRESTRICTED = {

@@ -1306,5 +1306,7 @@ export const LANGUAGE_LIST: LanguageSelectItem[] = [
   },
 ];
 
+export const LANGUAGES = [...HIGHLIGHTED_LANGUAGE_LIST, ...LANGUAGE_LIST]
+
 export const HIGHLIGHTED_LANGUAGE_SELECT_DATA = HIGHLIGHTED_LANGUAGE_LIST.map((language) => ({ value: language.id, text: language.label }));
 export const LANGUAGE_SELECT_DATA = LANGUAGE_LIST.map((language) => ({ value: language.id, text: language.label }));

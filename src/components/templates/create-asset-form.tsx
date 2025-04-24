@@ -142,12 +142,12 @@ export default function CreateAssetForm() {
   }
 
   return (
-    <ConnectorDashboard>
-      <ConnectorDashboard.Title className="p-5 text-3xl">
+    <div>
+      <div className="text-3xl">
         <span data-testid="asset-create-modal-title">
           <T string="assets.new.title" />
         </span>
-      </ConnectorDashboard.Title>
+      </div>
 
       <AssetForm
         managementUrl={connector.managementUrl}
@@ -222,7 +222,7 @@ export default function CreateAssetForm() {
             color="secondary"
             onClick={() => push("/assets")}
           >
-            <T string="buttonCancel"/>
+            <T string="common.cancel"/>
           </Button>
           <Button
             data-testid="asset-create-submit"
@@ -231,11 +231,11 @@ export default function CreateAssetForm() {
             onClick={onSubmit}
             disabled={cannotSubmit()}
           >
-            <T string="buttonSave"/>
+            <T string="common.create"/>
           </Button>
         </div>
       </AssetForm>
 
-    </ConnectorDashboard>
+    </div>
   );
 }
