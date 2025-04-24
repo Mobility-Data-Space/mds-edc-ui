@@ -48,6 +48,7 @@ export function useTranslator(): TranslatorContextType {
 interface TranslateProps {
   string: string;
   global?: boolean;
+  delimiter?: string;
 }
 
 export function Translate(
@@ -56,6 +57,21 @@ export function Translate(
   const { translator, globalTranslator } = useTranslator();
   const t = global ? globalTranslator : translator;
   return t(string);
+}
+
+export const DELIMITER = ", ";
+
+export function MultiTranslate(
+  { string, delimiter = DELIMITER, global = false }: TranslateProps,
+): string {
+  const { translator, globalTranslator } = useTranslator();
+  const t = global ? globalTranslator : translator;
+  const stringArray = string.split(delimiter);
+  return stringArray.length === 1 ?
+    t(string) :
+    stringArray
+      .map(str => t(str))
+      .join(delimiter);
 }
 
 export const T = Translate;
