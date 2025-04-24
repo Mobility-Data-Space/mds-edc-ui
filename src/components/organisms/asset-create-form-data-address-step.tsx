@@ -74,7 +74,7 @@ export function AssetCreateFormDataAddressStep({ formData, errors, onChange, tra
       }
       {formData[ASSET_DATA_ADDRESS_TYPE] === DATA_ADDRESS_TYPE_HTTP.value &&
         <>
-          <div className="flex flex-col gap-y-5 items-start">
+          <div className="flex flex-col gap-y-5">
             <label
               htmlFor="data-address-method"
               className="inline-block text-sm text-black font-medium mb-2"
@@ -106,13 +106,15 @@ export function AssetCreateFormDataAddressStep({ formData, errors, onChange, tra
               }
             </div>
 
-            <RadioButton
-              id="data-address-http-proxy-method"
-              labelTrue={translator("assets.new.fieldDataAddressHttpProxyMethodTrue")}
-              labelFalse={translator("assets.new.fieldDataAddressHttpProxyMethodFalse")}
-              value={formData[ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD]}
-              onChange={(value) => onChange({ ...formData, [ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD]: value })}
-            />
+            <div>
+              <RadioButton
+                id="data-address-http-proxy-method"
+                labelTrue={translator("assets.new.fieldDataAddressHttpProxyMethodTrue")}
+                labelFalse={translator("assets.new.fieldDataAddressHttpProxyMethodFalse")}
+                value={formData[ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD]}
+                onChange={(value) => onChange({ ...formData, [ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD]: value })}
+              />
+            </div>
           </div>
 
           <div className="flex flex-col gap-y-5 items-start">

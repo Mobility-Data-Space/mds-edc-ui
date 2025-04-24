@@ -23,7 +23,7 @@ export function useConnectorDashboardState(): ConnectorDashboardState {
     edcUrl: process.env.NEXT_PUBLIC_EDC_URL || "",
     managementUrl: appendProxyPrefix(process.env.NEXT_PUBLIC_EDC_MANAGEMENT_URL),
     defaultUrl: appendProxyPrefix(process.env.NEXT_PUBLIC_EDC_DEFAULT_URL),
-    protocolUrl: appendProxyPrefix(process.env.NEXT_PUBLIC_EDC_PROTOCOL_URL),
+    protocolUrl: process.env.NEXT_PUBLIC_EDC_PROTOCOL_URL || "",
   };
 
   return {
