@@ -136,13 +136,14 @@ Low-level building blocks, instead are the core essence of the above components.
 be used in the day to day, unless you are trying extend Connector's functionalities (e.g., building a UI for an extension's).
 
 | Component        | Description                                                                              |
-| ---------------- | ---------------------------------------------------------------------------------------- |
-| `JsonLdContextProvider`           | Allow to specify additional JSON-LD contexts to more easily access JSON-LD fields.                                   |
+| ---------------- |------------------------------------------------------------------------------------------|
+| `JsonLdContextProvider`        | Allow to specify additional JSON-LD contexts to more easily access JSON-LD fields.       |
+| `Catalog`        | Provide primitives to build catalog datasets list.                                       |
 | `Form`           | Provide primitives to build headless forms components.                                   |
 | `List`           | Provide primitives to build headless list.                                               |
 | `Local`          | Provide primitives to build headless visualisation components, without fetching ability. |
 | `View`           | Provide primitives to build headless visualisation components, with fetching ability.    |
-| `JsonLdValue`    | Provide primitives to access JSON-LD fields.                                              |
+| `JsonLdValue`    | Provide primitives to access JSON-LD fields.                                             |
 | `Timestamp`      | Provide primitives to visualise i18n-aware timestamps and dates.                         |
 
 ## Examples

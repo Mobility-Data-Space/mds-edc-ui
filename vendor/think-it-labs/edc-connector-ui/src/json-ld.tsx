@@ -11,6 +11,10 @@ export interface ValueProps {
   children?: (value: any) => JSX.Element;
 }
 
+export function readValue(object: JsonLdObject, name: string) {
+  return object?.[name]?.at(0)?.["@value"] || object?.[name];
+}
+
 function getValue(
   object: JsonLdObject,
   prefix: string,
