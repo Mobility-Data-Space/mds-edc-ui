@@ -1,43 +1,82 @@
 import { Button } from "@/components/atoms/button";
-import { Table } from "@/components/atoms/table";
-import { ConnectorDashboard } from "@/components/templates/connector-dashboard";
+import { Input } from "@/components/atoms/input";
+import SearchIcon from '@mui/icons-material/Search';
 import { AssetsList } from "@think-it-labs/edc-connector-ui/assets-list";
 import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-state";
 import { usePagination } from "@/hooks/use-pagination";
-import { T } from "@/i18n";
+import {T, useTranslator} from "@/i18n";
 import { ChevronLeft, ChevronRight, PlusCircle } from "lucide-react";
-import { Modal, Box, Button as MuiButton } from '@mui/material';
+import {Dialog, Box, Button as MuiButton, DialogContent, TextField} from '@mui/material';
 
-import {useState} from "react";
+import React, {useCallback, useState} from "react";
 import CreateAssetForm from "@/components/templates/create-asset-form.tsx";
 import SideDrawer from "@/components/organisms/side-drawer.tsx";
+import AssetCard from "@/components/organisms/asset-card.tsx";
+import {Asset} from "@think-it-labs/edc-connector-client";
+import AssetDetails from "@/components/organisms/asset-details.tsx";
 
 export default function AssetListPage() {
   const { push, connector } = useConnectorDashboardState();
   const { page, decrementPage, incrementPage, offset, limit, hasPrev } = usePagination();
+  const { translator } = useTranslator();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [openAsset, setOpenAsset] = useState({} as Asset);
+
+  const openDetailsModal = (asset: Asset) => {
+    setIsDetailsModalOpen(true);
+    setOpenAsset(asset);
+  };
+
+  const onDeleteAssetClick = () => {
+// TODO: implement
+  };
+
 
   return (
     <>
-      <Modal
-        style={{ overflow: "scroll" }}
-        open={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+      <Dialog
+        open={isCreateModalOpen}
+        maxWidth="lg"
+        className="my-7"
+        onClose={() => setIsCreateModalOpen(false)}
       >
-        <Box>
+        <DialogContent style={{ maxWidth: "80vw", width: "800px" }}>
           <CreateAssetForm />
-        </Box>
-      </Modal>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={isDetailsModalOpen}
+        maxWidth="lg"
+        className="my-7"
+        onClose={() => setIsDetailsModalOpen(false)}
+      >
+        <DialogContent style={{ maxWidth: "90vw", width: "1000px" }}>
+          <AssetDetails asset={openAsset} onDeleteClick={onDeleteAssetClick} />
+        </DialogContent>
+      </Dialog>
 
       <SideDrawer title={<T string="assets.title" />}>
         <AssetsList managementUrl={connector.managementUrl}>
-          <div className="flex justify-end py-4">
+          <div className="flex gap-x-4 py-4">
+            <Input
+              fullWidth={false}
+              placeholder={translator("assets.search")}
+              slots={{ htmlInput: (props) => <AssetsList.Search {...props} /> }}
+              slotProps={{
+                input: {
+                  classes: { root: "flex-grow" },
+                  startAdornment: <SearchIcon />,
+                }
+              }}
+            />
             <MuiButton
               data-testid="create-asset-modal-opener"
               variant="contained"
               className="gap-x-2 font-medium"
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => setIsCreateModalOpen(true)}
             >
               <PlusCircle className="h-4 w-4" />
               <T string="assets.buttonAdd" />
@@ -46,104 +85,16 @@ export default function AssetListPage() {
             {/* TODO: move pagination here */}
           </div>
 
-          <Table className="table table-fixed">
-            <Table.Head>
-              <Table.Row>
-                <Table.Heading className="w-16">
-                  #
-                </Table.Heading>
-
-                <Table.Heading>
-                  <T string="assets.headingTitle" />
-                </Table.Heading>
-
-                <Table.Heading>
-                  <T string="assets.headingDescription" />
-                </Table.Heading>
-
-                <Table.Heading>
-                  <T string="assets.headingVersion" />
-                </Table.Heading>
-
-                <Table.Heading>
-                  <T string="assets.headingDataAddressUrl" />
-                </Table.Heading>
-              </Table.Row>
-            </Table.Head>
-
-            <Table.Body>
-              <AssetsList.Items
-                limit={limit}
-                offset={offset}
-                sortOrder="DESC"
-              >
-                {({ item, index }) => (
-                  <AssetsList.Asset asset={item}>
-                    <Table.Row
-                      onClick={() => push(`/assets/${item.id}`)}
-                    >
-                      <Table.Cell>
-                        <button
-                          type="button"
-                          className="flex items-center gap-x-2"
-                        >
-                          {(page * 10) + (index + 1)}
-                        </button>
-                      </Table.Cell>
-
-                      <Table.Cell>
-                        <span className="font-semibold">
-                          <AssetsList.Asset.Properties.MandatoryValue
-                            prefix="purl"
-                            name="title"
-                          />
-                        </span>
-                      </Table.Cell>
-
-                      <Table.Cell>
-                      <span className="font-semibold">
-                        <AssetsList.Asset.Properties.MandatoryValue
-                          prefix="purl"
-                          name="description"
-                        />
-                      </span>
-                      </Table.Cell>
-
-                      <Table.Cell>
-                        <AssetsList.Asset.Properties.MandatoryValue
-                          prefix="dcat"
-                          name="version"
-                        />
-                      </Table.Cell>
-                      <Table.Cell>
-                        <AssetsList.Asset.DataAddress.MandatoryValue name="baseUrl" />
-                      </Table.Cell>
-                    </Table.Row>
-                  </AssetsList.Asset>
-                )}
-              </AssetsList.Items>
-            </Table.Body>
-          </Table>
-
-          <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">
-            <div className="inline-flex gap-x-2">
-              <Button
-                variant="secondary"
-                onClick={decrementPage}
-                disabled={!hasPrev}
-              >
-                <ChevronLeft className="w-4 h-4" />
-                Prev
-              </Button>
-
-              <Button
-                variant="secondary"
-                onClick={incrementPage}
-              >
-                Next
-                <ChevronRight className="w-4 h-4" />
-              </Button>
-            </div>
+          <div className="flex flex-wrap gap-2.5">
+            <AssetsList.Items
+              limit={limit}
+              offset={offset}
+              sortOrder="DESC"
+            >
+              {({ item, index }) => (
+                <AssetCard asset={item} key={index} onClick={() => openDetailsModal(item)} />
+              )}
+            </AssetsList.Items>
           </div>
 
           <AssetsList.Loading>
