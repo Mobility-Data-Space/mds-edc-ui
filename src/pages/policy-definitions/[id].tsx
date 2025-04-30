@@ -7,6 +7,8 @@ import {
 import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-state";
 import { T } from "@/i18n";
 import { useRouter } from "next/router";
+import React from "react";
+import SideDrawer from "@/components/organisms/side-drawer.tsx";
 
 function DeletePolicyDefinition() {
   const { deleteItem } = usePolicyDefinitionContext();
@@ -31,20 +33,11 @@ export default function AssetPage() {
   const { connector } = useConnectorDashboardState();
   const managementUrl = connector?.managementUrl as string;
   return (
-    <ConnectorDashboard>
+    <SideDrawer title={<T string="policyDefinitions.[id].title" />}>
       <PolicyDefinitionView
         id={id}
         managementUrl={managementUrl}
       >
-        <ConnectorDashboard.Section>
-          <ConnectorDashboard.Title>
-            <T string="title" />
-          </ConnectorDashboard.Title>
-          <ConnectorDashboard.Description>
-            <T string="description" />
-          </ConnectorDashboard.Description>
-        </ConnectorDashboard.Section>
-
         <ConnectorDashboard.Section>
           <h3 className="text-lg font-bold text-gray-800">
             <PolicyDefinitionView.Id />
@@ -58,6 +51,6 @@ export default function AssetPage() {
           <DeletePolicyDefinition />
         </ConnectorDashboard.Section>
       </PolicyDefinitionView>
-    </ConnectorDashboard>
+    </SideDrawer>
   );
 }

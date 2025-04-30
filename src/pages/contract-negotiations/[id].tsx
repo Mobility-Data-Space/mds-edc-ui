@@ -5,26 +5,19 @@ import {
 import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-state";
 import { T } from "@/i18n";
 import { useRouter } from "next/router";
+import React from "react";
+import SideDrawer from "@/components/organisms/side-drawer.tsx";
 
 export default function ContractNegotiationViewPage() {
   const id = useRouter().query.id as string;
   const { connector } = useConnectorDashboardState();
   const managementUrl = connector?.managementUrl as string;
   return (
-    <ConnectorDashboard>
+    <SideDrawer title={<T string="contractNegotiations.[id].title" />}>
       <ContractNegotiationView
         id={id}
         managementUrl={managementUrl}
       >
-        <ConnectorDashboard.Section>
-          <ConnectorDashboard.Title>
-            <T string="title" />
-          </ConnectorDashboard.Title>
-          <ConnectorDashboard.Description>
-            <T string="description" />
-          </ConnectorDashboard.Description>
-        </ConnectorDashboard.Section>
-
         <ConnectorDashboard.Section>
           <ul className="marker:text-blue-600 list-disc ps-5 space-y-2 text-sm text-gray-600">
             <li>
@@ -45,6 +38,6 @@ export default function ContractNegotiationViewPage() {
           </ul>
         </ConnectorDashboard.Section>
       </ContractNegotiationView>
-    </ConnectorDashboard>
+    </SideDrawer>
   );
 }

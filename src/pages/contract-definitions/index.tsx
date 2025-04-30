@@ -6,6 +6,8 @@ import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-stat
 import { usePagination } from "@/hooks/use-pagination";
 import { T, useTranslator } from "@/i18n";
 import { ChevronLeft, ChevronRight, Plus, Search } from "lucide-react";
+import React from "react";
+import SideDrawer from "@/components/organisms/side-drawer.tsx";
 
 export default function AssetListPage() {
   const { push, connector } = useConnectorDashboardState();
@@ -14,18 +16,10 @@ export default function AssetListPage() {
   const { decrementPage, incrementPage, offset, limit, hasPrev, page } =
     usePagination();
   return (
-    <ConnectorDashboard>
+    <SideDrawer title={<T string="contractDefinitions.title" />}>
       <ContractDefinitionsList managementUrl={managementUrl}>
         <ConnectorDashboard.Section>
           <div className="flex items-center">
-            <div className="flex-1">
-              <ConnectorDashboard.Title>
-                <T string="title" />
-              </ConnectorDashboard.Title>
-              <ConnectorDashboard.Description>
-                <T string="description" />
-              </ConnectorDashboard.Description>
-            </div>
             <div>
               <button
                 className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
@@ -175,6 +169,6 @@ export default function AssetListPage() {
           </div>
         </ContractDefinitionsList.Loading>
       </ContractDefinitionsList>
-    </ConnectorDashboard>
+    </SideDrawer>
   );
 }
