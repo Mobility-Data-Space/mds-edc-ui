@@ -4,8 +4,7 @@ import { T, useTranslator } from "@/i18n";
 import { AssetForm } from "@think-it-labs/edc-connector-ui/asset-html-form.tsx";
 import { AssetCreateFormDataAddressStep } from "@/components/organisms/asset-create-form-data-address-step.tsx";
 import {
-  ASSET_ID, assetFormDataToSubmitData,
-  computeRequiredDataOfferAddressProperties, CreateAssetAdvancedInfoFormData,
+  ASSET_ID, CreateAssetAdvancedInfoFormData,
   CreateAssetDataAddressFormData,
   CreateAssetFormData,
   CreateAssetPropertiesFormData, DATA_OFFER_CONSTRAINTS, DATA_OFFER_PUBLISH_MODE, DATA_OFFER_TYPE,
@@ -47,6 +46,7 @@ import {AssetStandardLicense} from "@/components/molecules/asset-standard-licens
 import {AssetConditionsForUse} from "@/components/molecules/asset-conditions-for-use.tsx";
 import {AssetTemporalCoverage} from "@/components/molecules/asset-temporal-coverage.tsx";
 import PolicyExpression from "@/components/organisms/policy-expression.tsx";
+import {assetFormDataToSubmitData, computeRequiredDataOfferAddressProperties} from "@/utilities/asset.ts";
 
 export default function CreateDataOfferForm() {
   const { push, connector } = useConnectorDashboardState();

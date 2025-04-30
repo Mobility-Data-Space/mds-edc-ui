@@ -4,17 +4,14 @@ import {Asset} from "@think-it-labs/edc-connector-client";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
-import {
-  ASSET_KEYWORDS,
-  ASSET_TITLE,
-  ASSET_DESCRIPTION, assetFieldsToShow
-} from "@/schema/asset.ts";
 import Typography from "@mui/material/Typography";
 import {AssetIcon} from "@/components/atoms/asset-icon.tsx";
 import {Chip, Icon, IconButton} from "@mui/material";
+import {ASSET_KEYWORDS, ASSET_DESCRIPTION} from "@/schema/asset.ts";
 import {MarkdownCollapsableText} from "@/components/molecules/markdown-collapsable-text.tsx";
 import Divider from "@mui/material/Divider";
-import {AssetFieldShow} from "@/components/molecules/asset-field-show.tsx";
+import AssetFieldGrid from "@/components/molecules/asset-field-grid.tsx";
+import {assetCustomFieldsToShow, assetFieldsToShow, assetPrivateFieldsToShow} from "@/utilities/asset.ts";
 
 interface AssetDetailsProps {
   asset: Asset;
@@ -57,7 +54,7 @@ export default function AssetDetails({ asset, onEditClick, onDeleteClick }: Asse
 
       <div>
         {description ?
-          <MarkdownCollapsableText data={readValue(asset.properties, ASSET_DESCRIPTION)} /> :
+          <MarkdownCollapsableText data={description}/> :
           <T string="assets.new.noDescription" />
         }
       </div>
@@ -70,12 +67,9 @@ export default function AssetDetails({ asset, onEditClick, onDeleteClick }: Asse
         )}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
-        {shownFields.map((field, index) =>
-          <AssetFieldShow {...field} key={index} />
-        )}
+      <div className="flex flex-col gap-y-9">
+        <AssetFieldGrid fields={shownFields}/>
       </div>
     </div>
-
   );
 }

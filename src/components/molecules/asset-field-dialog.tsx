@@ -52,6 +52,5 @@ export function AssetFieldDialog({ icon, label, subLabel, value, valueTitle, isO
         </Button>
       </DialogActions>
     </Dialog>
-
   );
 }
