@@ -4,7 +4,6 @@ import Image from 'next/image'
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
@@ -27,7 +26,7 @@ import PostAddIcon from '@mui/icons-material/PostAdd';
 import { PropsWithChildren, ReactNode } from "react";
 import Link from "next/link";
 import {useTranslator} from "@/i18n";
-import {SvgIconOwnProps} from "@mui/material";
+import {SvgIconProps} from "@mui/material";
 
 const drawerWidth = 300;
 
@@ -54,7 +53,7 @@ const RouteNode = ({ href, title, icon, className = "" }: RouteProps) => {
   );
 }
 
-const iconsProps: SvgIconOwnProps = { className: "size-7", color: "secondary" };
+const iconsProps: SvgIconProps = { className: "size-7", color: "secondary" };
 const routes: ReactNode[] = [
   <RouteNode
     key="dashboard"
