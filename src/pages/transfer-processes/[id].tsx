@@ -3,6 +3,8 @@ import { TransferProcessView } from "@think-it-labs/edc-connector-ui/transfer-pr
 import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-state";
 import { T } from "@/i18n";
 import { useRouter } from "next/router";
+import React from "react";
+import SideDrawer from "@/components/organisms/side-drawer.tsx";
 
 export default function TransferProcessViewPage() {
   const id = useRouter().query.id as string;
@@ -10,20 +12,11 @@ export default function TransferProcessViewPage() {
   const { connector } = useConnectorDashboardState();
   const managementUrl = connector?.managementUrl as string;
   return (
-    <ConnectorDashboard>
+    <SideDrawer title={<T string="transferProcesses.[id].title" />}>
       <TransferProcessView
         id={id}
         managementUrl={managementUrl}
       >
-        <ConnectorDashboard.Section>
-          <ConnectorDashboard.Title>
-            <T string="title" />
-          </ConnectorDashboard.Title>
-          <ConnectorDashboard.Description>
-            <T string="description" />
-          </ConnectorDashboard.Description>
-        </ConnectorDashboard.Section>
-
         <ConnectorDashboard.Section>
           <ul className="marker:text-blue-600 list-disc ps-5 space-y-2 text-sm text-gray-600">
             <li>
@@ -39,6 +32,6 @@ export default function TransferProcessViewPage() {
           </ul>
         </ConnectorDashboard.Section>
       </TransferProcessView>
-    </ConnectorDashboard>
+    </SideDrawer>
   );
 }

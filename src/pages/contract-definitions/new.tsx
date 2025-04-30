@@ -7,7 +7,8 @@ import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-stat
 import { T } from "@/i18n";
 import { Combobox } from "@headlessui/react";
 import { CheckIcon, ChevronsUpDown } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
+import SideDrawer from "@/components/organisms/side-drawer.tsx";
 
 function Policy() {
   // const [selected, setSelected] = useState(people[0]);
@@ -96,16 +97,7 @@ export default function CreateAssetPage() {
   const { push, connector } = useConnectorDashboardState();
   const managementUrl = connector?.managementUrl as string;
   return (
-    <ConnectorDashboard>
-      <ConnectorDashboard.Section>
-        <ConnectorDashboard.Title>
-          <T string="title" />
-        </ConnectorDashboard.Title>
-        <ConnectorDashboard.Description>
-          <T string="description" />
-        </ConnectorDashboard.Description>
-      </ConnectorDashboard.Section>
-
+    <SideDrawer title={<T string="contractDefinitions.new.title" />}>
       <ContractDefinitionForm managementUrl={managementUrl}>
         <ConnectorDashboard.Section>
         </ConnectorDashboard.Section>
@@ -125,6 +117,6 @@ export default function CreateAssetPage() {
           </Button>
         </ConnectorDashboard.Section>
       </ContractDefinitionForm>
-    </ConnectorDashboard>
+    </SideDrawer>
   );
 }
