@@ -265,3 +265,33 @@ export const assetFieldsToShow = (asset: Asset): AssetFieldProps[] => {
     ...assetAdvancedFieldsToShow(asset),
   ]
 };
+
+export const assetPrivateFieldsToShow = (asset: Asset): AssetFieldProps[] => {
+  const objectEntries = Object.entries(asset.privateProperties);
+  if (objectEntries.length === 0) {
+    return [];
+  }
+
+  return objectEntries.map(([key, value]) => ({
+    label: key,
+    value: value[0]["@value"],
+    icon: "category"
+  }));
+};
+
+export const assetCustomFieldsToShow = (asset: Asset): AssetFieldProps[] => {
+  const dataAddressDescription = readValue(asset.dataAddress, ASSET_DATA_ADDRESS_DESCRIPTION)
+  let customProperties = {};
+  try {
+    customProperties = JSON.parse(dataAddressDescription);
+  } catch (error) {
+    return [];
+  }
+
+  return Object.entries(customProperties)
+  .map(([label, value]) => ({
+    label,
+    value: value as string,
+    icon: "category"
+  }))
+};

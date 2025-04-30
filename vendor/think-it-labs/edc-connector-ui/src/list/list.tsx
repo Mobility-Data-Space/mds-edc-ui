@@ -53,7 +53,7 @@ export function List<T>({
 
 export interface ListItemProps<T> {
   item: T; // fix: type this
-  deleteItem: () => void;
+  deleteItem: () => Promise<void>;
   index: number;
 }
 
@@ -104,7 +104,7 @@ List.Items = function ListItems<T,>({
         <Item
           key={getId(item)}
           item={item}
-          deleteItem={() => deleteItem(getId(item))}
+          deleteItem={async () => deleteItem(getId(item))}
           index={index}
         />
       ))}
