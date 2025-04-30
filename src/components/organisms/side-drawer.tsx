@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useRouter } from 'next/router';
 import Image from 'next/image'
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -34,9 +35,9 @@ interface Props extends PropsWithChildren{
   title: ReactNode;
 }
 
-type RouteProps = { href: string, title: string, icon: ReactNode };
+type RouteProps = { href: string, title: string, icon: ReactNode, className?: string };
 
-const RouteNode = ({ href, title, icon }: RouteProps) => {
+const RouteNode = ({ href, title, icon, className = "" }: RouteProps) => {
   const { translator } = useTranslator();
 
   return (
@@ -120,6 +121,7 @@ const routes: ReactNode[] = [
 
 export default function SideDrawer(props: Props) {
   const { title, children } = props;
+  const router = useRouter();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
 
@@ -137,14 +139,25 @@ export default function SideDrawer(props: Props) {
       setMobileOpen(!mobileOpen);
     }
   };
-
+  const currentHref = router.route;
   const drawer = (
     <div>
       <Toolbar >
         <Image src="/mds_logo.svg" alt="Logo" height="57" width="0" className="my-2" style={{ width: "70%" }} />
       </Toolbar>
       <List>
-        {routes}
+        {routes.map((route: any) => {
+          if (!route || !route.props || route.props.href !== currentHref) {
+            return route;
+          }
+          return {
+            ...route,
+            props: {
+              ...route.props,
+              className: "bg-active hover:bg-white",
+            }
+          };
+        })}
       </List>
     </div>
   );
