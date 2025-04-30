@@ -8,6 +8,8 @@ import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-stat
 import { usePagination } from "@/hooks/use-pagination";
 import { T, useTranslator } from "@/i18n";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
+import React from "react";
+import SideDrawer from "@/components/organisms/side-drawer.tsx";
 
 export default function TransferProcessesListPage() {
   const { push, connector } = useConnectorDashboardState();
@@ -16,16 +18,9 @@ export default function TransferProcessesListPage() {
   const { decrementPage, incrementPage, offset, limit, hasPrev, page } =
     usePagination();
   return (
-    <ConnectorDashboard>
+    <SideDrawer title={<T string="transferProcesses.title" />}>
       <TransferProcessesList managementUrl={managementUrl}>
         <ConnectorDashboard.Section>
-          <ConnectorDashboard.Title>
-            <T string="title" />
-          </ConnectorDashboard.Title>
-          <ConnectorDashboard.Description>
-            <T string="description" />
-          </ConnectorDashboard.Description>
-
           <div className="sm:col-span-1">
             <label
               htmlFor="hs-as-table-product-review-search"
@@ -176,6 +171,6 @@ export default function TransferProcessesListPage() {
           </div>
         </TransferProcessesList.Loading>
       </TransferProcessesList>
-    </ConnectorDashboard>
+    </SideDrawer>
   );
 }

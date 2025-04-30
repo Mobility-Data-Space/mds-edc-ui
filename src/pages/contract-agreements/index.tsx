@@ -1,13 +1,14 @@
 import { Button } from "@/components/atoms/button";
 import { Table } from "@/components/atoms/table";
 import { ConnectorDashboard } from "@/components/templates/connector-dashboard";
-import { DATASPACE } from "@/constants/dataspace";
 import { ContractAgreementsList } from "@think-it-labs/edc-connector-ui/contract-agreements-list";
 import { Timestamp } from "@think-it-labs/edc-connector-ui/timestamp";
 import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-state";
 import { usePagination } from "@/hooks/use-pagination";
 import { T, useTranslator } from "@/i18n";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
+import React from "react";
+import SideDrawer from "@/components/organisms/side-drawer.tsx";
 
 export default function ContractAgreementsListPage() {
   const { push, connector } =
@@ -20,15 +21,9 @@ export default function ContractAgreementsListPage() {
     return "No connector";
   }
   return (
-    <ConnectorDashboard>
+    <SideDrawer title={<T string="contractAgreements.title" />}>
       <ContractAgreementsList managementUrl={managementUrl}>
         <ConnectorDashboard.Section>
-          <ConnectorDashboard.Title>
-            <T string="title" />
-          </ConnectorDashboard.Title>
-          <ConnectorDashboard.Description>
-            <T string="description" />
-          </ConnectorDashboard.Description>
           <div className="sm:col-span-1">
             <label
               htmlFor="hs-as-table-product-review-search"
@@ -185,6 +180,6 @@ export default function ContractAgreementsListPage() {
           </div>
         </ContractAgreementsList.Loading>
       </ContractAgreementsList>
-    </ConnectorDashboard>
+    </SideDrawer>
   );
 }
