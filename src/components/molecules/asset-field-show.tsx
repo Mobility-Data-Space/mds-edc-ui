@@ -26,11 +26,11 @@ export function AssetFieldShow({ icon, label, value, valueTitle, subLabel, openM
       {! openModalText ?
         <div>
           <Typography variant="body2" color="textDisabled">
-            <T string={label}/>
+            {0 === label.indexOf('http') ? label : <T string={label}/>}
           </Typography>
           <Typography>
             {/* TODO: http case */}
-            {0 === nonNullValue.indexOf('http') ? value : <MultiTranslate string={nonNullValue}/>}
+            {0 === nonNullValue.indexOf('http') ? nonNullValue : <MultiTranslate string={nonNullValue}/>}
           </Typography>
         </div> :
         <>

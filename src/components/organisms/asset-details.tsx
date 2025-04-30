@@ -16,7 +16,11 @@ interface AssetDetailsProps {
 export default function AssetDetails({ asset }: AssetDetailsProps) {
   const keywords = asset.properties[ASSET_KEYWORDS] || [];
   const description = readValue(asset.properties, ASSET_DESCRIPTION);
-  const shownFields = useMemo(() => assetFieldsToShow(asset), [asset]);
+  const [shownFields, privateFields, customFields] = useMemo(() => [
+    assetFieldsToShow(asset),
+    assetPrivateFieldsToShow(asset),
+    assetCustomFieldsToShow(asset),
+  ], [asset]);
 
   return (
     <div className="flex flex-col gap-y-2.5">
@@ -37,6 +41,8 @@ export default function AssetDetails({ asset }: AssetDetailsProps) {
 
       <div className="flex flex-col gap-y-9">
         <AssetFieldGrid fields={shownFields}/>
+        <AssetFieldGrid fields={customFields} label="assets.new.customProperties"/>
+        <AssetFieldGrid fields={privateFields} label="assets.new.privateProperties"/>
       </div>
     </div>
   );

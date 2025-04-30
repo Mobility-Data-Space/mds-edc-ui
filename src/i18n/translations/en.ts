@@ -177,6 +177,8 @@ export const en = {
         showReferenceFiles: "Show Reference Files",
         referenceFileImportant: "This reference file is important",
         showConditionsForUse: "Show Conditions for Use",
+        customProperties: "Custom Properties",
+        privateProperties: "Private Properties",
 
         buttonCancel: "Cancel",
         buttonSave: "Add asset",
