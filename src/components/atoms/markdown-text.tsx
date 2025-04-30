@@ -1,14 +1,14 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 
-export function MarkdownText({ data, className }: { data: string, className: string }): JSX.Element {
+export const MarkdownText = forwardRef<HTMLDivElement, { data: string, className?: string }>(function MarkdownText({ data, className }, ref) {
   return (
-    <div className={`markdown-description ${className}`}>
+    <div ref={ref} className={`markdown-description ${className || ""}`}>
       <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} >
         {data}
       </Markdown>
     </div>
   );
-}
+});
