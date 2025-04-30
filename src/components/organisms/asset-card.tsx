@@ -24,6 +24,9 @@ export default function AssetCard({ asset, participantId = "", onClick = () => {
   const remainingKeywordsCount = keywords.length - slicedKeywords.length;
 
   const title = readValue(asset.properties, ASSET_TITLE);
+  const description = truncate(readValue(asset.properties, ASSET_DESCRIPTION), 200);
+  const version = readValue(asset.properties, ASSET_VERSION);
+
   return (
     <Card className="w-[300px]">
       <CardContent className="flex flex-col gap-y-3">
@@ -40,11 +43,11 @@ export default function AssetCard({ asset, participantId = "", onClick = () => {
         </div>
 
         <Typography className="line-clamp-5">
-          {truncate(readValue(asset.properties, ASSET_DESCRIPTION), 200)}
+          {description}
         </Typography>
 
         <div className="flex flex-wrap gap-2">
-          {readValue(asset.properties, ASSET_VERSION) && <Chip className="font-medium text-sm !cursor-default" clickable label={readValue(asset.properties, ASSET_VERSION)} key={-1} color="primary" />}
+          {version && <Chip className="font-medium text-sm !cursor-default" clickable label={version} key={-1} color="primary" />}
           {slicedKeywords.map((keyword: { "@value": string }, index: number) =>
             <Chip className="font-medium text-sm !cursor-default" clickable label={keyword["@value"]} key={index} />
           )}
