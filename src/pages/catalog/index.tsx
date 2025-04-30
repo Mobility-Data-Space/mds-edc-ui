@@ -22,11 +22,14 @@ export default function CatalogPage() {
   const { push, connector } = useConnectorDashboardState();
   const { page, decrementPage, incrementPage, offset, limit, hasPrev } = usePagination();
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-  const [openAsset, setOpenAsset] = useState({} as Asset);
+  const [openAssetData, setOpenAssetData] = useState({
+    asset: {} as Asset,
+    participantId: "" as string | undefined,
+  });
 
-  const openDetailsModal = (asset: Asset) => {
+  const openDetailsModal = (asset: Asset, participantId?: string) => {
     setIsDetailsModalOpen(true);
-    setOpenAsset(asset);
+    setOpenAssetData({ asset, participantId });
   };
 
   return (
@@ -55,8 +58,8 @@ export default function CatalogPage() {
               offset={offset}
               sortOrder="DESC"
             >
-              {({ item, index }) => (
-                <AssetCard asset={dataSetToAsset(item) as any} key={index} onClick={() => openDetailsModal(dataSetToAsset(item) as any)} />
+              {({ item, index, participantId }) => (
+                <AssetCard asset={dataSetToAsset(item) as any} key={index} onClick={() => openDetailsModal(dataSetToAsset(item) as any, participantId)} participantId={participantId} />
               )}
             </Catalog.Items>
           </div>
