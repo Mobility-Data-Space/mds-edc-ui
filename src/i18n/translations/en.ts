@@ -21,6 +21,7 @@ export const en = {
       create: "Create",
       cancel: "Cancel",
       close: "Close",
+      delete: "Delete",
       showMore: "Show more",
       showLess: "Show less",
     },
@@ -40,7 +41,7 @@ export const en = {
       "[id]": {
         title: "View asset",
         dataAddress: "Data address",
-        deleteButton: "Delete",
+        deleteTitle: "Deletion confirmation",
       },
       new: {
         title: "Create new asset",
