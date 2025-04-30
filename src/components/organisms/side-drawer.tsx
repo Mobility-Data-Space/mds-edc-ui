@@ -12,22 +12,21 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '@mui/icons-material/Menu';
+import DataUsageIcon from '@mui/icons-material/DataUsage';
+import SimCardIcon from '@mui/icons-material/SimCard';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import UploadIcon from '@mui/icons-material/Upload';
+import PolicyIcon from '@mui/icons-material/Policy';
+import RuleIcon from '@mui/icons-material/Rule';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import {
-  Boxes,
-  Gauge,
-  Handshake,
-  ReceiptText,
-  Ruler,
-  SmartphoneNfc,
-  Store,
-  Truck,
-} from "lucide-react";
+import {ReceiptText} from "lucide-react";
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import { PropsWithChildren, ReactNode } from "react";
 import Link from "next/link";
 import {useTranslator} from "@/i18n";
+import {SvgIconOwnProps} from "@mui/material";
 
 const drawerWidth = 300;
 
@@ -54,30 +53,32 @@ const RouteNode = ({ href, title, icon }: RouteProps) => {
   );
 }
 
+const iconsProps: SvgIconOwnProps = { className: "size-7", color: "secondary" };
 const routes: ReactNode[] = [
   <RouteNode
-    key="overview"
+    key="dashboard"
     href="/"
-    title="Overview"
-    icon={<Gauge className="size-6" />}
+    title="Dashboard"
+    icon={<DataUsageIcon {...iconsProps} />}
   />,
   <RouteNode
-    key="assets"
-    href="/assets"
-    title="Assets"
-    icon={<Boxes className="size-6" />}
+    key="/catalog"
+    href="/catalog"
+    title="Catalog Browser"
+    icon={<SimCardIcon {...iconsProps} />}
   />,
   <RouteNode
-    key="policy-definitions"
-    href="/policy-definitions"
-    title="Policy definitions"
-    icon={<Ruler className="size-6" />}
+    key="contract-agreements"
+    href="/contract-agreements"
+    title="Contracts"
+    icon={<AssignmentTurnedInIcon {...iconsProps} />}
   />,
+
   <RouteNode
-    key="contract-definitions"
-    href="/contract-definitions"
-    title="Contract definitions"
-    icon={<ReceiptText className="size-6" />}
+    key="transfer-history"
+    href="/transfer-processes"
+    title="Transfer History"
+    icon={<AssignmentIcon {...iconsProps} />}
   />,
   // TODO: translate
   <h3 key="devider-1" className="mt-8 mx-5 mb-3 font-medium text-gray-500" >
@@ -86,34 +87,36 @@ const routes: ReactNode[] = [
   <RouteNode
     key="create-asset"
     href="/create-asset"
-    title="Data offer"
-    icon={<PostAddIcon className="size-6" />}
+    title="Create Data Offer"
+    icon={<PostAddIcon {...iconsProps} />}
   />,
   <RouteNode
-    key="/catalog"
-    href="/catalog"
-    title="Catalog"
-    icon={<Store className="size-6" />}
+    key="assets"
+    href="/assets"
+    title="Assets"
+    icon={<UploadIcon {...iconsProps} />}
   />,
   <RouteNode
-    key="contract-agreements"
-    href="/contract-agreements"
-    title="Contract agreements"
-    icon={<Handshake className="size-6" />}
+
+    key="policy-definitions"
+    href="/policy-definitions"
+    title="Policies"
+    icon={<PolicyIcon {...iconsProps} />}
   />,
   <RouteNode
+    key="contract-definitions"
+    href="/contract-definitions"
+    title="Data offers"
+    icon={<RuleIcon {...iconsProps} />}
+  />,
+  <RouteNode // TODO: extra route that doesn't exist on the old ui
     key="contract-negotiations"
     href="/contract-negotiations"
     title="Contract negotiations"
-    icon={<SmartphoneNfc className="size-6" />}
+    icon={<ReceiptText className="size-6" />}
   />,
-  <RouteNode
-    key="transfer-processes"
-    href="/transfer-processes"
-    title="Transfer processes"
-    icon={<Truck className="size-6" />}
-  />,
-];
+  // TODO: logout button
+]; // TODO: make hrefs like the old ui
 
 export default function SideDrawer(props: Props) {
   const { title, children } = props;
