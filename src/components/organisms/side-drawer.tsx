@@ -41,13 +41,13 @@ const RouteNode = ({ href, title, icon, className = "" }: RouteProps) => {
   const { translator } = useTranslator();
 
   return (
-    <ListItem key={href} disablePadding >
+    <ListItem key={href} disablePadding classes={{ root: `min-h-14 ${className}` }} >
       <ListItemButton>
-        <Link href={href} className="flex flex-row w-full" >
-          <ListItemIcon>
+        <Link href={href} className="flex flex-row items-center w-full pl-1 gap-x-5" >
+          <ListItemIcon className="!min-w-6">
             {icon}
           </ListItemIcon>
-          <ListItemText primary={translator(title)} />
+          <ListItemText primary={translator(title)} classes={{ primary: "!font-medium" }} />
         </Link>
       </ListItemButton>
     </ListItem>
@@ -82,7 +82,7 @@ const routes: ReactNode[] = [
     icon={<AssignmentIcon {...iconsProps} />}
   />,
   // TODO: translate
-  <h3 key="devider-1" className="mt-8 mx-5 mb-3 font-medium text-gray-500" >
+  <h3 key="devider-1" className="mt-8 mx-5 mb-3 text-xs font-semibold text-gray-500 uppercase" >
     Provide
   </h3>,
   <RouteNode
@@ -143,7 +143,7 @@ export default function SideDrawer(props: Props) {
   const drawer = (
     <div>
       <Toolbar >
-        <Image src="/mds_logo.svg" alt="Logo" height="57" width="0" className="my-2" style={{ width: "70%" }} />
+        <Image src="/mds_logo.svg" alt="Logo" height="57" width="0" className="m-2" style={{ height: "57px", width: "70%" }} />
       </Toolbar>
       <List>
         {routes.map((route: any) => {
@@ -164,7 +164,7 @@ export default function SideDrawer(props: Props) {
 
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box className="bg-background" sx={{ display: 'flex', height: "100%" }}>
       <CssBaseline />
       <AppBar
         elevation={0}
@@ -174,7 +174,7 @@ export default function SideDrawer(props: Props) {
           ml: { md: `${drawerWidth}px` },
         }}
       >
-        <Toolbar className="h-[73px]">
+        <Toolbar className="h-[64px] !pl-4">
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -184,7 +184,7 @@ export default function SideDrawer(props: Props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div" >
+          <Typography variant="h6" className="font-bold" noWrap component="div" >
             {title}
           </Typography>
         </Toolbar>
@@ -224,7 +224,7 @@ export default function SideDrawer(props: Props) {
       </Box>
       <Box
         component="main"
-        sx={{ flexGrow: 1, p: 3, width: { md: `calc(100% - ${drawerWidth}px)` } }}
+        sx={{ flexGrow: 1, p: 3, width: { md: `calc(100% - ${drawerWidth}px)` }, }}
       >
         <Toolbar />
         {children}
