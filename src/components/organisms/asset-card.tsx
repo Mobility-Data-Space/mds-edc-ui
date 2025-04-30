@@ -14,24 +14,29 @@ import {truncate} from "@/utilities/utilities.ts";
 
 export interface AssetCardProps {
   asset: Asset,
+  participantId?: string, // TODO: make not optional after passing participantId from assets page
   onClick?: () => void
 }
 
-export default function AssetCard({ asset, onClick = () => {} }: AssetCardProps) {
+export default function AssetCard({ asset, participantId = "", onClick = () => {} }: AssetCardProps) {
   const keywords = asset.properties[ASSET_KEYWORDS] || [];
   const slicedKeywords = keywords.slice(0, 3);
   const remainingKeywordsCount = keywords.length - slicedKeywords.length;
 
+  const title = readValue(asset.properties, ASSET_TITLE);
   return (
     <Card className="w-[300px]">
       <CardContent className="flex flex-col gap-y-3">
-        <div className="flex flex-row gap-x-4 items-center">
+        <div className="flex flex-row gap-x-4 items-start">
           <AssetIcon asset={asset} fontSize="large" />
-          <Typography variant="h4" className="hover:underline cursor-pointer" onClick={onClick}>
-            {readValue(asset.properties, ASSET_TITLE)}
-          </Typography>
-
-          {/* TODO: creatorOrganizationName or participant id */}
+          <div className="flex flex-col">
+            <Typography variant="h4" className="!leading-none hover:underline cursor-pointer" onClick={onClick}>
+              {title}
+            </Typography>
+            <Typography variant="body1" color="textSecondary">
+              {participantId}
+            </Typography>
+          </div>
         </div>
 
         <Typography className="line-clamp-5">
