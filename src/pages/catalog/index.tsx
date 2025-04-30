@@ -1,26 +1,18 @@
-import { Button } from "@/components/atoms/button";
-import { Table } from "@/components/atoms/table";
-import { ConnectorDashboard } from "@/components/templates/connector-dashboard";
-import { AssetsList } from "@think-it-labs/edc-connector-ui/assets-list";
 import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-state";
 import { usePagination } from "@/hooks/use-pagination";
 import { T } from "@/i18n";
-import { ChevronLeft, ChevronRight, PlusCircle } from "lucide-react";
-import {Modal, Box, Button as MuiButton, Dialog, DialogContent} from '@mui/material';
 
 import React, {useState} from "react";
-import CreateAssetForm from "@/components/templates/create-asset-form.tsx";
 import SideDrawer from "@/components/organisms/side-drawer.tsx";
 import AssetCard from "@/components/organisms/asset-card.tsx";
 import {Catalog} from "@think-it-labs/edc-connector-ui/catalog.tsx";
-import {useListContext} from "@think-it-labs/edc-connector-ui/list";
 import {dataSetToAsset} from "@/schema/catalog.ts";
-import AssetDetails from "@/components/organisms/asset-details.tsx";
 import {Asset} from "@think-it-labs/edc-connector-client";
+import AssetDetailsDialog from "@/components/organisms/asset-details-dialog.tsx";
 
 export default function CatalogPage() {
-  const { push, connector } = useConnectorDashboardState();
-  const { page, decrementPage, incrementPage, offset, limit, hasPrev } = usePagination();
+  const { connector } = useConnectorDashboardState();
+  const { offset, limit } = usePagination();
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [openAssetData, setOpenAssetData] = useState({
     asset: {} as Asset,
@@ -34,16 +26,13 @@ export default function CatalogPage() {
 
   return (
     <>
-      <Dialog
+      <AssetDetailsDialog
         open={isDetailsModalOpen}
-        maxWidth="lg"
-        className="my-7"
+        asset={openAssetData.asset}
+        participantId={openAssetData.participantId}
         onClose={() => setIsDetailsModalOpen(false)}
-      >
-        <DialogContent style={{ maxWidth: "90vw", width: "1000px" }}>
-          <AssetDetails asset={openAsset} />
-        </DialogContent>
-      </Dialog>
+        contentStyle={{ maxWidth: "90vw", width: "1000px" }}
+      />
 
       <SideDrawer title={<T string="catalog.title" />}>
         <Catalog managementUrl={connector.managementUrl} protocolUrl={connector.protocolUrl} >
