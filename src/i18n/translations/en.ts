@@ -225,7 +225,7 @@ export const en = {
         dataOfferDateRange: "Date Range",
       },
     },
-    "contract-definitions": {
+    contractDefinitions: {
       title: "List all contract definitions",
       description:
         "List all of your contracts offered to the external network. Contract definitions define how other participants would consume owned assets.",
@@ -245,7 +245,7 @@ export const en = {
         buttonSave: "Save changes",
       },
     },
-    "policy-definitions": {
+    policyDefinitions: {
       title: "List all policy definition",
       description:
         "List all owned policies containing rules that describe how others can consume the data you offer.",
@@ -278,7 +278,7 @@ export const en = {
         headingContracts: "Contracts",
       },
     },
-    "contract-agreements": {
+    contractAgreements: {
       title: "List all contract agreements",
       description:
         "List of contract agreements that owned connectors can consume. Listed agreements are the successful outcome of contract negotiations between two EDC connectors.",
@@ -292,7 +292,7 @@ export const en = {
         description: "A single contract agreement",
       },
     },
-    "contract-negotiations": {
+    contractNegotiations: {
       title: "List all contract negotiations",
       description:
         "List of contract agreements that owned connectors can consume. Listed agreements are the successful outcome of contract negotiations between two EDC connectors.",
@@ -310,7 +310,7 @@ export const en = {
         fieldErrorDetail: "Error detail",
       },
     },
-    "transfer-processes": {
+    transferProcesses: {
       title: "List all transfer processes",
       description: "List all outgoing and incoming transfer processes.",
       headingId: "ID",
