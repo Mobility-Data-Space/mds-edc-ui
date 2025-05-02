@@ -19,7 +19,7 @@ function DeleteContractDefinition() {
       variant="unstyled"
       onClick={async () => {
         await deleteItem();
-        push("/assets");
+        push("/my-assets");
       }}
     >
       Delete

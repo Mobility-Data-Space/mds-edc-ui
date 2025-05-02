@@ -57,26 +57,26 @@ const iconsProps: SvgIconProps = { className: "size-7", color: "secondary" };
 const routes: ReactNode[] = [
   <RouteNode
     key="dashboard"
-    href="/"
+    href="/dashboard"
     title="Dashboard"
     icon={<DataUsageIcon {...iconsProps} />}
   />,
   <RouteNode
-    key="/catalog"
-    href="/catalog"
+    key="catalog"
+    href="/catalog-browser"
     title="Catalog Browser"
     icon={<SimCardIcon {...iconsProps} />}
   />,
   <RouteNode
     key="contract-agreements"
-    href="/contract-agreements"
+    href="/contracts"
     title="Contracts"
     icon={<AssignmentTurnedInIcon {...iconsProps} />}
   />,
 
   <RouteNode
     key="transfer-history"
-    href="/transfer-processes"
+    href="/transfer-history"
     title="Transfer History"
     icon={<AssignmentIcon {...iconsProps} />}
   />,
@@ -92,31 +92,30 @@ const routes: ReactNode[] = [
   />,
   <RouteNode
     key="assets"
-    href="/assets"
+    href="/my-assets"
     title="Assets"
     icon={<UploadIcon {...iconsProps} />}
   />,
   <RouteNode
-
     key="policy-definitions"
-    href="/policy-definitions"
+    href="/policies"
     title="Policies"
     icon={<PolicyIcon {...iconsProps} />}
   />,
   <RouteNode
     key="contract-definitions"
-    href="/contract-definitions"
+    href="/data-offers"
     title="Data offers"
     icon={<RuleIcon {...iconsProps} />}
   />,
-  <RouteNode // TODO: extra route that doesn't exist on the old ui
+  <RouteNode
     key="contract-negotiations"
     href="/contract-negotiations"
     title="Contract negotiations"
     icon={<ReceiptText className="size-6" />}
   />,
   // TODO: logout button
-]; // TODO: make hrefs like the old ui
+];
 
 export default function SideDrawer(props: Props) {
   const { title, children } = props;

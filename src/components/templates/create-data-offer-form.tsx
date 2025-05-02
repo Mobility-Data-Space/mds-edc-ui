@@ -163,7 +163,7 @@ export default function CreateDataOfferForm() {
   return (
     <AssetForm
       managementUrl={connector.managementUrl}
-      onSuccess={() => push("/assets")}
+      onSuccess={() => push("/my-assets")}
       getFormDataToSubmit={() => assetFormDataToSubmitData(formData)}
       onFailure={onFormSubmitFail}
     >
