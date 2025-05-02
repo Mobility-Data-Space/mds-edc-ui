@@ -114,7 +114,6 @@ const routes: ReactNode[] = [
     title="Contract negotiations"
     icon={<ReceiptText className="size-6" />}
   />,
-  // TODO: logout button
 ];
 
 export default function SideDrawer(props: Props) {
