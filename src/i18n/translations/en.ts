@@ -24,6 +24,9 @@ export const en = {
       showMore: "Show more",
       showLess: "Show less",
     },
+    dashboard: {
+      title: "Dashboard"
+    },
     assets: {
       title: "My assets",
       description: "Assets shared by my connector",
