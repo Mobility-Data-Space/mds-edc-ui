@@ -151,7 +151,7 @@ export default function CreateAssetForm() {
 
       <AssetForm
         managementUrl={connector.managementUrl}
-        onSuccess={() => push("/assets")}
+        onSuccess={() => push("/my-assets")}
         getFormDataToSubmit={() => assetFormDataToSubmitData(formData)}
         onFailure={onFormSubmitFail}
       >
@@ -220,7 +220,7 @@ export default function CreateAssetForm() {
         <div className="flex justify-end gap-x-2 px-6 py-4">
           <Button
             color="secondary"
-            onClick={() => push("/assets")}
+            onClick={() => push("/my-assets")}
           >
             <T string="common.cancel"/>
           </Button>

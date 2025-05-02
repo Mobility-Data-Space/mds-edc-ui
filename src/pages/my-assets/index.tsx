@@ -1,4 +1,3 @@
-import { Button } from "@/components/atoms/button";
 import { Input } from "@/components/atoms/input";
 import SearchIcon from '@mui/icons-material/Search';
 import { AssetsList } from "@think-it-labs/edc-connector-ui/assets-list";
