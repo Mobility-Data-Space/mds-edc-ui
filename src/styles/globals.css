@@ -4,6 +4,12 @@
 /* noinspection CssInvalidAtRule */
 @plugin "@tailwindcss/typography";
 
+/* noinspection CssInvalidAtRule */
+@theme {
+  --color-active: #dedede;
+  --color-background: #fafafa;
+}
+
 @font-face {
   font-display: swap;
   font-family: 'Sans';
