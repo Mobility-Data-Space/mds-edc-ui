@@ -7,6 +7,8 @@ import {
 import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-state";
 import { T } from "@/i18n";
 import { useRouter } from "next/router";
+import React from "react";
+import SideDrawer from "@/components/organisms/side-drawer.tsx";
 
 function DeleteContractDefinition() {
   const { deleteItem } = useContractDefinitionContext();
@@ -17,7 +19,7 @@ function DeleteContractDefinition() {
       variant="unstyled"
       onClick={async () => {
         await deleteItem();
-        push("/assets");
+        push("/my-assets");
       }}
     >
       Delete
@@ -30,20 +32,11 @@ export default function ContractDefinitionViewPage() {
   const { connector } = useConnectorDashboardState();
   const managementUrl = connector?.managementUrl as string;
   return (
-    <ConnectorDashboard>
+    <SideDrawer title={<T string="contractDefinitions.[id].title" />}>
       <ContractDefinitionView
         id={id}
         managementUrl={managementUrl}
       >
-        <ConnectorDashboard.Section>
-          <ConnectorDashboard.Title>
-            <T string="title" />
-          </ConnectorDashboard.Title>
-          <ConnectorDashboard.Description>
-            <T string="description" />
-          </ConnectorDashboard.Description>
-        </ConnectorDashboard.Section>
-
         <ConnectorDashboard.Section>
           <h3 className="text-lg font-bold text-gray-800">
             <ContractDefinitionView.Id />
@@ -57,6 +50,6 @@ export default function ContractDefinitionViewPage() {
           <DeleteContractDefinition />
         </ConnectorDashboard.Section>
       </ContractDefinitionView>
-    </ConnectorDashboard>
+    </SideDrawer>
   );
 }

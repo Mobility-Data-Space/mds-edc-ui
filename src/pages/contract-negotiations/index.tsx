@@ -8,6 +8,8 @@ import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-stat
 import { usePagination } from "@/hooks/use-pagination";
 import { T, useTranslator } from "@/i18n";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
+import React from "react";
+import SideDrawer from "@/components/organisms/side-drawer.tsx";
 
 export default function ContractNegotiationsListPage() {
   const { push, connector } = useConnectorDashboardState();
@@ -16,7 +18,7 @@ export default function ContractNegotiationsListPage() {
   const { decrementPage, incrementPage, offset, limit, hasPrev, page } =
     usePagination();
   return (
-    <ConnectorDashboard>
+    <SideDrawer title={<T string="contractNegotiations.title" />}>
       <ContractNegotiationsList managementUrl={managementUrl}>
         <ConnectorDashboard.Section>
           <ConnectorDashboard.Title>
@@ -162,6 +164,6 @@ export default function ContractNegotiationsListPage() {
           </div>
         </ContractNegotiationsList.Loading>
       </ContractNegotiationsList>
-    </ConnectorDashboard>
+    </SideDrawer>
   );
 }
