@@ -1,17 +1,16 @@
-import React, {useMemo, useState} from "react";
+import React, {useState} from "react";
 import { T } from "@/i18n";
-import {Asset} from "@think-it-labs/edc-connector-client";
+import {Asset, ContractDefinition} from "@think-it-labs/edc-connector-client";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
-import {
-  ASSET_TITLE,
-} from "@/schema/asset.ts";
+import {ASSET_ID, ASSET_TITLE} from "@/schema/asset.ts";
 import Typography from "@mui/material/Typography";
 import {AssetIcon} from "@/components/atoms/asset-icon.tsx";
-import {Button as MuiButton, Dialog, DialogActions, DialogContent, DialogTitle, IconButton} from "@mui/material";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton} from "@mui/material";
 import AssetDetails from "@/components/organisms/asset-details.tsx";
 import {DeleteDialog} from "@/components/molecules/delete-dialog.tsx";
+import { enqueueSnackbar } from 'notistack';
 
 interface AssetDetailsDialogProps {
   asset: Asset;
@@ -19,12 +18,16 @@ interface AssetDetailsDialogProps {
   onClose: () => void;
   onEditClick?: () => void;
   deleteEnabled?: boolean;
-  participantId?: string;
+  participantId: string;
+  connectorEndpoint: string;
+  contractDefinitions?: ContractDefinition[];
+  assetIsOwned?: boolean;
   deleteItem?: () => Promise<void>;
   onDeleteSuccess?: () => void;
   contentStyle?: { [key: string]: string }
 }
-export default function AssetDetailsDialog({ open, onClose, asset, onEditClick, deleteEnabled = false, participantId, deleteItem, contentStyle = {} }: AssetDetailsDialogProps) {
+export default function AssetDetailsDialog({ open, onClose, asset, onEditClick, deleteEnabled = false, participantId, connectorEndpoint, contractDefinitions, assetIsOwned = true, deleteItem, onDeleteSuccess, contentStyle = {} }: AssetDetailsDialogProps) {
+  const id = asset[ASSET_ID];
   const title = readValue(asset.properties, ASSET_TITLE) || "";
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
@@ -86,12 +89,12 @@ export default function AssetDetailsDialog({ open, onClose, asset, onEditClick, 
           </div>
         </DialogTitle>
         <DialogContent style={contentStyle}>
-          <AssetDetails asset={asset} />
+          <AssetDetails asset={asset} participantId={participantId} connectorEndpoint={connectorEndpoint} contractDefinitions={contractDefinitions} assetIsOwned={assetIsOwned} />
         </DialogContent>
         <DialogActions>
-          <MuiButton color="secondary" onClick={onClose}>
+          <Button color="secondary" onClick={onClose}>
             <T string="common.close"/>
-          </MuiButton>
+          </Button>
         </DialogActions>
       </Dialog>
     </>

@@ -1,15 +1,19 @@
 import {Asset, Catalog as CatalogResult, CriterionInput, QuerySpec} from "@think-it-labs/edc-connector-client";
-import React, {PropsWithChildren, useCallback, useEffect, useMemo} from "react";
+import React, {PropsWithChildren, ReactNode, useCallback, useEffect, useMemo} from "react";
 import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
 import {List, useListContext} from "./list";
 import { Local } from "./local";
-import {CATALOG_DATASET, PARTICIPANT_ID} from "../../../../src/schema/catalog"; // TODO: should not import from outside the package
+
+export const CATALOG_DATASET = "http://www.w3.org/ns/dcat#dataset";
+export const PARTICIPANT_ID = "https://w3id.org/dspace/v0.8/participantId";
+export const ENDPOINT_URL = "http://www.w3.org/ns/dcat#endpointURL";
+export const DCAT_SERVICE_URL = "http://www.w3.org/ns/dcat#service";
 
 export interface CatalogListItemProps<T> {
   item: T; // fix: type this
   deleteItem: () => void;
   index: number;
-  participantId?: string;
+  participantId: string;
 }
 
 export interface CatalogListItemsProps<T> {
@@ -59,6 +63,28 @@ export function Catalog({
     </List>
   );
 }
+
+interface CatalogProviderChildrenProps {
+  participantId: string,
+  endpointUrl: string
+}
+
+interface CatalogProviderProps {
+  children: ({ participantId, endpointUrl }: CatalogProviderChildrenProps) => ReactNode
+}
+
+Catalog.Provider = function CatalogProvider({ children }: CatalogProviderProps) {
+  const { items } = useListContext<CatalogResult>();
+  const participantIdJsonLD = items[PARTICIPANT_ID as any];
+  const participantId = (participantIdJsonLD && participantIdJsonLD[0] && participantIdJsonLD[0]["@value"]) || "";
+  const dcatCatalogServiceJsonLD = items[DCAT_SERVICE_URL as any];
+  const endpointUrlJsonLd = dcatCatalogServiceJsonLD && dcatCatalogServiceJsonLD[0] && dcatCatalogServiceJsonLD[0][ENDPOINT_URL];
+  const endpointUrl = (endpointUrlJsonLd && endpointUrlJsonLd[0] && endpointUrlJsonLd[0]["@value"]) || "";
+
+  return (<>
+    {children({ participantId, endpointUrl })}
+  </>);
+};
 
 Catalog.Items = function ListItems({ children, limit, offset, filterExpression, sortField, sortOrder, }: CatalogListItemsProps<CatalogResult>) {
   const {
