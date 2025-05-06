@@ -39,7 +39,7 @@ export function AssetDataSamples({ translator, formData, onChange, errors }: Ass
       valueLabel={translator("assets.new.fieldAdvancedInfoDataSampleUrlValueLabel")}
       valuePlaceholder="https://my-org.com/my-data-offer"
       error={errors[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS]}
-      value={formData[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS]}
+      value={formData[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS] as []}
       valueOnly
       onChange={(value) => onChange({...formData, [ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS]: value})}
     />

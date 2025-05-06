@@ -1,24 +1,7 @@
-import React, {useState, useRef, useEffect} from "react";
+import React from "react";
 import {T} from "@/i18n";
-import {MarkdownText} from "@/components/atoms/markdown-text.tsx";
-import {
-  Button as MuiButton,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Icon,
-  IconButton
-} from "@mui/material";
-import KeyboardDoubleArrowDown from '@mui/icons-material/KeyboardDoubleArrowDown';
-import KeyboardDoubleArrowUp from '@mui/icons-material/KeyboardDoubleArrowUp';
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
 import Typography from "@mui/material/Typography";
-import {Asset} from "@think-it-labs/edc-connector-client";
-import {AssetIcon} from "@/components/atoms/asset-icon.tsx";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AssetDetails from "@/components/organisms/asset-details.tsx";
 
 interface DeleteDialogProps {
   title?: string;
@@ -51,12 +34,12 @@ export function DeleteDialog({ open, onClose, title = "", content = "", onConfir
         <T string={content} />
       </DialogContent>
       <DialogActions>
-        <MuiButton color="secondary" onClick={onClose}>
+        <Button color="secondary" onClick={onClose}>
           <T string="common.close"/>
-        </MuiButton>
-        <MuiButton color="error" variant="contained" onClick={onConfirmAndClose}>
+        </Button>
+        <Button color="error" variant="contained" onClick={onConfirmAndClose}>
           <T string="common.delete"/>
-        </MuiButton>
+        </Button>
       </DialogActions>
     </Dialog>
   );
