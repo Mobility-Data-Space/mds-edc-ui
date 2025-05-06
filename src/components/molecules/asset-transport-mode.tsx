@@ -4,7 +4,7 @@ import {
   CreateAssetAdvancedInfoFormData,
 } from "@/schema/asset.ts";
 import {MuiSelect} from "@/components/atoms/mui-select.tsx";
-import {DATA_GEO_REFERENCE_DATA} from "@/constants/data-category.ts";
+import {GEO_REFERENCE_DATA} from "@/constants/data-category.ts";
 
 export interface AssetTransportModeProps {
   translator: (key: string) => string;
@@ -20,7 +20,7 @@ export function AssetTransportMode({ translator, formData, onChange, errors }: A
     <MuiSelect
       name={ASSET_ADVANCED_INFO_TRANSPORT_MODE}
       id="advanced-info-transport-mode"
-      options={DATA_GEO_REFERENCE_DATA}
+      options={GEO_REFERENCE_DATA}
       placeholder={translator("assets.new.fieldAdvancedInfoTransportModePlaceholder")}
       value={formData[ASSET_ADVANCED_INFO_TRANSPORT_MODE]}
       error={errors[ASSET_ADVANCED_INFO_TRANSPORT_MODE]}

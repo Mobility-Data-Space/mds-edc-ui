@@ -1,3 +1,9 @@
+import {pascalCase} from "@/utilities/utilities.ts";
+
+export const CONTEXT_CAT = { prefix: "cat", value: "http://w3id.org/mds/data-categories#" };
+export const CONTEXT_SUB = { prefix: "sub", value: "http://w3id.org/mds/data-subcategories#" };
+export const CONTEXT_TMODE = { prefix: "tmode", value: "http://w3id.org/mds/transport-mode#" };
+
 export const TRAFFIC_INFORMATION = 'Traffic Information';
 export const ROADWORKS_AND_ROAD_CONDITIONS = 'Roadworks and Road Conditions';
 export const TRAFFIC_FLOW_INFORMATION = 'Traffic Flow Information';
@@ -13,67 +19,78 @@ export const VARIOUS = 'Various';
 export type TYPE_DATA_CATEGORY = typeof TRAFFIC_INFORMATION | typeof ROADWORKS_AND_ROAD_CONDITIONS | typeof TRAFFIC_FLOW_INFORMATION | typeof PARKING_INFORMATION | typeof ELECTROMOBILITY | typeof TRAFFIC_SIGNS_AND_SPEED_INFORMATION | typeof WEATHER_INFORMATION | typeof PUBLIC_TRANSPORT_INFORMATION | typeof SHARED_AND_ON_DEMAND_MOBILITY | typeof INFRASTRUCTURE_AND_LOGISTICS | typeof VARIOUS
 
 
-export const DATA_SUBCATEGORIES_DATA = {
+export const SUBCATEGORIES = {
   [TRAFFIC_INFORMATION]: [
-    { value: 'Accvalueents' },
-    { value: 'Hazard Warnings' },
+    'Accvalueents',
+    'Hazard Warnings',
   ],
   [ROADWORKS_AND_ROAD_CONDITIONS]: [
-    { value: 'Roadworks' },
-    { value: 'Road Conditions' },
+    'Roadworks',
+    'Road Conditions',
   ],
   [TRAFFIC_FLOW_INFORMATION]: [
-    { value: 'Realtime Traffic Flow Data' },
-    { value: 'Forecast Traffic Flow Data' },
+    'Realtime Traffic Flow Data',
+    'Forecast Traffic Flow Data',
   ],
   [PARKING_INFORMATION]: [
-    { value: 'Availability and Forecast' },
-    { value: 'Prices' },
+    'Availability and Forecast',
+    'Prices',
   ],
   [ELECTROMOBILITY]: [
-    { value: 'Location of Charging Station' },
-    { value: 'Prices at Charging Station' },
-    { value: 'Availability of Charging Station' },
+    'Location of Charging Station',
+    'Prices at Charging Station',
+    'Availability of Charging Station',
   ],
   [TRAFFIC_SIGNS_AND_SPEED_INFORMATION]: [
-    { value: 'Dynamic Speed Information' },
-    { value: 'Dynamic Traffic Signs' },
-    { value: 'Static Traffic Signs' },
+    'Dynamic Speed Information',
+    'Dynamic Traffic Signs',
+    'Static Traffic Signs',
   ],
   [WEATHER_INFORMATION]: [
-    { value: 'Current Weather Conditions' },
-    { value: 'Weather Forecast ' },
-    { value: 'Special Events or Disruptions' },
+    'Current Weather Conditions',
+    'Weather Forecast ',
+    'Special Events or Disruptions',
   ],
   [PUBLIC_TRANSPORT_INFORMATION]: [
-    { value: 'Timetables' },
-    { value: 'Fare' },
-    { value: 'Location Information' },
+    'Timetables',
+    'Fare',
+    'Location Information',
   ],
   [SHARED_AND_ON_DEMAND_MOBILITY]: [
-    { value: 'Vehicle Information ' },
-    { value: 'Availability ' },
-    { value: 'Location ' },
-    { value: 'Range ' },
+    'Vehicle Information ',
+    'Availability ',
+    'Location ',
+    'Range ',
   ],
   [INFRASTRUCTURE_AND_LOGISTICS]: [
-    { value: 'General Information About Planning Of Routes' },
-    { value: 'Pedestrian Networks' },
-    { value: 'Cycling Networks' },
-    { value: 'Road Network' },
-    { value: 'Water Routes' },
-    { value: 'Cargo Logistics' },
-    { value: 'Toll Information' },
+    'General Information About Planning Of Routes',
+    'Pedestrian Networks',
+    'Cycling Networks',
+    'Road Network',
+    'Water Routes',
+    'Cargo Logistics',
+    'Toll Information',
   ],
   [VARIOUS]: [],
 }
 
-export const DATA_CATEGORY_SELECT_DATA: { value: string }[] = Object.keys(DATA_SUBCATEGORIES_DATA).map(value => ({ value }));
+export const DATA_CATEGORY_SELECT_DATA = Object.keys(SUBCATEGORIES).map(value => ({
+  text: value,
+  value: `${CONTEXT_CAT.prefix}:${pascalCase(value)}`,
+}));
 
+const _DATA_SUBCATEGORIES_DATA: { [key: string]: {text: string, value: string}[] } = {};
+Object.entries(SUBCATEGORIES).forEach(([category, subCategories]) => {
+  _DATA_SUBCATEGORIES_DATA[`${CONTEXT_CAT.prefix}:${pascalCase(category)}`] = subCategories.map(subcategory => ({
+    text: subcategory,
+    value: `${CONTEXT_SUB.value}${pascalCase(subcategory)}`,
+  }))
+});
+export const DATA_SUBCATEGORIES_DATA = _DATA_SUBCATEGORIES_DATA;
 
-export const DATA_GEO_REFERENCE_DATA = [
-  { value: "Rail" },
-  { value: "Road" },
-  { value: "Water" },
-  { value: "Air" },
+export const GEO_REFERENCE_DATA = [
+  { text: "Rail", value: `${CONTEXT_TMODE.prefix}:Rail` },
+  { text: "Road", value: `${CONTEXT_TMODE.prefix}:Road` },
+  { text: "Water", value: `${CONTEXT_TMODE.prefix}:Water` },
+  { text: "Air", value: `${CONTEXT_TMODE.prefix}:Air` },
 ];
