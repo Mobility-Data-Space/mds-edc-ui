@@ -14,11 +14,11 @@ import {truncate} from "@/utilities/utilities.ts";
 
 export interface AssetCardProps {
   asset: Asset,
-  participantId?: string, // TODO: make not optional after passing participantId from assets page
+  participantId: string,
   onClick?: () => void
 }
 
-export default function AssetCard({ asset, participantId = "", onClick = () => {} }: AssetCardProps) {
+export default function AssetCard({ asset, participantId, onClick = () => {} }: AssetCardProps) {
   const keywords = asset.properties[ASSET_KEYWORDS] || [];
   const slicedKeywords = keywords.slice(0, 3);
   const remainingKeywordsCount = keywords.length - slicedKeywords.length;

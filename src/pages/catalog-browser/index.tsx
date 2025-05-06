@@ -6,7 +6,7 @@ import React, {useState} from "react";
 import SideDrawer from "@/components/organisms/side-drawer.tsx";
 import AssetCard from "@/components/organisms/asset-card.tsx";
 import {Catalog} from "@think-it-labs/edc-connector-ui/catalog.tsx";
-import {dataSetToAsset} from "@/schema/catalog.ts";
+import {dataSetToAsset, dataSetToContractDefinitions} from "@/schema/catalog.ts";
 import {Asset} from "@think-it-labs/edc-connector-client";
 import AssetDetailsDialog from "@/components/organisms/asset-details-dialog.tsx";
 
@@ -16,26 +16,31 @@ export default function CatalogPage() {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [openAssetData, setOpenAssetData] = useState({
     asset: {} as Asset,
-    participantId: "" as string | undefined,
+    participantId: "" as string,
   });
 
-  const openDetailsModal = (asset: Asset, participantId?: string) => {
+  const openDetailsModal = (asset: Asset, participantId: string) => {
     setIsDetailsModalOpen(true);
     setOpenAssetData({ asset, participantId });
   };
 
   return (
     <>
-      <AssetDetailsDialog
-        open={isDetailsModalOpen}
-        asset={openAssetData.asset}
-        participantId={openAssetData.participantId}
-        onClose={() => setIsDetailsModalOpen(false)}
-        contentStyle={{ maxWidth: "90vw", width: "1000px" }}
-      />
-
       <SideDrawer title={<T string="catalog.title" />}>
         <Catalog managementUrl={connector.managementUrl} protocolUrl={connector.protocolUrl} >
+          <Catalog.Provider>
+            {({ endpointUrl }) => (
+              <AssetDetailsDialog
+                open={isDetailsModalOpen}
+                asset={openAssetData.asset}
+                participantId={openAssetData.participantId}
+                connectorEndpoint={endpointUrl}
+                contractDefinitions={dataSetToContractDefinitions(openAssetData.asset)}
+                onClose={() => setIsDetailsModalOpen(false)}
+                contentStyle={{ maxWidth: "90vw", width: "1000px" }}
+              />
+            )}
+          </Catalog.Provider>
           <div className="flex justify-end py-4">
 
             {/* TODO: move pagination here */}

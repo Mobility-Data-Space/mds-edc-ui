@@ -1,7 +1,6 @@
 import {ASSET_ID} from "@/schema/asset.ts";
 
-export const CATALOG_DATASET = "http://www.w3.org/ns/dcat#dataset";
-export const PARTICIPANT_ID = "https://w3id.org/dspace/v0.8/participantId";
+export const HAS_POLICY = "http://www.w3.org/ns/odrl/2/hasPolicy";
 
 export const dataSetToAsset = (dataset: any) => { // TODO: dataSet type
 
@@ -13,3 +12,7 @@ export const dataSetToAsset = (dataset: any) => { // TODO: dataSet type
     privateProperties: dataset.privateProperties || {},
   };
 }
+
+export const dataSetToContractDefinitions = (dataset: any) => {
+  return dataset[HAS_POLICY] || [];
+};

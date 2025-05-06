@@ -39,7 +39,7 @@ export const assetFormDataToSubmitData = (formData: CreateAssetFormData) => {
   };
 };
 
-const assetGeneralFieldsToShow = (asset: Asset): AssetFieldProps[] => {
+const assetGeneralFieldsToShow = (asset: Asset, participantId: string, connectorEndpoint: string): AssetFieldShowProps[] => {
   const assetLanguage = readValue(asset.properties, ASSET_LANGUAGE);
 
   return [
@@ -75,7 +75,7 @@ const assetGeneralFieldsToShow = (asset: Asset): AssetFieldProps[] => {
     },
     {
       label: "assets.new.participantId",
-      value: "",  // TODO participantId from catalog[http://www.w3.org/ns/dcat#service],
+      value: participantId,
       icon: "category"
     },
     {
@@ -85,7 +85,7 @@ const assetGeneralFieldsToShow = (asset: Asset): AssetFieldProps[] => {
     },
     {
       label: "assets.new.connectorEndpoint",
-      value: "",  // TODO connectorEndpoint from catalog[http://www.w3.org/ns/dcat#service],
+      value: connectorEndpoint,
       icon: "link"
     },
   ];
@@ -260,7 +260,7 @@ const assetDataAddressFieldsToShow = (asset: Asset): AssetFieldProps[] => {
 
 export const assetFieldsToShow = (asset: Asset): AssetFieldProps[] => {
   return [
-    ...assetGeneralFieldsToShow(asset),
+    ...assetGeneralFieldsToShow(asset, participantId, connectorEndpoint),
     ...assetDataAddressFieldsToShow(asset),
     ...assetAdvancedFieldsToShow(asset),
   ]
