@@ -13,8 +13,10 @@ import SideDrawer from "@/components/organisms/side-drawer.tsx";
 import AssetCard from "@/components/organisms/asset-card.tsx";
 import {Asset} from "@think-it-labs/edc-connector-client";
 import AssetDetailsDialog from "@/components/organisms/asset-details-dialog.tsx";
+import {useRouter} from "next/router";
 
 export default function AssetListPage() {
+  const router = useRouter();
   const { connector } = useConnectorDashboardState();
   const { offset, limit } = usePagination();
   const { translator } = useTranslator();
@@ -50,7 +52,7 @@ export default function AssetListPage() {
         deleteEnabled
         deleteItem={openAssetData.deleteItem}
         contentStyle={{ maxWidth: "90vw", width: "1000px" }}
-        // TODO: on delete success refresh asset list
+        onDeleteSuccess={() => router.reload()}
       />
 
       <SideDrawer title={<T string="assets.title" />}>

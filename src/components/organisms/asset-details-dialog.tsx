@@ -21,6 +21,7 @@ interface AssetDetailsDialogProps {
   deleteEnabled?: boolean;
   participantId?: string;
   deleteItem?: () => Promise<void>;
+  onDeleteSuccess?: () => void;
   contentStyle?: { [key: string]: string }
 }
 export default function AssetDetailsDialog({ open, onClose, asset, onEditClick, deleteEnabled = false, participantId, deleteItem, contentStyle = {} }: AssetDetailsDialogProps) {
@@ -30,9 +31,13 @@ export default function AssetDetailsDialog({ open, onClose, asset, onEditClick, 
   const onDeleteConfirm = async () => {
     try {
       deleteItem && await deleteItem();
-      onClose()
+      onClose();
+      if (onDeleteSuccess) {
+        onDeleteSuccess();
+      }
     } catch (error) {
-      // TODO: show error message
+      /* TODO: translate */
+      enqueueSnackbar(`Failed deleting asset ${id}`);
     }
   };
   return (
