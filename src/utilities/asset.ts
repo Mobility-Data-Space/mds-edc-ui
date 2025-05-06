@@ -8,6 +8,22 @@ import {DELIMITER} from "@/i18n";
 import {extractArrayValues} from "@/utilities/utilities.ts";
 import {ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE, ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY, ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY, ASSET_ADVANCED_INFO_GEO_LOCATION, ASSET_ADVANCED_INFO_GEO_REFERENCE_METHOD, ASSET_ADVANCED_INFO_NUTS_LOCATIONS, ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS, ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE, ASSET_ADVANCED_INFO_TRANSPORT_MODE, ASSET_CONTENT_TYPE, ASSET_DATA_ADDRESS_BASE_URL, ASSET_DATA_ADDRESS_DESCRIPTION, ASSET_DATA_ADDRESS_ENABLE_BODY_PARAMETERIZATION, ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD, ASSET_DATA_ADDRESS_HTTP_PROXY_PATH, ASSET_DATA_ADDRESS_QUERY_PARAMS, ASSET_DATA_ADDRESS_TYPE, ASSET_ENDPOINT_DOCUMENTATION, ASSET_ID, ASSET_LANGUAGE, ASSET_PUBLISHER, ASSET_STANDARD_LICENSE, ASSET_TITLE, ASSET_VERSION, CreateAssetDataAddressFormData, CreateAssetFormData, DATA_OFFER_CONTACT_EMAIL, DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT, DATA_OFFER_TYPE} from "@/schema/asset.ts";
 
+const temporalCoverageValue = ([start, end]: [string, string]) => {
+  if (!start && !end) {
+    return "";
+  }
+
+  if (!end) {
+    return `Start: ${start}`;
+  }
+
+  if (!start) {
+    return `End: ${end}`;
+  }
+
+  return `${start} - ${end}`;
+}
+
 export const computeRequiredDataOfferAddressProperties = (formData: CreateAssetDataAddressFormData): (keyof CreateAssetDataAddressFormData)[] => {
   const required: (keyof CreateAssetDataAddressFormData)[] = [];
   if (formData[DATA_OFFER_TYPE] === DATA_OFFER_TYPE_DATA_SOURCE.value) {
@@ -205,7 +221,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): AssetFieldShowProps[] => {
     advancedFields.push({
       icon: 'today',
       label: 'assets.new.fieldAdvancedInfoTemporalCoverage',
-      value: temporalCoverage.map((date: { "@value": string }) => date["@value"]).join(" - "), // TODO: add start end prefixes when only start or end date is set
+      value: temporalCoverageValue(temporalCoverage.map((date: { "@value": string }) => date["@value"])),
     });
   }
 
