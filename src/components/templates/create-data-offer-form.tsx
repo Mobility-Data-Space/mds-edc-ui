@@ -643,7 +643,7 @@ export default function CreateDataOfferForm() {
                   <T string="dataOffer.new.policyExpression"/>
                 </label>
                 <PolicyExpression
-                  value={formData.properties[DATA_OFFER_CONSTRAINTS]}
+                  value={formData.properties[DATA_OFFER_CONSTRAINTS] as []}
                   onChange={(value) => generalInfoFormOnChange({
                     ...formData.properties,
                     [DATA_OFFER_CONSTRAINTS]: value

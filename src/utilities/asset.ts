@@ -1,7 +1,7 @@
 import {removeEmptyFields} from "@/utilities/form.ts";
 import {DATA_ADDRESS_TYPE_HTTP, DATA_OFFER_TYPE_DATA_SOURCE, DATA_OFFER_TYPE_ON_REQUEST} from "@/constants/data-address-types.ts";
 import {Asset} from "@think-it-labs/edc-connector-client";
-import {AssetFieldProps} from "@/components/molecules/asset-field-show.tsx";
+import {AssetFieldShowProps} from "@/components/molecules/asset-field-show.tsx";
 import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
 import {LANGUAGES} from "@/constants/languages.ts";
 import {DELIMITER} from "@/i18n";
@@ -91,7 +91,7 @@ const assetGeneralFieldsToShow = (asset: Asset, participantId: string, connector
   ];
 };
 
-const assetAdvancedFieldsToShow = (asset: Asset): AssetFieldProps[] => {
+const assetAdvancedFieldsToShow = (asset: Asset): AssetFieldShowProps[] => {
   const advancedFields = [];
   const assetTitle = readValue(asset.properties, ASSET_TITLE) || "";
 
@@ -212,7 +212,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): AssetFieldProps[] => {
   return advancedFields;
 };
 
-const assetDataAddressFieldsToShow = (asset: Asset): AssetFieldProps[] => {
+const assetDataAddressFieldsToShow = (asset: Asset): AssetFieldShowProps[] => {
   const dataAddressFieldsToMerge = [
     {
       label: "assets.new.httpProxyMethod",
@@ -258,7 +258,7 @@ const assetDataAddressFieldsToShow = (asset: Asset): AssetFieldProps[] => {
   return dataSourceFields;
 };
 
-export const assetFieldsToShow = (asset: Asset): AssetFieldProps[] => {
+export const assetFieldsToShow = (asset: Asset, participantId: string, connectorEndpoint: string): AssetFieldShowProps[] => {
   return [
     ...assetGeneralFieldsToShow(asset, participantId, connectorEndpoint),
     ...assetDataAddressFieldsToShow(asset),
@@ -266,7 +266,7 @@ export const assetFieldsToShow = (asset: Asset): AssetFieldProps[] => {
   ]
 };
 
-export const assetPrivateFieldsToShow = (asset: Asset): AssetFieldProps[] => {
+export const assetPrivateFieldsToShow = (asset: Asset): AssetFieldShowProps[] => {
   const objectEntries = Object.entries(asset.privateProperties);
   if (objectEntries.length === 0) {
     return [];
@@ -279,7 +279,7 @@ export const assetPrivateFieldsToShow = (asset: Asset): AssetFieldProps[] => {
   }));
 };
 
-export const assetCustomFieldsToShow = (asset: Asset): AssetFieldProps[] => {
+export const assetCustomFieldsToShow = (asset: Asset): AssetFieldShowProps[] => {
   const dataAddressDescription = readValue(asset.dataAddress, ASSET_DATA_ADDRESS_DESCRIPTION)
   let customProperties = {};
   try {

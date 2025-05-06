@@ -1,10 +1,10 @@
 import React from "react";
 import { T } from "@/i18n";
 import Typography from "@mui/material/Typography";
-import {AssetFieldProps, AssetFieldShow} from "@/components/molecules/asset-field-show.tsx";
+import {AssetFieldShowProps, AssetFieldShow} from "@/components/molecules/asset-field-show.tsx";
 
 interface AssetFieldGridProps {
-  fields: AssetFieldProps[];
+  fields: AssetFieldShowProps[];
   label?: string;
   className?: string;
 }

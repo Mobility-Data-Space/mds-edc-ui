@@ -37,7 +37,7 @@ export function AssetNutsLocations({ translator, formData, onChange, errors }: A
       valueLabel={translator("assets.new.fieldAdvancedInfoNutsLocationValueLabel")}
       valuePlaceholder="DE929"
       error={errors[ASSET_ADVANCED_INFO_NUTS_LOCATIONS]}
-      value={formData[ASSET_ADVANCED_INFO_NUTS_LOCATIONS]}
+      value={formData[ASSET_ADVANCED_INFO_NUTS_LOCATIONS] as []}
       valueOnly
       onChange={(value) => onChange({...formData, [ASSET_ADVANCED_INFO_NUTS_LOCATIONS]: value})}
     />
