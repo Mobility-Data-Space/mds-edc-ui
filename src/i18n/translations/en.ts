@@ -25,6 +25,8 @@ export const en = {
       showMore: "Show more",
       showLess: "Show less",
       negotiate: "Negotiate",
+      showJsonLd: "Show JSON-LD",
+      cleanedJson: "Cleaned JSON",
     },
     dashboard: {
       title: "Dashboard"
@@ -240,7 +242,8 @@ export const en = {
         "List all of your contracts offered to the external network. Contract definitions define how other participants would consume owned assets.",
       buttonAdd: "Add contract definition",
       headingId: "ID",
-      contractPolicy: "Contract policy",
+      contractPolicy: "Contract Policy",
+      contractPolicyJsonLd: "Contract Policy JSON-LD",
       headingAccessPolicy: "Access policy",
       "[id]": {
         title: "View contract definition",
@@ -272,6 +275,15 @@ export const en = {
         buttonCancel: "Cancel",
         buttonSave: "Save changes",
       },
+      constraint: {
+        POLICY_EVALUATION_TIME: "Time Restriction",
+        POLICY_EVALUATION_TIMETooltip: "POLICY_EVALUATION_TIME: Time at which the policy is evaluated. This can be used to restrict the data offer to certain time periods",
+        REFERRING_CONNECTOR: "Consumer's Participant ID",
+        REFERRING_CONNECTORTooltip: "REFERRING_CONNECTOR: Consumer's Participant ID, also called Connector ID, of the counter-party connector.",
+        andTooltip: "AND: Conjunction of several expressions. Evaluates to true if and only if all child expressions are true",
+        orTooltip: "OR: Disjunction of several expressions. Evaluates to true if and only if at least one child expression is true",
+        xoneTooltip: "XONE: XONE operation. Evaluates to true if and only if exactly one child expression is true"
+      }
     },
     catalog: {
       title: "Catalog Browser",

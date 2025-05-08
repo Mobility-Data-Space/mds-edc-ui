@@ -22,6 +22,12 @@ export const operatorGreaterThanOrEqual = {
   tooltip: 'Greater than or equal to',
 };
 
+export const operatorGreaterThanOrEqual2 = {
+  value: 'GTEQ',
+  text: '≥',
+  tooltip: 'Greater than or equal to',
+};
+
 export const operatorGreaterThan = {
   value: 'GT',
   text: '>',
@@ -30,6 +36,12 @@ export const operatorGreaterThan = {
 
 export const operatorLessThanOrEqual =   {
   value: 'LEQ',
+  text: '≤',
+  tooltip: 'Less than or equal to',
+};
+
+export const operatorLessThanOrEqual2 =   {
+  value: 'LTEQ',
   text: '≤',
   tooltip: 'Less than or equal to',
 };
@@ -74,7 +86,7 @@ export const operatorIsAllOf = {
   tooltip: 'Is all of',
 };
 
-export const operators = [ operatorEquals, operatorNotEqual, operatorGreaterThanOrEqual, operatorGreaterThan, operatorLessThanOrEqual, operatorLessThan, operatorIn, operatorHasPart, operatorIsA, operatorIsOneOf, operatorIsAnyOf, operatorIsAllOf ];
+export const operators = [ operatorEquals, operatorNotEqual, operatorGreaterThanOrEqual, operatorGreaterThanOrEqual2, operatorGreaterThan, operatorLessThanOrEqual, operatorLessThanOrEqual2, operatorLessThan, operatorIn, operatorHasPart, operatorIsA, operatorIsOneOf, operatorIsAnyOf, operatorIsAllOf ];
 
 export const consumerParticipantIdOperators = [operatorEquals, operatorIn];
 
