@@ -114,10 +114,10 @@ Catalog.Items = function ListItems({ children, limit, offset, filterExpression, 
 
   const participantIdJsonLD = items[PARTICIPANT_ID as any];
   const participantId = (participantIdJsonLD && participantIdJsonLD[0] && participantIdJsonLD[0]["@value"]) || "";
+
   return (
     <>
-      {/* TODO: remove type any */}
-      {!isLoading && items[CATALOG_DATASET as any] && items[CATALOG_DATASET as any]?.map((item: any, index: number) => (
+      {!isLoading && items["https://www.w3.org/ns/dcat/dataset" as any] && items["https://www.w3.org/ns/dcat/dataset" as any]?.map((item: any, index: number) => (
         <Item
           key={getId(item)}
           item={item}

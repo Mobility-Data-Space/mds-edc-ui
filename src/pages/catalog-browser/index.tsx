@@ -7,7 +7,7 @@ import SideDrawer from "@/components/organisms/side-drawer.tsx";
 import AssetCard from "@/components/organisms/asset-card.tsx";
 import {Catalog} from "@think-it-labs/edc-connector-ui/catalog.tsx";
 import {dataSetToAsset, dataSetToContractDefinitions} from "@/schema/catalog.ts";
-import {Asset} from "@think-it-labs/edc-connector-client";
+import {Asset, ContractDefinition} from "@think-it-labs/edc-connector-client";
 import AssetDetailsDialog from "@/components/organisms/asset-details-dialog.tsx";
 
 export default function CatalogPage() {
@@ -17,11 +17,12 @@ export default function CatalogPage() {
   const [openAssetData, setOpenAssetData] = useState({
     asset: {} as Asset,
     participantId: "" as string,
+    contractDefinitions: [] as ContractDefinition[],
   });
 
-  const openDetailsModal = (asset: Asset, participantId: string) => {
+  const openDetailsModal = (asset: Asset, participantId: string, contractDefinitions: ContractDefinition[]) => {
     setIsDetailsModalOpen(true);
-    setOpenAssetData({ asset, participantId });
+    setOpenAssetData({ asset, participantId, contractDefinitions });
   };
 
   return (
@@ -35,7 +36,7 @@ export default function CatalogPage() {
                 asset={openAssetData.asset}
                 participantId={openAssetData.participantId}
                 connectorEndpoint={endpointUrl}
-                contractDefinitions={dataSetToContractDefinitions(openAssetData.asset)}
+                contractDefinitions={openAssetData.contractDefinitions}
                 onClose={() => setIsDetailsModalOpen(false)}
                 contentStyle={{ maxWidth: "90vw", width: "1000px" }}
               />
@@ -53,7 +54,7 @@ export default function CatalogPage() {
               sortOrder="DESC"
             >
               {({ item, index, participantId }) => (
-                <AssetCard asset={dataSetToAsset(item) as any} key={index} onClick={() => openDetailsModal(dataSetToAsset(item) as any, participantId)} participantId={participantId} />
+                <AssetCard asset={dataSetToAsset(item) as any} key={index} onClick={() => openDetailsModal(dataSetToAsset(item) as any, participantId, dataSetToContractDefinitions(item))} participantId={participantId} />
               )}
             </Catalog.Items>
           </div>
