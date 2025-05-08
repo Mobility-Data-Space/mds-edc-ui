@@ -5,8 +5,7 @@ import Typography from "@mui/material/Typography";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from '@mui/material';
 import {AssetFieldDialog} from "@/components/molecules/asset-field-dialog.tsx";
 
-// TODO: convert to AssetFieldShowProps
-export interface AssetFieldProps {
+export interface AssetFieldShowProps {
   icon: string;
   label: string;
   value?: string;
@@ -15,22 +14,21 @@ export interface AssetFieldProps {
   valueTitle?: string;
 }
 
-export function AssetFieldShow({ icon, label, value, valueTitle, subLabel, openModalText}: AssetFieldProps): JSX.Element {
+export function AssetFieldShow({ icon, label, value, valueTitle, subLabel, openModalText}: AssetFieldShowProps): JSX.Element {
   const nonNullValue = value || "";
   const [dialogIsOpen, setDialogIsOpen] = React.useState(false);
 
   return (
-    <div className="flex flex-row gap-x-2.5 items-center" >
-      <Icon>{icon}</Icon>
+    <div className="flex flex-row gap-x-2.5" >
+      <Icon className="mt-1.5">{icon}</Icon>
 
       {! openModalText ?
         <div>
-          <Typography variant="body2" color="textDisabled">
-            <T string={label}/>
+          <Typography variant="body2" color="textDisabled" className="uppercase">
+            {0 === label.indexOf('http') ? label : <T string={label}/>}
           </Typography>
           <Typography>
-            {/* TODO: http case */}
-            {0 === nonNullValue.indexOf('http') ? value : <MultiTranslate string={nonNullValue}/>}
+            {0 === nonNullValue.indexOf('http') ? nonNullValue : <MultiTranslate string={nonNullValue}/>}
           </Typography>
         </div> :
         <>

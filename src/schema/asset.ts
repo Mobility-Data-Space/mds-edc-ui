@@ -1,63 +1,65 @@
-import {
-  DATA_ADDRESS_TYPE_HTTP,
-  DATA_OFFER_TYPE_DATA_SOURCE,
-  DATA_OFFER_TYPE_ON_REQUEST
-} from "@/constants/data-address-types.ts";
-import {ENGLISH_SELECT_DATA, LANGUAGES} from "@/constants/languages.ts";
-import {removeEmptyFields} from "@/utilities/form.ts";
-import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
-import {Asset} from "@think-it-labs/edc-connector-client";
-import {DELIMITER} from "@/i18n";
-import {extractArrayValues} from "@/utilities/utilities.ts";
-import {AssetFieldProps} from "@/components/molecules/asset-field-show.tsx";
+import {DATA_ADDRESS_TYPE_HTTP} from "@/constants/data-address-types.ts";
+import {ENGLISH_SELECT_DATA} from "@/constants/languages.ts";
+
+export const CONTEXT_DCT = { prefix: "dct", value: "http://purl.org/dc/terms/" };
+export const CONTEXT_DCAT = { prefix: "dcat", value: "http://www.w3.org/ns/dcat#" };
+export const CONTEXT_IDS = { prefix: "ids", value: "https://w3id.org/idsa/core/" };
+export const CONTEXT_IDSM = { prefix: "idsm", value: "https://w3id.org/idsa/metamodel/" };
+export const CONTEXT_OWL = { prefix: "owl", value: "http://www.w3.org/2002/07/owl#" };
+export const CONTEXT_RDF = { prefix: "rdf", value: "http://www.w3.org/1999/02/22-rdf-syntax-ns#" };
+export const CONTEXT_RDFS = { prefix: "rdfs", value: "http://www.w3.org/2000/01/rdf-schema#" };
+export const CONTEXT_XSD = { prefix: "xsd", value: "http://www.w3.org/2001/XMLSchema#" };
+export const CONTEXT_DBPEDIA = { prefix: "dbpedia", value: "http://dbpedia.org/ontology/" };
+
+export const CONTEXT_MDS = { prefix: "mds", value: "http://w3id.org/mds#" };
 
 export const ASSET_PROPERTIES = "https://w3id.org/edc/v0.0.1/ns/properties";
 export const ASSET_PRIVATE_PROPERTIES = "https://w3id.org/edc/v0.0.1/ns/privateProperties";
-export const ASSET_TITLE = "http://purl.org/dc/terms/title";
-export const ASSET_VERSION = "http://www.w3.org/ns/dcat#version";
+export const ASSET_TITLE = `${CONTEXT_DCT.value}title`;
+export const ASSET_VERSION = `${CONTEXT_DCAT.value}version`;
 export const ASSET_ID = "@id";
-export const ASSET_DESCRIPTION = "http://www.w3.org/ns/dcat#description";
-export const ASSET_KEYWORDS = "http://www.w3.org/ns/dcat#keyword";
-export const ASSET_LANGUAGE = "http://www.w3.org/ns/dcat#language";
-export const ASSET_CONTENT_TYPE = "['http://www.w3.org/ns/dcat#distribution'].['http://www.w3.org/ns/dcat#mediaType']";
-export const ASSET_ENDPOINT_DOCUMENTATION = "http://www.w3.org/ns/dcat#endpointDocumentation";
-export const ASSET_PUBLISHER = "http://www.w3.org/ns/dcat#publisher";
-export const ASSET_STANDARD_LICENSE = "http://www.w3.org/ns/dcat#license";
-export const DATA_OFFER_TYPE = "http://www.w3.org/ns/dcat#dataSourceAvailability";
-export const DATA_OFFER_CONTACT_EMAIL = "http://www.w3.org/ns/dcat#contactEmail";
-export const DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT = "http://www.w3.org/ns/dcat#contactPreferredEmailSubject";
-export const DATA_OFFER_PUBLISH_MODE = "http://www.w3.org/ns/dcat#publishMode";
-export const DATA_OFFER_CONSTRAINTS = "http://www.w3.org/ns/dcat#constraints";
+export const ASSET_DESCRIPTION = `${CONTEXT_DCAT.value}description`;
+export const ASSET_KEYWORDS = `${CONTEXT_DCAT.value}keyword`;
+export const ASSET_LANGUAGE = `${CONTEXT_DCAT.value}language`;
+export const ASSET_CONTENT_TYPE = `${CONTEXT_DCAT.value}mediaType`;
+export const ASSET_ENDPOINT_DOCUMENTATION = `${CONTEXT_DCAT.value}endpointDocumentation`;
+export const ASSET_PUBLISHER = `${CONTEXT_DCAT.value}publisher`;
+export const ASSET_STANDARD_LICENSE = `${CONTEXT_DCAT.value}license`;
+export const DATA_OFFER_TYPE = `${CONTEXT_DCAT.value}dataSourceAvailability`;
+export const DATA_OFFER_CONTACT_EMAIL = `${CONTEXT_DCAT.value}contactEmail`;
+export const DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT = `${CONTEXT_DCAT.value}contactPreferredEmailSubject`;
+export const DATA_OFFER_PUBLISH_MODE = `${CONTEXT_DCAT.value}publishMode`;
+export const DATA_OFFER_CONSTRAINTS = `${CONTEXT_DCAT.value}constraints`;
 
-export const ASSET_ADVANCED_INFO_DATA_CATEGORY = "http://www.w3.org/ns/dcat#dataCategory";
-export const ASSET_ADVANCED_INFO_DATA_SUBCATEGORY = "http://www.w3.org/ns/dcat#dataSubcategory";
-export const ASSET_ADVANCED_INFO_TRANSPORT_MODE = "http://www.w3.org/ns/dcat#transportMode";
-export const ASSET_ADVANCED_INFO_GEO_REFERENCE_METHOD = "http://www.w3.org/ns/dcat#geoReferenceMethod";
-export const ASSET_ADVANCED_INFO_DATA_MODEL = "http://www.w3.org/ns/dcat#dataModel";
-export const ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME = "http://www.w3.org/ns/dcat#sovereignLegalName";
-export const ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY = "http://www.w3.org/ns/dcat#dataUpdateFrequency";
-export const ASSET_ADVANCED_INFO_GEO_LOCATION = "http://www.w3.org/ns/dcat#geoLocation";
-export const ASSET_ADVANCED_INFO_NUTS_LOCATIONS = "http://www.w3.org/ns/dcat#nutsLocations";
-export const ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS = "http://www.w3.org/ns/dcat#dataSampleUrls";
-export const ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS = "http://www.w3.org/ns/dcat#referenceFileUrls";
-export const ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION = "http://www.w3.org/ns/dcat#referenceFilesDescription";
-export const ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE = "http://www.w3.org/ns/dcat#temporalCoverage";
-export const ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE = "http://www.w3.org/ns/dcat#conditionsForUse";
+export const ASSET_ADVANCED_INFO_DATA_CATEGORY = `${CONTEXT_MDS.value}dataCategory`;
+export const ASSET_ADVANCED_INFO_DATA_SUBCATEGORY = `${CONTEXT_MDS.value}dataSubcategory`;
+export const ASSET_ADVANCED_INFO_TRANSPORT_MODE = `${CONTEXT_MDS.value}transportMode`;
+export const ASSET_ADVANCED_INFO_GEO_REFERENCE_METHOD = `${CONTEXT_MDS.value}geoReferenceMethod`;
+export const ASSET_ADVANCED_INFO_DATA_MODEL = `${CONTEXT_MDS.value}dataModel`;
+export const ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME = `${CONTEXT_DCAT.value}sovereignLegalName`;
+export const ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY = `${CONTEXT_DCAT.value}dataUpdateFrequency`;
+export const ASSET_ADVANCED_INFO_GEO_LOCATION = `${CONTEXT_DCAT.value}geoLocation`;
+export const ASSET_ADVANCED_INFO_NUTS_LOCATIONS = `${CONTEXT_DCAT.value}nutsLocations`;
+export const ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS = `${CONTEXT_DCAT.value}dataSampleUrls`;
+export const ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS = `${CONTEXT_DCAT.value}referenceFileUrls`;
+export const ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION = `${CONTEXT_DCAT.value}referenceFilesDescription`;
+export const ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE = `${CONTEXT_DCAT.value}temporalCoverage`;
+export const ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE = `${CONTEXT_DCAT.value}conditionsForUse`;
 
 export const ASSET_DATA_ADDRESS_TYPE = "https://w3id.org/edc/v0.0.1/ns/type";
-export const ASSET_DATA_ADDRESS_DESCRIPTION = "http://www.w3.org/ns/dcat#description";
+export const ASSET_DATA_ADDRESS_DESCRIPTION = `${CONTEXT_DCAT.value}description`;
 export const ASSET_DATA_ADDRESS_METHOD = "method";
-export const ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD = "http://www.w3.org/ns/dcat#httpProxyMethod";
-export const ASSET_DATA_ADDRESS_BASE_URL = "http://www.w3.org/ns/dcat#baseUrl";
+export const ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD = `${CONTEXT_DCAT.value}httpProxyMethod`;
+export const ASSET_DATA_ADDRESS_BASE_URL = `${CONTEXT_DCAT.value}baseUrl`;
 export const ASSET_DATA_ADDRESS_HTTP_PROXY_PATH = "httpProxyPath";
-export const ASSET_DATA_ADDRESS_QUERY_PARAMS = "http://www.w3.org/ns/dcat#queryParams";
-export const ASSET_DATA_ADDRESS_ENABLE_QUERY_PARAMETERIZATION = "http://www.w3.org/ns/dcat#enableQueryParameterization";
-export const ASSET_DATA_ADDRESS_ENABLE_BODY_PARAMETERIZATION = "http://www.w3.org/ns/dcat#enableBodyParameterization";
-export const ASSET_DATA_ADDRESS_HTTP_AUTH_ADD_HEADER = "http://www.w3.org/ns/dcat#httpAuthAddHeader";
-export const ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE = "http://www.w3.org/ns/dcat#httpAuthHeaderType";
-export const ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_NAME = "http://www.w3.org/ns/dcat#httpAuthHeaderName";
-export const ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_VALUE = "http://www.w3.org/ns/dcat#httpAuthHeaderValue";
-export const ASSET_DATA_ADDRESS_HTTP_HEADERS = "http://www.w3.org/ns/dcat#httpHeaders";
+export const ASSET_DATA_ADDRESS_QUERY_PARAMS = `${CONTEXT_DCAT.value}queryParams`;
+export const ASSET_DATA_ADDRESS_ENABLE_QUERY_PARAMETERIZATION = `${CONTEXT_DCAT.value}enableQueryParameterization`;
+export const ASSET_DATA_ADDRESS_ENABLE_BODY_PARAMETERIZATION = `${CONTEXT_DCAT.value}enableBodyParameterization`;
+export const ASSET_DATA_ADDRESS_HTTP_AUTH_ADD_HEADER = `${CONTEXT_DCAT.value}httpAuthAddHeader`;
+export const ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE = `${CONTEXT_DCAT.value}httpAuthHeaderType`;
+export const ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_NAME = `${CONTEXT_DCAT.value}httpAuthHeaderName`;
+export const ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_VALUE = `${CONTEXT_DCAT.value}httpAuthHeaderValue`;
+export const ASSET_DATA_ADDRESS_HTTP_HEADERS = `${CONTEXT_DCAT.value}httpHeaders`;
 
 export const ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_NONE = "None";
 export const ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_VAULT_SECRET = "Vault-Secret";
@@ -129,259 +131,3 @@ export type CreateAssetFormData = typeof defaultCreateAssetFormData;
 export type CreateAssetPropertiesFormData = typeof defaultCreateAssetFormData.properties;
 export type CreateAssetAdvancedInfoFormData = typeof defaultCreateAssetFormData.advancedInfo;
 export type CreateAssetDataAddressFormData = typeof defaultCreateAssetFormData.dataAddress;
-
-export const computeRequiredDataOfferAddressProperties = (formData: CreateAssetDataAddressFormData): (keyof CreateAssetDataAddressFormData)[] => {
-  const required: (keyof CreateAssetDataAddressFormData)[] = [];
-  if (formData[DATA_OFFER_TYPE] === DATA_OFFER_TYPE_DATA_SOURCE.value) {
-    if (formData[ASSET_DATA_ADDRESS_TYPE] === DATA_ADDRESS_TYPE_HTTP.value) {
-      required.push(ASSET_DATA_ADDRESS_BASE_URL);
-    }
-  } else if (formData[DATA_OFFER_TYPE] === DATA_OFFER_TYPE_ON_REQUEST.value) {
-    required.push(DATA_OFFER_CONTACT_EMAIL, DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT);
-  }
-
-  return required;
-};
-
-export const computeRequiredDataAddressProperties = (formData: CreateAssetDataAddressFormData): (keyof CreateAssetDataAddressFormData)[] => {
-  const required: (keyof CreateAssetDataAddressFormData)[] = [];
-  if (formData[ASSET_DATA_ADDRESS_TYPE] === DATA_ADDRESS_TYPE_HTTP.value) {
-    required.push(ASSET_DATA_ADDRESS_BASE_URL);
-  }
-
-  return required;
-};
-
-export const assetFormDataToSubmitData = (formData: CreateAssetFormData) => {
-  const cleanFormDataObject = removeEmptyFields(formData);
-  return {
-    [ASSET_ID]: cleanFormDataObject.properties[ASSET_ID],
-    properties: { ...cleanFormDataObject.properties, ...cleanFormDataObject.advancedInfo },
-    dataAddress: cleanFormDataObject.dataAddress
-  };
-}
-
-const assetGeneralFieldsToShow = (asset: Asset) : AssetFieldProps[] => {
-  const assetLanguage = readValue(asset.properties, ASSET_LANGUAGE);
-
-  return [
-    {
-      label: "assets.new.fieldId",
-      value: asset[ASSET_ID],
-      icon: "category"
-    },
-    {
-      label: "assets.new.fieldVersion",
-      value: readValue(asset.properties, ASSET_VERSION),
-      icon: "file_copy"
-    },
-    {
-      label: "assets.new.fieldLanguage",
-      value: LANGUAGES.find((language) => language.id === assetLanguage)?.label,
-      icon: "language"
-    },
-    {
-      label: "assets.new.fieldPublisher",
-      value: readValue(asset.properties, ASSET_PUBLISHER),
-      icon: "apartment"
-    },
-    {
-      label: "assets.new.fieldEndpointDocumentation",
-      value: readValue(asset.properties, ASSET_ENDPOINT_DOCUMENTATION),
-      icon: "bookmarks"
-    },
-    {
-      label: "assets.new.fieldStandardLicense",
-      value: readValue(asset.properties, ASSET_STANDARD_LICENSE),
-      icon: "gavel"
-    },
-    {
-      label: "assets.new.participantId",
-      value: "",  // TODO participantId,
-      icon: "category"
-    },
-    {
-      label: "assets.new.creatorOrganizationName",
-      value: "",  // TODO creatorOrganizationName,
-      icon: "account_circle"
-    },
-    {
-      label: "assets.new.connectorEndpoint",
-      value: "",  // TODO connectorEndpoint,
-      icon: "link"
-    },
-  ];
-};
-
-const assetAdvancedFieldsToShow = (asset: Asset) : AssetFieldProps[] => {
-  const advancedFields = [];
-  const assetTitle = readValue(asset.properties, ASSET_TITLE) || "";
-
-  const transportMode = readValue(asset.properties, ASSET_ADVANCED_INFO_TRANSPORT_MODE);
-  if (transportMode) {
-    advancedFields.push({
-      icon: 'commute',
-      label: 'assets.new.fieldAdvancedInfoTransportMode',
-      value: transportMode,
-    });
-  }
-  const dataCategory = readValue(asset.properties, ASSET_ADVANCED_INFO_DATA_CATEGORY)
-  if (dataCategory) {
-    advancedFields.push({
-      icon: 'commute',
-      label: 'assets.new.fieldAdvancedInfoDataCategory',
-      value: dataCategory,
-    });
-  }
-  const dataSubcategory = readValue(asset.properties, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY)
-  if (dataSubcategory) {
-    advancedFields.push({
-      icon: 'commute',
-      label: 'assets.new.fieldAdvancedInfoDataSubcategory',
-      value: dataSubcategory,
-    });
-  }
-  const dataModel = readValue(asset.properties, ASSET_ADVANCED_INFO_DATA_MODEL)
-  if (dataModel) {
-    advancedFields.push({
-      icon: 'category',
-      label: 'assets.new.fieldAdvancedInfoDataModel',
-      value: dataModel,
-    });
-  }
-  const geoReferenceMethod = readValue(asset.properties, ASSET_ADVANCED_INFO_GEO_REFERENCE_METHOD)
-  if (geoReferenceMethod) {
-    advancedFields.push({
-      icon: 'commute',
-      label: 'assets.new.fieldAdvancedInfoGeoReferenceMethod',
-      value: geoReferenceMethod,
-    });
-  }
-  const geoLocation = readValue(asset.properties, ASSET_ADVANCED_INFO_GEO_LOCATION)
-  if (geoLocation) {
-    advancedFields.push({
-      icon: 'location_on',
-      label: 'assets.new.fieldAdvancedGeoLocation',
-      value: geoLocation,
-    });
-  }
-
-  const nutsLocations = readValue(asset.properties, ASSET_ADVANCED_INFO_NUTS_LOCATIONS)
-  if (nutsLocations?.length) {
-    advancedFields.push({
-      icon: 'location_on',
-      label: 'assets.new.fieldAdvancedInfoNutsLocation',
-      value: extractArrayValues(nutsLocations).join(DELIMITER),
-    });
-  }
-  const sovereignLegalName = readValue(asset.properties, ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME)
-  if (sovereignLegalName) {
-    advancedFields.push({
-      icon: 'account_balance',
-      label: 'assets.new.fieldAdvancedInfoSovereignLegalName',
-      value: sovereignLegalName,
-    });
-  }
-  const dataSampleUrls = readValue(asset.properties, ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS)
-  if (dataSampleUrls?.length) {
-    advancedFields.push({
-      icon: 'attachment',
-      label: 'assets.new.fieldAdvancedInfoDataSampleUrl',
-      subLabel: assetTitle,
-      openModalText: 'assets.new.showDataSamples',
-      value: extractArrayValues(dataSampleUrls).join("\n"),
-      valueTitle: 'assets.new.urls',
-    });
-  }
-  const referenceFileUrls = readValue(asset.properties, ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS);
-  if (referenceFileUrls?.length) {
-    advancedFields.push({
-      icon: 'receipt',
-      label: 'assets.new.fieldAdvancedInfoReferenceFileUrls',
-      subLabel: assetTitle,
-      openModalText: 'assets.new.showReferenceFiles',
-      value: extractArrayValues(referenceFileUrls).join("\n"),
-      valueTitle: ['assets.new.fieldDescription', 'assets.new.referenceFileImportant', '', '', 'assets.new.urls'].join("\n"),
-    });
-  }
-  const conditionsForUse = readValue(asset.properties, ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE);
-  if (conditionsForUse) {
-    advancedFields.push({
-      icon: 'description',
-      label: 'assets.new.fieldAdvancedInfoConditionsForUse',
-      subLabel: assetTitle,
-      openModalText: 'assets.new.showConditionsForUse',
-      value: conditionsForUse,
-    });
-  }
-  const dataUpdateFrequency = readValue(asset.properties, ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY);
-  if (dataUpdateFrequency) {
-    advancedFields.push({
-      icon: 'timelapse',
-      label: 'assets.new.fieldAdvancedDataUpdateFrequency',
-      value: dataUpdateFrequency,
-    });
-  }
-  const temporalCoverage = asset.properties[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE];
-  if (temporalCoverage) {
-    advancedFields.push({
-      icon: 'today',
-      label: 'assets.new.fieldAdvancedInfoTemporalCoverage',
-      value: temporalCoverage.map((date: { "@value": string }) => date["@value"]).join(" - "), // TODO: add start end prefixes when only start or end date is set
-    });
-  }
-
-  return advancedFields;
-};
-
-const assetDataAddressFieldsToShow = (asset: Asset) : AssetFieldProps[] => {
-  const dataAddressFieldsToMerge = [
-    {
-      label: "assets.new.httpProxyMethod",
-      value: readValue(asset.dataAddress, ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD),
-    },
-    {
-      label: "assets.new.httpProxyPath",
-      value: readValue(asset.dataAddress, ASSET_DATA_ADDRESS_HTTP_PROXY_PATH),
-    },
-    {
-      label: "assets.new.fieldDataAddressQueryParams",
-      value: readValue(asset.dataAddress, ASSET_DATA_ADDRESS_QUERY_PARAMS),
-    },
-    {
-      label: "assets.new.enableBodyParameterization",
-      value: readValue(asset.dataAddress, ASSET_DATA_ADDRESS_ENABLE_BODY_PARAMETERIZATION),
-    },
-  ];
-  const dataSourceText = ! dataAddressFieldsToMerge.some((field) => field.value) ? 'Disabled' :
-    dataAddressFieldsToMerge
-    .filter((field) => field.value)
-    .map((field) => field.label)
-    .join(DELIMITER);
-
-  const dataSourceFields = [
-    {
-      label: "assets.new.httpDataSourceParameterization",
-      value: dataSourceText,
-      icon: 'api',
-    },
-  ];
-  const contentType = readValue(asset.properties, ASSET_CONTENT_TYPE);
-  if (contentType) {
-    dataSourceFields.push({
-      label: "assets.new.fieldContentType",
-      value: contentType,
-      icon: 'category',
-    });
-  }
-
-  return dataSourceFields;
-};
-
-export const assetFieldsToShow = (asset: Asset) : AssetFieldProps[] => {
-  return [
-    ...assetGeneralFieldsToShow(asset),
-    ...assetDataAddressFieldsToShow(asset),
-    ...assetAdvancedFieldsToShow(asset),
-  ]
-}

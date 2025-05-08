@@ -4,37 +4,50 @@ import { AssetsList } from "@think-it-labs/edc-connector-ui/assets-list";
 import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-state";
 import { usePagination } from "@/hooks/use-pagination";
 import {T, useTranslator} from "@/i18n";
-import { ChevronLeft, ChevronRight, PlusCircle } from "lucide-react";
-import {Dialog, Box, Button as MuiButton, DialogContent, TextField} from '@mui/material';
+import { PlusCircle } from "lucide-react";
+import {Dialog, Button as MuiButton, DialogContent} from '@mui/material';
 
-import React, {useCallback, useState} from "react";
+import React, {useEffect, useState} from "react";
 import CreateAssetForm from "@/components/templates/create-asset-form.tsx";
 import SideDrawer from "@/components/organisms/side-drawer.tsx";
 import AssetCard from "@/components/organisms/asset-card.tsx";
 import {Asset} from "@think-it-labs/edc-connector-client";
-import AssetDetails from "@/components/organisms/asset-details.tsx";
+import AssetDetailsDialog from "@/components/organisms/asset-details-dialog.tsx";
+import {Catalog} from "@think-it-labs/edc-connector-ui/catalog.tsx";
+import {useRouter} from "next/router";
 
 export default function AssetListPage() {
-  const { push, connector } = useConnectorDashboardState();
-  const { page, decrementPage, incrementPage, offset, limit, hasPrev } = usePagination();
+  const router = useRouter();
+  const { connector } = useConnectorDashboardState();
+  const { offset, limit } = usePagination();
   const { translator } = useTranslator();
 
+  const [participantId, setParticipantId] = useState("");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-  const [openAsset, setOpenAsset] = useState({} as Asset);
-
-  const openDetailsModal = (asset: Asset) => {
+  const [openAssetData, setOpenAssetData] = useState({
+    asset: {} as Asset,
+    deleteItem: async () => {},
+  });
+  const openDetailsModal = (asset: Asset, deleteItem: () => Promise<void> = async () => {}) => {
     setIsDetailsModalOpen(true);
-    setOpenAsset(asset);
+    setOpenAssetData({ asset, deleteItem });
   };
 
-  const onDeleteAssetClick = () => {
-// TODO: implement
-  };
-
+  const SaveParticipantId = ({ participantId }: { participantId: string }) => {
+    useEffect(() => {
+      setParticipantId(participantId)
+    }, [participantId])
+    return <></>
+  }
 
   return (
     <>
+      <Catalog managementUrl={connector.managementUrl} protocolUrl={connector.protocolUrl} >
+        <Catalog.Provider>
+          {SaveParticipantId}
+        </Catalog.Provider>
+      </Catalog>
       <Dialog
         open={isCreateModalOpen}
         maxWidth="lg"
@@ -46,16 +59,17 @@ export default function AssetListPage() {
         </DialogContent>
       </Dialog>
 
-      <Dialog
+      <AssetDetailsDialog
         open={isDetailsModalOpen}
-        maxWidth="lg"
-        className="my-7"
+        asset={openAssetData.asset}
         onClose={() => setIsDetailsModalOpen(false)}
-      >
-        <DialogContent style={{ maxWidth: "90vw", width: "1000px" }}>
-          <AssetDetails asset={openAsset} onDeleteClick={onDeleteAssetClick} />
-        </DialogContent>
-      </Dialog>
+        deleteEnabled
+        deleteItem={openAssetData.deleteItem}
+        participantId={participantId}
+        connectorEndpoint={connector.protocolUrl}
+        contentStyle={{ maxWidth: "90vw", width: "1000px" }}
+        onDeleteSuccess={() => router.reload()}
+      />
 
       <SideDrawer title={<T string="assets.title" />}>
         <AssetsList managementUrl={connector.managementUrl}>
@@ -90,8 +104,8 @@ export default function AssetListPage() {
               offset={offset}
               sortOrder="DESC"
             >
-              {({ item, index }) => (
-                <AssetCard asset={item} key={index} onClick={() => openDetailsModal(item)} />
+              {({ item, index, deleteItem }) => (
+                <AssetCard asset={item} key={index} onClick={() => openDetailsModal(item, deleteItem)} participantId={participantId} />
               )}
             </AssetsList.Items>
           </div>

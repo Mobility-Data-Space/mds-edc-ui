@@ -37,7 +37,7 @@ export function AssetReferenceFileUrls({ translator, formData, onChange, errors 
       valueLabel={translator("assets.new.fieldAdvancedInfoReferenceFileUrlsValueLabel")}
       valuePlaceholder="https://my-org.com/my-data-offer/documentation/api-reference"
       error={errors[ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS]}
-      value={formData[ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS]}
+      value={formData[ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] as []}
       valueOnly
       onChange={(value) => onChange({...formData, [ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS]: value})}
     />

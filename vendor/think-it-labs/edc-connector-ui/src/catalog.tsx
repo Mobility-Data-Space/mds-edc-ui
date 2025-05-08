@@ -1,9 +1,29 @@
-import {Asset, Catalog as CatalogResult, QuerySpec} from "@think-it-labs/edc-connector-client";
-import React, {PropsWithChildren, useCallback, useEffect, useMemo} from "react";
+import {Asset, Catalog as CatalogResult, CriterionInput, QuerySpec} from "@think-it-labs/edc-connector-client";
+import React, {PropsWithChildren, ReactNode, useCallback, useEffect, useMemo} from "react";
 import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
-import {List, ListItemProps, ListItemsProps, useListContext} from "./list";
+import {List, useListContext} from "./list";
 import { Local } from "./local";
-import {CATALOG_DATASET} from "../../../../src/schema/catalog";
+
+export const CATALOG_DATASET = "http://www.w3.org/ns/dcat#dataset";
+export const PARTICIPANT_ID = "https://w3id.org/dspace/v0.8/participantId";
+export const ENDPOINT_URL = "http://www.w3.org/ns/dcat#endpointURL";
+export const DCAT_SERVICE_URL = "http://www.w3.org/ns/dcat#service";
+
+export interface CatalogListItemProps<T> {
+  item: T; // fix: type this
+  deleteItem: () => void;
+  index: number;
+  participantId: string;
+}
+
+export interface CatalogListItemsProps<T> {
+  limit?: number;
+  offset?: number;
+  filterExpression?: CriterionInput[];
+  sortField?: string;
+  sortOrder?: "ASC" | "DESC";
+  children: (props: CatalogListItemProps<T>) => JSX.Element;
+}
 
 interface CatalogProps {
   managementUrl: string;
@@ -44,7 +64,29 @@ export function Catalog({
   );
 }
 
-Catalog.Items = function ListItems({ children, limit, offset, filterExpression, sortField, sortOrder, }: ListItemsProps<CatalogResult>) {
+interface CatalogProviderChildrenProps {
+  participantId: string,
+  endpointUrl: string
+}
+
+interface CatalogProviderProps {
+  children: ({ participantId, endpointUrl }: CatalogProviderChildrenProps) => ReactNode
+}
+
+Catalog.Provider = function CatalogProvider({ children }: CatalogProviderProps) {
+  const { items } = useListContext<CatalogResult>();
+  const participantIdJsonLD = items[PARTICIPANT_ID as any];
+  const participantId = (participantIdJsonLD && participantIdJsonLD[0] && participantIdJsonLD[0]["@value"]) || "";
+  const dcatCatalogServiceJsonLD = items[DCAT_SERVICE_URL as any];
+  const endpointUrlJsonLd = dcatCatalogServiceJsonLD && dcatCatalogServiceJsonLD[0] && dcatCatalogServiceJsonLD[0][ENDPOINT_URL];
+  const endpointUrl = (endpointUrlJsonLd && endpointUrlJsonLd[0] && endpointUrlJsonLd[0]["@value"]) || "";
+
+  return (<>
+    {children({ participantId, endpointUrl })}
+  </>);
+};
+
+Catalog.Items = function ListItems({ children, limit, offset, filterExpression, sortField, sortOrder, }: CatalogListItemsProps<CatalogResult>) {
   const {
     items,
     setQuerySpec,
@@ -65,11 +107,13 @@ Catalog.Items = function ListItems({ children, limit, offset, filterExpression, 
 
 
   const Item = useMemo(() => {
-    return function Item(props: ListItemProps<CatalogResult>) {
+    return function Item(props: CatalogListItemProps<CatalogResult>) {
       return <>{children(props)}</>;
     };
   }, [children]);
 
+  const participantIdJsonLD = items[PARTICIPANT_ID as any];
+  const participantId = (participantIdJsonLD && participantIdJsonLD[0] && participantIdJsonLD[0]["@value"]) || "";
   return (
     <>
       {/* TODO: remove type any */}
@@ -79,6 +123,7 @@ Catalog.Items = function ListItems({ children, limit, offset, filterExpression, 
           item={item}
           deleteItem={() => deleteItem(getId(item))}
           index={index}
+          participantId={participantId}
         />
       ))}
     </>
