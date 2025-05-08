@@ -27,3 +27,14 @@ export const pascalCase = (string: string) => {
     (word) => word[0].toUpperCase() + word.slice(1).toLowerCase()
   ).replaceAll(' ', '');
 }
+
+export const tryTranslatingWithTooltip = (value: string, prefix: string, translator: (key: string) => string) => {
+  const tooltipTitleTranslationKey = `${prefix}.${value}Tooltip`;
+  const tooltipTitleTranslation = translator(tooltipTitleTranslationKey);
+  const tooltipTitle = tooltipTitleTranslation === tooltipTitleTranslationKey ? `"${value}"` : tooltipTitleTranslation;
+  const valueTranslationKey = `${prefix}.${value}`;
+  const valueTranslation = translator(valueTranslationKey);
+  const computedValue = valueTranslation === valueTranslationKey ? value : valueTranslation;
+
+  return [tooltipTitle, computedValue];
+}
