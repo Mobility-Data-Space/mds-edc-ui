@@ -1,13 +1,13 @@
 import React, {useRef, useState} from "react";
-import { ConnectorDashboard } from "@/components/templates/connector-dashboard";
 import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-state";
 import { T, useTranslator } from "@/i18n";
 import { AssetForm } from "@think-it-labs/edc-connector-ui/asset-html-form.tsx";
 import {Button, Step, StepContent, StepLabel, Stepper} from "@mui/material";
 import { AssetCreateFormGeneralInfoStepContent } from "@/components/organisms/asset-create-form-general-info-step-content.tsx";
 import { AssetCreateFormDataAddressStep } from "@/components/organisms/asset-create-form-data-address-step.tsx";
-import {ASSET_ID, assetFormDataToSubmitData, computeRequiredDataAddressProperties, CreateAssetAdvancedInfoFormData, CreateAssetDataAddressFormData, CreateAssetFormData, CreateAssetPropertiesFormData, defaultCreateAssetFormData, REQUIRED_ADVANCED_INFO, REQUIRED_PROPERTIES} from "@/schema/asset.ts";
+import {ASSET_ID, CreateAssetAdvancedInfoFormData, CreateAssetDataAddressFormData, CreateAssetFormData, CreateAssetPropertiesFormData, defaultCreateAssetFormData, REQUIRED_ADVANCED_INFO, REQUIRED_PROPERTIES} from "@/schema/asset.ts";
 import {AssetCreateFormAdvancedInfoStepContent} from "@/components/organisms/asset-create-form-advanced-step-content.tsx";
+import {assetFormDataToSubmitData, computeRequiredDataAddressProperties} from "@/utilities/asset.ts";
 
 export default function CreateAssetForm() {
   const { push, connector } = useConnectorDashboardState();

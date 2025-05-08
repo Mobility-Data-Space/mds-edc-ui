@@ -3,9 +3,9 @@ import {T} from "@/i18n";
 import {Button, Icon} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from '@mui/material';
-import {AssetFieldProps} from "@/components/molecules/asset-field-show.tsx";
+import {AssetFieldShowProps} from "@/components/molecules/asset-field-show.tsx";
 
-export function AssetFieldDialog({ icon, label, subLabel, value, valueTitle, isOpen, onClose }: AssetFieldProps & { isOpen: boolean, onClose: () => void }): JSX.Element {
+export function AssetFieldDialog({ icon, label, subLabel, value, valueTitle, isOpen, onClose }: AssetFieldShowProps & { isOpen: boolean, onClose: () => void }): JSX.Element {
   const nonNullValue = value || "";
   const nonNullValueTitle = valueTitle || "";
 
@@ -52,6 +52,5 @@ export function AssetFieldDialog({ icon, label, subLabel, value, valueTitle, isO
         </Button>
       </DialogActions>
     </Dialog>
-
   );
 }

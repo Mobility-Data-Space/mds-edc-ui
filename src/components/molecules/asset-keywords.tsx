@@ -23,7 +23,7 @@ export function AssetKeywords({ translator, formData, onChange, errors }: AssetK
       type="text"
       tooltip={translator("assets.new.fieldKeywordsTooltip")}
       placeholder={translator("assets.new.fieldKeywordsPlaceholder")}
-      value={formData[ASSET_KEYWORDS]}
+      value={formData[ASSET_KEYWORDS] as []}
       error={errors[ASSET_KEYWORDS]}
       onChange={(value) => onChange({...formData, [ASSET_KEYWORDS]: value})}
     />

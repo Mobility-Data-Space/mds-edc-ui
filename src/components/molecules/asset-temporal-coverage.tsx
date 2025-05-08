@@ -30,7 +30,7 @@ export function AssetTemporalCoverage({ translator, formData, onChange, errors }
         [ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE]: value
       })}
       error={errors[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE]}
-      value={formData[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE]}
+      value={formData[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE] as [string, string]}
     />
   );
 }

@@ -20,3 +20,10 @@ export const extractArrayValues = (array: any[]) => {
 export const joinArrayValues = (array: any[]) => {
   return extractArrayValues(array).join(DELIMITER);
 }
+
+export const pascalCase = (string: string) => {
+  return string.replace(
+    /\w+/g,
+    (word) => word[0].toUpperCase() + word.slice(1).toLowerCase()
+  ).replaceAll(' ', '');
+}

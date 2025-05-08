@@ -21,8 +21,10 @@ export const en = {
       create: "Create",
       cancel: "Cancel",
       close: "Close",
+      delete: "Delete",
       showMore: "Show more",
       showLess: "Show less",
+      negotiate: "Negotiate",
     },
     dashboard: {
       title: "Dashboard"
@@ -43,7 +45,7 @@ export const en = {
       "[id]": {
         title: "View asset",
         dataAddress: "Data address",
-        deleteButton: "Delete",
+        deleteTitle: "Deletion confirmation",
       },
       new: {
         title: "Create new asset",
@@ -179,6 +181,8 @@ export const en = {
         showReferenceFiles: "Show Reference Files",
         referenceFileImportant: "This reference file is important",
         showConditionsForUse: "Show Conditions for Use",
+        customProperties: "Custom Properties",
+        privateProperties: "Private Properties",
 
         buttonCancel: "Cancel",
         buttonSave: "Add asset",
@@ -229,12 +233,14 @@ export const en = {
       },
     },
     contractDefinitions: {
+      id: "Contract Offer Id",
+      contractOffer: "Contract Offer",
       title: "List all contract definitions",
       description:
         "List all of your contracts offered to the external network. Contract definitions define how other participants would consume owned assets.",
       buttonAdd: "Add contract definition",
       headingId: "ID",
-      headingContractPolicy: "Contract policy",
+      contractPolicy: "Contract policy",
       headingAccessPolicy: "Access policy",
       "[id]": {
         title: "View contract definition",
@@ -304,6 +310,7 @@ export const en = {
       headingContractAgreement: "Contract agreement",
       headingCounterPartyAddress: "Counter party address",
       headingCreatedAt: "Created at",
+      cannotNegotiateOwnedConnectors: "Cannot negotiate contracts with your own connector.",
       "[id]": {
         title: "View contract negotiation",
         description: "A single contract negotiation",

@@ -93,7 +93,7 @@ export function AssetCreateFormDataAddressStep({ formData, errors, onChange, tra
                   ]}
                   error={errors[ASSET_DATA_ADDRESS_METHOD]}
                   value={formData[ASSET_DATA_ADDRESS_METHOD]}
-                  disabled={methodAlwaysShowing && formData[ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD]}
+                  disabled={methodAlwaysShowing && !! formData[ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD]}
                   onChange={(event) => onChange({ ...formData, [ASSET_DATA_ADDRESS_TYPE]: event.target.value })}
                 />
                 : ""
@@ -166,7 +166,7 @@ export function AssetCreateFormDataAddressStep({ formData, errors, onChange, tra
               valuePlaceholder="..."
               helperText={formData[ASSET_DATA_ADDRESS_ENABLE_QUERY_PARAMETERIZATION] ? translator("assets.new.fieldDataAddressQueryParamsHelper") : ""}
               error={errors[ASSET_DATA_ADDRESS_QUERY_PARAMS]}
-              value={formData[ASSET_DATA_ADDRESS_QUERY_PARAMS]}
+              value={formData[ASSET_DATA_ADDRESS_QUERY_PARAMS] as []}
               onChange={(value) => onChange({ ...formData, [ASSET_DATA_ADDRESS_QUERY_PARAMS]: value })}
               additionalActions={[
                 <RadioButton
@@ -275,7 +275,7 @@ export function AssetCreateFormDataAddressStep({ formData, errors, onChange, tra
               type="text"
               required
               error={errors[ASSET_DATA_ADDRESS_HTTP_HEADERS]}
-              value={formData[ASSET_DATA_ADDRESS_HTTP_HEADERS]}
+              value={formData[ASSET_DATA_ADDRESS_HTTP_HEADERS] as []}
               onChange={(value) => onChange({...formData, [ASSET_DATA_ADDRESS_HTTP_HEADERS]: value})}
             />
           </div>

@@ -13,7 +13,7 @@ export type KeyValuePairInputListProps =  Omit<TextFieldProps, "onChange"> & {
   valuePlaceholder?: string;
   valueOnly?: boolean;
   additionalActions?: JSX.Element[];
-  value: TagsList;
+  value: TagsList | any[];
   onChange: (tagList: TagsList) => void;
 };
 
