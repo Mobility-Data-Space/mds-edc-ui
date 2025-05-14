@@ -1,15 +1,22 @@
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-state";
 import { T, useTranslator } from "@/i18n";
 import { AssetForm } from "@think-it-labs/edc-connector-ui/asset-html-form.tsx";
-import {Button, Step, StepContent, StepLabel, Stepper} from "@mui/material";
+import {Button, Step, StepContent, StepIconProps, StepLabel, Stepper} from "@mui/material";
 import { AssetCreateFormGeneralInfoStepContent } from "@/components/organisms/asset-create-form-general-info-step-content.tsx";
 import { AssetCreateFormDataAddressStep } from "@/components/organisms/asset-create-form-data-address-step.tsx";
-import {ASSET_ID, CreateAssetAdvancedInfoFormData, CreateAssetDataAddressFormData, CreateAssetFormData, CreateAssetPropertiesFormData, defaultCreateAssetFormData, REQUIRED_ADVANCED_INFO, REQUIRED_PROPERTIES} from "@/schema/asset.ts";
+import {ASSET_DATA_ADDRESS_DESCRIPTION, ASSET_DATA_ADDRESS_TYPE, ASSET_ID, ASSET_TITLE, ASSET_VERSION, CreateAssetAdvancedInfoFormData, CreateAssetDataAddressFormData, CreateAssetFormData, CreateAssetPropertiesFormData, defaultCreateAssetFormData, REQUIRED_ADVANCED_INFO, REQUIRED_PROPERTIES} from "@/schema/asset.ts";
 import {AssetCreateFormAdvancedInfoStepContent} from "@/components/organisms/asset-create-form-advanced-step-content.tsx";
 import {assetFormDataToSubmitData, computeRequiredDataAddressProperties, generateId} from "@/utilities/asset.ts";
 import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
 import { enqueueSnackbar } from 'notistack';
+import {DATA_ADDRESS_TYPE_CUSTOM} from "@/constants/data-address-types.ts";
+import {StepIcon} from "@/components/atoms/step-icon.tsx";
+
+const stepLabelSharedProps = {
+  className: "w-full justify-start p-4",
+  slots: { stepIcon: (props: StepIconProps) => <StepIcon {...props} /> },
+}
 
 export default function CreateAssetForm() {
   const { push, connector } = useConnectorDashboardState();
@@ -186,7 +193,7 @@ export default function CreateAssetForm() {
           <Step>
             <div className="my-2" data-testid="asset-create-general-info-step-title">
               <Button fullWidth color="secondary">
-                <StepLabel onClick={() => setActiveStep(0)} className={"w-full justify-start p-4"} >
+                <StepLabel onClick={() => setActiveStep(0)} {...stepLabelSharedProps} >
                   <T string="assets.new.generalInformation"/>
                 </StepLabel>
               </Button>
@@ -206,7 +213,7 @@ export default function CreateAssetForm() {
           <Step>
             <div className="my-2" data-testid="asset-create-advanced-info-step-title">
               <Button fullWidth color="secondary">
-                <StepLabel onClick={tryGoToAdvancedStep} className={"w-full justify-start p-4"}>
+                <StepLabel onClick={tryGoToAdvancedStep} {...stepLabelSharedProps}>
                   <T string="assets.new.advancedInformation"/>
                 </StepLabel>
               </Button>
@@ -226,7 +233,7 @@ export default function CreateAssetForm() {
           <Step>
             <div className="my-2" data-testid="asset-create-data-address-step-title">
               <Button fullWidth color="secondary">
-                <StepLabel onClick={tryGoingToDataSourceStep} className={"w-full justify-start p-4"}>
+                <StepLabel onClick={tryGoingToDataSourceStep} {...stepLabelSharedProps}>
                   <T string="assets.new.datasourceInformation"/>
                 </StepLabel>
               </Button>
