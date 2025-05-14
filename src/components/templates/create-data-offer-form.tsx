@@ -1,33 +1,18 @@
-import React, {useRef, useState} from "react";
-import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-state";
-import { T, useTranslator } from "@/i18n";
-import { AssetForm } from "@think-it-labs/edc-connector-ui/asset-html-form.tsx";
-import { AssetCreateFormDataAddressStep } from "@/components/organisms/asset-create-form-data-address-step.tsx";
-import {
-  ASSET_ID, CreateAssetAdvancedInfoFormData,
-  CreateAssetDataAddressFormData,
-  CreateAssetFormData,
-  CreateAssetPropertiesFormData, DATA_OFFER_CONSTRAINTS, DATA_OFFER_PUBLISH_MODE, DATA_OFFER_TYPE,
-  defaultCreateAssetFormData, REQUIRED_ADVANCED_INFO,
-  REQUIRED_PROPERTIES
-} from "@/schema/asset.ts";
-import Typography from "@mui/material/Typography";
+import React, {useEffect, useRef, useState} from "react";
+import {Button, Checkbox, FormControlLabel, Divider, Typography} from "@mui/material";
+import {useConnectorDashboardState} from "@/hooks/use-connector-dashboard-state";
+import {T, useTranslator} from "@/i18n";
+import {AssetForm} from "@think-it-labs/edc-connector-ui/asset-html-form.tsx";
+import {AssetCreateFormDataAddressStep} from "@/components/organisms/asset-create-form-data-address-step.tsx";
+import {ASSET_DATA_ADDRESS_DESCRIPTION, ASSET_DATA_ADDRESS_TYPE, ASSET_ID, ASSET_TITLE, CreateAssetAdvancedInfoFormData, CreateAssetDataAddressFormData, CreateAssetFormData, CreateAssetPropertiesFormData, DATA_OFFER_CONSTRAINTS, DATA_OFFER_PUBLISH_MODE, DATA_OFFER_TYPE, defaultCreateAssetFormData, REQUIRED_ADVANCED_INFO, REQUIRED_PROPERTIES} from "@/schema/asset.ts";
 import RadioButtonsGroup from "@/components/atoms/radio-group.tsx";
 import {AssetContactEmailAndSubject} from "@/components/molecules/asset-contact-email-and-subject.tsx";
-import {
-  DATA_OFFER_TYPE_DATA_SOURCE, DATA_OFFER_TYPE_ON_REQUEST,
-  DATA_OFFER_TYPES,
-  PUBLISH_MODE_PUBLISH_RESTRICTED, PUBLISH_MODE_PUBLISH_UNRESTRICTED,
-  PUBLISH_MODES
-} from "@/constants/data-address-types.ts";
+import {DATA_ADDRESS_TYPE_CUSTOM, DATA_OFFER_TYPE_DATA_SOURCE, DATA_OFFER_TYPE_ON_REQUEST, DATA_OFFER_TYPES, PUBLISH_MODE_PUBLISH_RESTRICTED, PUBLISH_MODE_PUBLISH_UNRESTRICTED, PUBLISH_MODES} from "@/constants/data-address-types.ts";
 import {AssetDataCategoryAndSubcategory} from "@/components/molecules/asset-data-category-and-subcategory.tsx";
-import Divider from "@mui/material/Divider";
 import {AssetTitle} from "@/components/molecules/asset-title.tsx";
 import {AssetId} from "@/components/molecules/asset-id.tsx";
 import {AssetDescription} from "@/components/molecules/asset-description.tsx";
 import {AssetKeywords} from "@/components/molecules/asset-keywords.tsx";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import {Button, Checkbox} from "@mui/material";
 import {AssetLanguage} from "@/components/molecules/asset-language.tsx";
 import {AssetVersion} from "@/components/molecules/asset-version.tsx";
 import {AssetTransportMode} from "@/components/molecules/asset-transport-mode.tsx";
@@ -48,6 +33,7 @@ import {AssetTemporalCoverage} from "@/components/molecules/asset-temporal-cover
 import PolicyExpression from "@/components/organisms/policy-expression.tsx";
 import {assetFormDataToSubmitData, computeRequiredDataOfferAddressProperties, generateId} from "@/utilities/asset.ts";
 import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
+import {enqueueSnackbar} from "notistack";
 
 export default function CreateDataOfferForm() {
   const { push, connector } = useConnectorDashboardState();
@@ -179,7 +165,7 @@ export default function CreateDataOfferForm() {
   };
 
   const onFormSubmitFail = (error: Error) => {
-    console.log('onFormSubmitFail : ', error);
+    enqueueSnackbar(translator("assets.new.saveFail"));
   }
 
   const dataOfferTypeIsDataSource = formData.dataAddress[DATA_OFFER_TYPE] === DATA_OFFER_TYPE_DATA_SOURCE.value;
