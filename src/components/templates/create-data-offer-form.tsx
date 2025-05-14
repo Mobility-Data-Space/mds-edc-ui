@@ -46,7 +46,7 @@ import {AssetStandardLicense} from "@/components/molecules/asset-standard-licens
 import {AssetConditionsForUse} from "@/components/molecules/asset-conditions-for-use.tsx";
 import {AssetTemporalCoverage} from "@/components/molecules/asset-temporal-coverage.tsx";
 import PolicyExpression from "@/components/organisms/policy-expression.tsx";
-import {assetFormDataToSubmitData, computeRequiredDataOfferAddressProperties} from "@/utilities/asset.ts";
+import {assetFormDataToSubmitData, computeRequiredDataOfferAddressProperties, generateId} from "@/utilities/asset.ts";
 import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
 
 export default function CreateDataOfferForm() {
@@ -87,6 +87,11 @@ export default function CreateDataOfferForm() {
 
   const generalInfoFormOnChange = (generalInfoFormData: CreateAssetPropertiesFormData) => {
     setErrors((oldErrors) => ({ ...oldErrors, properties: validateGeneralInfo(generalInfoFormData) }));
+
+    const generatedOldId = generateId(formData.properties[ASSET_TITLE] as string);
+    if (generatedOldId === generalInfoFormData[ASSET_ID]) {
+      generalInfoFormData[ASSET_ID] = generateId(generalInfoFormData[ASSET_TITLE] as string);
+    }
 
     return onChange({ ...formData, properties: generalInfoFormData, [ASSET_ID]: generalInfoFormData[ASSET_ID] });
   };
