@@ -11,10 +11,10 @@ export interface AssetTitleProps {
   formData: CreateAssetPropertiesFormData;
   onChange: (formData: CreateAssetPropertiesFormData) => void;
   errors: { [key: string]: boolean };
-  required?: boolean;
+  hideLabel?: boolean;
 }
 
-export function AssetTitle({ translator, formData, onChange, errors }: AssetTitleProps): JSX.Element {
+export function AssetTitle({ translator, formData, onChange, errors, hideLabel = false }: AssetTitleProps): JSX.Element {
 
   return (
     <Input
@@ -23,7 +23,7 @@ export function AssetTitle({ translator, formData, onChange, errors }: AssetTitl
       id="properties-title"
       data-testid="properties-title"
       type="text"
-      label={<T string="assets.new.fieldTitle" />}
+      label={hideLabel ? "" : <T string="assets.new.fieldTitle" />}
       placeholder={translator("assets.new.fieldTitlePlaceholder")}
       value={formData[ASSET_TITLE]}
       error={errors[ASSET_TITLE]}

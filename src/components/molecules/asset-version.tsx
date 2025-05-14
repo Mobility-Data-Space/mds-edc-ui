@@ -11,17 +11,17 @@ export interface AssetVersionProps {
   formData: CreateAssetPropertiesFormData;
   onChange: (formData: CreateAssetPropertiesFormData) => void;
   errors: { [key: string]: boolean };
-  required?: boolean;
+  hideLabel?: boolean;
 }
 
-export function AssetVersion({ translator, formData, onChange, errors }: AssetVersionProps): JSX.Element {
+export function AssetVersion({ translator, formData, onChange, errors, hideLabel = false }: AssetVersionProps): JSX.Element {
 
   return (
     <Input
       name={ASSET_VERSION}
       id="properties-version"
       type="text"
-      label={<T string="assets.new.fieldVersion" />}
+      label={hideLabel ? "" : <T string="assets.new.fieldVersion" />}
       placeholder={"1.0"}
       tooltip={translator("assets.new.fieldVersionTooltip")}
       value={formData[ASSET_VERSION]}
