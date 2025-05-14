@@ -263,6 +263,7 @@ export default function CreateDataOfferForm() {
                   <T string="assets.new.fieldTitle"/>
                 </label>
                 <AssetTitle
+                  hideLabel
                   formData={formData.properties}
                   errors={errors.properties}
                   onChange={generalInfoFormOnChange}
@@ -278,6 +279,7 @@ export default function CreateDataOfferForm() {
                   <T string="assets.new.fieldId"/>
                 </label>
                 <AssetId
+                  hideLabel
                   formData={formData.properties}
                   errors={errors.properties}
                   onChange={generalInfoFormOnChange}
@@ -335,6 +337,7 @@ export default function CreateDataOfferForm() {
                     <T string="assets.new.fieldVersion"/>
                   </label>
                   <AssetVersion
+                    hideLabel
                     formData={formData.properties}
                     errors={errors.properties}
                     onChange={generalInfoFormOnChange}
