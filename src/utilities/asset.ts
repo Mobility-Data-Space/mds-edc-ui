@@ -1,5 +1,5 @@
 import {removeEmptyFields} from "@/utilities/form.ts";
-import {DATA_ADDRESS_TYPE_HTTP, DATA_OFFER_TYPE_DATA_SOURCE, DATA_OFFER_TYPE_ON_REQUEST} from "@/constants/data-address-types.ts";
+import {DATA_ADDRESS_TYPE_CUSTOM, DATA_ADDRESS_TYPE_HTTP, DATA_OFFER_TYPE_DATA_SOURCE, DATA_OFFER_TYPE_ON_REQUEST} from "@/constants/data-address-types.ts";
 import {Asset} from "@think-it-labs/edc-connector-client";
 import {AssetFieldShowProps} from "@/components/molecules/asset-field-show.tsx";
 import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
@@ -29,6 +29,8 @@ export const computeRequiredDataOfferAddressProperties = (formData: CreateAssetD
   if (formData[DATA_OFFER_TYPE] === DATA_OFFER_TYPE_DATA_SOURCE.value) {
     if (formData[ASSET_DATA_ADDRESS_TYPE] === DATA_ADDRESS_TYPE_HTTP.value) {
       required.push(ASSET_DATA_ADDRESS_BASE_URL);
+    } else if (formData[ASSET_DATA_ADDRESS_TYPE] === DATA_ADDRESS_TYPE_CUSTOM.value) {
+      required.push(ASSET_DATA_ADDRESS_DESCRIPTION);
     }
   } else if (formData[DATA_OFFER_TYPE] === DATA_OFFER_TYPE_ON_REQUEST.value) {
     required.push(DATA_OFFER_CONTACT_EMAIL, DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT);
@@ -41,6 +43,8 @@ export const computeRequiredDataAddressProperties = (formData: CreateAssetDataAd
   const required: (keyof CreateAssetDataAddressFormData)[] = [];
   if (formData[ASSET_DATA_ADDRESS_TYPE] === DATA_ADDRESS_TYPE_HTTP.value) {
     required.push(ASSET_DATA_ADDRESS_BASE_URL);
+  } else if (formData[ASSET_DATA_ADDRESS_TYPE] === DATA_ADDRESS_TYPE_CUSTOM.value) {
+    required.push(ASSET_DATA_ADDRESS_DESCRIPTION);
   }
 
   return required;

@@ -1,33 +1,13 @@
 import React from "react";
-import { FormHelperText } from "@mui/material";
+import {FormHelperText} from "@mui/material";
 import {T} from "@/i18n";
 import {Input} from "../atoms/input.tsx";
 import {MuiSelect} from "../atoms/mui-select.tsx";
-import {
-  DATA_ADDRESS_SELECT_DATA,
-  DATA_ADDRESS_TYPE_CUSTOM,
-  DATA_ADDRESS_TYPE_HTTP
-} from "@/constants/data-address-types.ts";
+import {DATA_ADDRESS_SELECT_DATA, DATA_ADDRESS_TYPE_CUSTOM, DATA_ADDRESS_TYPE_HTTP} from "@/constants/data-address-types.ts";
 import {RadioButton} from "@/components/atoms/radio-button.tsx";
 import {KeyValuePairInputList} from "@/components/molecules/key-value-pair-input-list.tsx";
-import {
-  ASSET_DATA_ADDRESS_BASE_URL,
-  ASSET_DATA_ADDRESS_DESCRIPTION,
-  ASSET_DATA_ADDRESS_ENABLE_BODY_PARAMETERIZATION,
-  ASSET_DATA_ADDRESS_ENABLE_QUERY_PARAMETERIZATION,
-  ASSET_DATA_ADDRESS_HTTP_AUTH_ADD_HEADER,
-  ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_NAME,
-  ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE,
-  ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_NONE, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_SELECT_OPTIONS,
-  ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_VAULT_SECRET,
-  ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_VALUE,
-  ASSET_DATA_ADDRESS_HTTP_HEADERS,
-  ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD,
-  ASSET_DATA_ADDRESS_HTTP_PROXY_PATH,
-  ASSET_DATA_ADDRESS_METHOD,
-  ASSET_DATA_ADDRESS_QUERY_PARAMS,
-  ASSET_DATA_ADDRESS_TYPE, CreateAssetDataAddressFormData,
-} from "@/schema/asset.ts";
+import {ASSET_DATA_ADDRESS_BASE_URL, ASSET_DATA_ADDRESS_DESCRIPTION, ASSET_DATA_ADDRESS_ENABLE_BODY_PARAMETERIZATION, ASSET_DATA_ADDRESS_ENABLE_QUERY_PARAMETERIZATION, ASSET_DATA_ADDRESS_HTTP_AUTH_ADD_HEADER, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_NAME, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_NONE, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_SELECT_OPTIONS, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_VAULT_SECRET, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_VALUE, ASSET_DATA_ADDRESS_HTTP_HEADERS, ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD, ASSET_DATA_ADDRESS_HTTP_PROXY_PATH, ASSET_DATA_ADDRESS_METHOD, ASSET_DATA_ADDRESS_QUERY_PARAMS, ASSET_DATA_ADDRESS_TYPE, CreateAssetDataAddressFormData} from "@/schema/asset.ts";
+import {theme} from "@/theme/ThemeProvider.tsx";
 
 export interface AssetCreateDataAddressFormStepProps {
   translator: (key: string) => string,
@@ -35,9 +15,10 @@ export interface AssetCreateDataAddressFormStepProps {
   onChange: any,
   errors: { [key: string]: boolean },
   methodAlwaysShowing?: boolean,
+  customDataSourceConfigRows?: number,
 }
 
-export function AssetCreateFormDataAddressStep({ formData, errors, onChange, translator, methodAlwaysShowing = false, }: AssetCreateDataAddressFormStepProps): JSX.Element {
+export function AssetCreateFormDataAddressStep({ formData, errors, onChange, translator, methodAlwaysShowing = false, customDataSourceConfigRows = 2 }: AssetCreateDataAddressFormStepProps): JSX.Element {
   return (
     <div className="flex flex-col gap-y-5">
       <div className="flex flex-col gap-y-5 items-start">
@@ -64,9 +45,12 @@ export function AssetCreateFormDataAddressStep({ formData, errors, onChange, tra
           id="properties-description"
           key="properties-description"
           multiline
-          rows={6}
-          label={translator("assets.new.fieldDescription")}
+          rows={customDataSourceConfigRows}
+          label={translator("assets.new.fieldCustomDatasourceConfig")}
           placeholder={'{"https://w3id.org/edc/v0.0.1/ns/type": "HttpData", ...}'}
+          required
+          helperText={typeof errors[ASSET_DATA_ADDRESS_DESCRIPTION] === "string" ? errors[ASSET_DATA_ADDRESS_DESCRIPTION] : ""}
+          classes={{ textField: { '& p':{ color: theme.palette.error.main } }} as any}
           error={errors[ASSET_DATA_ADDRESS_DESCRIPTION]}
           value={formData[ASSET_DATA_ADDRESS_DESCRIPTION]}
           onChange={(event) => onChange({ ...formData, [ASSET_DATA_ADDRESS_DESCRIPTION]: event.target.value })}
