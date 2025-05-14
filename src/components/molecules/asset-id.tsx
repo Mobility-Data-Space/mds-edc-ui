@@ -9,11 +9,10 @@ export interface AssetIdProps {
   formData: CreateAssetPropertiesFormData;
   onChange: (formData: CreateAssetPropertiesFormData) => void;
   errors: { [key: string]: boolean };
-  required?: boolean;
+  hideLabel?: boolean;
 }
 
-export function AssetId({ translator, formData, onChange, errors }: AssetIdProps): JSX.Element {
-
+export function AssetId({ translator, formData, onChange, errors, hideLabel = false }: AssetIdProps): JSX.Element {
   return (
     <Input
       required
@@ -21,7 +20,7 @@ export function AssetId({ translator, formData, onChange, errors }: AssetIdProps
       id="properties-id"
       data-testid="properties-id"
       type="text"
-      label={<T string="assets.new.fieldId" />}
+      label={hideLabel ? "" : <T string="assets.new.fieldId" />}
       placeholder={translator("assets.new.fieldIdPlaceholder")}
       value={formData[ASSET_ID]}
       error={errors[ASSET_ID]}
