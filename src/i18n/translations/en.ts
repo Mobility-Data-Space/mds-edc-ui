@@ -62,6 +62,7 @@ export const en = {
         fieldVersion: "Version",
         fieldContentType: "Content type",
         fieldDescription: "Description",
+        fieldCustomDatasourceConfig: "Custom Datasource Config (JSON)",
         fieldKeywords: "Keywords",
         fieldLanguage: "Language",
         fieldEndpointDocumentation: "Endpoint Documentation",
@@ -191,6 +192,7 @@ export const en = {
         buttonSave: "Add asset",
 
         invalidWhitespacesOrColons: "Must not contain whitespaces or colons.",
+        mustBeValidJson: "Must be valid JSON",
       },
     },
     dataOffer: {
