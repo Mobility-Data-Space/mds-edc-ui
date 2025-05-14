@@ -138,13 +138,21 @@ export default function CreateDataOfferForm() {
   };
 
   const validateDataAddress = (formDataToValidate: CreateAssetDataAddressFormData) => {
-    const newErrors: { [key: string]: boolean } = {};
+    const newErrors: { [key: string]: boolean | string } = {};
     const required = computeRequiredDataOfferAddressProperties(formDataToValidate);
     required.forEach((propertyName) => {
       if (! formDataToValidate[propertyName]) {
         newErrors[propertyName] = true;
       }
     });
+
+    if (formDataToValidate[ASSET_DATA_ADDRESS_TYPE] === DATA_ADDRESS_TYPE_CUSTOM.value && formDataToValidate[ASSET_DATA_ADDRESS_DESCRIPTION] !== "") {
+      try {
+        JSON.parse(formDataToValidate[ASSET_DATA_ADDRESS_DESCRIPTION] as string);
+      } catch (e) {
+        newErrors[ASSET_DATA_ADDRESS_DESCRIPTION] = translator("assets.new.mustBeValidJson");
+      }
+    }
 
     return newErrors;
   }
@@ -220,6 +228,7 @@ export default function CreateDataOfferForm() {
                   onChange={dataAddressFormOnChange}
                   errors={errors.dataAddress}
                   methodAlwaysShowing
+                  customDataSourceConfigRows={6}
                 /> :
                 <AssetContactEmailAndSubject
                   translator={translator}

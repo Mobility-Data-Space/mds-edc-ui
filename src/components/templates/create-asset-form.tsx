@@ -121,13 +121,21 @@ export default function CreateAssetForm() {
   };
 
   const validateDataAddress = (formDataToValidate: CreateAssetDataAddressFormData) => {
-    const newErrors: { [key: string]: boolean } = {};
+    const newErrors: { [key: string]: boolean | string } = {};
     const required = computeRequiredDataAddressProperties(formDataToValidate);
     required.forEach((propertyName) => {
       if (! formDataToValidate[propertyName]) {
         newErrors[propertyName] = true;
       }
     });
+
+    if (formDataToValidate[ASSET_DATA_ADDRESS_TYPE] === DATA_ADDRESS_TYPE_CUSTOM.value && formDataToValidate[ASSET_DATA_ADDRESS_DESCRIPTION] !== "") {
+      try {
+        JSON.parse(formDataToValidate[ASSET_DATA_ADDRESS_DESCRIPTION] as string);
+      } catch (e) {
+        newErrors[ASSET_DATA_ADDRESS_DESCRIPTION] = translator("assets.new.mustBeValidJson");
+      }
+    }
 
     return newErrors;
   }
