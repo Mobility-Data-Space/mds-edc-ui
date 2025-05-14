@@ -311,3 +311,16 @@ export const assetCustomFieldsToShow = (asset: Asset): AssetFieldShowProps[] => 
     icon: "category"
   }))
 };
+
+export const generateId = (title?: string, version?: string) => {
+  const transformedVersion = transformForId(version);
+  return transformForId(title) + (transformedVersion ? `-${transformedVersion}` : "")
+};
+
+export const transformForId = (str?: string) => {
+  return (str ?? '')
+    .trim()
+    .replace(':', '-')
+    .replaceAll(' ', '-')
+    .toLowerCase();
+};

@@ -57,6 +57,7 @@ export const en = {
         datasourceInformation: "Datasource Information",
         advancedInformation: "Advanced Information",
         fieldId: "Asset ID",
+        fieldIdAlreadyExists: "ID already exists.",
         fieldTitle: "Title",
         fieldVersion: "Version",
         fieldContentType: "Content type",
@@ -188,6 +189,8 @@ export const en = {
 
         buttonCancel: "Cancel",
         buttonSave: "Add asset",
+
+        invalidWhitespacesOrColons: "Must not contain whitespaces or colons.",
       },
     },
     dataOffer: {
