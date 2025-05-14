@@ -117,7 +117,7 @@ Catalog.Items = function ListItems({ children, limit, offset, filterExpression, 
 
   return (
     <>
-      {!isLoading && items["https://www.w3.org/ns/dcat/dataset" as any] && items["https://www.w3.org/ns/dcat/dataset" as any]?.map((item: any, index: number) => (
+      {!isLoading && items["http://www.w3.org/ns/dcat#dataset" as any] && items["http://www.w3.org/ns/dcat#dataset" as any]?.map((item: any, index: number) => (
         <Item
           key={getId(item)}
           item={item}
