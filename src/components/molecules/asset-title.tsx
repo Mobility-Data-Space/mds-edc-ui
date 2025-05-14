@@ -27,13 +27,7 @@ export function AssetTitle({ translator, formData, onChange, errors }: AssetTitl
       placeholder={translator("assets.new.fieldTitlePlaceholder")}
       value={formData[ASSET_TITLE]}
       error={errors[ASSET_TITLE]}
-      onChange={(event) => {
-        const onChangeData = { ...formData, [ASSET_TITLE]: event.target.value };
-        if (formData[ASSET_TITLE] === formData[ASSET_ID]) {
-          onChangeData[ASSET_ID] = event.target.value;
-        }
-        onChange(onChangeData)
-      }}
+      onChange={(event) => onChange({ ...formData, [ASSET_TITLE]: event.target.value })}
     />
   );
 }
