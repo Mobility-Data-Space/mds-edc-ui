@@ -47,6 +47,7 @@ import {AssetConditionsForUse} from "@/components/molecules/asset-conditions-for
 import {AssetTemporalCoverage} from "@/components/molecules/asset-temporal-coverage.tsx";
 import PolicyExpression from "@/components/organisms/policy-expression.tsx";
 import {assetFormDataToSubmitData, computeRequiredDataOfferAddressProperties} from "@/utilities/asset.ts";
+import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
 
 export default function CreateDataOfferForm() {
   const { push, connector } = useConnectorDashboardState();
@@ -56,6 +57,13 @@ export default function CreateDataOfferForm() {
   const { translator } = useTranslator();
   const [formData, setFormData] = useState<CreateAssetFormData>(defaultCreateAssetFormData);
   const [errors, setErrors] = useState({ properties: {}, advancedInfo: {}, dataAddress: {} });
+
+  const [existingIds, setExistingIds] = useState<string[]>([]);
+  const client = useEdcConnectorClient({ management: connector.managementUrl });
+  useEffect(() => {
+    client.management.assets.queryAll({ offset: 0 })
+    .then(assets => setExistingIds(assets.map(asset => asset[ASSET_ID])));
+  }, []);
 
   const generalInfoIsNotValid = () => {
     return 0 < Object.entries(validateGeneralInfo(formData.properties)).length
@@ -96,12 +104,19 @@ export default function CreateDataOfferForm() {
   };
 
   const validateGeneralInfo = (formDataToValidate: CreateAssetPropertiesFormData) => {
-    const newErrors: { [key: string]: boolean } = {};
+    const newErrors: { [key: string]: boolean | string } = {};
     REQUIRED_PROPERTIES.forEach((propertyName) => {
       if (! formDataToValidate[propertyName]) {
         newErrors[propertyName] = true;
       }
     });
+
+    const idAlreadyExist = existingIds.includes(formDataToValidate[ASSET_ID]);
+    if (! /^[^\s:]*$/.test(formDataToValidate[ASSET_ID])) {
+      newErrors[ASSET_ID] = translator('assets.new.invalidWhitespacesOrColons');
+    } else if (idAlreadyExist) {
+      newErrors[ASSET_ID] = translator('assets.new.fieldIdAlreadyExists');
+    }
 
     return newErrors;
   };
