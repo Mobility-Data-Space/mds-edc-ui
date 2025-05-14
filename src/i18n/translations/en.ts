@@ -191,6 +191,7 @@ export const en = {
         buttonCancel: "Cancel",
         buttonSave: "Add asset",
 
+        saveFail: "Failed saving asset!",
         invalidWhitespacesOrColons: "Must not contain whitespaces or colons.",
         mustBeValidJson: "Must be valid JSON",
       },

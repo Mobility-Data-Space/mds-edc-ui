@@ -9,6 +9,7 @@ import {ASSET_ID, CreateAssetAdvancedInfoFormData, CreateAssetDataAddressFormDat
 import {AssetCreateFormAdvancedInfoStepContent} from "@/components/organisms/asset-create-form-advanced-step-content.tsx";
 import {assetFormDataToSubmitData, computeRequiredDataAddressProperties, generateId} from "@/utilities/asset.ts";
 import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
+import { enqueueSnackbar } from 'notistack';
 
 export default function CreateAssetForm() {
   const { push, connector } = useConnectorDashboardState();
@@ -160,7 +161,7 @@ export default function CreateAssetForm() {
   };
 
   const onFormSubmitFail = (error: Error) => {
-    console.log('onFormSubmitFail : ', error);
+    enqueueSnackbar(translator("assets.new.saveFail"));
   }
 
   if (!connector) {
