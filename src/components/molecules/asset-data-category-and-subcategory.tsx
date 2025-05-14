@@ -16,20 +16,21 @@ export interface AssetDataCategoryAndSubcategoryProps {
 }
 
 export function AssetDataCategoryAndSubcategory({ translator, formData, onChange, errors }: AssetDataCategoryAndSubcategoryProps): JSX.Element {
+  const labelColor = errors[ASSET_ADVANCED_INFO_DATA_CATEGORY] ? `text-red-500` : "text-gray-800"
 
   return (
     <>
       <div>
         <label
           htmlFor="advanced-info-data-category"
-          className="block text-sm text-gray-800 mb-1"
+          className={`block text-sm mb-1 ${labelColor}`}
         >
           <T string="assets.new.fieldAdvancedInfoDataCategory"/>
+          {"*"}
         </label>
         <MuiSelect
           name={ASSET_ADVANCED_INFO_DATA_CATEGORY}
           id="advanced-info-data-category"
-          required
           placeholder={translator("assets.new.fieldAdvancedInfoDataCategoryPlaceholder")}
           options={DATA_CATEGORY_SELECT_DATA}
           value={formData[ASSET_ADVANCED_INFO_DATA_CATEGORY]}

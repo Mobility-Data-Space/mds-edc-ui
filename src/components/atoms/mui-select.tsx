@@ -45,7 +45,7 @@ export function MuiSelect({ label, options, highlights = [], id = "", defaultVal
   }, [defaultValue, name, onChange, notValue]);
 
   return (
-    <FormControl fullWidth disabled={disabled} color="secondary">
+    <FormControl fullWidth disabled={disabled} required={required} color="secondary">
       <InputLabel>{label}</InputLabel>
       <Select
         id={id}
