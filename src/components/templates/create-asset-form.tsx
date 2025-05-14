@@ -7,7 +7,7 @@ import { AssetCreateFormGeneralInfoStepContent } from "@/components/organisms/as
 import { AssetCreateFormDataAddressStep } from "@/components/organisms/asset-create-form-data-address-step.tsx";
 import {ASSET_ID, CreateAssetAdvancedInfoFormData, CreateAssetDataAddressFormData, CreateAssetFormData, CreateAssetPropertiesFormData, defaultCreateAssetFormData, REQUIRED_ADVANCED_INFO, REQUIRED_PROPERTIES} from "@/schema/asset.ts";
 import {AssetCreateFormAdvancedInfoStepContent} from "@/components/organisms/asset-create-form-advanced-step-content.tsx";
-import {assetFormDataToSubmitData, computeRequiredDataAddressProperties} from "@/utilities/asset.ts";
+import {assetFormDataToSubmitData, computeRequiredDataAddressProperties, generateId} from "@/utilities/asset.ts";
 import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
 
 export default function CreateAssetForm() {
@@ -70,6 +70,11 @@ export default function CreateAssetForm() {
 
   const generalInfoFormOnChange = (generalInfoFormData: CreateAssetPropertiesFormData) => {
     setErrors((oldErrors) => ({ ...oldErrors, properties: validateGeneralInfo(generalInfoFormData) }));
+
+    const generatedOldId = generateId(formData.properties[ASSET_TITLE] as string, formData.properties[ASSET_VERSION] as string);
+    if (generatedOldId === generalInfoFormData[ASSET_ID]) {
+      generalInfoFormData[ASSET_ID] = generateId(generalInfoFormData[ASSET_TITLE] as string, generalInfoFormData[ASSET_VERSION] as string);
+    }
 
     return onChange({ ...formData, properties: generalInfoFormData, [ASSET_ID]: generalInfoFormData[ASSET_ID] });
   };
