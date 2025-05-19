@@ -13,6 +13,7 @@ import LinkIcon from "@mui/icons-material/Link";
 import InfoIcon from "@mui/icons-material/Info";
 import {IconButton, Tooltip} from "@mui/material";
 import {CounterPartyAddressDialog} from "@/components/molecules/counter-party-address-dialog.tsx";
+import {useDebounce} from "@/hooks/use-debounce.ts";
 
 export default function CatalogPage() {
   const { connector } = useParticipantConnectorState();
@@ -23,6 +24,8 @@ export default function CatalogPage() {
   const [isCounterPartyAddressDialogOpen, setIsCounterPartyAddressDialogOpen] = useState(false);
 
   const [counterPartyAddress, setCounterPartyAddress] = useState(connector.protocolUrl) ;
+  const [counterPartyAddressToSearch, setCounterPartyAddressToSearch] = useState(connector.protocolUrl) ;
+  const { debounce: debouncedSetCounterPartyAddress } = useDebounce((url) => setCounterPartyAddressToSearch(url));
 
   const [openAssetData, setOpenAssetData] = useState({
     asset: {} as Asset,
@@ -76,7 +79,7 @@ export default function CatalogPage() {
               }}
               onChange={(event) => {
                 setCounterPartyAddress(event.target.value);
-//                  triggerSearch()
+                debouncedSetCounterPartyAddress(event.target.value);
               }}
             />
           </div>
@@ -84,7 +87,7 @@ export default function CatalogPage() {
             {/* TODO: move pagination here */}
           </div>
           </div>
-          <ContractOffersList managementUrl={connector.managementUrl} counterPartyAddress={counterPartyAddress}>
+          <ContractOffersList managementUrl={connector.managementUrl} counterPartyAddress={counterPartyAddressToSearch}>
             <div className="flex flex-wrap gap-2.5">
               <ContractOffersList.Items
                 limit={limit}
