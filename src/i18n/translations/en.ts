@@ -299,6 +299,10 @@ export const en = {
         "List all participants which you can check their catalogs.",
       headingName: "Name",
       headingStatus: "Status",
+      connectorEndpoints: "Connector Endpoints",
+      clickForDetails: "Click for details",
+      fetchStatus: "Fetch Status",
+      otherConnectorEndpointCatalogs: "Other Connector Endpoint Catalogs",
       "[participant]": {
         title: "List contract offers for ",
         description: "List participants for the selected participant.",
