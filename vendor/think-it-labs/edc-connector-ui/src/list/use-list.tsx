@@ -25,7 +25,7 @@ export function useList<T>(
   const [items, setItems] = useState<T[]>([]);
   const [error, setError] = useState<Error | null>(null);
   const [isLoading, setLoading] = useState(false);
-  const [shouldSearch, setSohuldSearch] = useState(false);
+  const [shouldSearch, setShouldSearch] = useState(false);
 
   const deleteItem = useCallback(
     (id: string) => del(id),
@@ -42,6 +42,7 @@ export function useList<T>(
           const response = await queryAll(querySpec);
           setItems(response);
         } catch (err) {
+          setItems([]);
           setError(err as Error);
         } finally {
           setLoading(false);
@@ -66,7 +67,7 @@ export function useList<T>(
           setError(err as Error);
         } finally {
           setLoading(false);
-          setSohuldSearch(false);
+          setShouldSearch(false);
         }
       }
     )();
@@ -93,7 +94,7 @@ export function useList<T>(
           ]
           : [],
       });
-      setSohuldSearch(true);
+      setShouldSearch(true);
     },
   };
 }
