@@ -140,7 +140,16 @@ export default function SideDrawer(props: Props) {
   const drawer = (
     <div>
       <Toolbar >
-        <Image src="/mds_logo.svg" alt="Logo" height="57" width="0" className="m-2" style={{ height: "57px", width: "70%" }} />
+        <Image
+          src="/mds_logo.svg"
+          alt="Logo"
+          height={0}
+          width={0}
+          className="m-2"
+          priority
+          style={{ height: "57px", width: "70%" }}
+        />
+
       </Toolbar>
       <List>
         {routes.map((route: any) => {
