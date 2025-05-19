@@ -16,18 +16,11 @@ export default function ContractNegotiationsListPage() {
   const { globalTranslator } = useTranslator();
   const { decrementPage, incrementPage, offset, limit, hasPrev, page } =
     usePagination();
-  
+
   return (
     <SideDrawer title={<T string="contractNegotiations.title" />}>
       <ContractNegotiationsList managementUrl={managementUrl}>
         <div className="sm:col-span-1">
-          <p>
-            <T string="title" />
-          </p>
-          <p>
-            <T string="description" />
-          </p>
-        
           <label
             htmlFor="hs-as-table-product-review-search"
             className="sr-only"

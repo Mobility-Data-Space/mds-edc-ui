@@ -1,6 +1,3 @@
-import SimCardIcon from '@mui/icons-material/SimCard';
-import ContactPageIcon from '@mui/icons-material/ContactPage';
-import UploadIcon from '@mui/icons-material/Upload';
 import {Asset} from "@think-it-labs/edc-connector-client";
 import {DATA_OFFER_TYPE} from "@/schema/asset.ts";
 import {DATA_OFFER_TYPE_LIVE, DATA_OFFER_TYPE_ON_REQUEST} from "@/constants/data-address-types.ts";

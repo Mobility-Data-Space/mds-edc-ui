@@ -1,12 +1,6 @@
 import React from "react";
 import {T} from "@/i18n";
-import {
-  ASSET_ADVANCED_INFO_NUTS_LOCATIONS, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE,
-  CreateAssetAdvancedInfoFormData,
-} from "@/schema/asset.ts";
-import {IconButton, Tooltip} from "@mui/material";
-import {InfoOutlined} from "@mui/icons-material";
-import {KeyValuePairInputList} from "@/components/molecules/key-value-pair-input-list.tsx";
+import {ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE, CreateAssetAdvancedInfoFormData} from "@/schema/asset.ts";
 import DateRangePicker from "@/components/molecules/date-range-picker.tsx";
 
 export interface AssetTemporalCoverageProps {

@@ -45,7 +45,6 @@ export const removeJsonLdSchemaFromProperties = (originalJson: any): any => {
 }
 
 export const convertOdrlToJsonHtml = (processedJson: any, valueDelimiter = " "): any => {
-  console.log({valueDelimiter})
   if (Array.isArray(processedJson)) {
     return processedJson.map(item => convertOdrlToJsonHtml(item, valueDelimiter));
   }
