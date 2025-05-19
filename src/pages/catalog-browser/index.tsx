@@ -41,6 +41,7 @@ export default function CatalogPage() {
         participantId={openAssetData.participantId}
         connectorEndpoint={connector.protocolUrl}
         contractDefinitions={openAssetData.contractDefinitions}
+        assetIsOwned={counterPartyAddress === connector.protocolUrl}
         onClose={() => setIsDetailsModalOpen(false)}
         contentStyle={{ maxWidth: "90vw", width: "1000px" }}
       />

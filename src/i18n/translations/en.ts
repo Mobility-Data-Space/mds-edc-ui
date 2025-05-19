@@ -19,6 +19,7 @@ export const en = {
     common: {
       add: "Add",
       create: "Create",
+      confirm: "Confirm",
       cancel: "Cancel",
       close: "Close",
       delete: "Delete",
@@ -27,6 +28,7 @@ export const en = {
       negotiate: "Negotiate",
       showJsonLd: "Show JSON-LD",
       cleanedJson: "Cleaned JSON",
+      errorOccurred: "An error has occurred",
     },
     dashboard: {
       title: "Dashboard"
@@ -329,6 +331,8 @@ export const en = {
       headingCounterPartyAddress: "Counter party address",
       headingCreatedAt: "Created at",
       cannotNegotiateOwnedConnectors: "Cannot negotiate contracts with your own connector.",
+      negotiateConfirmTitle: "Data Offer Terms & Conditions",
+      negotiateConfirmContent: "Hereby I agree that by pressing the 'Confirm' button, I accept the license\n    terms, policies, and additional conditions for use, including any copyright\n    notices, associated with the provider's offer.",
       "[id]": {
         title: "View contract negotiation",
         description: "A single contract negotiation",

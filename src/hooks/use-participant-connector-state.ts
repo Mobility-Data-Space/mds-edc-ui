@@ -1,5 +1,6 @@
 import { Participant } from "@/constants/dataspace";
 import { useRouter } from "next/router";
+import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
 
 type ConnectorDashboardState = {
   connector: Participant;
@@ -31,3 +32,9 @@ export function useParticipantConnectorState(): ConnectorDashboardState {
     push: (href: string) => router.push(`${href}`),
   } as any;
 }
+
+export const useEdcClient = () => {
+  const { connector } = useParticipantConnectorState()
+
+  return useEdcConnectorClient({ management: connector.managementUrl });
+};

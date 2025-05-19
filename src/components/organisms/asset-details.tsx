@@ -1,8 +1,8 @@
 import React, {useEffect, useMemo, useState} from "react";
-import { T } from "@/i18n";
+import {T, useTranslator} from "@/i18n";
 import {Asset, compact, ContractDefinition} from "@think-it-labs/edc-connector-client";
 import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
-import {ASSET_KEYWORDS, ASSET_DESCRIPTION, ASSET_TITLE} from "@/schema/asset.ts";
+import {ASSET_KEYWORDS, ASSET_DESCRIPTION, ASSET_TITLE, ASSET_ID} from "@/schema/asset.ts";
 import {Button, Checkbox, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Icon, Tooltip} from "@mui/material";
 import {MarkdownCollapsableText} from "@/components/molecules/markdown-collapsable-text.tsx";
 import Divider from "@mui/material/Divider";
@@ -14,8 +14,11 @@ import {convertOdrlToJsonHtml, removeJsonLdSchemaFromProperties} from "@/schema/
 import {ConstraintShow} from "@/components/molecules/constraint-show.tsx";
 import dynamic from "next/dynamic";
 import {ReactJsonViewProps} from "react-json-view";
-import CreateAssetForm from "@/components/templates/create-asset-form.tsx";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import {ConfirmDialog} from "@/components/molecules/confirm-dialog.tsx";
+import {useEdcClient, useParticipantConnectorState} from "@/hooks/use-participant-connector-state.ts";
+import {POLICY_ASSIGNER, POLICY_TARGET} from "@/schema/policy.ts";
+import {enqueueSnackbar} from "notistack";
 
 interface AssetDetailsProps {
   asset: Asset;
@@ -26,6 +29,8 @@ interface AssetDetailsProps {
 }
 
 export default function AssetDetails({ asset, participantId, connectorEndpoint, contractDefinitions, assetIsOwned = true }: AssetDetailsProps) {
+  const { translator } = useTranslator();
+
   const keywords = asset.properties[ASSET_KEYWORDS] || [];
   const description = readValue(asset.properties, ASSET_DESCRIPTION);
   const title = readValue(asset.properties, ASSET_TITLE) || "";
@@ -60,11 +65,25 @@ export default function AssetDetails({ asset, participantId, connectorEndpoint, 
     compactConstraints();
   }, []);
 
-console.log('AssetDetails : ', {
-  removeJsonLdSchemaFromProperties: removeJsonLdSchemaFromProperties(compactContractDefinitions),
-  constraint: removeJsonLdSchemaFromProperties(compactContractDefinitions)?.permission?.constraint,
-  convertOdrlToJsonHtml: convertOdrlToJsonHtml(removeJsonLdSchemaFromProperties(compactContractDefinitions)?.permission?.constraint)
-})
+  const [negotiateContractIsOpen, setNegotiateContractIsOpen] = useState(false);
+
+  const edcClient = useEdcClient()
+
+  const onNegotiateConfirm = (contractDefinition: any) => {
+    edcClient.management.contractNegotiations.initiate({
+      counterPartyAddress: connectorEndpoint,
+      policy: {
+        ...contractDefinition,
+        [POLICY_ASSIGNER]: { "@id": participantId },
+        [POLICY_TARGET]: { "@id": asset[ASSET_ID] },
+      },
+    }).then(() => {
+      setNegotiateContractIsOpen(false);
+    }).catch(error => {
+      enqueueSnackbar(translator("common.errorOccurred"));
+    })
+  }
+
   return (
     <div className="flex flex-col gap-y-2.5">
       <div>
@@ -129,7 +148,7 @@ console.log('AssetDetails : ', {
                 <Tooltip title={<T string="contractNegotiations.cannotNegotiateOwnedConnectors"/>}
                          disableHoverListener={!assetIsOwned} disableFocusListener={!assetIsOwned}>
                 <span className="float-right">
-                  <Button disabled={assetIsOwned} color="secondary" variant="contained">
+                  <Button disabled={assetIsOwned} color="secondary" variant="contained" onClick={() => setNegotiateContractIsOpen(true)}>
                     <T string="common.negotiate"/>
                   </Button>
                 </span>
@@ -177,6 +196,14 @@ console.log('AssetDetails : ', {
                   </div>
                 </DialogActions>
               </Dialog>
+
+              <ConfirmDialog
+                open={negotiateContractIsOpen}
+                onClose={() => setNegotiateContractIsOpen(false)}
+                onConfirm={() => onNegotiateConfirm(contractDefinition)}
+                title="contractNegotiations.negotiateConfirmTitle"
+                content="contractNegotiations.negotiateConfirmContent"
+              />
             </div>
           ))}
         </div>
