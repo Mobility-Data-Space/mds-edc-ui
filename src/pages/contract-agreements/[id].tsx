@@ -1,14 +1,15 @@
-import { ConnectorDashboard } from "@/components/templates/connector-dashboard";
+
 import { ContractAgreementView } from "@think-it-labs/edc-connector-ui/contract-agreement-view";
-import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-state";
+import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T } from "@/i18n";
 import { useRouter } from "next/router";
 import React from "react";
 import SideDrawer from "@/components/organisms/side-drawer.tsx";
+import { List } from "@think-it-labs/edc-connector-ui/list";
 
 export default function ContractAgreementViewPage() {
   const id = useRouter().query.id as string;
-  const { connector } = useConnectorDashboardState();
+  const { connector } = useParticipantConnectorState();
   const managementUrl = connector?.managementUrl as string;
   return (
     <SideDrawer title={<T string="contractAgreements.[id].title" />}>
@@ -16,17 +17,19 @@ export default function ContractAgreementViewPage() {
         id={id}
         managementUrl={managementUrl}
       >
-        <ConnectorDashboard.Section>
-          <ConnectorDashboard.Title>
-            <T string="title" />
-          </ConnectorDashboard.Title>
-          <ConnectorDashboard.Description>
-            <T string="description" />
-          </ConnectorDashboard.Description>
-        </ConnectorDashboard.Section>
-
-        <ConnectorDashboard.Section>
-        </ConnectorDashboard.Section>
+        <p>
+          <T string="title" />
+        </p>
+        <p>
+          <T string="description" />
+        </p>
+        <ul>
+          <li><ContractAgreementView.Id /></li>
+          <li><ContractAgreementView.AssetId /></li>
+          <li><ContractAgreementView.ConsumerId /></li>
+          <li><ContractAgreementView.ProviderId /></li>
+          <li><ContractAgreementView.Policy /></li>
+        </ul>
       </ContractAgreementView>
     </SideDrawer>
   );

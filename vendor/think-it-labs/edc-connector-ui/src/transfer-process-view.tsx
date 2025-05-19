@@ -20,7 +20,12 @@ export function TransferProcessView(
   });
 
   const get = useCallback(
-    () => client.management.transferProcesses.get(id),
+    () => {
+      if (id != undefined)
+        return client.management.transferProcesses.get(id)
+      
+      return Promise.resolve(new TransferProcess())
+    },
     [client, id],
   );
 

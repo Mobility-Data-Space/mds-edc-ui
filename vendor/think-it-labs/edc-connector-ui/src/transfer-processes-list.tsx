@@ -21,8 +21,13 @@ export function TransferProcessesList({
   });
 
   const queryAll = useCallback(
-    (querySpec: QuerySpec) =>
-      client.management.transferProcesses.queryAll(querySpec),
+    (querySpec: QuerySpec) => {
+      if (Object.keys(querySpec).length != 0) {
+        return client.management.transferProcesses.queryAll(querySpec);
+      }
+
+      return Promise.resolve([new TransferProcess()]) ;
+    },
     [client],
   );
 

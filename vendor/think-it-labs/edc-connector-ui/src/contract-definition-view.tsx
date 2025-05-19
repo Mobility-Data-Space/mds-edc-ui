@@ -27,7 +27,12 @@ export function ContractDefinitionView(
   });
 
   const get = useCallback(
-    () => client.management.contractDefinitions.get(id),
+    () => {
+      if (id != undefined)
+        return client.management.contractDefinitions.get(id)
+      
+      return Promise.resolve(new ContractDefinition())
+    },
     [client, id],
   );
 

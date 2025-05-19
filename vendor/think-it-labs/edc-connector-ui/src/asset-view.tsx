@@ -20,7 +20,12 @@ export function AssetView(
   });
 
   const get = useCallback(
-    () => client.management.assets.get(id),
+    () => {
+      if (id != undefined)
+        return client.management.assets.get(id)
+      
+      return Promise.resolve(new Asset())
+    },
     [client, id],
   );
 

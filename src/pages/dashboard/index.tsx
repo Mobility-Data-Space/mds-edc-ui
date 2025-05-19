@@ -6,7 +6,7 @@ import {useEffect} from "react";
 export default function ConnectorPage() {
   const router = useRouter();
   useEffect(() => {
-    router.push("/my-assets"); // TODO: to be removed after implementing the dashboard
+    router.push("/assets"); // TODO: to be removed after implementing the dashboard
   }, []);
 
   return (

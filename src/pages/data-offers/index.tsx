@@ -1,8 +1,8 @@
 import { Button } from "@/components/atoms/button";
 import { Table } from "@/components/atoms/table";
-import { ConnectorDashboard } from "@/components/templates/connector-dashboard";
+
 import { ContractDefinitionsList } from "@think-it-labs/edc-connector-ui/contract-definitions-list";
-import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-state";
+import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { usePagination } from "@/hooks/use-pagination";
 import { T, useTranslator } from "@/i18n";
 import { ChevronLeft, ChevronRight, Plus, Search } from "lucide-react";
@@ -10,7 +10,7 @@ import React from "react";
 import SideDrawer from "@/components/organisms/side-drawer.tsx";
 
 export default function AssetListPage() {
-  const { push, connector } = useConnectorDashboardState();
+  const { push, connector } = useParticipantConnectorState();
   const { globalTranslator } = useTranslator();
   const managementUrl = connector?.managementUrl as string;
   const { decrementPage, incrementPage, offset, limit, hasPrev, page } =
@@ -18,12 +18,11 @@ export default function AssetListPage() {
   return (
     <SideDrawer title={<T string="contractDefinitions.title" />}>
       <ContractDefinitionsList managementUrl={managementUrl}>
-        <ConnectorDashboard.Section>
           <div className="flex items-center">
             <div>
               <button
                 className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-                onClick={() => push("/contract-definitions/new")}
+                onClick={() => push("/data-offers/new")}
               >
                 <Plus className="h-4 w-4" />
                 <T string="buttonAdd" />
@@ -51,7 +50,6 @@ export default function AssetListPage() {
               </ContractDefinitionsList.SearchTrigger>
             </div>
           </div>
-        </ConnectorDashboard.Section>
 
         <Table>
           <Table.Head>
@@ -82,7 +80,7 @@ export default function AssetListPage() {
             >
               {({ item, index }) => (
                 <Table.Row
-                  onClick={() => push(`/contract-definitions/${item.id}`)}
+                  onClick={() => push(`/data-offers/${item.id}`)}
                 >
                   <Table.Cell>
                     <button

@@ -1,4 +1,4 @@
-import {Asset, Catalog as CatalogResult, CriterionInput, QuerySpec} from "@think-it-labs/edc-connector-client";
+import {Asset, Catalog as CatalogResult, CriterionInput, Dataset, QuerySpec} from "@think-it-labs/edc-connector-client";
 import React, {PropsWithChildren, ReactNode, useCallback, useEffect, useMemo} from "react";
 import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
 import {List, useListContext} from "./list";
@@ -56,7 +56,7 @@ export function Catalog({
     <List<CatalogResult>
       queryAll={queryAll as any} // TODO: type
       delete={del}
-      getId={(asset) => asset.id}
+      getId={(catalog: CatalogResult) => catalog.participantId}
       managementUrl={managementUrl}
     >
       {children}
@@ -115,6 +115,11 @@ Catalog.Items = function ListItems({ children, limit, offset, filterExpression, 
   const participantIdJsonLD = items[PARTICIPANT_ID as any];
   const participantId = (participantIdJsonLD && participantIdJsonLD[0] && participantIdJsonLD[0]["@value"]) || "";
 
+  !isLoading && items[CATALOG_DATASET as any] && items[CATALOG_DATASET as any]?.map((item: Dataset, index: number) => {
+    console.log(item)
+    console.log(index)
+  })
+  
   return (
     <>
       {!isLoading && items["http://www.w3.org/ns/dcat#dataset" as any] && items["http://www.w3.org/ns/dcat#dataset" as any]?.map((item: any, index: number) => (

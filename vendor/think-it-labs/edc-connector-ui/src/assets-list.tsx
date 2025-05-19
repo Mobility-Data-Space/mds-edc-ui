@@ -18,7 +18,13 @@ export function AssetsList({
   });
 
   const queryAll = useCallback(
-    (querySpec: QuerySpec) => client.management.assets.queryAll(querySpec),
+    (querySpec: QuerySpec) => {
+      if (Object.keys(querySpec).length != 0) {
+        return client.management.assets.queryAll(querySpec);
+      }
+
+      return Promise.resolve([new Asset()]) ;
+    },
     [client],
   );
 

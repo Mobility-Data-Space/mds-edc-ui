@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
-import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-state";
+import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
-import { AssetForm } from "@think-it-labs/edc-connector-ui/asset-html-form.tsx";
+import { AssetForm } from "@think-it-labs/edc-connector-ui/asset-form.tsx";
 import {Button, Step, StepContent, StepIconProps, StepLabel, Stepper} from "@mui/material";
 import { AssetCreateFormGeneralInfoStepContent } from "@/components/organisms/asset-create-form-general-info-step-content.tsx";
 import { AssetCreateFormDataAddressStep } from "@/components/organisms/asset-create-form-data-address-step.tsx";
@@ -12,6 +12,7 @@ import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-e
 import { enqueueSnackbar } from 'notistack';
 import {DATA_ADDRESS_TYPE_CUSTOM} from "@/constants/data-address-types.ts";
 import {StepIcon} from "@/components/atoms/step-icon.tsx";
+import { AssetFormWrapper } from "@think-it-labs/edc-connector-ui/asset-form-wrapper";
 
 const stepLabelSharedProps = {
   className: "w-full justify-start p-4",
@@ -19,7 +20,7 @@ const stepLabelSharedProps = {
 }
 
 export default function CreateAssetForm() {
-  const { push, connector } = useConnectorDashboardState();
+  const { push, connector } = useParticipantConnectorState();
   const submitButtonRef = useRef<HTMLButtonElement>(null);
 
   const { translator } = useTranslator();
@@ -183,10 +184,10 @@ export default function CreateAssetForm() {
         </span>
       </div>
 
-      <AssetForm
+      <AssetFormWrapper
         managementUrl={connector.managementUrl}
-        onSuccess={() => push("/my-assets")}
-        getFormDataToSubmit={() => assetFormDataToSubmitData(formData)}
+        onSuccess={() => push("/assets")}
+        formData={() => assetFormDataToSubmitData(formData)}
         onFailure={onFormSubmitFail}
       >
         <Stepper activeStep={activeStep} orientation="vertical" className="p-5">
@@ -254,7 +255,7 @@ export default function CreateAssetForm() {
         <div className="flex justify-end gap-x-2 px-6 py-4">
           <Button
             color="secondary"
-            onClick={() => push("/my-assets")}
+            onClick={() => push("/assets")}
           >
             <T string="common.cancel"/>
           </Button>
@@ -268,7 +269,7 @@ export default function CreateAssetForm() {
             <T string="common.create"/>
           </Button>
         </div>
-      </AssetForm>
+      </AssetFormWrapper>
 
     </div>
   );

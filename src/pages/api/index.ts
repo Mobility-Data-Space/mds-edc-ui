@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Readable } from "node:stream";
-import {removeProxyPrefix} from "@/hooks/use-connector-dashboard-state.ts";
+import {removeProxyPrefix} from "@/hooks/use-participant-connector-state";
 
 type Data = {
   name: string;

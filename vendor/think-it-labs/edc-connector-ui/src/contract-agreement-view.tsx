@@ -21,7 +21,12 @@ export function ContractAgreementView(
   });
 
   const get = useCallback(
-    () => client.management.contractAgreements.get(id),
+    () => {
+      if (id != undefined)
+        return client.management.contractAgreements.get(id)
+
+      return Promise.resolve(new ContractAgreement())
+    },
     [client, id],
   );
 
@@ -87,7 +92,7 @@ ContractAgreementViewPolicy.Obbligations =
       };
     }, [children]);
 
-    <>
+    return (<>
       {item?.obligations.map((item, index) => (
         <Item
           key={item}
@@ -95,7 +100,7 @@ ContractAgreementViewPolicy.Obbligations =
           index={index}
         />
       ))}
-    </>;
+    </>);
   };
 
 ContractAgreementViewPolicy.Prohibitions =
@@ -110,7 +115,7 @@ ContractAgreementViewPolicy.Prohibitions =
       };
     }, [children]);
 
-    <>
+    return (<>
       {item?.prohibitions.map((item, index) => (
         <Item
           key={item}
@@ -118,7 +123,7 @@ ContractAgreementViewPolicy.Prohibitions =
           index={index}
         />
       ))}
-    </>;
+    </>);
   };
 
 ContractAgreementViewPolicy.Permissions =
@@ -133,7 +138,7 @@ ContractAgreementViewPolicy.Permissions =
       };
     }, [children]);
 
-    <>
+    return (<>
       {item?.permissions.map((item, index) => (
         <Item
           key={item}
@@ -141,7 +146,7 @@ ContractAgreementViewPolicy.Permissions =
           index={index}
         />
       ))}
-    </>;
+    </>);
   };
 
 ContractAgreementView.Policy = ContractAgreementViewPolicy;

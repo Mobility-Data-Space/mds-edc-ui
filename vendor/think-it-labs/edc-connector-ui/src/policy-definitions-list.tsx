@@ -20,8 +20,13 @@ export function PolicyDefinitionsList({
   });
 
   const queryAll = useCallback(
-    (querySpec: QuerySpec) =>
-      client.management.policyDefinitions.queryAll(querySpec),
+    (querySpec: QuerySpec) => {
+      if (Object.keys(querySpec).length != 0) {
+        return client.management.policyDefinitions.queryAll(querySpec);
+      }
+
+      return Promise.resolve([new PolicyDefinition()]) ;
+    },
     [client],
   );
 

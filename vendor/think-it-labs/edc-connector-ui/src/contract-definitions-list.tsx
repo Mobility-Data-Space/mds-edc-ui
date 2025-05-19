@@ -21,8 +21,13 @@ export function ContractDefinitionsList({
   });
 
   const queryAll = useCallback(
-    (querySpec: QuerySpec) =>
-      client.management.contractDefinitions.queryAll(querySpec),
+    (querySpec: QuerySpec) => {
+      if (Object.keys(querySpec).length != 0) {
+        return client.management.contractDefinitions.queryAll(querySpec);
+      }
+
+      return Promise.resolve([new ContractDefinition()]) ;
+    }, 
     [client],
   );
 

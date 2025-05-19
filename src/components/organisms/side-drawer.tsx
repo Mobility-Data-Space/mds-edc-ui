@@ -69,15 +69,15 @@ const routes: ReactNode[] = [
   />,
   <RouteNode
     key="contract-agreements"
-    href="/contracts"
-    title="Contracts"
+    href="/contract-agreements"
+    title="Contract Agreements"
     icon={<AssignmentTurnedInIcon {...iconsProps} />}
   />,
 
   <RouteNode
-    key="transfer-history"
-    href="/transfer-history"
-    title="Transfer History"
+    key="transfer-processes"
+    href="/transfer-processes"
+    title="Transfer Processes"
     icon={<AssignmentIcon {...iconsProps} />}
   />,
   // TODO: translate
@@ -85,25 +85,25 @@ const routes: ReactNode[] = [
     Provide
   </h3>,
   <RouteNode
-    key="create-asset"
-    href="/create-asset"
+    key="create-offer"
+    href="/create-data-offer"
     title="Create Data Offer"
     icon={<PostAddIcon {...iconsProps} />}
   />,
   <RouteNode
     key="assets"
-    href="/my-assets"
+    href="/assets"
     title="Assets"
     icon={<UploadIcon {...iconsProps} />}
   />,
   <RouteNode
     key="policy-definitions"
-    href="/policies"
+    href="/policy-definitions"
     title="Policies"
     icon={<PolicyIcon {...iconsProps} />}
   />,
   <RouteNode
-    key="contract-definitions"
+    key="data-offers"
     href="/data-offers"
     title="Data offers"
     icon={<RuleIcon {...iconsProps} />}

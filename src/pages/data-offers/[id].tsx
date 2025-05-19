@@ -1,10 +1,10 @@
 import { Button } from "@/components/atoms/button";
-import { ConnectorDashboard } from "@/components/templates/connector-dashboard";
+
 import {
   ContractDefinitionView,
   useContractDefinitionContext,
 } from "@think-it-labs/edc-connector-ui/contract-definition-view";
-import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-state";
+import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T } from "@/i18n";
 import { useRouter } from "next/router";
 import React from "react";
@@ -19,7 +19,7 @@ function DeleteContractDefinition() {
       variant="unstyled"
       onClick={async () => {
         await deleteItem();
-        push("/my-assets");
+        push("/assets");
       }}
     >
       Delete
@@ -29,7 +29,7 @@ function DeleteContractDefinition() {
 
 export default function ContractDefinitionViewPage() {
   const id = useRouter().query.id as string;
-  const { connector } = useConnectorDashboardState();
+  const { connector } = useParticipantConnectorState();
   const managementUrl = connector?.managementUrl as string;
   return (
     <SideDrawer title={<T string="contractDefinitions.[id].title" />}>
@@ -37,18 +37,14 @@ export default function ContractDefinitionViewPage() {
         id={id}
         managementUrl={managementUrl}
       >
-        <ConnectorDashboard.Section>
           <h3 className="text-lg font-bold text-gray-800">
             <ContractDefinitionView.Id />
           </h3>
           <p className="mt-1 text-xs font-medium uppercase text-gray-500">
             <ContractDefinitionView.CreatedAt />
           </p>
-        </ConnectorDashboard.Section>
 
-        <ConnectorDashboard.Section>
           <DeleteContractDefinition />
-        </ConnectorDashboard.Section>
       </ContractDefinitionView>
     </SideDrawer>
   );

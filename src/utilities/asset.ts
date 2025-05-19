@@ -54,7 +54,7 @@ export const assetFormDataToSubmitData = (formData: CreateAssetFormData) => {
   const cleanFormDataObject = removeEmptyFields(formData);
   return {
     [ASSET_ID]: cleanFormDataObject.properties[ASSET_ID],
-    properties: {...cleanFormDataObject.properties, ...cleanFormDataObject.advancedInfo},
+    properties: {...cleanFormDataObject.advancedInfo},
     dataAddress: cleanFormDataObject.dataAddress
   };
 };
@@ -220,7 +220,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): AssetFieldShowProps[] => {
       value: dataUpdateFrequency,
     });
   }
-  const temporalCoverage = asset.properties[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE];
+  const temporalCoverage = readValue(asset.properties, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE);
   if (temporalCoverage) {
     advancedFields.push({
       icon: 'today',

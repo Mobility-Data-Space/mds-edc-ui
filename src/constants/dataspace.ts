@@ -1,7 +1,7 @@
 export interface Participant {
   id: string;
   name: string;
-  edcUrl: string;
+  edcUrl: string; // public url
   managementUrl: string;
   defaultUrl: string;
   protocolUrl: string;
@@ -45,56 +45,36 @@ class Dataspace {
 }
 
 export const DATASPACE = new Dataspace([
-  ["circular-economy", {
-    integration: [
+  ["mobility-data-space", {
+    local: [
       {
-        id: "zf-circular-economy-integration",
-        name: "ZF Circular economy (integration)",
+        id: "mds-local",
+        name: "MDS UI (local)",
         edcUrl: "localhost:3000",
         managementUrl: "http://localhost:3000/api/3001/management",
         defaultUrl: "http://localhost:3000/api/8860/api",
         protocolUrl: "http://zf-circular-economy-integration:9194/protocol",
       },
     ],
-    production: [
+    dev: [
       {
-        id: "zf-circular-economy-production",
-        name: "ZF Circular economy (production)",
+        id: "mds-dev",
+        name: "MDS UI (dev)",
+        edcUrl: "localhost:3000",
+        managementUrl: "http://localhost:3000/api/3001/management",
+        defaultUrl: "http://localhost:3000/api/8860/api",
+        protocolUrl: "http://zf-circular-economy-integration:9194/protocol",
+      },
+    ],
+    prod: [
+      {
+        id: "mds-prod",
+        name: "MDS UI (prod)",
         edcUrl: "localhost:3000",
         managementUrl: "http://localhost:3000/api/3003/management",
         defaultUrl: "http://localhost:3000/api/8870/api",
         protocolUrl: "http://zf-circular-economy-production:9194/protocol",
       },
     ],
-  }],
-  ["quality", {
-    development: [
-      {
-        id: "bosh-quality-development",
-        name: "Bosh Quality (development)",
-        edcUrl: "localhost:3000",
-        managementUrl: "http://localhost:3000/api/3006/management",
-        defaultUrl: "http://localhost:3000/api/8840/api",
-        protocolUrl: "http://bosh-quality-development:9194/protocol",
-      },
-      {
-        id: "zf-quality-development",
-        name: "ZF Quality (development)",
-        edcUrl: "localhost:3000",
-        managementUrl: "http://localhost:3000/api/3009/management",
-        defaultUrl: "http://localhost:3000/api/8880/api",
-        protocolUrl: "http://zf-quality-development:9194/protocol",
-      },
-    ],
-    integration: [
-      {
-        id: "bosh-quality-integration",
-        name: "Bosh Quality (integration)",
-        edcUrl: "localhost:3000",
-        managementUrl: "http://localhost:3000/api/3008/management",
-        defaultUrl: "http://localhost:3000/api/8850/api",
-        protocolUrl: "http://bosh-quality-integration:9194/protocol",
-      },
-    ],
-  }],
+  }]
 ]);

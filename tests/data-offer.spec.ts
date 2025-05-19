@@ -35,7 +35,7 @@ test("data offer creates asset", async ({ page }) => {
   await expect(dataOfferCreateSubmit).toBeEnabled();
   await dataOfferCreateSubmit.click();
 
-  await page.goto("http://localhost:3000/my-assets");
+  await page.goto("http://localhost:3000/assets");
   await page.waitForResponse(resp => resp.url().includes('/management'));
 
   await expect(page.getByText(uniqueAssetTitle)).toBeVisible();

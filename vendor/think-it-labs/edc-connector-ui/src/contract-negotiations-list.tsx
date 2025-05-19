@@ -19,8 +19,13 @@ export function ContractNegotiationsList({
   });
 
   const queryAll = useCallback(
-    (querySpec: QuerySpec) =>
-      client.management.contractNegotiations.queryAll(querySpec),
+    (querySpec: QuerySpec) => {
+      if (Object.keys(querySpec).length != 0) {
+        return client.management.contractNegotiations.queryAll(querySpec);
+      }
+
+      return Promise.resolve([new ContractNegotiation()]) ;
+    },
     [client],
   );
 

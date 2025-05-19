@@ -20,7 +20,12 @@ export function ContractNegotiationView(
   });
 
   const get = useCallback(
-    () => client.management.contractNegotiations.get(id),
+    () => {
+      if (id != undefined)
+        return client.management.contractNegotiations.get(id)
+      
+      return Promise.resolve(new ContractNegotiation())
+    },
     [client, id],
   );
 

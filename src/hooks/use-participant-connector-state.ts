@@ -14,7 +14,7 @@ export function removeProxyPrefix(url: string = "") {
   return url.replace(new RegExp(`(${process.env.NEXT_PUBLIC_EDC_URL || ""})?/api\\?path=`, 'i'), "");
 }
 
-export function useConnectorDashboardState(): ConnectorDashboardState {
+export function useParticipantConnectorState(): ConnectorDashboardState {
   const router = useRouter();
 
   const connector: Participant = {

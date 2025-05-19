@@ -10,7 +10,7 @@ export type DaySlotCustomProps = PickersDayProps<any> & {
 }
 
 export const DatePickerDaySlot = React.forwardRef(
-  function DatePickerDaySlot({ dayjsStartDate = null, dayjsEndDate = null, bothDatesAreSet = false, ...props }: DaySlotCustomProps) {
+  function DatePickerDaySlot({ dayjsStartDate = null, dayjsEndDate = null, bothDatesAreSet = false, ...props }: DaySlotCustomProps, ref) {
     const isStartDate = props.day.isSame(dayjsStartDate, "day");
     const isEndDate = props.day.isSame(dayjsEndDate, "day");
     const isWithinPeriod = props.day.isAfter(dayjsStartDate, "day") && props.day.isBefore(dayjsEndDate, "day");
