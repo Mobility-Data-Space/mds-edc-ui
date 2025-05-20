@@ -2,7 +2,7 @@ import React from "react";
 import {T} from "@/i18n";
 import {Input} from "../atoms/input.tsx";
 import {theme} from "@/theme/ThemeProvider.tsx";
-import { AssetProperties } from "@/schema/asset.ts";
+import {AssetProperties} from "@/utilities/asset.ts";
 
 export interface AssetIdProps {
   translator: (key: string) => string;

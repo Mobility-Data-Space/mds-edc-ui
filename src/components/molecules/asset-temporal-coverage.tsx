@@ -1,7 +1,8 @@
 import React from "react";
 import {T} from "@/i18n";
-import {ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE, AssetProperties} from "@/schema/asset.ts";
+import {ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE} from "@/schema/asset.ts";
 import DateRangePicker from "@/components/molecules/date-range-picker.tsx";
+import {AssetProperties} from "@/utilities/asset.ts";
 
 export interface AssetTemporalCoverageProps {
   translator: (key: string) => string;

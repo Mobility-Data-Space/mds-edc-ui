@@ -1,10 +1,8 @@
 import React from "react";
 import {T} from "@/i18n";
 import {Input} from "../atoms/input.tsx";
-import {
-  ASSET_ADVANCED_INFO_DATA_MODEL,
-  ASSET_VERSION, AssetProperties
-} from "@/schema/asset.ts";
+import {ASSET_ADVANCED_INFO_DATA_MODEL} from "@/schema/asset.ts";
+import {AssetProperties} from "@/utilities/asset.ts";
 
 export interface AssetDataModelProps {
   translator: (key: string) => string;

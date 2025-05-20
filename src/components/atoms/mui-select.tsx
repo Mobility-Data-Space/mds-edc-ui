@@ -1,5 +1,5 @@
-import React, {useEffect} from "react";
-import {Select, SelectProps as MuiSelectProps, MenuItem, InputLabel} from "@mui/material";
+import React, {ReactNode, useEffect} from "react";
+import {Select, SelectProps as MuiSelectProps, MenuItem, InputLabel, FormHelperText} from "@mui/material";
 import Divider from '@mui/material/Divider';
 import FormControl from "@mui/material/FormControl";
 import Typography from "@mui/material/Typography";
@@ -15,6 +15,7 @@ export type SelectProps = Partial<MuiSelectProps> & {
   required?: boolean,
   onChange: (event: any) => void,
   placeholder?: string,
+  helperText?: ReactNode,
 };
 
 export function renderSelectOptions(options: Option[]): JSX.Element[] {
@@ -35,7 +36,7 @@ export function renderSelectValue(value: unknown, placeholder: string = "", opti
   return <>{option && option.text ? option.text : value}</>;
 }
 
-export function MuiSelect({ label, options, highlights = [], id = "", defaultValue = "", name, value = "", error = false, onChange, placeholder = "", required = false, disabled = false }: SelectProps): JSX.Element {
+export function MuiSelect({ label, options, highlights = [], id = "", defaultValue = "", name, value = "", error = false, onChange, placeholder = "", required = false, disabled = false, helperText = "" }: SelectProps): JSX.Element {
   const hasHighlights = highlights && highlights.length > 0;
   const notValue = ! value;
   useEffect(() => {
@@ -67,6 +68,9 @@ export function MuiSelect({ label, options, highlights = [], id = "", defaultVal
         {hasHighlights && <Divider />}
         {renderSelectOptions(options)}
       </Select>
+      <FormHelperText>
+        {helperText}
+      </FormHelperText>
     </FormControl>
 
   );

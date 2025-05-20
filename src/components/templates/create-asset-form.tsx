@@ -6,10 +6,10 @@ import { AssetCreateFormGeneralInfoStepContent } from "@/components/organisms/as
 import { AssetCreateFormDataAddressStep } from "@/components/organisms/asset-create-form-data-address-step.tsx";
 import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_DATA_ADDRESS_DESCRIPTION, ASSET_DATA_ADDRESS_TYPE, ASSET_TITLE, ASSET_VERSION} from "@/schema/asset.ts";
 import {AssetCreateFormAdvancedInfoStepContent} from "@/components/organisms/asset-create-form-advanced-step-content.tsx";
-import {fromAssetForm, computeRequiredDataAddressProperties, generateId, AssetProperties, defaultCreateAssetFormData} from "@/utilities/asset.ts";
+import {fromAssetForm, computeRequiredDataAddressProperties, generateId, defaultCreateAssetFormData, AssetProperties} from "@/utilities/asset.ts";
 import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
 import { enqueueSnackbar } from 'notistack';
-import {DATA_ADDRESS_TYPE_CUSTOM, DATA_ADDRESS_TYPE_HTTP} from "@/constants/data-address-types.ts";
+import {DATA_ADDRESS_TYPE_CUSTOM} from "@/constants/data-address-types.ts";
 import {StepIcon} from "@/components/atoms/step-icon.tsx";
 import { AssetFormWrapper } from "@think-it-labs/edc-connector-ui/asset-form-wrapper";
 import { AssetInput, DataAddress } from "@think-it-labs/edc-connector-client";

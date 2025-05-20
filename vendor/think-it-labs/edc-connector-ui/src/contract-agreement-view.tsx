@@ -60,6 +60,11 @@ ContractAgreementView.ProviderId = function ContractAgreementViewProviderId() {
   return <>{item?.providerId}</>;
 };
 
+ContractAgreementView.Item = function ContractAgreementViewItem() {
+  const { item } = useContractAgreementContext();
+  return item;
+};
+
 ContractAgreementView.Loading = View.Loading;
 
 interface ContractAgreementViewPolicyProps {

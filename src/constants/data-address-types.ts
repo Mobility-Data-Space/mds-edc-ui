@@ -2,12 +2,24 @@ export const DATA_ADDRESS_TYPE_HTTP = {
     value: 'Http',
     text: 'REST-API Endpoint',
 };
+export const DATA_ADDRESS_TYPE_DATASINK = {
+    value: 'Custom-Datasink-Json',
+    text: `Custom Datasink Config (JSON)`,
+};
+
+export const DATA_ADDRESS_TYPE_TRANSFER_PROCESS = {
+    value: 'Custom-Data-Transfer-Process-Json',
+    text: `Custom Transfer Process Request (JSON)`,
+};
+
 export const DATA_ADDRESS_TYPE_CUSTOM = {
     value: 'Custom-Data-Address-Json',
     text: `Custom Datasource-create Config (JSON)`,
 };
 
 export const DATA_ADDRESS_SELECT_DATA = [ DATA_ADDRESS_TYPE_HTTP, DATA_ADDRESS_TYPE_CUSTOM ];
+
+export const DATA_TRANSFER_TYPE = [ DATA_ADDRESS_TYPE_HTTP, DATA_ADDRESS_TYPE_DATASINK, DATA_ADDRESS_TYPE_TRANSFER_PROCESS ]
 
 export const DATA_OFFER_TYPE_DATA_SOURCE = {
     text: 'Available (with data source)',

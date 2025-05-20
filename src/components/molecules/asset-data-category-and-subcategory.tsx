@@ -1,12 +1,9 @@
 import React from "react";
 import {T} from "@/i18n";
 import {MuiSelect} from "../atoms/mui-select.tsx";
-import {
-  ASSET_ADVANCED_INFO_DATA_CATEGORY,
-  ASSET_ADVANCED_INFO_DATA_SUBCATEGORY,
-  AssetProperties,
-} from "@/schema/asset.ts";
+import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY} from "@/schema/asset.ts";
 import {DATA_CATEGORY_SELECT_DATA, DATA_SUBCATEGORIES_DATA, TYPE_DATA_CATEGORY} from "@/constants/data-category.ts";
+import {AssetProperties} from "@/utilities/asset.ts";
 
 export interface AssetDataCategoryAndSubcategoryProps {
   translator: (key: string) => string;

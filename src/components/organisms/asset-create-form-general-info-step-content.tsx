@@ -10,7 +10,7 @@ import {AssetEndpointDocumentation} from "@/components/molecules/asset-endpoint-
 import {AssetContentType} from "@/components/molecules/asset-content-type.tsx";
 import {AssetPublisher} from "@/components/molecules/asset-publisher.tsx";
 import {AssetStandardLicense} from "@/components/molecules/asset-standard-license.tsx";
-import { AssetProperties } from "@/schema/asset";
+import { AssetProperties } from "@/utilities/asset";
 
 export interface AssetCreateFormGeneralInfoStepProps {
   translator: (key: string) => string;
