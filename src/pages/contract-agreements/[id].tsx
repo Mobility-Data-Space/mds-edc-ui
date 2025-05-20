@@ -1,34 +1,20 @@
 
 import { ContractAgreementView } from "@think-it-labs/edc-connector-ui/contract-agreement-view";
-import { useEdcClient, useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
+import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
 import { useRouter } from "next/router";
-import React, { useRef } from "react";
+import React, {useState} from "react";
 import SideDrawer from "@/components/organisms/side-drawer.tsx";
 import Button from "@mui/material/Button";
-import { ContractAgreement, PolicyBuilder } from "@think-it-labs/edc-connector-client";
-import { createTransferProcessRequest } from "@/utilities/transfer_process";
-import { enqueueSnackbar } from "notistack";
+import {TransferFormDialog} from "@/components/templates/transfer-form-dialog.tsx";
 
 export default function ContractAgreementViewPage() {
   const id = useRouter().query.id as string;
   const { push, connector } = useParticipantConnectorState();
+  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
 
   const { translator } = useTranslator();
   const managementUrl = connector?.managementUrl as string;
-  const edcClient = useEdcClient() ;
-
-  const onSubmit = () => {
-    const agreement: ContractAgreement = {
-      policy: new PolicyBuilder().type("Set").build(),
-      assetId: "",
-      providerId: "",
-      consumerId: ""
-    } ;
-    const transfer = createTransferProcessRequest(agreement) ;
-    edcClient.management.transferProcesses.initiate(transfer)
-      .catch(error => enqueueSnackbar(translator("common.errorOccurred")))
-  }
 
   return (
     <SideDrawer title={<T string="contractAgreements.[id].title" />}>
@@ -36,6 +22,11 @@ export default function ContractAgreementViewPage() {
         id={id}
         managementUrl={managementUrl}
       >
+        <TransferFormDialog
+          isOpen={isTransferModalOpen}
+          onClose={() => setIsTransferModalOpen(false)}
+          translator={translator}
+        />
         <p>
           <T string="title" />
         </p>
@@ -53,9 +44,9 @@ export default function ContractAgreementViewPage() {
           <Button
             data-testid="transfer-process-submit"
             variant="contained"
-            onClick={onSubmit}
+            onClick={() => setIsTransferModalOpen(true)}
           >
-            Transfer
+            <T string="common.transfer" />
           </Button>
         </div>
       </ContractAgreementView>
