@@ -1,5 +1,5 @@
 import React, {ReactNode} from "react";
-import {ConstraintType} from "@/constants/constraints.ts";
+
 import Typography from "@mui/material/Typography";
 import {IconButton} from "@mui/material";
 import {Minus} from "lucide-react";
@@ -7,10 +7,12 @@ import {TreeBranch} from "@/components/atoms/tree-branch.tsx";
 import {TreeLeaf} from "@/components/atoms/tree-leaf.tsx";
 import {Constraint} from "@/components/molecules/constraint.tsx";
 import {AddConstraintButton} from "@/components/organisms/add-constraint-button.tsx";
+import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
+import { MultiplicityConstraint } from "@/utilities/constraints";
 
 export interface PolicyExpressionProps {
-  value: ConstraintType[];
-  onChange: (newValue: ConstraintType[]) => void;
+  value: (AtomicConstraint|MultiplicityConstraint)[];
+  onChange: (newValue: (AtomicConstraint|MultiplicityConstraint)[]) => void;
   onRemove?: () => void;
   title?: ReactNode;
   isFirstLevel?: boolean;
@@ -21,19 +23,24 @@ export default function PolicyExpression({ value, onChange, onRemove, title = ""
   const resolvedShowAddButton = showAddButton || (isFirstLevel && value.length === 0);
   const hideVerticalAndHorizontalLine = isFirstLevel && value.length <= 1;
 
-  const createOnChange = (index: number) => (newConstraint: ConstraintType) => {
+  const createOnChange = (index: number) => (newConstraint: AtomicConstraint|MultiplicityConstraint) => {
     const result = [...value];
     result[index] = newConstraint;
     return onChange(result);
   };
-
+  
+  console.log(title) ;
+  console.log(value) ;
+  console.log(value?.length) ;
+  console.log(isFirstLevel) ;
+  console.log(isFirstLevel) ;
   const createOnRemove = (index: number) => () => {
     const result = [...value];
     result.splice(index, 1)
     return onChange(result);
   };
 
-  const onAdd = (newConstraint: ConstraintType) => onChange([...value, newConstraint]);
+  const onAdd = (newConstraint: AtomicConstraint|MultiplicityConstraint) => onChange([...value, newConstraint]);
 
   return (
     <div>

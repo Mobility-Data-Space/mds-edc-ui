@@ -7,8 +7,8 @@ import { useParticipantConnectorState } from "@/hooks/use-participant-connector-
 import { PolicyDefinitionFormWrapper } from "@think-it-labs/edc-connector-ui/policy-definition-form-wrapper";
 import { fromPolicyDefinitionForm } from "@/utilities/policy";
 import PolicyExpression from "@/components/organisms/policy-expression";
-import { Permission, PolicyBuilder, PolicyDefinitionInput, PolicyInput } from "@think-it-labs/edc-connector-client";
-import { ConstraintType } from "@/constants/constraints";
+import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
+import { MultiplicityConstraint } from "@/utilities/constraints";
 
 export default function CreatePolicyDefinitionPage() {
   const { push, connector } = useParticipantConnectorState();
@@ -16,14 +16,15 @@ export default function CreatePolicyDefinitionPage() {
 
   const { translator } = useTranslator();
 
-  const [formData, setFormData] = useState<Permission[]>([]);
-  const [policyExpression, setPolicyExpression] = useState<ConstraintType[]>([]);
+  const [formData, setFormData] = useState<(AtomicConstraint|MultiplicityConstraint)[]>([]);
+  const [policyExpression, setPolicyExpression] = useState<(AtomicConstraint|MultiplicityConstraint)[]>([]);
 
   const [errors, setErrors] = useState({ title: false, content: false });
 
   const validateForm = () => true ;
-  const onChange = (newFormData: Permission[]) => {
-    setFormData({ ...newFormData });
+  const onChange = (newFormData: (AtomicConstraint|MultiplicityConstraint)[]) => {
+    setFormData([ ...newFormData ]);
+    setPolicyExpression([ ...newFormData ]);
   }
   const onSubmit = () => {
     if (!validateForm()) {
@@ -70,9 +71,9 @@ export default function CreatePolicyDefinitionPage() {
                   <PolicyExpression
                     value={policyExpression}
                     onChange={(value) => {
-                      console.log(formData);
+                      console.log(value);
                       console.log(policyExpression);
-                      setPolicyExpression(value);
+                      onChange(value);
                       console.log(policyExpression);
                     }}
                   />

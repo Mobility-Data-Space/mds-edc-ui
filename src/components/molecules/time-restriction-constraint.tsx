@@ -1,15 +1,17 @@
 import Typography from "@mui/material/Typography";
 import {T} from "@/i18n";
 import {MuiSelect} from "@/components/atoms/mui-select.tsx";
-import {timeRestrictionOperators} from "@/constants/constraints.ts";
+import {timeRestrictionOperators} from "@/utilities/constraints";
 import {DatePicker} from "@/components/atoms/date-picker.tsx";
 import {IconButton} from "@mui/material";
 import {Minus} from "lucide-react";
 import * as React from "react";
 
 import {ConstraintProps} from "@/components/molecules/constraint.tsx";
+import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
 
 export function TimeRestrictionConstraint({value, onChange, onRemove}: ConstraintProps) {
+  value = value as AtomicConstraint
   return (
     <div className="flex flex-row gap-4">
       <Typography variant="body2">
@@ -18,8 +20,8 @@ export function TimeRestrictionConstraint({value, onChange, onRemove}: Constrain
       <MuiSelect options={timeRestrictionOperators} value={value.operator}
                  onChange={(event) => onChange({...value, operator: event.target.value})}/>
       <DatePicker
-        onChange={(dateValue) => onChange({...value, right: dateValue})}
-        value={value.right as string}
+        onChange={(dateValue) => onChange({...value, rightOperand: dateValue})}
+        value={value.rightOperand as string}
       />
       <IconButton
         size="large"

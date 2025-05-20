@@ -1,12 +1,12 @@
 import {
-  ConstraintType,
   createAndConstraint,
   createOrConstraint,
   createParticipantIdConstraint,
   createTimeRestrictionConstraint,
   createTimespanAndConstraint,
-  createXOneConstraint
-} from "@/constants/constraints.ts";
+  createXOneConstraint,
+  MultiplicityConstraint
+} from "@/utilities/constraints";
 import {T, useTranslator} from "@/i18n";
 import * as React from "react";
 import {Button as MuiButton, IconButton, Tooltip, TooltipProps} from "@mui/material";
@@ -19,11 +19,12 @@ import {DATE_FORMAT} from "@/utilities/date.ts";
 import Popover from "@mui/material/Popover";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
+import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
 
 export interface AddConstraintButtonProps {
   showAddButton?: boolean;
   isFirstLevel?: boolean;
-  onClick: (constraint: ConstraintType) => void;
+  onClick: (constraint: AtomicConstraint|MultiplicityConstraint) => void;
 }
 
 export function AddConstraintButton({showAddButton = false, onClick}: AddConstraintButtonProps) {
@@ -33,7 +34,7 @@ export function AddConstraintButton({showAddButton = false, onClick}: AddConstra
   const [dateRangeModalIsOpen, setDateRangeModalIsOpen] = React.useState(false);
   const [dateRangeModalValue, setDateRangeModalValue] = React.useState<[string, string]>(["", ""]);
 
-  const onAddWithClose = (constraint: ConstraintType) => {
+  const onAddWithClose = (constraint: AtomicConstraint|MultiplicityConstraint) => {
     onClick(constraint);
     handleClose();
     setDateRangeModalIsOpen(false);

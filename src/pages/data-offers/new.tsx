@@ -8,7 +8,7 @@ import { fromContractDefinitionForm } from "@/utilities/contract_definition";
 import {ContractDefinitionInput, CriterionInput} from "@think-it-labs/edc-connector-client";
 import { defaultCreateContractDefinitionFormData } from "@/utilities/contract_definition";
 import {MuiSelect} from "@/components/atoms/mui-select.tsx";
-import {operatorIn} from "@/constants/constraints.ts";
+import {operatorIn} from "@/utilities/constraints";
 import {Button} from "@mui/material";
 
 const optionsGenerator = (data: { "@id": string }[]) => {

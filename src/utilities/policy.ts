@@ -1,10 +1,17 @@
 import {removeEmptyFields} from "@/utilities/form.ts";
-import { Permission, PolicyBuilder, PolicyDefinitionInput } from "@think-it-labs/edc-connector-client";
+import { Constraint, Permission, PolicyBuilder, PolicyDefinitionInput } from "@think-it-labs/edc-connector-client";
 
-export const fromPolicyDefinitionForm = (formData: Permission[]) : PolicyDefinitionInput => {
+export const fromPolicyDefinitionForm = (formData: Constraint[]) : PolicyDefinitionInput => {
   console.log(formData);
   const policy = new PolicyBuilder().type("Set").raw({
-    permission: formData
+    permission: [
+      {
+        action: {
+          type: "USE",
+        }, 
+        constraint: formData
+      }
+    ]
   }).build() ;
   
   const cleanFormDataObject = removeEmptyFields(formData);

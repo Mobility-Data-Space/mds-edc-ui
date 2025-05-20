@@ -1,8 +1,4 @@
-export type ConstraintType = {
-  left: string,
-  operator?: string,
-  right: string | ConstraintType[],
-};
+import { AtomicConstraint, Constraint } from "@think-it-labs/edc-connector-client";
 
 export const operatorEquals = {
   value: 'EQ',
@@ -100,34 +96,45 @@ export const xOneLeft = 'XONE';
 
 export const multipleConstraints = [andLeft, orLeft, xOneLeft];
 
-export const createParticipantIdConstraint = () => ({
-  left: consumerParticipantIdLeft,
+export const createParticipantIdConstraint = (): AtomicConstraint => ({
+  leftOperand: consumerParticipantIdLeft,
   operator: operatorIn.value,
-  right: "",
+  rightOperand: "",
 });
 
-export const createTimeRestrictionConstraint = (right = "", operator = operatorLessThan.value) => ({
-  left: timeRestrictionLeft,
+export const createTimeRestrictionConstraint = (rightOperand = "", operator = operatorLessThan.value): AtomicConstraint => ({
+  leftOperand: timeRestrictionLeft,
   operator,
-  right,
+  rightOperand,
 });
 
-export const createTimespanAndConstraint = ([startDate, endDate]: [string, string]) => ({
-  left: andLeft,
-  right: [createTimeRestrictionConstraint(startDate, operatorGreaterThanOrEqual.value), createTimeRestrictionConstraint(endDate, operatorLessThanOrEqual.value)],
+// Multi
+export const createTimespanAndConstraint = ([startDate, endDate]: [string, string]): AndConstraint => ({
+  and: [
+    createTimeRestrictionConstraint(startDate, operatorGreaterThanOrEqual.value), 
+    createTimeRestrictionConstraint(endDate, operatorLessThanOrEqual.value)
+  ],
 });
 
-export const createAndConstraint = () => ({
-  left: andLeft,
-  right: [] satisfies ConstraintType[],
+export const createAndConstraint = (): AndConstraint => ({
+  and: [] satisfies (AtomicConstraint|MultiplicityConstraint)[],
 });
 
-export const createOrConstraint = () => ({
-  left: orLeft,
-  right: [] satisfies ConstraintType[],
+export const createOrConstraint = (): OrConstraint => ({
+  or: [] satisfies (AtomicConstraint|MultiplicityConstraint)[],
 });
 
-export const createXOneConstraint = () => ({
-  left: xOneLeft,
-  right: [] satisfies ConstraintType[],
+export const createXOneConstraint = (): XoneConstraint => ({
+  xone: [] satisfies (AtomicConstraint|MultiplicityConstraint)[],
 });
+
+export interface OrConstraint extends Constraint {
+  or: Constraint[]
+}
+export interface AndConstraint extends Constraint {
+  and: Constraint[]
+}
+export interface XoneConstraint extends Constraint {
+  xone: Constraint[]
+}
+export type MultiplicityConstraint = OrConstraint | AndConstraint | XoneConstraint ;

@@ -1,51 +1,54 @@
 import {
   andLeft,
-  ConstraintType,
+
   consumerParticipantIdLeft,
+  MultiplicityConstraint,
   orLeft,
   timeRestrictionLeft,
   xOneLeft
-} from "@/constants/constraints.ts";
+} from "@/utilities/constraints";
 import * as React from "react";
 import {ConsumerParticipantIdConstraint} from "@/components/molecules/consumer-participant-id-constraint.tsx";
 import {TimeRestrictionConstraint} from "@/components/molecules/time-restriction-constraint.tsx";
 import {RestrictionConstraint} from "@/components/molecules/restriction-constraint.tsx";
+import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
 
 export interface ConstraintProps {
-  value: ConstraintType,
-  onChange: (newValue: ConstraintType) => void,
+  value: AtomicConstraint|MultiplicityConstraint,
+  onChange: (newValue: AtomicConstraint|MultiplicityConstraint) => void,
   onRemove: () => void,
 }
 export const Constraint = ({value, onChange, onRemove}: ConstraintProps) => {
-  if (value.left === consumerParticipantIdLeft) {
-    return (
-      <ConsumerParticipantIdConstraint
-        value={value}
-        onChange={onChange}
-        onRemove={onRemove}
-      />
-    );
-  }
+  if(value.hasOwnProperty("leftOperand")){
+    value = value as AtomicConstraint ;
 
-  if (value.left === timeRestrictionLeft) {
-    return (
-      <TimeRestrictionConstraint
-        value={value}
-        onChange={onChange}
-        onRemove={onRemove}
-      />
-    );
-  }
+    if (value.leftOperand === consumerParticipantIdLeft) {
+      return (
+        <ConsumerParticipantIdConstraint
+          value={value}
+          onChange={onChange}
+          onRemove={onRemove}
+        />
+      );
+    }
 
-  if ([andLeft, orLeft, xOneLeft].includes(value.left)) {
-    return (
-      <RestrictionConstraint
-        value={value}
-        onChange={onChange}
-        onRemove={onRemove}
-      />
-    );
+    if (value.leftOperand === timeRestrictionLeft) {
+      return (
+        <TimeRestrictionConstraint
+          value={value}
+          onChange={onChange}
+          onRemove={onRemove}
+        />
+      );
+    }
   }
-
-  return <></>;
+  
+  // MultiplicityConstraint
+  return (
+    <RestrictionConstraint
+      value={value}
+      onChange={onChange}
+      onRemove={onRemove}
+    />
+  );
 };
