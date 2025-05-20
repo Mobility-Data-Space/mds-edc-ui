@@ -26,10 +26,12 @@ export default function AssetListPage() {
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+
   const [openAssetData, setOpenAssetData] = useState({
     asset: {} as Asset,
     deleteItem: async () => {},
   });
+  
   const openDetailsModal = (asset: Asset, deleteItem: () => Promise<void> = async () => {}) => {
     setIsDetailsModalOpen(true);
     setOpenAssetData({ asset, deleteItem });

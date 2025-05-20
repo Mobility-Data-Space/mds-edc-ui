@@ -1,18 +1,18 @@
 import React, {useEffect, useRef, useState} from "react";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
-import { AssetForm } from "@think-it-labs/edc-connector-ui/asset-form.tsx";
 import {Button, Step, StepContent, StepIconProps, StepLabel, Stepper} from "@mui/material";
 import { AssetCreateFormGeneralInfoStepContent } from "@/components/organisms/asset-create-form-general-info-step-content.tsx";
 import { AssetCreateFormDataAddressStep } from "@/components/organisms/asset-create-form-data-address-step.tsx";
-import {ASSET_DATA_ADDRESS_DESCRIPTION, ASSET_DATA_ADDRESS_TYPE, ASSET_ID, ASSET_TITLE, ASSET_VERSION, CreateAssetAdvancedInfoFormData, CreateAssetDataAddressFormData, CreateAssetFormData, CreateAssetPropertiesFormData, defaultCreateAssetFormData, REQUIRED_ADVANCED_INFO, REQUIRED_PROPERTIES} from "@/schema/asset.ts";
+import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_DATA_ADDRESS_DESCRIPTION, ASSET_DATA_ADDRESS_TYPE, ASSET_TITLE, ASSET_VERSION, AssetProperties, defaultCreateAssetFormData} from "@/schema/asset.ts";
 import {AssetCreateFormAdvancedInfoStepContent} from "@/components/organisms/asset-create-form-advanced-step-content.tsx";
-import {assetFormDataToSubmitData, computeRequiredDataAddressProperties, generateId} from "@/utilities/asset.ts";
+import {fromAssetForm, computeRequiredDataAddressProperties, generateId} from "@/utilities/asset.ts";
 import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
 import { enqueueSnackbar } from 'notistack';
-import {DATA_ADDRESS_TYPE_CUSTOM} from "@/constants/data-address-types.ts";
+import {DATA_ADDRESS_TYPE_CUSTOM, DATA_ADDRESS_TYPE_HTTP} from "@/constants/data-address-types.ts";
 import {StepIcon} from "@/components/atoms/step-icon.tsx";
 import { AssetFormWrapper } from "@think-it-labs/edc-connector-ui/asset-form-wrapper";
+import { AssetInput, DataAddress } from "@think-it-labs/edc-connector-client";
 
 const stepLabelSharedProps = {
   className: "w-full justify-start p-4",
@@ -24,15 +24,16 @@ export default function CreateAssetForm() {
   const submitButtonRef = useRef<HTMLButtonElement>(null);
 
   const { translator } = useTranslator();
-  const [activeStep, setActiveStep] = useState(0);
-  const [formData, setFormData] = useState<CreateAssetFormData>(defaultCreateAssetFormData);
-  const [errors, setErrors] = useState({ properties: {}, advancedInfo: {}, dataAddress: {} });
 
+  const [activeStep, setActiveStep] = useState(0);
+  const [formData, setFormData] = useState<AssetInput>(defaultCreateAssetFormData);
+  const [errors, setErrors] = useState({ properties: {}, dataAddress: {} });
   const [existingIds, setExistingIds] = useState<string[]>([]);
+
   const client = useEdcConnectorClient({ management: connector.managementUrl });
   useEffect(() => {
     client.management.assets.queryAll({ offset: 0 })
-    .then(assets => setExistingIds(assets.map(asset => asset[ASSET_ID])));
+    .then(assets => setExistingIds(assets.map(asset => asset["@id"])));
   }, []);
 
   const generalInfoIsNotValid = () => {
@@ -40,7 +41,7 @@ export default function CreateAssetForm() {
   }
 
   const advancedInfoIsNotValid = () => {
-    return 0 < Object.entries(validateAdvancedInfo(formData.advancedInfo)).length
+    return 0 < Object.entries(validateAdvancedInfo(formData.properties)).length
   }
 
   const dataAddressIsNotValid = () => {
@@ -63,7 +64,7 @@ export default function CreateAssetForm() {
   }
 
   const tryGoingToDataSourceStep = () => {
-    const validationErrors = validateAdvancedInfo(formData.advancedInfo);
+    const validationErrors = validateAdvancedInfo(formData.properties);
     setErrors((oldErrors) => ({ ...oldErrors, advancedInfo: validationErrors }));
     if (0 === Object.entries(validationErrors).length) {
       setActiveStep(2);
@@ -73,54 +74,56 @@ export default function CreateAssetForm() {
     return false;
   }
 
-  const onChange = (newFormData: CreateAssetFormData) => {
+  const onChange = (newFormData: AssetInput) => {
     setFormData({ ...newFormData });
   }
 
-  const generalInfoFormOnChange = (generalInfoFormData: CreateAssetPropertiesFormData) => {
+  const generalInfoFormOnChange = (generalInfoFormData: AssetProperties) => {
     setErrors((oldErrors) => ({ ...oldErrors, properties: validateGeneralInfo(generalInfoFormData) }));
 
     const generatedOldId = generateId(formData.properties[ASSET_TITLE] as string, formData.properties[ASSET_VERSION] as string);
-    if (generatedOldId === generalInfoFormData[ASSET_ID]) {
-      generalInfoFormData[ASSET_ID] = generateId(generalInfoFormData[ASSET_TITLE] as string, generalInfoFormData[ASSET_VERSION] as string);
+    if (generatedOldId === generalInfoFormData["@id"]) {
+      generalInfoFormData["@id"] = generateId(generalInfoFormData[ASSET_TITLE] as string, generalInfoFormData[ASSET_VERSION] as string);
     }
 
-    return onChange({ ...formData, properties: generalInfoFormData, [ASSET_ID]: generalInfoFormData[ASSET_ID] });
+    return onChange({ ...formData, properties: generalInfoFormData, ["@id"]: generalInfoFormData["@id"] });
   };
 
-  const dataAddressFormOnChange = (dataAddressFormData: CreateAssetDataAddressFormData) => {
+  const dataAddressFormOnChange = (dataAddressFormData: DataAddress) => {
     setErrors((oldErrors) => ({ ...oldErrors, dataAddress: validateDataAddress(dataAddressFormData) }));
 
     return onChange({ ...formData, dataAddress: dataAddressFormData });
   };
 
-  const advancedInfoFormOnChange = (advancedInfoFormData: CreateAssetAdvancedInfoFormData) => {
+  const advancedInfoFormOnChange = (advancedInfoFormData: AssetProperties) => {
     setErrors((oldErrors) => ({ ...oldErrors, advancedInfo: validateAdvancedInfo(advancedInfoFormData) }));
 
-    return onChange({ ...formData, advancedInfo: advancedInfoFormData });
+    return onChange({ ...formData, properties: advancedInfoFormData });
   };
 
-  const validateGeneralInfo = (formDataToValidate: CreateAssetPropertiesFormData) => {
+  const validateGeneralInfo = (formDataToValidate: AssetProperties) => {
     const newErrors: { [key: string]: boolean | string } = {};
-    REQUIRED_PROPERTIES.forEach((propertyName) => {
+    const required_properties = [ASSET_TITLE, "@id"] ;
+    required_properties.forEach((propertyName) => {
       if (! formDataToValidate[propertyName]) {
         newErrors[propertyName] = true;
       }
     });
 
-    const idAlreadyExist = existingIds.includes(formDataToValidate[ASSET_ID]);
-    if (! /^[^\s:]*$/.test(formDataToValidate[ASSET_ID])) {
-      newErrors[ASSET_ID] = translator('assets.new.invalidWhitespacesOrColons');
+    const idAlreadyExist = existingIds.includes(formDataToValidate["@id"]);
+    if (! /^[^\s:]*$/.test(formDataToValidate["@id"])) {
+      newErrors["@id"] = translator('assets.new.invalidWhitespacesOrColons');
     } else if (idAlreadyExist) {
-      newErrors[ASSET_ID] = translator('assets.new.fieldIdAlreadyExists');
+      newErrors["@id"] = translator('assets.new.fieldIdAlreadyExists');
     }
 
     return newErrors;
   };
 
-  const validateAdvancedInfo = (formDataToValidate: CreateAssetAdvancedInfoFormData) => {
+  const validateAdvancedInfo = (formDataToValidate: AssetProperties) => {
     const newErrors: { [key: string]: boolean } = {};
-    REQUIRED_ADVANCED_INFO.forEach((propertyName) => {
+    const required_properties = [ASSET_ADVANCED_INFO_DATA_CATEGORY] ;
+    required_properties.forEach((propertyName) => {
       if (! formDataToValidate[propertyName]) {
         newErrors[propertyName] = true;
       }
@@ -129,7 +132,7 @@ export default function CreateAssetForm() {
     return newErrors;
   };
 
-  const validateDataAddress = (formDataToValidate: CreateAssetDataAddressFormData) => {
+  const validateDataAddress = (formDataToValidate: DataAddress) => {
     const newErrors: { [key: string]: boolean | string } = {};
     const required = computeRequiredDataAddressProperties(formDataToValidate);
     required.forEach((propertyName) => {
@@ -151,8 +154,7 @@ export default function CreateAssetForm() {
 
   const setFormErrors = () => {
     return {
-      properties: validateGeneralInfo(formData.properties),
-      advancedInfo: validateAdvancedInfo(formData.advancedInfo),
+      properties: validateAdvancedInfo(validateGeneralInfo(formData.properties)),
       dataAddress: validateDataAddress(formData.dataAddress),
     }
   };
@@ -187,7 +189,7 @@ export default function CreateAssetForm() {
       <AssetFormWrapper
         managementUrl={connector.managementUrl}
         onSuccess={() => push("/assets")}
-        formData={() => assetFormDataToSubmitData(formData)}
+        formData={() => fromAssetForm(formData)}
         onFailure={onFormSubmitFail}
       >
         <Stepper activeStep={activeStep} orientation="vertical" className="p-5">
@@ -223,9 +225,9 @@ export default function CreateAssetForm() {
               <div data-testid="asset-create-advanced-info-step-content">
                 <AssetCreateFormAdvancedInfoStepContent
                   translator={translator}
-                  formData={formData.advancedInfo}
+                  formData={formData.properties}
                   onChange={advancedInfoFormOnChange}
-                  errors={errors.advancedInfo}
+                  errors={errors.properties}
                 />
               </div>
             </StepContent>

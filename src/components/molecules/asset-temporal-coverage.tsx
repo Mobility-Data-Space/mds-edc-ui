@@ -1,12 +1,12 @@
 import React from "react";
 import {T} from "@/i18n";
-import {ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE, CreateAssetAdvancedInfoFormData} from "@/schema/asset.ts";
+import {ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE, AssetProperties} from "@/schema/asset.ts";
 import DateRangePicker from "@/components/molecules/date-range-picker.tsx";
 
 export interface AssetTemporalCoverageProps {
   translator: (key: string) => string;
-  formData: CreateAssetAdvancedInfoFormData;
-  onChange: (formData: CreateAssetAdvancedInfoFormData) => void;
+  formData: AssetProperties;
+  onChange: (formData: AssetProperties) => void;
   errors: { [key: string]: boolean };
   required?: boolean;
 }

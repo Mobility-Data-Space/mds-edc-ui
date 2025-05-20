@@ -4,13 +4,13 @@ import {MuiSelect} from "../atoms/mui-select.tsx";
 import {
   ASSET_ADVANCED_INFO_DATA_CATEGORY,
   ASSET_ADVANCED_INFO_DATA_SUBCATEGORY,
-  CreateAssetAdvancedInfoFormData,
+  AssetProperties,
 } from "@/schema/asset.ts";
 import {DATA_CATEGORY_SELECT_DATA, DATA_SUBCATEGORIES_DATA, TYPE_DATA_CATEGORY} from "@/constants/data-category.ts";
 
 export interface AssetDataCategoryAndSubcategoryProps {
   translator: (key: string) => string;
-  formData: CreateAssetAdvancedInfoFormData;
+  formData: AssetProperties;
   onChange: (formData: any) => void;
   errors: { [key: string]: boolean };
 }

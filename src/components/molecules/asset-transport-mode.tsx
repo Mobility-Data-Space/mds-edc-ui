@@ -1,15 +1,15 @@
 import React from "react";
 import {
   ASSET_ADVANCED_INFO_TRANSPORT_MODE,
-  CreateAssetAdvancedInfoFormData,
+  AssetProperties,
 } from "@/schema/asset.ts";
 import {MuiSelect} from "@/components/atoms/mui-select.tsx";
 import {GEO_REFERENCE_DATA} from "@/constants/data-category.ts";
 
 export interface AssetTransportModeProps {
   translator: (key: string) => string;
-  formData: CreateAssetAdvancedInfoFormData;
-  onChange: (formData: CreateAssetAdvancedInfoFormData) => void;
+  formData: AssetProperties;
+  onChange: (formData: AssetProperties) => void;
   errors: { [key: string]: boolean };
   required?: boolean;
 }

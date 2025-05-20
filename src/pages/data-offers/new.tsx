@@ -7,21 +7,22 @@ import { T, useTranslator } from "@/i18n";
 import React, { useRef, useState } from "react";
 import SideDrawer from "@/components/organisms/side-drawer.tsx";
 import { ContractDefinitionFormWrapper } from "@think-it-labs/edc-connector-ui/contract-definition-form-wrapper";
-import { contractDefinitionFormDataToSubmitData } from "@/utilities/contract_definition";
-import { ASSETS_SELECTOR, ACCESS_POLICY_ID, CONTRACT_POLICY_ID, CreateContractDefinitionFormData, defaultCreateContractDefinitionFormData } from "@/schema/contract_definition";
+import { fromContractDefinitionForm } from "@/utilities/contract_definition";
 import { Input } from "@/components/atoms/input";
+import { ContractDefinitionInput, CriterionInput } from "@think-it-labs/edc-connector-client";
+import { defaultCreateContractDefinitionFormData } from "@/utilities/contract_definition";
 
 export default function CreateContractDefinitionPage() {
   const { push, connector } = useParticipantConnectorState();
   const managementUrl = connector?.managementUrl as string;
   const submitButtonRef = useRef<HTMLButtonElement>(null);
 
-  const [formData, setFormData] = useState<CreateContractDefinitionFormData>(defaultCreateContractDefinitionFormData);
+  const [formData, setFormData] = useState<ContractDefinitionInput>(defaultCreateContractDefinitionFormData);
   const validateForm = () => true ;
 
   const { translator } = useTranslator();
 
-  const onChange = (newFormData: CreateContractDefinitionFormData) => {
+  const onChange = (newFormData: ContractDefinitionInput) => {
     setFormData({ ...newFormData });
   }
   const onSubmit = () => {
@@ -38,44 +39,54 @@ export default function CreateContractDefinitionPage() {
     enqueueSnackbar(translator("policyDefinition.new.saveFail"));
   };
 
+  const idSelector = (id: string): CriterionInput[] => {
+    return [
+      {
+        operandLeft: "@id",
+        operator: "=",
+        operandRight: id
+      }
+    ]
+  }
+
   return (
     <SideDrawer title={<T string="contractDefinitions.new.title" />}>
       <ContractDefinitionFormWrapper 
         managementUrl={managementUrl}
-        formData={() => contractDefinitionFormDataToSubmitData(formData)}
+        formData={() => fromContractDefinitionForm(formData)}
         onSuccess={() => push("/data-offers")}
         onFailure={onFormSubmitFail}>
           <Input
             required
-            name={ASSETS_SELECTOR}
+            name="assets-selector"
             id="asset-id"
             data-testid="asset-id"
             type="text"
             placeholder="asset id"
-            value={formData[ASSETS_SELECTOR]}
-            onChange={(event) => onChange({ ...formData, [ASSETS_SELECTOR]: [event.target.value] })}
+            value={formData.assetsSelector}
+            onChange={(event) => onChange({ ...formData, assetsSelector: idSelector(event.target.value)})}
           />
 
           <Input
             required
-            name={CONTRACT_POLICY_ID}
+            name="contract-policy-id"
             id="contract-policy-id"
             data-testid="contract-policy-id"
             type="text"
             placeholder="contract-policy-id"
-            value={formData[CONTRACT_POLICY_ID]}
-            onChange={(event) => onChange({ ...formData, [CONTRACT_POLICY_ID]: event.target.value })}
+            value={formData.contractPolicyId}
+            onChange={(event) => onChange({ ...formData, contractPolicyId: event.target.value })}
           />
 
           <Input
             required
-            name={ACCESS_POLICY_ID}
+            name="contract-policy-id"
             id="access-policy-id"
             data-testid="access-policy-id"
             type="text"
             placeholder="access-policy-id"
-            value={formData[ACCESS_POLICY_ID]}
-            onChange={(event) => onChange({ ...formData, [ACCESS_POLICY_ID]: event.target.value })}
+            value={formData.accessPolicyId}
+            onChange={(event) => onChange({ ...formData, accessPolicyId: event.target.value })}
           />
           <Button
             variant="secondary"

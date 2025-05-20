@@ -3,14 +3,14 @@ import {T} from "@/i18n";
 import {Input} from "../atoms/input.tsx";
 import {
   ASSET_DESCRIPTION,
-  CreateAssetPropertiesFormData,
+  AssetProperties,
 } from "@/schema/asset.ts";
 import {FormHelperText, Link} from "@mui/material";
 
 export interface AssetDescriptionProps {
   translator: (key: string) => string;
-  formData: CreateAssetPropertiesFormData;
-  onChange: (formData: CreateAssetPropertiesFormData) => void;
+  formData: AssetProperties;
+  onChange: (formData: AssetProperties) => void;
   errors: { [key: string]: boolean };
   required?: boolean;
 }

@@ -3,13 +3,13 @@ import {T} from "@/i18n";
 import {Input} from "../atoms/input.tsx";
 import {
   ASSET_ENDPOINT_DOCUMENTATION,
-  CreateAssetPropertiesFormData,
+  AssetProperties,
 } from "@/schema/asset.ts";
 
 export interface AssetEndpointDocumentationProps {
   translator: (key: string) => string;
-  formData: CreateAssetPropertiesFormData;
-  onChange: (formData: CreateAssetPropertiesFormData) => void;
+  formData: AssetProperties;
+  onChange: (formData: AssetProperties) => void;
   errors: { [key: string]: boolean };
   required?: boolean;
 }

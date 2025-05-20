@@ -5,7 +5,6 @@ import {Asset} from "@think-it-labs/edc-connector-client";
 import {AssetIcon} from "@/components/atoms/asset-icon.tsx";
 import {
   ASSET_DESCRIPTION,
-  ASSET_ID,
   ASSET_KEYWORDS,
   ASSET_TITLE,
   ASSET_VERSION,
@@ -20,7 +19,7 @@ export interface AssetCardProps {
 }
 
 export default function AssetCard({ asset, participantId, onClick = () => {} }: AssetCardProps) {
-  const asset_id = asset[ASSET_ID]
+  const asset_id = asset["@id"]
   const keywords = asset.properties[ASSET_KEYWORDS] || [];
   const slicedKeywords = keywords.slice(0, 3);
   const remainingKeywordsCount = keywords.length - slicedKeywords.length;

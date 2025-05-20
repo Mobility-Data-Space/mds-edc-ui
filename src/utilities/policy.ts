@@ -1,13 +1,25 @@
-import { POLICY_ID, CreatePolicyFormData, POLICY_PERMISSIONS } from "@/schema/policy";
 import {removeEmptyFields} from "@/utilities/form.ts";
+import { Permission, PolicyBuilder, PolicyDefinitionInput } from "@think-it-labs/edc-connector-client";
 
-export const policyFormDataToSubmitData = (formData: CreatePolicyFormData) => {
+export const fromPolicyDefinitionForm = (formData: Permission[]) : PolicyDefinitionInput => {
   console.log(formData);
-  formData.policy["@type"] = "Set" ;
+  const policy = new PolicyBuilder().type("Set").raw({
+    permission: formData
+  }).build() ;
+  
   const cleanFormDataObject = removeEmptyFields(formData);
   console.log(cleanFormDataObject);
   return {
-    [POLICY_ID]: cleanFormDataObject.id,
-    policy: cleanFormDataObject.policy
+    "@id": cleanFormDataObject.id,
+    policy: policy
   };
+};
+
+const policy = new PolicyBuilder().type("Set").raw({
+    permission: []
+  }).build() ;
+
+export const defaultCreatePolicyFormData: PolicyDefinitionInput = {
+  "@id": "",
+  policy: policy
 };

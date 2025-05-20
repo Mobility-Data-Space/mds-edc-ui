@@ -1,14 +1,21 @@
-import { ACCESS_POLICY_ID, ASSETS_SELECTOR, CONTRACT_DEFINITION_ID, CONTRACT_POLICY_ID, CreateContractDefinitionFormData } from "@/schema/contract_definition";
 import {removeEmptyFields} from "@/utilities/form.ts";
+import { ContractDefinitionInput } from "@think-it-labs/edc-connector-client";
 
-export const contractDefinitionFormDataToSubmitData = (formData: CreateContractDefinitionFormData) => {
+export const fromContractDefinitionForm = (formData: ContractDefinitionInput): ContractDefinitionInput => {
   console.log(formData);
   const cleanFormDataObject = removeEmptyFields(formData);
   console.log(cleanFormDataObject);
   return {
-    [CONTRACT_DEFINITION_ID]: cleanFormDataObject[CONTRACT_DEFINITION_ID],
-    accessPolicyId: cleanFormDataObject[ACCESS_POLICY_ID],
-    contractPolicyId: cleanFormDataObject[CONTRACT_POLICY_ID],
-    assetsSelector: [cleanFormDataObject[ASSETS_SELECTOR]],
+    ["@id"]: cleanFormDataObject["@id"],
+    accessPolicyId: cleanFormDataObject.accessPolicyId,
+    contractPolicyId: cleanFormDataObject.contractPolicyId,
+    assetsSelector: cleanFormDataObject.assetsSelector,
   };
+};
+
+export const defaultCreateContractDefinitionFormData: ContractDefinitionInput = {
+  "@id": "",
+  accessPolicyId: "",
+  contractPolicyId: "",
+  assetsSelector: [],
 };

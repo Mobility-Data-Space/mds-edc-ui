@@ -3,13 +3,13 @@ import {T} from "@/i18n";
 import {Input} from "../atoms/input.tsx";
 import {
   ASSET_CONTENT_TYPE,
-  CreateAssetPropertiesFormData,
+  AssetProperties,
 } from "@/schema/asset.ts";
 import {FormHelperText, Link} from "@mui/material";
 
 export interface AssetContentTypeProps {
-  formData: CreateAssetPropertiesFormData;
-  onChange: (formData: CreateAssetPropertiesFormData) => void;
+  formData: AssetProperties;
+  onChange: (formData: AssetProperties) => void;
   errors: { [key: string]: boolean };
   required?: boolean;
 }

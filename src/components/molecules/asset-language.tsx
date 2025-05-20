@@ -1,15 +1,14 @@
 import React from "react";
-import {T} from "@/i18n";
 import {
   ASSET_LANGUAGE,
-  CreateAssetPropertiesFormData,
+  AssetProperties
 } from "@/schema/asset.ts";
 import {MuiSelect} from "@/components/atoms/mui-select.tsx";
 import {HIGHLIGHTED_LANGUAGE_SELECT_DATA, LANGUAGE_SELECT_DATA} from "@/constants/languages.ts";
 
 export interface AssetLanguageProps {
-  formData: CreateAssetPropertiesFormData;
-  onChange: (formData: CreateAssetPropertiesFormData) => void;
+  formData: AssetProperties;
+  onChange: (formData: AssetProperties) => void;
   errors: { [key: string]: boolean };
 }
 

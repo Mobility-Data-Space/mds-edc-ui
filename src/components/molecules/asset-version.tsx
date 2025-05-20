@@ -3,13 +3,13 @@ import {T} from "@/i18n";
 import {Input} from "../atoms/input.tsx";
 import {
   ASSET_VERSION,
-  CreateAssetPropertiesFormData,
+  AssetProperties,
 } from "@/schema/asset.ts";
 
 export interface AssetVersionProps {
   translator: (key: string) => string;
-  formData: CreateAssetPropertiesFormData;
-  onChange: (formData: CreateAssetPropertiesFormData) => void;
+  formData: AssetProperties;
+  onChange: (formData: AssetProperties) => void;
   errors: { [key: string]: boolean };
   hideLabel?: boolean;
 }

@@ -2,14 +2,14 @@ import React from "react";
 import {T} from "@/i18n";
 import {Input} from "../atoms/input.tsx";
 import {
-  CreateAssetDataAddressFormData,
   DATA_OFFER_CONTACT_EMAIL,
   DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT,
 } from "@/schema/asset.ts";
+import { DataAddress } from "@think-it-labs/edc-connector-client";
 
 export interface ContactEmailAndSubjectProps {
   translator: (key: string) => string;
-  formData: CreateAssetDataAddressFormData;
+  formData: DataAddress;
   onChange: (formData: any) => void;
   errors: { [key: string]: boolean };
   required?: boolean;

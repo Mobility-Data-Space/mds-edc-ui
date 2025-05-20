@@ -3,7 +3,7 @@ import {Button, Checkbox, FormControlLabel, Divider, Typography} from "@mui/mate
 import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
 import {T, useTranslator} from "@/i18n";
 import {AssetCreateFormDataAddressStep} from "@/components/organisms/asset-create-form-data-address-step.tsx";
-import {ASSET_DATA_ADDRESS_DESCRIPTION, ASSET_DATA_ADDRESS_TYPE, ASSET_ID, ASSET_TITLE, CreateAssetAdvancedInfoFormData, CreateAssetDataAddressFormData, CreateAssetFormData, CreateAssetPropertiesFormData, DATA_OFFER_CONSTRAINTS, DATA_OFFER_PUBLISH_MODE, DATA_OFFER_TYPE, defaultCreateAssetFormData, REQUIRED_ADVANCED_INFO, REQUIRED_PROPERTIES} from "@/schema/asset.ts";
+import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_DATA_ADDRESS_DESCRIPTION, ASSET_DATA_ADDRESS_TYPE, ASSET_TITLE, DATA_OFFER_CONSTRAINTS, DATA_OFFER_PUBLISH_MODE, DATA_OFFER_TYPE, } from "@/schema/asset.ts";
 import RadioButtonsGroup from "@/components/atoms/radio-group.tsx";
 import {AssetContactEmailAndSubject} from "@/components/molecules/asset-contact-email-and-subject.tsx";
 import {DATA_ADDRESS_TYPE_CUSTOM, DATA_OFFER_TYPE_DATA_SOURCE, DATA_OFFER_TYPE_ON_REQUEST, DATA_OFFER_TYPES, PUBLISH_MODE_PUBLISH_RESTRICTED, PUBLISH_MODE_PUBLISH_UNRESTRICTED, PUBLISH_MODES} from "@/constants/data-address-types.ts";
@@ -30,91 +30,110 @@ import {AssetStandardLicense} from "@/components/molecules/asset-standard-licens
 import {AssetConditionsForUse} from "@/components/molecules/asset-conditions-for-use.tsx";
 import {AssetTemporalCoverage} from "@/components/molecules/asset-temporal-coverage.tsx";
 import PolicyExpression from "@/components/organisms/policy-expression.tsx";
-import {assetFormDataToSubmitData, computeRequiredDataOfferAddressProperties, generateId} from "@/utilities/asset.ts";
 import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
 import {enqueueSnackbar} from "notistack";
 import SideDrawer from "@/components/organisms/side-drawer";
+import { AssetInput, ContractDefinitionInput, DataAddress, PolicyDefinitionInput } from "@think-it-labs/edc-connector-client";
+import { defaultCreatePolicyFormData } from "@/utilities/policy";
+import { defaultCreateContractDefinitionFormData } from "@/utilities/contract_definition";
+import { defaultCreateAssetFormData, AssetProperties, computeRequiredDataOfferAddressProperties, generateId } from "@/utilities/asset"
+
+interface DataOffer {
+  asset: AssetInput,
+  policy: PolicyDefinitionInput,
+  contract: ContractDefinitionInput
+}
 
 export default function CreateDataOfferPage() {
   const { push, connector } = useParticipantConnectorState();
+
   const [showAdvancedFields, setShowAdvancedFields] = useState(false);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
 
   const { translator } = useTranslator();
-  const [formData, setFormData] = useState<CreateAssetFormData>(defaultCreateAssetFormData);
+  
+  const [formData, setFormData] = useState<DataOffer>({
+    asset: defaultCreateAssetFormData,
+    policy: defaultCreatePolicyFormData,
+    contract: defaultCreateContractDefinitionFormData
+  });
+
   const [errors, setErrors] = useState({ properties: {}, advancedInfo: {}, dataAddress: {} });
 
   const [existingIds, setExistingIds] = useState<string[]>([]);
   const client = useEdcConnectorClient({ management: connector.managementUrl });
   useEffect(() => {
     client.management.assets.queryAll({ offset: 0 })
-    .then(assets => setExistingIds(assets.map(asset => asset[ASSET_ID])));
+    .then(assets => setExistingIds(assets.map(asset => asset["@id"])));
   }, []);
 
   const generalInfoIsNotValid = () => {
-    return 0 < Object.entries(validateGeneralInfo(formData.properties)).length
+    return 0 < Object.entries(validateGeneralInfo(formData.asset.properties)).length
   }
 
   const advancedInfoIsNotValid = () => {
-    return 0 < Object.entries(validateAdvancedInfo(formData.advancedInfo)).length
+    return 0 < Object.entries(validateAdvancedInfo(formData.asset.properties)).length
   }
 
   const dataAddressIsNotValid = () => {
-    return 0 < Object.entries(validateDataAddress(formData.dataAddress)).length
+    return 0 < Object.entries(validateDataAddress(formData.asset.dataAddress)).length
   }
 
   const cannotSubmit = () => {
     return generalInfoIsNotValid() || advancedInfoIsNotValid() || dataAddressIsNotValid();
   }
 
-  const onChange = (newFormData: CreateAssetFormData) => {
+  const onChange = (newFormData: DataOffer) => {
     setFormData({ ...newFormData });
   }
 
-  const generalInfoFormOnChange = (generalInfoFormData: CreateAssetPropertiesFormData) => {
+  const generalInfoFormOnChange = (generalInfoFormData: AssetProperties) => {
     setErrors((oldErrors) => ({ ...oldErrors, properties: validateGeneralInfo(generalInfoFormData) }));
 
-    const generatedOldId = generateId(formData.properties[ASSET_TITLE] as string);
-    if (generatedOldId === generalInfoFormData[ASSET_ID]) {
-      generalInfoFormData[ASSET_ID] = generateId(generalInfoFormData[ASSET_TITLE] as string);
+    const generatedOldId = generateId(formData.asset.properties[ASSET_TITLE] as string);
+    if (generatedOldId === generalInfoFormData["@id"]) {
+      generalInfoFormData["@id"] = generateId(generalInfoFormData[ASSET_TITLE] as string);
     }
 
-    return onChange({ ...formData, properties: generalInfoFormData, [ASSET_ID]: generalInfoFormData[ASSET_ID] });
+    return onChange({ ...formData, asset: { ...formData.asset, properties: generalInfoFormData, ["@id"]: generalInfoFormData["@id"] }});
   };
 
-  const dataAddressFormOnChange = (dataAddressFormData: CreateAssetDataAddressFormData) => {
+  const dataAddressFormOnChange = (dataAddressFormData: DataAddress) => {
     setErrors((oldErrors) => ({ ...oldErrors, dataAddress: validateDataAddress(dataAddressFormData) }));
 
-    return onChange({ ...formData, dataAddress: dataAddressFormData });
+    return onChange({ ...formData, asset: {...formData.asset, dataAddress: dataAddressFormData }});
   };
 
-  const advancedInfoFormOnChange = (advancedInfoFormData: CreateAssetAdvancedInfoFormData) => {
+  const advancedInfoFormOnChange = (advancedInfoFormData: AssetProperties) => {
     setErrors((oldErrors) => ({ ...oldErrors, advancedInfo: validateAdvancedInfo(advancedInfoFormData) }));
 
-    return onChange({ ...formData, advancedInfo: advancedInfoFormData });
+    return onChange({ ...formData, asset: { ...formData.asset, properties: advancedInfoFormData }});
   };
 
-  const validateGeneralInfo = (formDataToValidate: CreateAssetPropertiesFormData) => {
+  const validateGeneralInfo = (formDataToValidate: AssetProperties) => {
+    console.log(formDataToValidate)
     const newErrors: { [key: string]: boolean | string } = {};
-    REQUIRED_PROPERTIES.forEach((propertyName) => {
+    const required_properties = [ASSET_TITLE, "@id"] ;
+    required_properties.forEach((propertyName) => {
       if (! formDataToValidate[propertyName]) {
         newErrors[propertyName] = true;
       }
     });
 
-    const idAlreadyExist = existingIds.includes(formDataToValidate[ASSET_ID]);
-    if (! /^[^\s:]*$/.test(formDataToValidate[ASSET_ID])) {
-      newErrors[ASSET_ID] = translator('assets.new.invalidWhitespacesOrColons');
+    const idAlreadyExist = existingIds.includes(formDataToValidate["@id"]);
+    if (! /^[^\s:]*$/.test(formDataToValidate["@id"])) {
+      newErrors["@id"] = translator('assets.new.invalidWhitespacesOrColons');
     } else if (idAlreadyExist) {
-      newErrors[ASSET_ID] = translator('assets.new.fieldIdAlreadyExists');
+      newErrors["@id"] = translator('assets.new.fieldIdAlreadyExists');
     }
-
+    console.log(newErrors)
     return newErrors;
   };
 
-  const validateAdvancedInfo = (formDataToValidate: CreateAssetAdvancedInfoFormData) => {
+  const validateAdvancedInfo = (formDataToValidate: AssetProperties) => {
     const newErrors: { [key: string]: boolean } = {};
-    REQUIRED_ADVANCED_INFO.forEach((propertyName) => {
+    const required_properties = [ASSET_ADVANCED_INFO_DATA_CATEGORY] ;
+    required_properties.forEach((propertyName) => {
       if (! formDataToValidate[propertyName]) {
         newErrors[propertyName] = true;
       }
@@ -123,7 +142,7 @@ export default function CreateDataOfferPage() {
     return newErrors;
   };
 
-  const validateDataAddress = (formDataToValidate: CreateAssetDataAddressFormData) => {
+  const validateDataAddress = (formDataToValidate: DataAddress) => {
     const newErrors: { [key: string]: boolean | string } = {};
     const required = computeRequiredDataOfferAddressProperties(formDataToValidate);
     required.forEach((propertyName) => {
@@ -145,9 +164,9 @@ export default function CreateDataOfferPage() {
 
   const setFormErrors = () => {
     return {
-      properties: validateGeneralInfo(formData.properties),
-      advancedInfo: validateAdvancedInfo(formData.advancedInfo),
-      dataAddress: validateDataAddress(formData.dataAddress),
+      properties: validateGeneralInfo(formData.asset.properties),
+      advancedInfo: validateAdvancedInfo(formData.asset.properties),
+      dataAddress: validateDataAddress(formData.asset.dataAddress),
     };
   };
 
@@ -157,18 +176,14 @@ export default function CreateDataOfferPage() {
       return;
     }
 
-    // TODO: asset id already exist
-
-    if (submitButtonRef.current && submitButtonRef.current.form) {
-      submitButtonRef.current.form.requestSubmit();
-    }
+    console.log(formData)
   };
 
   const onFormSubmitFail = (error: Error) => {
     enqueueSnackbar(translator("assets.new.saveFail"));
   }
 
-  const dataOfferTypeIsDataSource = formData.dataAddress[DATA_OFFER_TYPE] === DATA_OFFER_TYPE_DATA_SOURCE.value;
+  const dataOfferTypeIsDataSource = formData.asset.dataAddress[DATA_OFFER_TYPE] === DATA_OFFER_TYPE_DATA_SOURCE.value;
 
   if (!connector) {
     return "No connector";
@@ -203,12 +218,12 @@ export default function CreateDataOfferPage() {
                   label={<T string="dataOffer.new.type"/>}
                   defaultValue={DATA_OFFER_TYPE_ON_REQUEST.value}
                   options={DATA_OFFER_TYPES}
-                  onChange={(value) => dataAddressFormOnChange({...formData.dataAddress, [DATA_OFFER_TYPE]: value})}
+                  onChange={(value) => dataAddressFormOnChange({...formData.asset.dataAddress, [DATA_OFFER_TYPE]: value})}
                 />
                 {dataOfferTypeIsDataSource ?
                   <AssetCreateFormDataAddressStep
                     translator={translator}
-                    formData={formData.dataAddress}
+                    formData={formData.asset.dataAddress}
                     onChange={dataAddressFormOnChange}
                     errors={errors.dataAddress}
                     methodAlwaysShowing
@@ -216,7 +231,7 @@ export default function CreateDataOfferPage() {
                   /> :
                   <AssetContactEmailAndSubject
                     translator={translator}
-                    formData={formData.dataAddress}
+                    formData={formData.asset.dataAddress}
                     onChange={dataAddressFormOnChange}
                     errors={errors.dataAddress}
                   />}
@@ -248,7 +263,7 @@ export default function CreateDataOfferPage() {
                   </label>
                   <AssetTitle
                     hideLabel
-                    formData={formData.properties}
+                    formData={formData.asset.properties}
                     errors={errors.properties}
                     onChange={generalInfoFormOnChange}
                     translator={translator}
@@ -264,7 +279,7 @@ export default function CreateDataOfferPage() {
                   </label>
                   <AssetId
                     hideLabel
-                    formData={formData.properties}
+                    formData={formData.asset.properties}
                     errors={errors.properties}
                     onChange={generalInfoFormOnChange}
                     translator={translator}
@@ -279,7 +294,7 @@ export default function CreateDataOfferPage() {
                     <T string="assets.new.fieldDescription"/>
                   </label>
                   <AssetDescription
-                    formData={formData.properties}
+                    formData={formData.asset.properties}
                     errors={errors.properties}
                     onChange={generalInfoFormOnChange}
                     translator={translator}
@@ -294,7 +309,7 @@ export default function CreateDataOfferPage() {
                     <T string="assets.new.fieldKeywords"/>
                   </label>
                   <AssetKeywords
-                    formData={formData.properties}
+                    formData={formData.asset.properties}
                     errors={errors.properties}
                     onChange={generalInfoFormOnChange}
                     translator={translator}
@@ -322,7 +337,7 @@ export default function CreateDataOfferPage() {
                     </label>
                     <AssetVersion
                       hideLabel
-                      formData={formData.properties}
+                      formData={formData.asset.properties}
                       errors={errors.properties}
                       onChange={generalInfoFormOnChange}
                       translator={translator}
@@ -336,7 +351,7 @@ export default function CreateDataOfferPage() {
                       <T string="assets.new.fieldLanguage"/>
                     </label>
                     <AssetLanguage
-                      formData={formData.properties}
+                      formData={formData.asset.properties}
                       errors={errors.properties}
                       onChange={generalInfoFormOnChange}
                     />
@@ -364,7 +379,7 @@ export default function CreateDataOfferPage() {
               <div className="sm:col-span-2 flex flex-col gap-6">
                 <AssetDataCategoryAndSubcategory
                   translator={translator}
-                  formData={formData.advancedInfo}
+                  formData={formData.asset.properties}
                   onChange={advancedInfoFormOnChange}
                   errors={errors.advancedInfo}
                 />
@@ -379,7 +394,7 @@ export default function CreateDataOfferPage() {
                     </label>
                     <AssetTransportMode
                       translator={translator}
-                      formData={formData.advancedInfo}
+                      formData={formData.asset.properties}
                       onChange={advancedInfoFormOnChange}
                       errors={errors.advancedInfo}
                     />
@@ -393,7 +408,7 @@ export default function CreateDataOfferPage() {
                     </label>
                     <AssetDataModel
                       translator={translator}
-                      formData={formData.advancedInfo}
+                      formData={formData.asset.properties}
                       onChange={advancedInfoFormOnChange}
                       errors={errors.advancedInfo}
                     />
@@ -429,7 +444,7 @@ export default function CreateDataOfferPage() {
                       <T string="assets.new.fieldAdvancedInfoDataModel"/>
                     </label>
                     <AssetEndpointDocumentation
-                      formData={formData.properties}
+                      formData={formData.asset.properties}
                       errors={errors.properties}
                       onChange={generalInfoFormOnChange}
                       translator={translator}
@@ -438,7 +453,7 @@ export default function CreateDataOfferPage() {
 
                   <div>
                     <AssetContentType
-                      formData={formData.properties}
+                      formData={formData.asset.properties}
                       errors={errors.properties}
                       onChange={generalInfoFormOnChange}
                     />
@@ -447,7 +462,7 @@ export default function CreateDataOfferPage() {
                   <div>
                     <AssetDataSamples
                       translator={translator}
-                      formData={formData.advancedInfo}
+                      formData={formData.asset.properties}
                       onChange={advancedInfoFormOnChange}
                       errors={errors.advancedInfo}
                     />
@@ -456,7 +471,7 @@ export default function CreateDataOfferPage() {
                   <div>
                     <AssetReferenceFileUrls
                       translator={translator}
-                      formData={formData.advancedInfo}
+                      formData={formData.asset.properties}
                       onChange={advancedInfoFormOnChange}
                       errors={errors.advancedInfo}
                     />
@@ -483,7 +498,7 @@ export default function CreateDataOfferPage() {
                 <div className="sm:col-span-2 flex flex-col gap-6">
                   <AssetTemporalCoverage
                     translator={translator}
-                    formData={formData.advancedInfo}
+                    formData={formData.asset.properties}
                     onChange={advancedInfoFormOnChange}
                     errors={errors.advancedInfo}
                   />
@@ -497,7 +512,7 @@ export default function CreateDataOfferPage() {
                     </label>
                     <AssetDataUpdateFrequency
                       translator={translator}
-                      formData={formData.advancedInfo}
+                      formData={formData.asset.properties}
                       onChange={advancedInfoFormOnChange}
                       errors={errors.advancedInfo}
                     />
@@ -512,7 +527,7 @@ export default function CreateDataOfferPage() {
                     </label>
                     <AssetGeoReferenceMethod
                       translator={translator}
-                      formData={formData.advancedInfo}
+                      formData={formData.asset.properties}
                       onChange={advancedInfoFormOnChange}
                       errors={errors.advancedInfo}
                     />
@@ -527,7 +542,7 @@ export default function CreateDataOfferPage() {
                     </label>
                     <AssetGeoLocations
                       translator={translator}
-                      formData={formData.advancedInfo}
+                      formData={formData.asset.properties}
                       onChange={advancedInfoFormOnChange}
                       errors={errors.advancedInfo}
                     />
@@ -536,7 +551,7 @@ export default function CreateDataOfferPage() {
                   <div>
                     <AssetNutsLocations
                       translator={translator}
-                      formData={formData.advancedInfo}
+                      formData={formData.asset.properties}
                       onChange={advancedInfoFormOnChange}
                       errors={errors.advancedInfo}
                     />
@@ -570,7 +585,7 @@ export default function CreateDataOfferPage() {
                     </label>
                     <AssetSovereignLegalName
                       translator={translator}
-                      formData={formData.advancedInfo}
+                      formData={formData.asset.properties}
                       onChange={advancedInfoFormOnChange}
                       errors={errors.advancedInfo}
                     />
@@ -585,7 +600,7 @@ export default function CreateDataOfferPage() {
                     </label>
                     <AssetPublisher
                       translator={translator}
-                      formData={formData.properties}
+                      formData={formData.asset.properties}
                       onChange={generalInfoFormOnChange}
                       errors={errors.properties}
                     />
@@ -600,7 +615,7 @@ export default function CreateDataOfferPage() {
                     </label>
                     <AssetStandardLicense
                       translator={translator}
-                      formData={formData.properties}
+                      formData={formData.asset.properties}
                       onChange={generalInfoFormOnChange}
                       errors={errors.properties}
                     />
@@ -615,7 +630,7 @@ export default function CreateDataOfferPage() {
                     </label>
                     <AssetConditionsForUse
                       translator={translator}
-                      formData={formData.advancedInfo}
+                      formData={formData.asset.properties}
                       onChange={advancedInfoFormOnChange}
                       errors={errors.properties}
                     />
@@ -648,20 +663,20 @@ export default function CreateDataOfferPage() {
                   defaultValue={PUBLISH_MODE_PUBLISH_UNRESTRICTED.value}
                   options={PUBLISH_MODES}
                   onChange={(value) => generalInfoFormOnChange({
-                    ...formData.properties,
+                    ...formData.asset.properties,
                     [DATA_OFFER_PUBLISH_MODE]: value
                   })}
                 />
-                {formData.properties[DATA_OFFER_PUBLISH_MODE] !== PUBLISH_MODE_PUBLISH_RESTRICTED.value ? "" : <div>
+                {formData.asset.properties[DATA_OFFER_PUBLISH_MODE] !== PUBLISH_MODE_PUBLISH_RESTRICTED.value ? "" : <div>
                   <label
                     className="inline-block text-sm text-black font-medium mb-2"
                   >
                     <T string="dataOffer.new.policyExpression"/>
                   </label>
                   <PolicyExpression
-                    value={formData.properties[DATA_OFFER_CONSTRAINTS] as []}
+                    value={formData.asset.properties[DATA_OFFER_CONSTRAINTS] as []}
                     onChange={(value) => generalInfoFormOnChange({
-                      ...formData.properties,
+                      ...formData.asset.properties,
                       [DATA_OFFER_CONSTRAINTS]: value
                     })}
                   />

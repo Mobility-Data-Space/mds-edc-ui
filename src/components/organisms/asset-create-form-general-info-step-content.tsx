@@ -1,8 +1,5 @@
 import React from "react";
 import {T} from "@/i18n";
-import {
-  CreateAssetPropertiesFormData
-} from "@/schema/asset.ts";
 import {AssetId} from "@/components/molecules/asset-id.tsx";
 import {AssetVersion} from "@/components/molecules/asset-version.tsx";
 import {AssetTitle} from "@/components/molecules/asset-title.tsx";
@@ -13,11 +10,12 @@ import {AssetEndpointDocumentation} from "@/components/molecules/asset-endpoint-
 import {AssetContentType} from "@/components/molecules/asset-content-type.tsx";
 import {AssetPublisher} from "@/components/molecules/asset-publisher.tsx";
 import {AssetStandardLicense} from "@/components/molecules/asset-standard-license.tsx";
+import { AssetProperties } from "@/schema/asset";
 
 export interface AssetCreateFormGeneralInfoStepProps {
   translator: (key: string) => string;
-  formData: CreateAssetPropertiesFormData;
-  onChange: (formData: CreateAssetPropertiesFormData) => void;
+  formData: AssetProperties;
+  onChange: (formData: AssetProperties) => void;
   errors: { [key: string]: boolean };
 }
 

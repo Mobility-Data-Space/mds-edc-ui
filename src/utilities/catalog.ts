@@ -1,19 +1,18 @@
-import {ASSET_ID} from "@/schema/asset.ts";
+import { Asset, ContractDefinition, Dataset } from "@think-it-labs/edc-connector-client";
 
 export const HAS_POLICY = "http://www.w3.org/ns/odrl/2/hasPolicy";
 
-export const dataSetToAsset = (dataset: any) => { // TODO: dataSet type
-
+export const datasetToAsset = (dataset: Dataset): Asset => { // TODO: dataSet type
   return {
     // TODO: get only specific values for each field
-    [ASSET_ID]: dataset[ASSET_ID],
+    ["@id"]: dataset["@id"],
     properties: dataset.properties || { ...dataset },
     dataAddress: dataset.dataAddress || { ...dataset },
     privateProperties: dataset.privateProperties || {},
-  };
+  } as Asset;
 }
 
-export const dataSetToContractDefinitions = (dataset: any) => {
+export const datasetToContractDefinitions = (dataset: Dataset): ContractDefinition[] => {
   return dataset[HAS_POLICY] || [];
 };
 

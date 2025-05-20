@@ -3,7 +3,7 @@ import {T} from "@/i18n";
 import {Input} from "../atoms/input.tsx";
 import {
   ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION,
-  CreateAssetAdvancedInfoFormData,
+  AssetProperties,
 } from "@/schema/asset.ts";
 import {FormHelperText, Link} from "@mui/material";
 import {AssetTransportMode} from "@/components/molecules/asset-transport-mode.tsx";
@@ -21,7 +21,7 @@ import {AssetTemporalCoverage} from "@/components/molecules/asset-temporal-cover
 
 export interface AssetCreateFormAdvancedInfoStepProps {
   translator: (key: string) => string;
-  formData: CreateAssetAdvancedInfoFormData
+  formData: AssetProperties
   onChange: (formData: any) => void;
   errors: { [key: string]: boolean };
 }

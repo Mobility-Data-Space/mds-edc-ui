@@ -4,15 +4,14 @@ import {Input} from "../atoms/input.tsx";
 import {
   ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE,
   ASSET_ADVANCED_INFO_DATA_MODEL,
-  ASSET_VERSION, CreateAssetAdvancedInfoFormData,
-  CreateAssetPropertiesFormData,
+  ASSET_VERSION, AssetProperties
 } from "@/schema/asset.ts";
 import {FormHelperText, Link} from "@mui/material";
 
 export interface AssetConditionsForUseProps {
   translator: (key: string) => string;
-  formData: CreateAssetAdvancedInfoFormData;
-  onChange: (formData: CreateAssetAdvancedInfoFormData) => void;
+  formData: AssetProperties;
+  onChange: (formData: AssetProperties) => void;
   errors: { [key: string]: boolean };
   required?: boolean;
 }

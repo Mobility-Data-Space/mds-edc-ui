@@ -3,14 +3,13 @@ import {T} from "@/i18n";
 import {Input} from "../atoms/input.tsx";
 import {
   ASSET_ADVANCED_INFO_DATA_MODEL,
-  ASSET_VERSION, CreateAssetAdvancedInfoFormData,
-  CreateAssetPropertiesFormData,
+  ASSET_VERSION, AssetProperties
 } from "@/schema/asset.ts";
 
 export interface AssetDataModelProps {
   translator: (key: string) => string;
-  formData: CreateAssetAdvancedInfoFormData;
-  onChange: (formData: CreateAssetAdvancedInfoFormData) => void;
+  formData: AssetProperties;
+  onChange: (formData: AssetProperties) => void;
   errors: { [key: string]: boolean };
   required?: boolean;
 }

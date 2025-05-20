@@ -1,26 +1,28 @@
 import { T, useTranslator } from "@/i18n";
 import React, { useRef, useState } from "react";
 import SideDrawer from "@/components/organisms/side-drawer.tsx";
-
-
 import Button from "@mui/material/Button";
 import { enqueueSnackbar } from "notistack";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { PolicyDefinitionFormWrapper } from "@think-it-labs/edc-connector-ui/policy-definition-form-wrapper";
-import { policyFormDataToSubmitData } from "@/utilities/policy";
-import { CreatePolicyFormData, defaultCreatePolicyFormData, POLICY_PERMISSIONS } from "@/schema/policy";
+import { fromPolicyDefinitionForm } from "@/utilities/policy";
 import PolicyExpression from "@/components/organisms/policy-expression";
+import { Permission, PolicyBuilder, PolicyDefinitionInput, PolicyInput } from "@think-it-labs/edc-connector-client";
+import { ConstraintType } from "@/constants/constraints";
 
 export default function CreatePolicyDefinitionPage() {
   const { push, connector } = useParticipantConnectorState();
   const submitButtonRef = useRef<HTMLButtonElement>(null);
 
   const { translator } = useTranslator();
-  const [formData, setFormData] = useState<CreatePolicyFormData>(defaultCreatePolicyFormData);
+
+  const [formData, setFormData] = useState<Permission[]>([]);
+  const [policyExpression, setPolicyExpression] = useState<ConstraintType[]>([]);
+
   const [errors, setErrors] = useState({ title: false, content: false });
 
   const validateForm = () => true ;
-  const onChange = (newFormData: CreatePolicyFormData) => {
+  const onChange = (newFormData: Permission[]) => {
     setFormData({ ...newFormData });
   }
   const onSubmit = () => {
@@ -40,7 +42,7 @@ export default function CreatePolicyDefinitionPage() {
   if (!connector) {
     return "No connector";
   }
-    
+
   return (
     <SideDrawer title={<T string="policyDefinitions.new.title" />}>
       <div>
@@ -52,7 +54,7 @@ export default function CreatePolicyDefinitionPage() {
   
         <PolicyDefinitionFormWrapper
           managementUrl={connector.managementUrl}
-          formData={() => policyFormDataToSubmitData(formData)}
+          formData={() => fromPolicyDefinitionForm(formData)}
           onSuccess={() => push("/policy-definitions")}
           onFailure={onFormSubmitFail}
         >
@@ -66,12 +68,12 @@ export default function CreatePolicyDefinitionPage() {
                     <T string="dataOffer.new.policyExpression"/>
                   </label>
                   <PolicyExpression
-                    value={formData.policy[POLICY_PERMISSIONS] as []}
+                    value={policyExpression}
                     onChange={(value) => {
                       console.log(formData);
-                      formData.policy[POLICY_PERMISSIONS] = [...value] ;
-                      console.log(formData);
-                      onChange(formData);
+                      console.log(policyExpression);
+                      setPolicyExpression(value);
+                      console.log(policyExpression);
                     }}
                   />
                 </div>

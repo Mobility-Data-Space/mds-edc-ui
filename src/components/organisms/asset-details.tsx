@@ -1,8 +1,8 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {T, useTranslator} from "@/i18n";
-import {Asset, compact, ContractDefinition} from "@think-it-labs/edc-connector-client";
+import {Asset, compact, ContractDefinition, ContractNegotiationRequest} from "@think-it-labs/edc-connector-client";
 import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
-import {ASSET_KEYWORDS, ASSET_DESCRIPTION, ASSET_TITLE, ASSET_ID} from "@/schema/asset.ts";
+import {ASSET_KEYWORDS, ASSET_DESCRIPTION, ASSET_TITLE} from "@/schema/asset.ts";
 import {Button, Checkbox, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Icon, Tooltip} from "@mui/material";
 import {MarkdownCollapsableText} from "@/components/molecules/markdown-collapsable-text.tsx";
 import Divider from "@mui/material/Divider";
@@ -10,15 +10,16 @@ import AssetFieldGrid from "@/components/molecules/asset-field-grid.tsx";
 import {assetCustomFieldsToShow, assetFieldsToShow, assetPrivateFieldsToShow} from "@/utilities/asset.ts";
 import {AssetFieldShow} from "@/components/molecules/asset-field-show.tsx";
 import Typography from "@mui/material/Typography";
-import {convertOdrlToJsonHtml, removeJsonLdSchemaFromProperties} from "@/schema/catalog.ts";
+import {convertOdrlToJsonHtml, removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
 import {ConstraintShow} from "@/components/molecules/constraint-show.tsx";
 import dynamic from "next/dynamic";
 import {ReactJsonViewProps} from "react-json-view";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import {ConfirmDialog} from "@/components/molecules/confirm-dialog.tsx";
 import {useEdcClient, useParticipantConnectorState} from "@/hooks/use-participant-connector-state.ts";
-import {POLICY_ASSIGNER, POLICY_TARGET} from "@/schema/policy.ts";
+
 import {enqueueSnackbar} from "notistack";
+import { createNegotiationRequest } from "@/utilities/contract_negotiations";
 
 interface AssetDetailsProps {
   asset: Asset;
@@ -69,19 +70,11 @@ export default function AssetDetails({ asset, participantId, connectorEndpoint, 
 
   const edcClient = useEdcClient()
 
-  const onNegotiateConfirm = (contractDefinition: any) => {
-    edcClient.management.contractNegotiations.initiate({
-      counterPartyAddress: connectorEndpoint,
-      policy: {
-        ...contractDefinition,
-        [POLICY_ASSIGNER]: { "@id": participantId },
-        [POLICY_TARGET]: { "@id": asset[ASSET_ID] },
-      },
-    }).then(() => {
-      setNegotiateContractIsOpen(false);
-    }).catch(error => {
-      enqueueSnackbar(translator("common.errorOccurred"));
-    })
+  const onNegotiateConfirm = (offer: ContractDefinition) => {
+    const negotiation = createNegotiationRequest(offer) ;
+    edcClient.management.contractNegotiations.initiate(negotiation)
+      .then(() => setNegotiateContractIsOpen(false))
+      .catch(error => enqueueSnackbar(translator("common.errorOccurred")))
   }
 
   return (
