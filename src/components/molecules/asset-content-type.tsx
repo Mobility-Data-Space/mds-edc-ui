@@ -1,11 +1,9 @@
 import React from "react";
 import {T} from "@/i18n";
 import {Input} from "../atoms/input.tsx";
-import {
-  ASSET_CONTENT_TYPE,
-  AssetProperties,
-} from "@/schema/asset.ts";
+import {ASSET_CONTENT_TYPE} from "@/schema/asset.ts";
 import {FormHelperText, Link} from "@mui/material";
+import {AssetProperties} from "@/utilities/asset.ts";
 
 export interface AssetContentTypeProps {
   formData: AssetProperties;

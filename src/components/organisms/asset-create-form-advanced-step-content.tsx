@@ -3,7 +3,6 @@ import {T} from "@/i18n";
 import {Input} from "../atoms/input.tsx";
 import {
   ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION,
-  AssetProperties,
 } from "@/schema/asset.ts";
 import {FormHelperText, Link} from "@mui/material";
 import {AssetTransportMode} from "@/components/molecules/asset-transport-mode.tsx";
@@ -18,10 +17,11 @@ import {AssetSovereignLegalName} from "@/components/molecules/asset-sovereign-le
 import {AssetConditionsForUse} from "@/components/molecules/asset-conditions-for-use.tsx";
 import {AssetDataCategoryAndSubcategory} from "@/components/molecules/asset-data-category-and-subcategory.tsx";
 import {AssetTemporalCoverage} from "@/components/molecules/asset-temporal-coverage.tsx";
+import {AssetProperties} from "@/utilities/asset.ts";
 
 export interface AssetCreateFormAdvancedInfoStepProps {
   translator: (key: string) => string;
-  formData: AssetProperties
+  formData: AssetProperties;
   onChange: (formData: any) => void;
   errors: { [key: string]: boolean };
 }

@@ -1,12 +1,9 @@
 import React from "react";
 import {T} from "@/i18n";
 import {Input} from "../atoms/input.tsx";
-import {
-  ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE,
-  ASSET_ADVANCED_INFO_DATA_MODEL,
-  ASSET_VERSION, AssetProperties
-} from "@/schema/asset.ts";
+import {ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE} from "@/schema/asset.ts";
 import {FormHelperText, Link} from "@mui/material";
+import {AssetProperties} from "@/utilities/asset.ts";
 
 export interface AssetConditionsForUseProps {
   translator: (key: string) => string;
