@@ -1,21 +1,39 @@
-import { Button } from "@/components/atoms/button";
-import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
-
+import {useEdcClient, useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
 import { enqueueSnackbar } from "notistack";
 import { T, useTranslator } from "@/i18n";
-
-import React, { useRef, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import SideDrawer from "@/components/organisms/side-drawer.tsx";
 import { ContractDefinitionFormWrapper } from "@think-it-labs/edc-connector-ui/contract-definition-form-wrapper";
 import { fromContractDefinitionForm } from "@/utilities/contract_definition";
-import { Input } from "@/components/atoms/input";
-import { ContractDefinitionInput, CriterionInput } from "@think-it-labs/edc-connector-client";
+import {ContractDefinitionInput, CriterionInput} from "@think-it-labs/edc-connector-client";
 import { defaultCreateContractDefinitionFormData } from "@/utilities/contract_definition";
+import {MuiSelect} from "@/components/atoms/mui-select.tsx";
+import {operatorIn} from "@/constants/constraints.ts";
+import {Button} from "@mui/material";
+
+const optionsGenerator = (data: { "@id": string }[]) => {
+  return data.map(entry => ({
+    value: entry["@id"]
+  }));
+};
 
 export default function CreateContractDefinitionPage() {
   const { push, connector } = useParticipantConnectorState();
   const managementUrl = connector?.managementUrl as string;
   const submitButtonRef = useRef<HTMLButtonElement>(null);
+
+  const [assetIds, setAssetIds] = useState<{ value: string }[]>([]);
+  const [policyIds, setPolicyIds] = useState<{ value: string }[]>([]);
+  const edcClient = useEdcClient();
+  useEffect(() => {
+    edcClient.management.assets.queryAll({ offset: 0 })
+      .then(result => setAssetIds(optionsGenerator(result)))
+      .catch(error => setAssetIds([]));
+
+    edcClient.management.policyDefinitions.queryAll({ offset: 0 })
+      .then(result => setPolicyIds(optionsGenerator(result)))
+      .catch(error => setPolicyIds([]));
+  }, []);
 
   const [formData, setFormData] = useState<ContractDefinitionInput>(defaultCreateContractDefinitionFormData);
   const validateForm = () => true ;
@@ -43,64 +61,76 @@ export default function CreateContractDefinitionPage() {
     return [
       {
         operandLeft: "@id",
-        operator: "=",
+        operator: operatorIn.value,
         operandRight: id
       }
     ]
+  };
+
+  const idReader = (criteria: CriterionInput[]) => {
+    return criteria[0]?.operandRight || "";
   }
 
   return (
     <SideDrawer title={<T string="contractDefinitions.new.title" />}>
-      <ContractDefinitionFormWrapper 
+      <ContractDefinitionFormWrapper
         managementUrl={managementUrl}
         formData={() => fromContractDefinitionForm(formData)}
         onSuccess={() => push("/data-offers")}
-        onFailure={onFormSubmitFail}>
-          <Input
-            required
+        onFailure={onFormSubmitFail}
+      >
+        <div className="flex flex-col gap-y-5">
+          <MuiSelect
+            multiple
             name="assets-selector"
             id="asset-id"
             data-testid="asset-id"
             type="text"
             placeholder="asset id"
-            value={formData.assetsSelector}
+            options={assetIds}
+            value={idReader(formData.assetsSelector)}
             onChange={(event) => onChange({ ...formData, assetsSelector: idSelector(event.target.value)})}
           />
 
-          <Input
-            required
+          <MuiSelect
             name="contract-policy-id"
             id="contract-policy-id"
             data-testid="contract-policy-id"
             type="text"
             placeholder="contract-policy-id"
+            options={policyIds}
             value={formData.contractPolicyId}
             onChange={(event) => onChange({ ...formData, contractPolicyId: event.target.value })}
           />
 
-          <Input
-            required
-            name="contract-policy-id"
+          <MuiSelect
+            name="access-policy-id"
             id="access-policy-id"
             data-testid="access-policy-id"
             type="text"
             placeholder="access-policy-id"
+            options={policyIds}
             value={formData.accessPolicyId}
             onChange={(event) => onChange({ ...formData, accessPolicyId: event.target.value })}
           />
-          <Button
-            variant="secondary"
-            onClick={() => push("/data-offers")}
-          >
-            <T string="buttonCancel" />
-          </Button>
-          <Button
-            variant="primary"
-            type="submit"
-            onClick={onSubmit}
-          >
-            <T string="buttonSave" />
-          </Button>
+
+          <div className="flex flex-row self-end gap-x-5">
+            <Button
+              color="secondary"
+              onClick={() => push("/data-offers")}
+            >
+              <T string="common.cancel" />
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              onClick={onSubmit}
+            >
+              <T string="common.create" />
+            </Button>
+          </div>
+        </div>
       </ContractDefinitionFormWrapper>
     </SideDrawer>
   );
