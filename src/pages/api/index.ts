@@ -1,10 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Readable } from "node:stream";
-import {removeProxyPrefix} from "@/hooks/use-participant-connector-state";
 
 type Data = {
   name: string;
 };
+
+function removeProxyPrefix(url: string = "") {
+  return url.replace(new RegExp(`(${process.env.NEXT_PUBLIC_EDC_URL || ""})?/api\\?path=`, 'i'), "");
+}
 
 export default async function handler(
   req: NextApiRequest,

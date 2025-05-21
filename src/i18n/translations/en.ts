@@ -29,7 +29,7 @@ export const en = {
       negotiate: "Negotiate",
       showJsonLd: "Show JSON-LD",
       cleanedJson: "Cleaned JSON",
-      errorOccurred: "An error has occurred",
+      errorOccurred: "An error has occurred"
     },
     dashboard: {
       title: "Dashboard"
@@ -253,6 +253,7 @@ export const en = {
       headingId: "ID",
       contractPolicy: "Contract Policy",
       contractPolicyJsonLd: "Contract Policy JSON-LD",
+      headingContractPolicy: "Contract policy",
       headingAccessPolicy: "Access policy",
       "[id]": {
         title: "View contract definition",

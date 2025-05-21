@@ -84,7 +84,7 @@ PolicyDefinitionView.Policy = {
     }, [children]);
 
     return (<>
-      {!isLoading && item?.policy.permissions.map((item, index) => (
+      {!isLoading && item?.policy.permissions != undefined && item?.policy.permissions.map((item, index) => (
         <Item
           key={item}
           item={item}

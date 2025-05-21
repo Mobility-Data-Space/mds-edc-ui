@@ -1,22 +1,22 @@
-import { Input } from "@/components/atoms/input";
-import SearchIcon from '@mui/icons-material/Search';
-import { AssetsList } from "@think-it-labs/edc-connector-ui/assets-list";
-import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
-import { usePagination } from "@/hooks/use-pagination";
-import {T, useTranslator} from "@/i18n";
+import React, {useState} from "react";
+import {useRouter} from "next/router";
 
 import { PlusCircle } from "lucide-react";
 
-import {Dialog, Button as MuiButton, DialogContent} from '@mui/material';
+import {Button as MuiButton, DialogContent} from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 
-import React, {useEffect, useState} from "react";
-
-import CreateAssetForm from "@/components/templates/create-asset-form.tsx";
-import SideDrawer from "@/components/organisms/side-drawer.tsx";
-import AssetCard from "@/components/organisms/asset-card.tsx";
 import {Asset} from "@think-it-labs/edc-connector-client";
-import AssetDetailsDialog from "@/components/organisms/asset-details-dialog.tsx";
-import {useRouter} from "next/router";
+import { AssetsList } from "@think-it-labs/edc-connector-ui/assets-list";
+
+import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
+import { usePagination } from "@/hooks/use-pagination";
+import {T, useTranslator} from "@/i18n";
+import { Input } from "@/components/atoms/input";
+import SideDrawer from "@/components/organisms/side-drawer";
+import AssetCard from "@/components/organisms/asset-card";
+import AssetFormDialog from "@/components/templates/asset-form-dialog";
+import AssetDialog from "@/components/organisms/asset-dialog";
 
 export default function AssetListPage() {
   const router = useRouter();
@@ -39,18 +39,11 @@ export default function AssetListPage() {
 
   return (
     <>
-      <Dialog
+      <AssetFormDialog
         open={isCreateModalOpen}
-        maxWidth="lg"
-        className="my-7"
-        onClose={() => setIsCreateModalOpen(false)}
-      >
-        <DialogContent style={{ maxWidth: "80vw", width: "800px" }}>
-          <CreateAssetForm />
-        </DialogContent>
-      </Dialog>
+        onClose={() => setIsCreateModalOpen(false)} />
 
-      <AssetDetailsDialog
+      <AssetDialog
         open={isDetailsModalOpen}
         asset={openAssetData.asset}
         onClose={() => setIsDetailsModalOpen(false)}

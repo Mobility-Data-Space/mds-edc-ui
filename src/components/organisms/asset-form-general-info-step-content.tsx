@@ -12,14 +12,14 @@ import {AssetPublisher} from "@/components/molecules/asset-publisher.tsx";
 import {AssetStandardLicense} from "@/components/molecules/asset-standard-license.tsx";
 import { AssetProperties } from "@/utilities/asset";
 
-export interface AssetCreateFormGeneralInfoStepProps {
+export interface AssetFormGeneralInfoStepProps {
   translator: (key: string) => string;
   formData: AssetProperties;
   onChange: (formData: AssetProperties) => void;
   errors: { [key: string]: boolean };
 }
 
-export function AssetCreateFormGeneralInfoStepContent({ translator, formData, onChange, errors }: AssetCreateFormGeneralInfoStepProps): JSX.Element {
+export function AssetFormGeneralInfoStepContent({ translator, formData, onChange, errors }: AssetFormGeneralInfoStepProps): JSX.Element {
 
   return (
     <div className="flex flex-col gap-y-5">

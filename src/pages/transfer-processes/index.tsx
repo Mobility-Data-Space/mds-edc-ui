@@ -42,102 +42,104 @@ export default function TransferProcessesListPage() {
             </TransferProcessesList.SearchTrigger>
           </div>
         </div>
+        <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">
+          <Table>
+            <Table.Head>
+              <Table.Row>
+                <Table.Heading className="w-16">
+                  #
+                </Table.Heading>
 
-        <Table>
-          <Table.Head>
-            <Table.Row>
-              <Table.Heading className="w-16">
-                #
-              </Table.Heading>
+                <Table.Heading>
+                  <T string="transferProcesses.headingId" />
+                </Table.Heading>
 
-              <Table.Heading>
-                <T string="headingId" />
-              </Table.Heading>
+                <Table.Heading>
+                  <T string="transferProcesses.headingState" />
+                </Table.Heading>
 
-              <Table.Heading>
-                <T string="headingState" />
-              </Table.Heading>
+                <Table.Heading>
+                  <T string="transferProcesses.headingContractAgreement" />
+                </Table.Heading>
 
-              <Table.Heading>
-                <T string="headingContractAgreement" />
-              </Table.Heading>
+                <Table.Heading>
+                  <T string="transferProcesses.headingAsset" />
+                </Table.Heading>
 
-              <Table.Heading>
-                <T string="headingAsset" />
-              </Table.Heading>
+                <Table.Heading>
+                  <T string="transferProcesses.headingCorrelationId" />
+                </Table.Heading>
+              </Table.Row>
+            </Table.Head>
 
-              <Table.Heading>
-                <T string="headingCorrelationId" />
-              </Table.Heading>
-            </Table.Row>
-          </Table.Head>
+            <Table.Body>
+              <TransferProcessesList.Items
+                limit={limit}
+                offset={offset}
+                sortOrder="DESC"
+              >
+                {({ item, index }) => (
+                  <Table.Row
+                    onClick={() => push(`/transfer-processes/${item.id}`)}
+                  >
+                    <Table.Cell>
+                      <button
+                        type="button"
+                        className="flex items-center gap-x-2 text-gray-800"
+                      >
+                        {(page * 10) + (index + 1)}
+                      </button>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <span className="font-semibold">
+                        {item.id}
+                      </span>
+                    </Table.Cell>
+                    <Table.Cell>
+                      {item.state}
+                    </Table.Cell>
+                    <Table.Cell>
+                      <ContractAgreementView
+                        id={item.contractId}
+                        managementUrl={managementUrl}
+                      >
+                        <p className="text-xs italic mb-1">
+                          <ContractAgreementView.ProviderId /> →{" "}
+                          <ContractAgreementView.ConsumerId />
+                        </p>
+                        <p className="font-semibold">
+                          <ContractAgreementView.Id />
+                        </p>
+                      </ContractAgreementView>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <AssetView
+                        id={item.assetId}
+                        managementUrl={managementUrl}
+                      >
+                        <p className="mb-1">
+                          <AssetView.Name />
+                        </p>
+                        <p className="text-xs mb-1">
+                          <AssetView.Id />
+                        </p>
+                        <p className="text-xs">
+                          <AssetView.ContentType />
+                        </p>
+                      </AssetView>
 
-          <Table.Body>
-            <TransferProcessesList.Items
-              limit={limit}
-              offset={offset}
-              sortOrder="DESC"
-            >
-              {({ item, index }) => (
-                <Table.Row
-                  onClick={() => push(`/transfer-processes/${item.id}`)}
-                >
-                  <Table.Cell>
-                    <button
-                      type="button"
-                      className="flex items-center gap-x-2 text-gray-800"
-                    >
-                      {(page * 10) + (index + 1)}
-                    </button>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <span className="font-semibold">
-                      {item.id}
-                    </span>
-                  </Table.Cell>
-                  <Table.Cell>
-                    {item.state}
-                  </Table.Cell>
-                  <Table.Cell>
-                    <ContractAgreementView
-                      id={item.contractId}
-                      managementUrl={managementUrl}
-                    >
-                      <p className="text-xs italic mb-1">
-                        <ContractAgreementView.ProviderId /> →{" "}
-                        <ContractAgreementView.ConsumerId />
-                      </p>
-                      <p className="font-semibold">
-                        <ContractAgreementView.Id />
-                      </p>
-                    </ContractAgreementView>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <AssetView
-                      id={item.assetId}
-                      managementUrl={managementUrl}
-                    >
-                      <p className="mb-1">
-                        <AssetView.Name />
-                      </p>
-                      <p className="text-xs mb-1">
-                        <AssetView.Id />
-                      </p>
-                      <p className="text-xs">
-                        <AssetView.ContentType />
-                      </p>
-                    </AssetView>
-
-                    {item.assetId}
-                  </Table.Cell>
-                  <Table.Cell>
-                    {item.correlationId}
-                  </Table.Cell>
-                </Table.Row>
-              )}
-            </TransferProcessesList.Items>
-          </Table.Body>
-        </Table>
+                      {item.assetId}
+                    </Table.Cell>
+                    <Table.Cell>
+                      {item.correlationId}
+                    </Table.Cell>
+                  </Table.Row>
+                )}
+              </TransferProcessesList.Items>
+            </Table.Body>
+          </Table>
+        </div>
+        
         <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">
           <div className="inline-flex gap-x-2">
             <Button

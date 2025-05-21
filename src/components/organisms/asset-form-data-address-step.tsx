@@ -10,7 +10,7 @@ import {ASSET_DATA_ADDRESS_BASE_URL, ASSET_DATA_ADDRESS_DESCRIPTION, ASSET_DATA_
 import {theme} from "@/theme/ThemeProvider.tsx";
 import { DataAddress } from "@think-it-labs/edc-connector-client";
 
-export interface AssetCreateDataAddressFormStepProps {
+export interface AssetDataAddressFormStepProps {
   translator: (key: string) => string,
   formData: DataAddress,
   onChange: any,
@@ -19,7 +19,7 @@ export interface AssetCreateDataAddressFormStepProps {
   customDataSourceConfigRows?: number,
 }
 
-export function AssetCreateFormDataAddressStep({ formData, errors, onChange, translator, methodAlwaysShowing = false, customDataSourceConfigRows = 2 }: AssetCreateDataAddressFormStepProps): JSX.Element {
+export function AssetFormDataAddressStep({ formData, errors, onChange, translator, methodAlwaysShowing = false, customDataSourceConfigRows = 2 }: AssetDataAddressFormStepProps): JSX.Element {
   return (
     <div className="flex flex-col gap-y-5">
       <div className="flex flex-col gap-y-5 items-start">

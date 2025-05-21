@@ -47,6 +47,15 @@ export default function PolicyDefinitionPage() {
         <p className="mt-1 text-xs font-medium uppercase text-gray-500">
           <PolicyDefinitionView.CreatedAt />
         </p>
+        <p className="mt-1 text-xs font-medium uppercase text-gray-500">
+          <PolicyDefinitionView.Policy.Permissions>
+            {() => {
+              (
+                <p>Permission</p>
+              )
+            }}
+          </PolicyDefinitionView.Policy.Permissions>
+        </p>
         <DeletePolicyDefinition />
       </PolicyDefinitionView>
     </SideDrawer>

@@ -41,89 +41,91 @@ export default function ContractNegotiationsListPage() {
             </ContractNegotiationsList.SearchTrigger>
           </div>
         </div>
+        <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">
+          <Table>
+            <Table.Head>
+              <Table.Row>
+                <Table.Heading className="w-16">
+                  #
+                </Table.Heading>
 
-        <Table>
-          <Table.Head>
-            <Table.Row>
-              <Table.Heading className="w-16">
-                #
-              </Table.Heading>
+                <Table.Heading>
+                  <T string="contractNegotiations.headingId" />
+                </Table.Heading>
 
-              <Table.Heading>
-                <T string="headingId" />
-              </Table.Heading>
+                <Table.Heading>
+                  <T string="contractNegotiations.headingState" />
+                </Table.Heading>
 
-              <Table.Heading>
-                <T string="headingState" />
-              </Table.Heading>
+                <Table.Heading>
+                  <T string="contractNegotiations.headingContractAgreement" />
+                </Table.Heading>
 
-              <Table.Heading>
-                <T string="headingContractAgreement" />
-              </Table.Heading>
+                <Table.Heading>
+                  <T string="contractNegotiations.headingCounterPartyAddress" />
+                </Table.Heading>
 
-              <Table.Heading>
-                <T string="headingCounterPartyAddress" />
-              </Table.Heading>
+                <Table.Heading>
+                  <T string="contractNegotiations.headingCreatedAt" />
+                </Table.Heading>
+              </Table.Row>
+            </Table.Head>
 
-              <Table.Heading>
-                <T string="headingCreatedAt" />
-              </Table.Heading>
-            </Table.Row>
-          </Table.Head>
-
-          <Table.Body>
-            <ContractNegotiationsList.Items
-              limit={limit}
-              offset={offset}
-              sortOrder="DESC"
-            >
-              {({ item, index }) => (
-                <Table.Row
-                  onClick={() => push(`/contract-negotiations/${item.id}`)}
-                >
-                  <Table.Cell>
-                    <button
-                      type="button"
-                      className="flex items-center gap-x-2 text-gray-800"
-                    >
-                      {(page * 10) + (index + 1)}
-                    </button>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <span className="font-semibold">
-                      {item.id}
-                    </span>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <span className="font-semibold">
-                      {item.state}
-                    </span>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <ContractAgreementView
-                      managementUrl={managementUrl}
-                      id={item.contractAgreementId}
-                    >
-                      <p className="text-xs italic mb-1 text-gray-800">
-                        <ContractAgreementView.ProviderId /> →{" "}
-                        <ContractAgreementView.ConsumerId />
-                      </p>
-                      <p className="font-semibold text-sm text-gray-800">
-                        <ContractAgreementView.Id />
-                      </p>
-                    </ContractAgreementView>
-                  </Table.Cell>
-                  <Table.Cell>
-                    {item.counterPartyAddress || "n.a."}
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Timestamp milliseconds={item.createdAt} />
-                  </Table.Cell>
-                </Table.Row>
-              )}
-            </ContractNegotiationsList.Items>
-          </Table.Body>
-        </Table>
+            <Table.Body>
+              <ContractNegotiationsList.Items
+                limit={limit}
+                offset={offset}
+                sortOrder="DESC"
+              >
+                {({ item, index }) => (
+                  <Table.Row
+                    onClick={() => push(`/contract-negotiations/${item.id}`)}
+                  >
+                    <Table.Cell>
+                      <button
+                        type="button"
+                        className="flex items-center gap-x-2 text-gray-800"
+                      >
+                        {(page * 10) + (index + 1)}
+                      </button>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <span className="font-semibold">
+                        {item.id}
+                      </span>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <span className="font-semibold">
+                        {item.state}
+                      </span>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <ContractAgreementView
+                        managementUrl={managementUrl}
+                        id={item.contractAgreementId}
+                      >
+                        <p className="text-xs italic mb-1 text-gray-800">
+                          <ContractAgreementView.ProviderId /> →{" "}
+                          <ContractAgreementView.ConsumerId />
+                        </p>
+                        <p className="font-semibold text-sm text-gray-800">
+                          <ContractAgreementView.Id />
+                        </p>
+                      </ContractAgreementView>
+                    </Table.Cell>
+                    <Table.Cell>
+                      {item.counterPartyAddress || "n.a."}
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Timestamp milliseconds={item.createdAt} />
+                    </Table.Cell>
+                  </Table.Row>
+                )}
+              </ContractNegotiationsList.Items>
+            </Table.Body>
+          </Table>
+        </div>
+        
         <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">
           <div className="inline-flex gap-x-2">
             <Button

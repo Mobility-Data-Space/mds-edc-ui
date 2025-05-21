@@ -12,7 +12,7 @@ import AssetDetails from "@/components/organisms/asset-details.tsx";
 import {DeleteDialog} from "@/components/molecules/delete-dialog.tsx";
 import { enqueueSnackbar } from 'notistack';
 
-interface AssetDetailsDialogProps {
+interface AssetDialogProps {
   asset: Asset;
   open: boolean;
   onClose: () => void;
@@ -26,7 +26,7 @@ interface AssetDetailsDialogProps {
   onDeleteSuccess?: () => void;
   contentStyle?: { [key: string]: string }
 }
-export default function AssetDetailsDialog({ open, onClose, asset, onEditClick, deleteEnabled = false, participantId, connectorEndpoint, contractDefinitions, assetIsOwned = true, deleteItem, onDeleteSuccess, contentStyle = {} }: AssetDetailsDialogProps) {
+export default function AssetDialog({ open, onClose, asset, onEditClick, deleteEnabled = false, participantId, connectorEndpoint, contractDefinitions, assetIsOwned = true, deleteItem, onDeleteSuccess, contentStyle = {} }: AssetDialogProps) {
   const id = asset["@id"];
   const title = readValue(asset.properties, ASSET_TITLE) || "";
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);

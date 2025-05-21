@@ -1,21 +1,16 @@
 import { Participant } from "@/constants/dataspace";
 import { useRouter } from "next/router";
-import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
 
-type ConnectorDashboardState = {
+type ParticipantConnectorState = {
   connector: Participant;
   push: (href: string) => void;
 };
 
-export function appendProxyPrefix(url: string = "") {
+function appendProxyPrefix(url: string = "") {
   return `${process.env.NEXT_PUBLIC_EDC_URL || ""}/api?path=${url}`;
 }
 
-export function removeProxyPrefix(url: string = "") {
-  return url.replace(new RegExp(`(${process.env.NEXT_PUBLIC_EDC_URL || ""})?/api\\?path=`, 'i'), "");
-}
-
-export function useParticipantConnectorState(): ConnectorDashboardState {
+export function useParticipantConnectorState(): ParticipantConnectorState {
   const router = useRouter();
 
   const connector: Participant = {
@@ -32,9 +27,3 @@ export function useParticipantConnectorState(): ConnectorDashboardState {
     push: (href: string) => router.push(`${href}`),
   } as any;
 }
-
-export const useEdcClient = () => {
-  const { connector } = useParticipantConnectorState()
-
-  return useEdcConnectorClient({ management: connector.managementUrl });
-};

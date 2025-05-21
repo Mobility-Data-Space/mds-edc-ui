@@ -9,11 +9,14 @@ import { T, useTranslator } from "@/i18n";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import React from "react";
 import SideDrawer from "@/components/organisms/side-drawer.tsx";
+import { ContractAgreementView } from "@think-it-labs/edc-connector-ui/contract-agreement-view";
 
 export default function ContractAgreementsListPage() {
   const { push, connector } = useParticipantConnectorState();
   const managementUrl = connector?.managementUrl as string;
+
   const { globalTranslator } = useTranslator();
+
   const { decrementPage, incrementPage, offset, limit, hasPrev, page } =
     usePagination();
   if (!connector) {
@@ -39,111 +42,100 @@ export default function ContractAgreementsListPage() {
               <Search className="w-4 h-4" />
             </div>
             <ContractAgreementsList.SearchTrigger className="py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-e-md border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
-              <T global string="search" />
+              <T global string="buttonSearch" />
             </ContractAgreementsList.SearchTrigger>
           </div>
         </div>
+        <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">
+          <Table>
+            <Table.Head>
+              <Table.Row>
+                <Table.Heading className="w-16">
+                  #
+                </Table.Heading>
 
-        <Table>
-          <Table.Head>
-            <Table.Row>
-              <Table.Heading className="w-16">
-                #
-              </Table.Heading>
+                <Table.Heading>
+                  <T string="contractAgreements.headingId" />
+                </Table.Heading>
 
-              <Table.Heading>
-                <T string="headingId" />
-              </Table.Heading>
+                <Table.Heading>
+                  <T string="contractAgreements.headingConsumer" /> →{" "} <T string="contractAgreements.headingProvider" />
+                </Table.Heading>
 
-              <Table.Heading>
-                <T string="headingConsumer" />
-              </Table.Heading>
+                <Table.Heading>
+                  <T string="contractAgreements.headingAsset" />
+                </Table.Heading>
 
-              <Table.Heading>
-                <T string="headingProvider" />
-              </Table.Heading>
+                <Table.Heading>
+                  <T string="contractAgreements.headingContractSigningDate" />
+                </Table.Heading>
+              </Table.Row>
+            </Table.Head>
 
-              <Table.Heading>
-                <T string="headingAsset" />
-              </Table.Heading>
-
-              <Table.Heading>
-                <T string="headingContractSigningDate" />
-              </Table.Heading>
-            </Table.Row>
-          </Table.Head>
-
-          <Table.Body>
-            <ContractAgreementsList.Items
-              limit={limit}
-              offset={offset}
-              sortOrder="DESC"
-            >
-              {({ item, index }) => {
-                return (
-                  <Table.Row
-                    onClick={() => push(`/contract-agreements/${item.id}`)}
-                  >
-                    <Table.Cell>
-                      <button
-                        type="button"
-                        className="flex items-center gap-x-2"
+            <Table.Body>
+              <ContractAgreementsList.Items
+                limit={limit}
+                offset={offset}
+                sortOrder="DESC"
+              >
+                {({ item, index }) => {
+                  return (
+                    <ContractAgreementView id={item.id} managementUrl={connector.managementUrl}>
+                      <Table.Row
+                        onClick={() => push(`/contract-agreements/${item.id}`)}
                       >
-                        <span className="text-sm text-gray-800">
-                          {(page * 10) + (index + 1)}
-                        </span>
-                      </button>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <span className="font-semibold">
-                        {item.id}
-                      </span>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <p className="text-sm mb-1 text-gray-800">
-                        {connector?.name}
-                      </p>
-                      <p className="text-xs italic text-gray-800">
-                        {connector?.id}
-                      </p>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <p className="text-sm mb-1 text-gray-800">
-                        {connector?.name}
-                      </p>
-                      <p className="text-xs italic text-gray-800">
-                        {connector?.id}
-                      </p>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <ContractAgreementsList.Asset
-                        id={item.assetId}
-                        managementUrl={connector!.managementUrl}
-                      >
-                        <p className="text-sm mb-1 text-gray-800">
-                          <ContractAgreementsList.Asset.Name />
-                        </p>
-                        <p className="text-xs mb-1 text-gray-800">
-                          <ContractAgreementsList.Asset.Id />
-                        </p>
-                        <p className="text-xs italic text-gray-800">
-                          <ContractAgreementsList.Asset.ContentType />
-                        </p>
-                      </ContractAgreementsList.Asset>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <span className="text-sm text-gray-800">
-                        <Timestamp
-                          milliseconds={item.contractSigningDate}
-                        />
-                      </span>
-                    </Table.Cell>
-                  </Table.Row>
-                );
-              }}
-            </ContractAgreementsList.Items>
-          </Table.Body>
-        </Table>
+                        <Table.Cell>
+                          <button
+                            type="button"
+                            className="flex items-center gap-x-2"
+                          >
+                            <span className="text-sm text-gray-800">
+                              {(page * 10) + (index + 1)}
+                            </span>
+                          </button>
+                        </Table.Cell>
+                        <Table.Cell>
+                          <span className="font-semibold">
+                            <ContractAgreementView.Id />
+                          </span>
+                        </Table.Cell>
+                        <Table.Cell>
+                          <p className="text-xs mb-1 text-gray-800">
+                            <ContractAgreementView.ConsumerId /> →{" "} <ContractAgreementView.ProviderId />
+                          </p>
+                        </Table.Cell>
+                        <Table.Cell>
+                          <ContractAgreementsList.Asset
+                            id={item.assetId}
+                            managementUrl={connector!.managementUrl}
+                          >
+                            <p className="text-sm mb-1 text-gray-800">
+                              <ContractAgreementsList.Asset.Name />
+                            </p>
+                            <p className="text-xs mb-1 text-gray-800">
+                              <ContractAgreementsList.Asset.Id />
+                            </p>
+                            <p className="text-xs italic text-gray-800">
+                              <ContractAgreementsList.Asset.ContentType />
+                            </p>
+                          </ContractAgreementsList.Asset>
+                        </Table.Cell>
+                        <Table.Cell>
+                          <span className="text-sm text-gray-800">
+                            <Timestamp
+                              milliseconds={item.contractSigningDate}
+                            />
+                          </span>
+                        </Table.Cell>
+                      </Table.Row>
+                    </ContractAgreementView>
+                  );
+                }}
+              </ContractAgreementsList.Items>
+            </Table.Body>
+          </Table>
+        </div>
+        
 
         <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">
           <div className="inline-flex gap-x-2">

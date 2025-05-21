@@ -11,39 +11,38 @@ import {ASSET_DATA_ADDRESS_ENABLE_QUERY_PARAMETERIZATION, ASSET_DATA_ADDRESS_HTT
 import {theme} from "@/theme/ThemeProvider.tsx";
 import Typography from "@mui/material/Typography";
 import {TRANSFER_PROCESS_DATA_ADDRESS_TYPE, TRANSFER_PROCESS_DATA_DESTINATION, TRANSFER_PROCESS_HTTP_AUTH_HEADER_NAME, TRANSFER_PROCESS_HTTP_AUTH_HEADER_TYPE, TRANSFER_PROCESS_HTTP_AUTH_HEADER_VALUE, TRANSFER_PROCESS_HTTP_HEADERS, TRANSFER_PROCESS_HTTP_METHOD, TRANSFER_PROCESS_HTTP_PROXIED_BODY, TRANSFER_PROCESS_HTTP_PROXIED_BODY_CONTENT_TYPE, TRANSFER_PROCESS_HTTP_PROXIED_METHOD, TRANSFER_PROCESS_HTTP_PROXIED_PATH, TRANSFER_PROCESS_HTTP_PROXIED_QUERY_PARAMS, TRANSFER_PROCESS_HTTP_SHOW_AUTH_HEADER, TRANSFER_PROCESS_HTTP_URL, TRANSFER_PROCESS_SHOW_ALL_HTTP_PARAMETERIZATION_FIELDS} from "@/schema/transfer-process.ts";
-import {ContractAgreement, PolicyBuilder} from "@think-it-labs/edc-connector-client";
+import {ContractAgreement, DataAddress, PolicyBuilder} from "@think-it-labs/edc-connector-client";
 import {ContractAgreementView} from "@think-it-labs/edc-connector-ui/contract-agreement-view.tsx";
-import {createTransferProcessRequest, defaultTransferProcess} from "@/utilities/transfer-process.ts";
+import {createTransferProcessRequest, defaultDataDestination} from "@/utilities/transfer-process.ts";
 import Button from "@mui/material/Button";
-import {useEdcClient, useParticipantConnectorState} from "@/hooks/use-participant-connector-state.ts";
+import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
 import {enqueueSnackbar} from "notistack";
 import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog.ts";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
 
-export interface AssetCreateDataAddressFormStepProps {
+export interface TransferFormDialogProps {
   isOpen: boolean,
   onClose: () => void,
   translator: (key: string) => string,
 }
 
-export function TransferFormDialog({ isOpen, onClose, translator }: AssetCreateDataAddressFormStepProps): JSX.Element {
-  const [formData, setFormData] = useState<any>(defaultTransferProcess);
+export function TransferFormDialog({ isOpen, onClose, translator }: TransferFormDialogProps): JSX.Element {
+  const [formData, setFormData] = useState<DataAddress>(defaultDataDestination);
+
   const [errors, setErrors] = useState<any>({});
   const contractAgreement = removeJsonLdSchemaFromProperties(ContractAgreementView.Item());
-  const edcClient = useEdcClient() ;
+  
   const { connector } = useParticipantConnectorState();
+  const edcClient = useEdcConnectorClient({management: connector.managementUrl}) ;
 
   const onSubmit = () => {
-
     const agreement: Partial<ContractAgreement> = {
-      policy: new PolicyBuilder().type("Set").build(),
       assetId: contractAgreement?.assetId[0] && contractAgreement?.assetId[0]["@value"],
       providerId: contractAgreement?.providerId[0] && contractAgreement?.providerId[0]["@value"],
       consumerId: contractAgreement?.consumerId[0] && contractAgreement?.consumerId[0]["@value"],
       contractId: contractAgreement["@id"],
-      counterPartyAddress: connector.protocolUrl,
-      transferType: "HttpData-PULL",
     };
-    const transfer = createTransferProcessRequest(agreement as ContractAgreement);
+    const transfer = createTransferProcessRequest(agreement as ContractAgreement, "HttpData-PULL", formData, connector.protocolUrl);
     edcClient.management.transferProcesses.initiate(transfer)
       .then(onClose)
       .catch(error => enqueueSnackbar(translator("common.errorOccurred")))

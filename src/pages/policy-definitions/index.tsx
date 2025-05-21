@@ -38,61 +38,64 @@ export default function PolicyDefinitionListPage() {
               <Search className="w-4 h-4" />
             </div>
             <PolicyDefinitionsList.SearchTrigger className="py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-e-md border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
-              <T global string="search" />
+              <T global string="buttonSearch" />
             </PolicyDefinitionsList.SearchTrigger>
           </div>
         </div>
 
-        <Table>
-          <Table.Head>
-            <Table.Row>
-              <Table.Heading className="w-16">
-                #
-              </Table.Heading>
+        <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">
+          <Table>
+            <Table.Head>
+              <Table.Row>
+                <Table.Heading className="w-16">
+                  #
+                </Table.Heading>
 
-              <Table.Heading>
-                <T string="headingId" />
-              </Table.Heading>
+                <Table.Heading>
+                  <T string="policyDefinitions.headingId" />
+                </Table.Heading>
 
-              <Table.Heading>
-                <T string="headingCreatedAt" />
-              </Table.Heading>
-            </Table.Row>
-          </Table.Head>
+                <Table.Heading>
+                  <T string="policyDefinitions.headingCreatedAt" />
+                </Table.Heading>
+              </Table.Row>
+            </Table.Head>
 
-          <Table.Body>
-            <PolicyDefinitionsList.Items
-              limit={limit}
-              offset={offset}
-              sortOrder="DESC"
-            >
-              {({ item, index }) => (
-                <Table.Row
-                  onClick={() => push(`/policy-definitions/${item.id}`)}
-                >
-                  <Table.Cell>
-                    <button
-                      type="button"
-                      className="flex items-center gap-x-2 text-sm text-gray-800"
-                    >
-                      {(page * 10) + (index + 1)}
-                    </button>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <span className="font-semibold">
-                      {item.id}
-                    </span>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Timestamp
-                      seconds={item.createdAt}
-                    />
-                  </Table.Cell>
-                </Table.Row>
-              )}
-            </PolicyDefinitionsList.Items>
-          </Table.Body>
-        </Table>
+            <Table.Body>
+              <PolicyDefinitionsList.Items
+                limit={limit}
+                offset={offset}
+                sortOrder="DESC"
+              >
+                {({ item, index }) => (
+                  <Table.Row
+                    onClick={() => push(`/policy-definitions/${item.id}`)}
+                  >
+                    <Table.Cell>
+                      <button
+                        type="button"
+                        className="flex items-center gap-x-2 text-sm text-gray-800"
+                      >
+                        {(page * 10) + (index + 1)}
+                      </button>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <span className="font-semibold">
+                        {item.id}
+                      </span>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Timestamp
+                        seconds={item.createdAt}
+                      />
+                    </Table.Cell>
+                  </Table.Row>
+                )}
+              </PolicyDefinitionsList.Items>
+            </Table.Body>
+          </Table>
+        </div>
+        
         <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">
           <div className="inline-flex gap-x-2">
             <Button
@@ -119,7 +122,7 @@ export default function PolicyDefinitionListPage() {
                 onClick={() => push("/policy-definitions/new")}
               >
                 <Plus className="h-4 w-4" />
-                <T string="buttonAdd" />
+                <T string="common.add" />
               </button>
             </div>
           </div>

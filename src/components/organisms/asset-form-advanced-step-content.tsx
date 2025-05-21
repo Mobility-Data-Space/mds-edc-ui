@@ -19,14 +19,14 @@ import {AssetDataCategoryAndSubcategory} from "@/components/molecules/asset-data
 import {AssetTemporalCoverage} from "@/components/molecules/asset-temporal-coverage.tsx";
 import {AssetProperties} from "@/utilities/asset.ts";
 
-export interface AssetCreateFormAdvancedInfoStepProps {
+export interface AssetFormAdvancedInfoStepProps {
   translator: (key: string) => string;
   formData: AssetProperties;
   onChange: (formData: any) => void;
   errors: { [key: string]: boolean };
 }
 
-export function AssetCreateFormAdvancedInfoStepContent({ translator, formData, onChange, errors }: AssetCreateFormAdvancedInfoStepProps): JSX.Element {
+export function AssetFormAdvancedInfoStepContent({ translator, formData, onChange, errors }: AssetFormAdvancedInfoStepProps): JSX.Element {
 
   return (
     <div className="flex flex-col gap-y-5">

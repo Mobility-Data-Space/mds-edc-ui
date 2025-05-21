@@ -2,10 +2,9 @@ import React, {useEffect, useRef, useState} from "react";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
 import {Button, Step, StepContent, StepIconProps, StepLabel, Stepper} from "@mui/material";
-import { AssetCreateFormGeneralInfoStepContent } from "@/components/organisms/asset-create-form-general-info-step-content.tsx";
-import { AssetCreateFormDataAddressStep } from "@/components/organisms/asset-create-form-data-address-step.tsx";
+
 import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_DATA_ADDRESS_DESCRIPTION, ASSET_DATA_ADDRESS_TYPE, ASSET_TITLE, ASSET_VERSION} from "@/schema/asset.ts";
-import {AssetCreateFormAdvancedInfoStepContent} from "@/components/organisms/asset-create-form-advanced-step-content.tsx";
+
 import {fromAssetForm, computeRequiredDataAddressProperties, generateId, defaultCreateAssetFormData, AssetProperties} from "@/utilities/asset.ts";
 import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
 import { enqueueSnackbar } from 'notistack';
@@ -13,13 +12,16 @@ import {DATA_ADDRESS_TYPE_CUSTOM} from "@/constants/data-address-types.ts";
 import {StepIcon} from "@/components/atoms/step-icon.tsx";
 import { AssetFormWrapper } from "@think-it-labs/edc-connector-ui/asset-form-wrapper";
 import { AssetInput, DataAddress } from "@think-it-labs/edc-connector-client";
+import { AssetFormGeneralInfoStepContent } from "./asset-form-general-info-step-content";
+import { AssetFormAdvancedInfoStepContent } from "./asset-form-advanced-step-content";
+import { AssetFormDataAddressStep } from "./asset-form-data-address-step";
 
 const stepLabelSharedProps = {
   className: "w-full justify-start p-4",
   slots: { stepIcon: (props: StepIconProps) => <StepIcon {...props} /> },
 }
 
-export default function CreateAssetForm() {
+export default function AssetForm() {
   const { push, connector } = useParticipantConnectorState();
   const submitButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -203,7 +205,7 @@ export default function CreateAssetForm() {
             </div>
             <StepContent>
               <div data-testid="asset-create-general-info-step-content">
-                <AssetCreateFormGeneralInfoStepContent
+                <AssetFormGeneralInfoStepContent
                   formData={formData.properties}
                   onChange={generalInfoFormOnChange}
                   errors={errors.properties}
@@ -223,7 +225,7 @@ export default function CreateAssetForm() {
             </div>
             <StepContent>
               <div data-testid="asset-create-advanced-info-step-content">
-                <AssetCreateFormAdvancedInfoStepContent
+                <AssetFormAdvancedInfoStepContent
                   translator={translator}
                   formData={formData.properties}
                   onChange={advancedInfoFormOnChange}
@@ -243,7 +245,7 @@ export default function CreateAssetForm() {
             </div>
             <StepContent>
               <div data-testid="asset-create-data-address-step-content">
-                <AssetCreateFormDataAddressStep
+                <AssetFormDataAddressStep
                   translator={translator}
                   formData={formData.dataAddress}
                   onChange={dataAddressFormOnChange}

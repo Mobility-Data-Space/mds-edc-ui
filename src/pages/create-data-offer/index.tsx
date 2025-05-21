@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import {Button, Checkbox, FormControlLabel, Divider, Typography} from "@mui/material";
 import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
 import {T, useTranslator} from "@/i18n";
-import {AssetCreateFormDataAddressStep} from "@/components/organisms/asset-create-form-data-address-step.tsx";
+
 import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_DATA_ADDRESS_DESCRIPTION, ASSET_DATA_ADDRESS_TYPE, ASSET_TITLE, DATA_OFFER_CONSTRAINTS, DATA_OFFER_PUBLISH_MODE, DATA_OFFER_TYPE, } from "@/schema/asset.ts";
 import RadioButtonsGroup from "@/components/atoms/radio-group.tsx";
 import {AssetContactEmailAndSubject} from "@/components/molecules/asset-contact-email-and-subject.tsx";
@@ -37,6 +37,7 @@ import { AssetInput, ContractDefinitionInput, DataAddress, PolicyDefinitionInput
 import { defaultCreatePolicyFormData } from "@/utilities/policy";
 import { defaultCreateContractDefinitionFormData } from "@/utilities/contract_definition";
 import { defaultCreateAssetFormData, AssetProperties, computeRequiredDataOfferAddressProperties, generateId } from "@/utilities/asset"
+import { AssetFormDataAddressStep } from "@/components/organisms/asset-form-data-address-step";
 
 interface DataOffer {
   asset: AssetInput,
@@ -221,7 +222,7 @@ export default function CreateDataOfferPage() {
                   onChange={(value) => dataAddressFormOnChange({...formData.asset.dataAddress, [DATA_OFFER_TYPE]: value})}
                 />
                 {dataOfferTypeIsDataSource ?
-                  <AssetCreateFormDataAddressStep
+                  <AssetFormDataAddressStep
                     translator={translator}
                     formData={formData.asset.dataAddress}
                     onChange={dataAddressFormOnChange}

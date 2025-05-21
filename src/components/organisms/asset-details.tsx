@@ -16,10 +16,11 @@ import dynamic from "next/dynamic";
 import {ReactJsonViewProps} from "react-json-view";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import {ConfirmDialog} from "@/components/molecules/confirm-dialog.tsx";
-import {useEdcClient, useParticipantConnectorState} from "@/hooks/use-participant-connector-state.ts";
+import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state.ts";
 
 import {enqueueSnackbar} from "notistack";
 import { createNegotiationRequest } from "@/utilities/contract_negotiations";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 
 interface AssetDetailsProps {
   asset: Asset;
@@ -30,6 +31,7 @@ interface AssetDetailsProps {
 }
 
 export default function AssetDetails({ asset, participantId, connectorEndpoint, contractDefinitions, assetIsOwned = true }: AssetDetailsProps) {
+  const { connector } = useParticipantConnectorState() ;
   const { translator } = useTranslator();
 
   const keywords = asset.properties[ASSET_KEYWORDS] || [];
@@ -42,7 +44,6 @@ export default function AssetDetails({ asset, participantId, connectorEndpoint, 
   ], [asset]);
 
   const [jsonIsCleaned, setJsonIsCleaned] = useState(false);
-
   const [jsonLdModalOpen, setJsonLdModalOpen] = useState(false);
   const onOpen = () => setJsonLdModalOpen(true);
   const onClose = () => setJsonLdModalOpen(false);
@@ -68,7 +69,7 @@ export default function AssetDetails({ asset, participantId, connectorEndpoint, 
 
   const [negotiateContractIsOpen, setNegotiateContractIsOpen] = useState(false);
 
-  const edcClient = useEdcClient()
+  const edcClient = useEdcConnectorClient({management: connector.managementUrl});
 
   const onNegotiateConfirm = (offer: ContractDefinition) => {
     const negotiation = createNegotiationRequest(offer) ;

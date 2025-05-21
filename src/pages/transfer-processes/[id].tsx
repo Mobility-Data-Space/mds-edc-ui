@@ -18,15 +18,20 @@ export default function TransferProcessViewPage() {
         id={id}
         managementUrl={managementUrl}
       >
-        <ul className="marker:text-blue-600 list-disc ps-5 space-y-2 text-sm text-gray-600">
+        <ul>
           <li>
-            <T string="fieldId" />: <TransferProcessView.Id />
+            <TransferProcessView.Id />
           </li>
           <li>
-            <T string="fieldAsset" />: <TransferProcessView.AssetId />
+            <TransferProcessView.AssetId />
           </li>
           <li>
-            <T string="fieldCorrelationId" />:{" "}
+            <TransferProcessView.ContractId />
+          </li>
+          <li>
+            <TransferProcessView.ConnectorId />
+          </li>
+          <li>
             <TransferProcessView.CorrelationId />
           </li>
         </ul>

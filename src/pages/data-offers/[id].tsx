@@ -37,14 +37,14 @@ export default function ContractDefinitionViewPage() {
         id={id}
         managementUrl={managementUrl}
       >
-          <h3 className="text-lg font-bold text-gray-800">
-            <ContractDefinitionView.Id />
-          </h3>
-          <p className="mt-1 text-xs font-medium uppercase text-gray-500">
-            <ContractDefinitionView.CreatedAt />
-          </p>
+        <h3 className="text-lg font-bold text-gray-800">
+          <ContractDefinitionView.Id />
+        </h3>
+        <p className="mt-1 text-xs font-medium uppercase text-gray-500">
+          <ContractDefinitionView.CreatedAt />
+        </p>
 
-          <DeleteContractDefinition />
+        <DeleteContractDefinition />
       </ContractDefinitionView>
     </SideDrawer>
   );

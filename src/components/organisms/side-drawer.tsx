@@ -170,7 +170,7 @@ export default function SideDrawer(props: Props) {
 
 
   return (
-    <Box className="bg-background" sx={{ display: 'flex', height: "100%" }}>
+    <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar
         elevation={0}

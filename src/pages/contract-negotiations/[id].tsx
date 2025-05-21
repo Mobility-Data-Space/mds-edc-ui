@@ -19,20 +19,17 @@ export default function ContractNegotiationViewPage() {
         id={id}
         managementUrl={managementUrl}
       >
-        <ul className="marker:text-blue-600 list-disc ps-5 space-y-2 text-sm text-gray-600">
+        <ul>
           <li>
-            <T string="fieldId" />: <ContractNegotiationView.Id />
+            <ContractNegotiationView.Id />
           </li>
           <li>
-            <T string="fieldContractAgreementId" />:{" "}
             <ContractNegotiationView.ContractAgreementId />
           </li>
           <li>
-            <T string="fieldCounterPartyAddress" />:{" "}
             <ContractNegotiationView.CounterPartyAddress />
           </li>
           <li>
-            <T string="fieldErrorDetail" />:{" "}
             <ContractNegotiationView.ErrorDetail />
           </li>
         </ul>

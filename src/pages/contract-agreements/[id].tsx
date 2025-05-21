@@ -10,7 +10,7 @@ import {TransferFormDialog} from "@/components/templates/transfer-form-dialog.ts
 
 export default function ContractAgreementViewPage() {
   const id = useRouter().query.id as string;
-  const { push, connector } = useParticipantConnectorState();
+  const { connector } = useParticipantConnectorState();
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
 
   const { translator } = useTranslator();
@@ -27,12 +27,7 @@ export default function ContractAgreementViewPage() {
           onClose={() => setIsTransferModalOpen(false)}
           translator={translator}
         />
-        <p>
-          <T string="title" />
-        </p>
-        <p>
-          <T string="description" />
-        </p>
+
         <ul>
           <li><ContractAgreementView.Id /></li>
           <li><ContractAgreementView.AssetId /></li>
@@ -40,6 +35,7 @@ export default function ContractAgreementViewPage() {
           <li><ContractAgreementView.ProviderId /></li>
           <li><ContractAgreementView.Policy /></li>
         </ul>
+
         <div className="flex justify-end gap-x-2">
           <Button
             data-testid="transfer-process-submit"

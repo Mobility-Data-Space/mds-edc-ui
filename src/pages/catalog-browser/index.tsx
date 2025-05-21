@@ -4,16 +4,18 @@ import { T, useTranslator } from "@/i18n";
 import { Input } from "@/components/atoms/input";
 import React, {useState} from "react";
 import SideDrawer from "@/components/organisms/side-drawer.tsx";
-import AssetCard from "@/components/organisms/asset-card.tsx";
+
 import {datasetToAsset, datasetToContractDefinitions} from "@/utilities/catalog";
 import {Asset, ContractDefinition} from "@think-it-labs/edc-connector-client";
-import AssetDetailsDialog from "@/components/organisms/asset-details-dialog.tsx";
+
 import { ContractOffersList } from "@think-it-labs/edc-connector-ui/contract-offers-list";
 import LinkIcon from "@mui/icons-material/Link";
 import InfoIcon from "@mui/icons-material/Info";
 import {IconButton, Tooltip} from "@mui/material";
 import {CounterPartyAddressDialog} from "@/components/molecules/counter-party-address-dialog.tsx";
 import {useDebounce} from "@/hooks/use-debounce.ts";
+import DataOfferDialog from "@/components/organisms/data-offer-dialog";
+import DataOfferCard from "@/components/organisms/data-offer-card";
 
 export default function CatalogPage() {
   const { connector } = useParticipantConnectorState();
@@ -40,7 +42,7 @@ export default function CatalogPage() {
 
   return (
     <>
-      <AssetDetailsDialog
+      <DataOfferDialog
         open={isDetailsModalOpen}
         asset={openAssetData.asset}
         participantId={openAssetData.participantId}
@@ -56,6 +58,7 @@ export default function CatalogPage() {
         onClose={() => setIsCounterPartyAddressDialogOpen(false)}
         content={counterPartyAddress}
       />
+      
       <SideDrawer title={<T string="catalog.title"/>}>
         <div className="grid grid-cols-1 gap-x-3.5 py-4">
           <div>
@@ -96,7 +99,7 @@ export default function CatalogPage() {
               sortOrder="DESC"
             >
               {({item, index}) => (
-                <AssetCard asset={datasetToAsset(item) as Asset} key={index}
+                <DataOfferCard asset={datasetToAsset(item) as Asset} key={index}
                             onClick={() => openDetailsModal(datasetToAsset(item) as any, counterPartyAddress, datasetToContractDefinitions(item))}
                             participantId={connector.id}/>
               )}
