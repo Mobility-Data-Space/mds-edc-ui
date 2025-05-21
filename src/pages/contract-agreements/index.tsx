@@ -10,6 +10,9 @@ import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import React from "react";
 import SideDrawer from "@/components/organisms/side-drawer.tsx";
 import { ContractAgreementView } from "@think-it-labs/edc-connector-ui/contract-agreement-view";
+import ContractAgreementCard from "@/components/organisms/contract-agreement-card.tsx";
+import {Card, CardContent, Icon} from "@mui/material";
+import Typography from "@mui/material/Typography";
 
 export default function ContractAgreementsListPage() {
   const { push, connector } = useParticipantConnectorState();
@@ -46,96 +49,19 @@ export default function ContractAgreementsListPage() {
             </ContractAgreementsList.SearchTrigger>
           </div>
         </div>
-        <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">
-          <Table>
-            <Table.Head>
-              <Table.Row>
-                <Table.Heading className="w-16">
-                  #
-                </Table.Heading>
-
-                <Table.Heading>
-                  <T string="contractAgreements.headingId" />
-                </Table.Heading>
-
-                <Table.Heading>
-                  <T string="contractAgreements.headingConsumer" /> →{" "} <T string="contractAgreements.headingProvider" />
-                </Table.Heading>
-
-                <Table.Heading>
-                  <T string="contractAgreements.headingAsset" />
-                </Table.Heading>
-
-                <Table.Heading>
-                  <T string="contractAgreements.headingContractSigningDate" />
-                </Table.Heading>
-              </Table.Row>
-            </Table.Head>
-
-            <Table.Body>
-              <ContractAgreementsList.Items
-                limit={limit}
-                offset={offset}
-                sortOrder="DESC"
-              >
-                {({ item, index }) => {
-                  return (
-                    <ContractAgreementView id={item.id} managementUrl={connector.managementUrl}>
-                      <Table.Row
-                        onClick={() => push(`/contract-agreements/${item.id}`)}
-                      >
-                        <Table.Cell>
-                          <button
-                            type="button"
-                            className="flex items-center gap-x-2"
-                          >
-                            <span className="text-sm text-gray-800">
-                              {(page * 10) + (index + 1)}
-                            </span>
-                          </button>
-                        </Table.Cell>
-                        <Table.Cell>
-                          <span className="font-semibold">
-                            <ContractAgreementView.Id />
-                          </span>
-                        </Table.Cell>
-                        <Table.Cell>
-                          <p className="text-xs mb-1 text-gray-800">
-                            <ContractAgreementView.ConsumerId /> →{" "} <ContractAgreementView.ProviderId />
-                          </p>
-                        </Table.Cell>
-                        <Table.Cell>
-                          <ContractAgreementsList.Asset
-                            id={item.assetId}
-                            managementUrl={connector!.managementUrl}
-                          >
-                            <p className="text-sm mb-1 text-gray-800">
-                              <ContractAgreementsList.Asset.Name />
-                            </p>
-                            <p className="text-xs mb-1 text-gray-800">
-                              <ContractAgreementsList.Asset.Id />
-                            </p>
-                            <p className="text-xs italic text-gray-800">
-                              <ContractAgreementsList.Asset.ContentType />
-                            </p>
-                          </ContractAgreementsList.Asset>
-                        </Table.Cell>
-                        <Table.Cell>
-                          <span className="text-sm text-gray-800">
-                            <Timestamp
-                              milliseconds={item.contractSigningDate}
-                            />
-                          </span>
-                        </Table.Cell>
-                      </Table.Row>
-                    </ContractAgreementView>
-                  );
-                }}
-              </ContractAgreementsList.Items>
-            </Table.Body>
-          </Table>
+        <div className="flex flex-wrap gap-2.5 py-4">
+          <ContractAgreementsList.Items
+            limit={limit}
+            offset={offset}
+            sortOrder="DESC"
+          >
+            {({ item, index }) => {
+              return (
+                <ContractAgreementCard key={index} contractAgreement={item} onClick={() => push(`/contract-agreements/${item.id}`)} />
+              );
+            }}
+          </ContractAgreementsList.Items>
         </div>
-        
 
         <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">
           <div className="inline-flex gap-x-2">

@@ -323,6 +323,10 @@ export const en = {
       headingProvider: "Provider",
       headingAsset: "Asset",
       headingContractSigningDate: "Contract signing date",
+      signed: "Signed",
+      transfers: "Transfers",
+      otherConnector: "Other Connector",
+      status: "Status",
       "[id]": {
         title: "View contract agreement",
         description: "A single contract agreement",
