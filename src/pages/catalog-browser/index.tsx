@@ -11,20 +11,28 @@ import {Asset, ContractDefinition} from "@think-it-labs/edc-connector-client";
 import { ContractOffersList } from "@think-it-labs/edc-connector-ui/contract-offers-list";
 import LinkIcon from "@mui/icons-material/Link";
 import InfoIcon from "@mui/icons-material/Info";
-import {IconButton, Tooltip} from "@mui/material";
+import {IconButton, Pagination, Tooltip} from "@mui/material";
 import {CounterPartyAddressDialog} from "@/components/molecules/counter-party-address-dialog.tsx";
 import {useDebounce} from "@/hooks/use-debounce.ts";
 import DataOfferDialog from "@/components/organisms/data-offer-dialog";
 import DataOfferCard from "@/components/organisms/data-offer-card";
+import SearchIcon from "@mui/icons-material/Search";
+import {Button} from "@/components/atoms/button.tsx";
+import {ChevronLeft, ChevronRight} from "lucide-react";
 
 export default function CatalogPage() {
   const { connector } = useParticipantConnectorState();
-  const { offset, limit } = usePagination();
+  const { decrementPage, incrementPage, offset, limit, hasPrev } = usePagination();
   const { translator } = useTranslator();
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isCounterPartyAddressDialogOpen, setIsCounterPartyAddressDialogOpen] = useState(false);
 
+
+  const [shrinkSearch, setShrinkSearch] = useState(false);
+  const [searchValue, setSearchValue] = useState("") ;
+  const [searchValueToSearch, setSearchValueToSearch] = useState("") ;
+  const { debounce: debounceSetSearchValueToSearch } = useDebounce(setSearchValueToSearch);
   const [counterPartyAddress, setCounterPartyAddress] = useState("") ;
   const [counterPartyAddressToSearch, setCounterPartyAddressToSearch] = useState("") ;
   const { debounce: debouncedSetCounterPartyAddress } = useDebounce((url) => setCounterPartyAddressToSearch(url));
@@ -58,9 +66,35 @@ export default function CatalogPage() {
         onClose={() => setIsCounterPartyAddressDialogOpen(false)}
         content={counterPartyAddress}
       />
-      
+
       <SideDrawer title={<T string="catalog.title"/>}>
-        <div className="grid grid-cols-1 gap-x-3.5 py-4">
+        <div className="grid grid-cols-3 gap-x-3.5 py-4">
+          <div>
+            <Input
+              id="catalog-search"
+              fullWidth
+              data-testid="catalog-search"
+              type="text"
+              label={<T string="catalog.search"/>}
+              value={searchValue}
+              onFocus={() => setShrinkSearch(true)}
+              onBlur={(e) => setShrinkSearch(!!e.target.value)}
+              slotProps={{
+                input: {
+                  classes: {root: "flex-grow"},
+                  startAdornment: <SearchIcon className="mr-2"/>,
+                },
+                inputLabel: {
+                  shrink: shrinkSearch,
+                  className: shrinkSearch ? "" : "ml-7",
+                }
+              }}
+              onChange={(event) => {
+                setSearchValue(event.target.value);
+                debounceSetSearchValueToSearch(event.target.value);
+              }}
+            />
+          </div>
           <div>
             <Input
               id="catalog-url"
@@ -87,8 +121,20 @@ export default function CatalogPage() {
               }}
             />
           </div>
-          <div>
-            {/* TODO: move pagination here */}
+          <div className="flex justify-end items-center">
+            <div className="inline-flex float-right gap-x-2">
+              <IconButton
+                onClick={decrementPage}
+                disabled={!hasPrev}
+              >
+                <ChevronLeft className="size-6"/>
+              </IconButton>
+              <IconButton
+                onClick={incrementPage}
+              >
+                <ChevronRight className="size-6"/>
+              </IconButton>
+            </div>
           </div>
         </div>
         <ContractOffersList managementUrl={connector.managementUrl} counterPartyAddress={counterPartyAddressToSearch}>
@@ -99,9 +145,12 @@ export default function CatalogPage() {
               sortOrder="DESC"
             >
               {({item, index}) => (
-                <DataOfferCard asset={datasetToAsset(item) as Asset} key={index}
-                            onClick={() => openDetailsModal(datasetToAsset(item) as any, counterPartyAddress, datasetToContractDefinitions(item))}
-                            participantId={connector.id}/>
+                <DataOfferCard
+                  key={index}
+                  asset={datasetToAsset(item) as Asset}
+                  onClick={() => openDetailsModal(datasetToAsset(item) as any, counterPartyAddress, datasetToContractDefinitions(item))}
+                  participantId={connector.id}
+                />
               )}
             </ContractOffersList.Items>
           </div>

@@ -304,6 +304,7 @@ export const en = {
       connectorEndpoints: "Connector Endpoints",
       clickForDetails: "Click for details",
       fetchStatus: "Fetch Status",
+      search: "Search Catalog",
       otherConnectorEndpointCatalogs: "Other Connector Endpoint Catalogs",
       "[participant]": {
         title: "List contract offers for ",
