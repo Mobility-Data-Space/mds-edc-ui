@@ -5,8 +5,7 @@ import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
 import { Timestamp, TimestampProps } from "./timestamp";
 import { useViewContext, View } from "./view";
 
-export const usePolicyDefinitionContext = () =>
-  useViewContext<PolicyDefinition>();
+export const usePolicyDefinitionContext = () => useViewContext<PolicyDefinition>();
 
 interface PolicyDefinitionViewProps {
   id: string;
@@ -21,7 +20,12 @@ export function PolicyDefinitionView(
   });
 
   const get = useCallback(
-    () => client.management.policyDefinitions.get(id),
+    () => {
+      if (id != undefined)
+        return client.management.policyDefinitions.get(id)
+
+      return Promise.resolve(new PolicyDefinition())
+    },
     [client, id],
   );
 
@@ -58,7 +62,7 @@ PolicyDefinitionView.Policy = {
       };
     }, [children]);
 
-    <>
+    return (<>
       {!isLoading && item?.policy.obligations.map((item, index) => (
         <Item
           key={item}
@@ -66,7 +70,7 @@ PolicyDefinitionView.Policy = {
           index={index}
         />
       ))}
-    </>;
+    </>);
   },
   Permissions: function PolicyDefinitionViewPolicyPermissions(
     { children }: any,
@@ -79,7 +83,7 @@ PolicyDefinitionView.Policy = {
       };
     }, [children]);
 
-    <>
+    return (<>
       {!isLoading && item?.policy.permissions.map((item, index) => (
         <Item
           key={item}
@@ -87,7 +91,7 @@ PolicyDefinitionView.Policy = {
           index={index}
         />
       ))}
-    </>;
+    </>);
   },
   Prohibitions: function PolicyDefinitionViewPolicyProhibitions(
     { children }: any,
@@ -100,7 +104,7 @@ PolicyDefinitionView.Policy = {
       };
     }, [children]);
 
-    <>
+    return (<>
       {!isLoading && item?.policy.prohibitions.map((item, index) => (
         <Item
           key={item}
@@ -108,7 +112,7 @@ PolicyDefinitionView.Policy = {
           index={index}
         />
       ))}
-    </>;
+    </>);
   },
 };
 

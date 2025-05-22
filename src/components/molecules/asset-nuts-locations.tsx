@@ -1,17 +1,15 @@
 import React from "react";
 import {T} from "@/i18n";
-import {
-  ASSET_ADVANCED_INFO_NUTS_LOCATIONS,
-  CreateAssetAdvancedInfoFormData,
-} from "@/schema/asset.ts";
+import {ASSET_ADVANCED_INFO_NUTS_LOCATIONS} from "@/schema/asset.ts";
 import {IconButton, Tooltip} from "@mui/material";
 import {InfoOutlined} from "@mui/icons-material";
 import {KeyValuePairInputList} from "@/components/molecules/key-value-pair-input-list.tsx";
+import {AssetProperties} from "@/utilities/asset.ts";
 
 export interface AssetNutsLocationsProps {
   translator: (key: string) => string;
-  formData: CreateAssetAdvancedInfoFormData;
-  onChange: (formData: CreateAssetAdvancedInfoFormData) => void;
+  formData: AssetProperties;
+  onChange: (formData: AssetProperties) => void;
   errors: { [key: string]: boolean };
   required?: boolean;
 }

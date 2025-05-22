@@ -66,6 +66,11 @@ export function MultiTranslate(
 ): string {
   const { translator, globalTranslator } = useTranslator();
   const t = global ? globalTranslator : translator;
+
+  if(typeof string != "string"){
+    string = JSON.stringify(string)
+  }
+  
   const stringArray = string.split(delimiter);
   return stringArray.length === 1 ?
     t(string) :

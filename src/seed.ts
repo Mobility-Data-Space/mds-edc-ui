@@ -1,3 +1,4 @@
+/*
 import {
   Dataset,
   EdcConnectorClient,
@@ -524,7 +525,8 @@ async function main() {
                   // Transfer processes
                   await Promise.all([
                     (async () => {
-                      const client /*: EdcConnectorClient */ =
+                      // TYPE: EdcConnectorClient
+                      const client =
                         new EdcConnectorClient
                           .Builder()
                           .managementUrl(connector.managementUrl)
@@ -665,3 +667,4 @@ async function main() {
 main()
   .then(() => console.log("DONE"))
   .catch(console.error);
+*/

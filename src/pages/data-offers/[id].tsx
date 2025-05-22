@@ -1,35 +1,19 @@
 import { Button } from "@/components/atoms/button";
-import { ConnectorDashboard } from "@/components/templates/connector-dashboard";
+
 import {
   ContractDefinitionView,
   useContractDefinitionContext,
 } from "@think-it-labs/edc-connector-ui/contract-definition-view";
-import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-state";
+import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T } from "@/i18n";
 import { useRouter } from "next/router";
 import React from "react";
 import SideDrawer from "@/components/organisms/side-drawer.tsx";
-
-function DeleteContractDefinition() {
-  const { deleteItem } = useContractDefinitionContext();
-  const { push } = useRouter();
-
-  return (
-    <Button
-      variant="unstyled"
-      onClick={async () => {
-        await deleteItem();
-        push("/my-assets");
-      }}
-    >
-      Delete
-    </Button>
-  );
-}
+import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog.ts";
 
 export default function ContractDefinitionViewPage() {
   const id = useRouter().query.id as string;
-  const { connector } = useConnectorDashboardState();
+  const { connector } = useParticipantConnectorState();
   const managementUrl = connector?.managementUrl as string;
   return (
     <SideDrawer title={<T string="contractDefinitions.[id].title" />}>
@@ -37,18 +21,32 @@ export default function ContractDefinitionViewPage() {
         id={id}
         managementUrl={managementUrl}
       >
-        <ConnectorDashboard.Section>
-          <h3 className="text-lg font-bold text-gray-800">
-            <ContractDefinitionView.Id />
-          </h3>
-          <p className="mt-1 text-xs font-medium uppercase text-gray-500">
-            <ContractDefinitionView.CreatedAt />
-          </p>
-        </ConnectorDashboard.Section>
+        <ul>
+          <li className="mt-2">
+            <span className="font-bold"><T
+              string="contractDefinitions.[id].fieldId"/></span>: <ContractDefinitionView.AccessPolicy.Id/>
+          </li>
+          <li className="mt-2">
+            <span className="font-bold"><T
+              string="contractDefinitions.[id].fieldAccessPolicyId"/></span>: <ContractDefinitionView.AccessPolicy.Id/>
+          </li>
+          <li className="mt-2">
+            <span className="font-bold"><T
+              string="contractDefinitions.[id].fieldContractPolicyId"/></span>: <ContractDefinitionView.ContractPolicy.Id/>
+          </li>
+          <li className="mt-2">
+            <div className="flex gap-x-5">
 
-        <ConnectorDashboard.Section>
-          <DeleteContractDefinition />
-        </ConnectorDashboard.Section>
+            <span className="font-bold"><T
+              string="contractDefinitions.[id].fieldAssetSelector"/>: </span>
+              <ContractDefinitionView.AssetsSelector>
+                {({item}) => removeJsonLdSchemaFromProperties(item)?.map((constraint: any) =>
+                  (constraint.operandRight || constraint.rightOperand || [])[0]["@value"] || ""
+                )}
+              </ContractDefinitionView.AssetsSelector>
+            </div>
+          </li>
+        </ul>
       </ContractDefinitionView>
     </SideDrawer>
   );

@@ -1,5 +1,5 @@
-import { ContractAgreement, Policy } from "@think-it-labs/edc-connector-client";
-import React, { useMemo } from "react";
+import {ContractAgreement, JsonLdObject, Policy} from "@think-it-labs/edc-connector-client";
+import React, {ReactNode, useMemo} from "react";
 import { PropsWithChildren, useCallback } from "react";
 import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
 import { Local, useLocalContext } from "./local";
@@ -21,7 +21,12 @@ export function ContractAgreementView(
   });
 
   const get = useCallback(
-    () => client.management.contractAgreements.get(id),
+    () => {
+      if (id != undefined)
+        return client.management.contractAgreements.get(id)
+
+      return Promise.resolve(new ContractAgreement())
+    },
     [client, id],
   );
 
@@ -53,6 +58,21 @@ ContractAgreementView.ConsumerId = function ContractAgreementViewConsumerId() {
 ContractAgreementView.ProviderId = function ContractAgreementViewProviderId() {
   const { item } = useContractAgreementContext();
   return <>{item?.providerId}</>;
+};
+
+ContractAgreementView.Item = function ContractAgreementViewItem() {
+  const { item } = useContractAgreementContext();
+  return item;
+};
+
+ContractAgreementView.ContractSigningDate = function ContractAgreementViewContractSigningDate() {
+  const { item } = useContractAgreementContext();
+  return <>{item?.contractSigningDate && (new Date(item.contractSigningDate * 1000).toString())}</>;
+};
+
+ContractAgreementView.PolicyPermissions = function ContractAgreementViewContractSigningDate({ children }: { children: ({ item }: { item?: JsonLdObject[] }) => ReactNode }) {
+  const { item } = useContractAgreementContext();
+  return children({ item: item?.policy?.permissions });
 };
 
 ContractAgreementView.Loading = View.Loading;
@@ -87,7 +107,7 @@ ContractAgreementViewPolicy.Obbligations =
       };
     }, [children]);
 
-    <>
+    return (<>
       {item?.obligations.map((item, index) => (
         <Item
           key={item}
@@ -95,7 +115,7 @@ ContractAgreementViewPolicy.Obbligations =
           index={index}
         />
       ))}
-    </>;
+    </>);
   };
 
 ContractAgreementViewPolicy.Prohibitions =
@@ -110,7 +130,7 @@ ContractAgreementViewPolicy.Prohibitions =
       };
     }, [children]);
 
-    <>
+    return (<>
       {item?.prohibitions.map((item, index) => (
         <Item
           key={item}
@@ -118,7 +138,7 @@ ContractAgreementViewPolicy.Prohibitions =
           index={index}
         />
       ))}
-    </>;
+    </>);
   };
 
 ContractAgreementViewPolicy.Permissions =
@@ -133,7 +153,7 @@ ContractAgreementViewPolicy.Permissions =
       };
     }, [children]);
 
-    <>
+    return (<>
       {item?.permissions.map((item, index) => (
         <Item
           key={item}
@@ -141,7 +161,7 @@ ContractAgreementViewPolicy.Permissions =
           index={index}
         />
       ))}
-    </>;
+    </>);
   };
 
 ContractAgreementView.Policy = ContractAgreementViewPolicy;

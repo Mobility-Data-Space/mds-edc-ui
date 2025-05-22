@@ -1,15 +1,12 @@
 import React from "react";
-import {T} from "@/i18n";
-import {
-  ASSET_KEYWORDS,
-  CreateAssetPropertiesFormData,
-} from "@/schema/asset.ts";
+import {ASSET_KEYWORDS} from "@/schema/asset.ts";
 import {KeywordsInput} from "@/components/atoms/keywords-input.tsx";
+import {AssetProperties} from "@/utilities/asset.ts";
 
 export interface AssetKeywordsProps {
   translator: (key: string) => string;
-  formData: CreateAssetPropertiesFormData;
-  onChange: (formData: CreateAssetPropertiesFormData) => void;
+  formData: AssetProperties;
+  onChange: (formData: AssetProperties) => void;
   errors: { [key: string]: boolean };
   required?: boolean;
 }

@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
 
 const FIRST_PAGE = 0;
-const ITEMS = 10;
+const ITEMS = 25;
 
 export function usePagination() {
   const { query, route, push } = useRouter();

@@ -10,7 +10,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <TranslatorProvider>
       <JsonLdContextProvider
         additionalJsonLdContext={{
-          "purl": "http://purl.org/dc/terms/",
+          "dct": "http://purl.org/dc/terms/",
           "dcat": "http://www.w3.org/ns/dcat#",
         }}
       >

@@ -1,8 +1,8 @@
-import { ConnectorDashboard } from "@/components/templates/connector-dashboard";
+
 import {
   ContractNegotiationView,
 } from "@think-it-labs/edc-connector-ui/contract-negotiation-view";
-import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-state";
+import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T } from "@/i18n";
 import { useRouter } from "next/router";
 import React from "react";
@@ -10,33 +10,49 @@ import SideDrawer from "@/components/organisms/side-drawer.tsx";
 
 export default function ContractNegotiationViewPage() {
   const id = useRouter().query.id as string;
-  const { connector } = useConnectorDashboardState();
+  const { connector } = useParticipantConnectorState();
   const managementUrl = connector?.managementUrl as string;
+
   return (
     <SideDrawer title={<T string="contractNegotiations.[id].title" />}>
       <ContractNegotiationView
         id={id}
         managementUrl={managementUrl}
       >
-        <ConnectorDashboard.Section>
-          <ul className="marker:text-blue-600 list-disc ps-5 space-y-2 text-sm text-gray-600">
-            <li>
-              <T string="fieldId" />: <ContractNegotiationView.Id />
-            </li>
-            <li>
-              <T string="fieldContractAgreementId" />:{" "}
-              <ContractNegotiationView.ContractAgreementId />
-            </li>
-            <li>
-              <T string="fieldCounterPartyAddress" />:{" "}
-              <ContractNegotiationView.CounterPartyAddress />
-            </li>
-            <li>
-              <T string="fieldErrorDetail" />:{" "}
-              <ContractNegotiationView.ErrorDetail />
-            </li>
-          </ul>
-        </ConnectorDashboard.Section>
+        <ul>
+          <li className="mt-2">
+            <span className="font-bold"><T
+              string="contractNegotiations.[id].fieldId"/></span>: <ContractNegotiationView.Id/>
+          </li>
+          <li className="mt-2">
+            <span className="font-bold"><T
+              string="contractNegotiations.[id].fieldContractAgreementId"/></span>: <ContractNegotiationView.ContractAgreementId/>
+          </li>
+          <li className="mt-2">
+            <span className="font-bold"><T
+              string="contractNegotiations.[id].fieldCounterPartyAddress"/></span>: <ContractNegotiationView.CounterPartyAddress/>
+          </li>
+          <li className="mt-2">
+            <span className="font-bold"><T
+              string="contractNegotiations.[id].fieldCreatedAt"/></span>: <ContractNegotiationView.CreatedAt/>
+          </li>
+          <li className="mt-2">
+            <span className="font-bold"><T
+              string="contractNegotiations.[id].fieldCounterPartyId"/></span>: <ContractNegotiationView.CounterPartyId/>
+          </li>
+          <li className="mt-2">
+            <span className="font-bold"><T
+              string="contractNegotiations.[id].fieldProtocol"/></span>: <ContractNegotiationView.Protocol/>
+          </li>
+          <li className="mt-2">
+            <span className="font-bold"><T
+              string="contractNegotiations.[id].fieldState"/></span>: <ContractNegotiationView.State/>
+          </li>
+          <li className="mt-2">
+            <span className="font-bold"><T
+              string="contractNegotiations.[id].fieldType"/></span>: <ContractNegotiationView.Type/>
+          </li>
+        </ul>
       </ContractNegotiationView>
     </SideDrawer>
   );

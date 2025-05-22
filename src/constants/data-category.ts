@@ -1,9 +1,5 @@
 import {pascalCase} from "@/utilities/utilities.ts";
 
-export const CONTEXT_CAT = { prefix: "cat", value: "http://w3id.org/mds/data-categories#" };
-export const CONTEXT_SUB = { prefix: "sub", value: "http://w3id.org/mds/data-subcategories#" };
-export const CONTEXT_TMODE = { prefix: "tmode", value: "http://w3id.org/mds/transport-mode#" };
-
 export const TRAFFIC_INFORMATION = 'Traffic Information';
 export const ROADWORKS_AND_ROAD_CONDITIONS = 'Roadworks and Road Conditions';
 export const TRAFFIC_FLOW_INFORMATION = 'Traffic Flow Information';
@@ -76,21 +72,21 @@ export const SUBCATEGORIES = {
 
 export const DATA_CATEGORY_SELECT_DATA = Object.keys(SUBCATEGORIES).map(value => ({
   text: value,
-  value: `${CONTEXT_CAT.prefix}:${pascalCase(value)}`,
+  value: `${pascalCase(value)}`,
 }));
 
 const _DATA_SUBCATEGORIES_DATA: { [key: string]: {text: string, value: string}[] } = {};
 Object.entries(SUBCATEGORIES).forEach(([category, subCategories]) => {
-  _DATA_SUBCATEGORIES_DATA[`${CONTEXT_CAT.prefix}:${pascalCase(category)}`] = subCategories.map(subcategory => ({
+  _DATA_SUBCATEGORIES_DATA[`${pascalCase(category)}`] = subCategories.map(subcategory => ({
     text: subcategory,
-    value: `${CONTEXT_SUB.value}${pascalCase(subcategory)}`,
+    value: `${pascalCase(subcategory)}`,
   }))
 });
 export const DATA_SUBCATEGORIES_DATA = _DATA_SUBCATEGORIES_DATA;
 
 export const GEO_REFERENCE_DATA = [
-  { text: "Rail", value: `${CONTEXT_TMODE.prefix}:Rail` },
-  { text: "Road", value: `${CONTEXT_TMODE.prefix}:Road` },
-  { text: "Water", value: `${CONTEXT_TMODE.prefix}:Water` },
-  { text: "Air", value: `${CONTEXT_TMODE.prefix}:Air` },
+  { text: "Rail", value: `Rail` },
+  { text: "Road", value: `Road` },
+  { text: "Water", value: `Water` },
+  { text: "Air", value: `Air` },
 ];

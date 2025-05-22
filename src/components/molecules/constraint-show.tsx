@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import {Tooltip} from "@mui/material";
 import {useTranslator} from "@/i18n";
 import {dateToString} from "@/utilities/date.ts";
-import {operators} from "@/constants/constraints.ts";
+import {operators} from "@/utilities/constraints.ts";
 import {tryTranslatingWithTooltip} from "@/utilities/utilities.ts";
 
 interface ConstraintShowProps {
@@ -60,7 +60,7 @@ export function ConstraintShow({ data }: ConstraintShowProps): ReactNode {
     }
 
     if (typeof data !== 'object' || !data) {
-      return String(data);
+      return [null, undefined].indexOf(data) === -1 ? String(data) : "";
     }
 
     let html = [];

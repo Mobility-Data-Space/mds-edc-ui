@@ -5,7 +5,7 @@ export default function Document() {
   return (
     <Html lang="en" className="h-full">
       <Head />
-      <body className="flex h-full flex-col leading-relaxed antialiased">
+      <body className="flex h-full flex-col leading-relaxed antialiased" style={{ backgroundColor: "rgb(250, 250, 250)" }}>
         <Main/>
         <NextScript/>
         <Script src="/__ENV.js" />
