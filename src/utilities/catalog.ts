@@ -52,6 +52,11 @@ export const convertOdrlToJsonHtml = (processedJson: any, valueDelimiter = " "):
     return processedJson;
   }
 
+  if (!! processedJson["action"]) {
+    const value = processedJson["action"] && processedJson["action"][0] && processedJson["action"][0]["@id"];
+    return `Action${valueDelimiter}:${valueDelimiter}${value}`;
+  }
+
   if (
     !! processedJson.leftOperand &&
     !! processedJson.operator &&
@@ -59,9 +64,9 @@ export const convertOdrlToJsonHtml = (processedJson: any, valueDelimiter = " "):
     Object.keys(processedJson).length === 3
   ) {
     return [
-      processedJson.leftOperand,
-      processedJson.operator.toUpperCase(),
-      processedJson.rightOperand,
+      extractValue(processedJson.leftOperand),
+      extractValue(processedJson.operator).toUpperCase(),
+      extractValue(processedJson.rightOperand),
     ].join(valueDelimiter);
   }
 
@@ -74,3 +79,21 @@ export const convertOdrlToJsonHtml = (processedJson: any, valueDelimiter = " "):
   return htmlObject;
 };
 
+function extractValue(value: any) {
+  if (! Array.isArray(value)) {
+    if (typeof value === "object") {
+      return value["@id"] || value["@value"] || "";
+    }
+    return value || "";
+  }
+
+  const result = (value[0] && (value[0]["@id"] || value[0]["@value"])) || "";
+  const regex = /[/#]?([^/#]+)$/;
+  const match = regex.exec(result);
+
+  if (match && match[1]) {
+    return match[1];
+  }
+  return result;
+
+}

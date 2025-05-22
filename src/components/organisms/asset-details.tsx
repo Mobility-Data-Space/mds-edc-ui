@@ -30,6 +30,14 @@ interface AssetDetailsProps {
   assetIsOwned: boolean;
 }
 
+function getConstraints(contractDefinition: ContractDefinition) {
+  const cleanContractDefinition = removeJsonLdSchemaFromProperties(contractDefinition);
+  return convertOdrlToJsonHtml(
+    cleanContractDefinition?.permission?.constraint ||
+    cleanContractDefinition?.permission, ","
+  );
+}
+
 export default function AssetDetails({ asset, participantId, connectorEndpoint, contractDefinitions, assetIsOwned = true }: AssetDetailsProps) {
   const { connector } = useParticipantConnectorState() ;
   const { translator } = useTranslator();
@@ -119,8 +127,7 @@ export default function AssetDetails({ asset, participantId, connectorEndpoint, 
                       <T string="contractDefinitions.contractPolicy"/>
                     </Typography>
                     <div>
-                      <ConstraintShow
-                        data={convertOdrlToJsonHtml(removeJsonLdSchemaFromProperties(compactContractDefinitions)?.permission?.constraint, ",")}/>
+                      <ConstraintShow data={getConstraints(contractDefinition)}/>
                     </div>
                   </div>
                 </div>
