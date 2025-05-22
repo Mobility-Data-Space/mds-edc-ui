@@ -12,7 +12,7 @@ export default function ContractNegotiationViewPage() {
   const id = useRouter().query.id as string;
   const { connector } = useParticipantConnectorState();
   const managementUrl = connector?.managementUrl as string;
-  
+
   return (
     <SideDrawer title={<T string="contractNegotiations.[id].title" />}>
       <ContractNegotiationView
@@ -20,17 +20,37 @@ export default function ContractNegotiationViewPage() {
         managementUrl={managementUrl}
       >
         <ul>
-          <li>
-            <ContractNegotiationView.Id />
+          <li className="mt-2">
+            <span className="font-bold"><T
+              string="contractNegotiations.[id].fieldId"/></span>: <ContractNegotiationView.Id/>
           </li>
-          <li>
-            <ContractNegotiationView.ContractAgreementId />
+          <li className="mt-2">
+            <span className="font-bold"><T
+              string="contractNegotiations.[id].fieldContractAgreementId"/></span>: <ContractNegotiationView.ContractAgreementId/>
           </li>
-          <li>
-            <ContractNegotiationView.CounterPartyAddress />
+          <li className="mt-2">
+            <span className="font-bold"><T
+              string="contractNegotiations.[id].fieldCounterPartyAddress"/></span>: <ContractNegotiationView.CounterPartyAddress/>
           </li>
-          <li>
-            <ContractNegotiationView.ErrorDetail />
+          <li className="mt-2">
+            <span className="font-bold"><T
+              string="contractNegotiations.[id].fieldCreatedAt"/></span>: <ContractNegotiationView.CreatedAt/>
+          </li>
+          <li className="mt-2">
+            <span className="font-bold"><T
+              string="contractNegotiations.[id].fieldCounterPartyId"/></span>: <ContractNegotiationView.CounterPartyId/>
+          </li>
+          <li className="mt-2">
+            <span className="font-bold"><T
+              string="contractNegotiations.[id].fieldProtocol"/></span>: <ContractNegotiationView.Protocol/>
+          </li>
+          <li className="mt-2">
+            <span className="font-bold"><T
+              string="contractNegotiations.[id].fieldState"/></span>: <ContractNegotiationView.State/>
+          </li>
+          <li className="mt-2">
+            <span className="font-bold"><T
+              string="contractNegotiations.[id].fieldType"/></span>: <ContractNegotiationView.Type/>
           </li>
         </ul>
       </ContractNegotiationView>
