@@ -102,6 +102,7 @@ const customDefault: BaseDataAddress = {
 export const defaultCreateAssetFormData: AssetInput = {
   "@id": "",
   properties: {
+    "@id": "",
     [ASSET_TITLE]: "",
     [ASSET_VERSION]: "",
     [ASSET_DESCRIPTION]: "",
