@@ -74,7 +74,7 @@ export const ASSET_DATA_ADDRESS_HTTP_HEADERS = "headers"
 export const ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD = "proxyMethod"
 export const ASSET_DATA_ADDRESS_HTTP_PROXY_PATH = "proxyPath"
 
-export const ASSET_DATA_ADDRESS_HTTP_AUTH_ADD_HEADER: string = ""
+export const ASSET_DATA_ADDRESS_HTTP_AUTH_ADD_HEADER: string = "httpAuthAddHeader"
 export const ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE = "authType"
 export const ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_VALUE = "Value"
 export const ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_NONE = ""
