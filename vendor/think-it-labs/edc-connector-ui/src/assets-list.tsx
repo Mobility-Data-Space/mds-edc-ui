@@ -37,7 +37,7 @@ export function AssetsList({
     <List<Asset>
       queryAll={queryAll}
       delete={del}
-      getId={(asset: Asset) => asset.id}
+      getId={(asset: Asset) => asset["@id"]}
       managementUrl={managementUrl}
     >
       {children}
