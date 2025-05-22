@@ -1,5 +1,3 @@
-import { Button } from "@/components/atoms/button";
-
 import {
   PolicyDefinitionView,
   usePolicyDefinitionContext,
@@ -10,22 +8,28 @@ import { T } from "@/i18n";
 import { useRouter } from "next/router";
 import React from "react";
 import SideDrawer from "@/components/organisms/side-drawer.tsx";
-import { List } from "@think-it-labs/edc-connector-ui/list";
+import {convertOdrlToJsonHtml, removeJsonLdSchemaFromProperties} from "@/utilities/catalog.ts";
+import {ConstraintShow} from "@/components/molecules/constraint-show.tsx";
+import {Constraint} from "@think-it-labs/edc-connector-client";
+import {Button} from "@mui/material";
 
 function DeletePolicyDefinition() {
   const { deleteItem } = usePolicyDefinitionContext();
   const { push } = useRouter();
 
   return (
-    <Button
-      variant="unstyled"
-      onClick={async () => {
-        await deleteItem();
-        push("/policy-definitions");
-      }}
-    >
-      Delete
-    </Button>
+    <div>
+      <Button
+        variant="contained"
+        color="error"
+        onClick={async () => {
+          await deleteItem();
+          push("/policy-definitions");
+        }}
+      >
+        Delete
+      </Button>
+    </div>
   );
 }
 
@@ -41,22 +45,21 @@ export default function PolicyDefinitionPage() {
         id={id}
         managementUrl={managementUrl}
       >
-        <h3 className="text-lg font-bold text-gray-800">
-          <PolicyDefinitionView.Id />
-        </h3>
-        <p className="mt-1 text-xs font-medium uppercase text-gray-500">
-          <PolicyDefinitionView.CreatedAt />
-        </p>
-        <p className="mt-1 text-xs font-medium uppercase text-gray-500">
-          <PolicyDefinitionView.Policy.Permissions>
-            {() => {
-              (
-                <p>Permission</p>
-              )
-            }}
-          </PolicyDefinitionView.Policy.Permissions>
-        </p>
-        <DeletePolicyDefinition />
+        <div className="flex flex-col gap-y-4">
+          <h3 className="text-lg font-bold text-gray-800">
+            <PolicyDefinitionView.Id/>
+          </h3>
+          <p className="mt-1 text-xs font-medium uppercase text-gray-500">
+            <PolicyDefinitionView.CreatedAt/>
+          </p>
+          <p className="mt-1 text-xs font-medium text-gray-500">
+            <PolicyDefinitionView.Policy.Permissions>
+              {({ item }: { item: Constraint }) => <ConstraintShow
+                  data={convertOdrlToJsonHtml(removeJsonLdSchemaFromProperties(item)?.constraint, ",")}
+              />}
+            </PolicyDefinitionView.Policy.Permissions>
+          </p>
+        </div>
       </PolicyDefinitionView>
     </SideDrawer>
   );
