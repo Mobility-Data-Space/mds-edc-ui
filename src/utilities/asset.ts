@@ -1,14 +1,15 @@
 import {removeEmptyFields} from "@/utilities/form.ts";
-import {DATA_ADDRESS_TYPE_CUSTOM, DATA_ADDRESS_TYPE_HTTP, DATA_OFFER_TYPE_DATA_SOURCE, DATA_OFFER_TYPE_ON_REQUEST} from "@/constants/data-address-types.ts";
+import {ASSET_DATA_ADDRESS_BASE_URL, ASSET_DATA_ADDRESS_DESCRIPTION, ASSET_DATA_ADDRESS_ENABLE_BODY_PARAMETERIZATION, ASSET_DATA_ADDRESS_HTTP_AUTH_ADD_HEADER, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_NAME, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_NONE, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_VAULT_SECRET, ASSET_DATA_ADDRESS_HTTP_HEADERS, ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD, ASSET_DATA_ADDRESS_HTTP_PROXY_PATH, ASSET_DATA_ADDRESS_QUERY_PARAMS, DATA_ADDRESS_TYPE_CUSTOM, DATA_ADDRESS_TYPE_HTTP, DATA_OFFER_CONTACT_EMAIL, DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT, DATA_OFFER_TYPE_DATA_SOURCE, DATA_OFFER_TYPE_ON_REQUEST} from "@/constants/data-address-types.ts";
 import {Asset, AssetInput, BaseDataAddress, DataAddress, HttpDataAddress} from "@think-it-labs/edc-connector-client";
 import {AssetFieldShowProps} from "@/components/molecules/asset-field-show.tsx";
 import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
 import {ENGLISH_SELECT_DATA, LANGUAGES} from "@/constants/languages.ts";
 import {DELIMITER} from "@/i18n";
 import {extractArrayValues} from "@/utilities/utilities.ts";
-import {ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE, ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY, ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY, ASSET_ADVANCED_INFO_GEO_LOCATION, ASSET_ADVANCED_INFO_GEO_REFERENCE_METHOD, ASSET_ADVANCED_INFO_NUTS_LOCATIONS, ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION, ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS, ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE, ASSET_ADVANCED_INFO_TRANSPORT_MODE, ASSET_CONTENT_TYPE, ASSET_DATA_ADDRESS_BASE_URL, ASSET_DATA_ADDRESS_DESCRIPTION, ASSET_DATA_ADDRESS_ENABLE_BODY_PARAMETERIZATION, ASSET_DATA_ADDRESS_ENABLE_QUERY_PARAMETERIZATION, ASSET_DATA_ADDRESS_HTTP_AUTH_ADD_HEADER, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_NAME, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_NONE, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_VAULT_SECRET, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_VALUE, ASSET_DATA_ADDRESS_HTTP_HEADERS, ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD, ASSET_DATA_ADDRESS_HTTP_PROXY_PATH, ASSET_DATA_ADDRESS_METHOD, ASSET_DATA_ADDRESS_QUERY_PARAMS, ASSET_DATA_ADDRESS_TYPE, ASSET_DESCRIPTION, ASSET_ENDPOINT_DOCUMENTATION, ASSET_KEYWORDS, ASSET_LANGUAGE, ASSET_PUBLISHER, ASSET_STANDARD_LICENSE, ASSET_TITLE, ASSET_VERSION, DATA_OFFER_CONSTRAINTS, DATA_OFFER_CONTACT_EMAIL, DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT, DATA_OFFER_PUBLISH_MODE, DATA_OFFER_TYPE} from "@/schema/asset.ts";
+import {ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE, ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY, ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY, ASSET_ADVANCED_INFO_GEO_LOCATION, ASSET_ADVANCED_INFO_GEO_REFERENCE_METHOD, ASSET_ADVANCED_INFO_NUTS_LOCATIONS, ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION, ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS, ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE, ASSET_ADVANCED_INFO_TRANSPORT_MODE, ASSET_CONTENT_TYPE, ASSET_DESCRIPTION, ASSET_ENDPOINT_DOCUMENTATION, ASSET_KEYWORDS, ASSET_LANGUAGE, ASSET_PUBLISHER, ASSET_STANDARD_LICENSE, ASSET_TITLE, ASSET_VERSION} from "@/schema/asset.ts";
 
 const temporalCoverageValue = ([start, end]: [string, string]) => {
+  console.log(start, end)
   if (!start && !end) {
     return "";
   }
@@ -26,13 +27,13 @@ const temporalCoverageValue = ([start, end]: [string, string]) => {
 
 export const computeRequiredDataOfferAddressProperties = (formData: DataAddress): (keyof DataAddress)[] => {
   const required: (keyof DataAddress)[] = [];
-  if (formData[DATA_OFFER_TYPE] === DATA_OFFER_TYPE_DATA_SOURCE.value) {
-    if (formData[ASSET_DATA_ADDRESS_TYPE] === DATA_ADDRESS_TYPE_HTTP.value) {
+  if (formData.type === DATA_OFFER_TYPE_DATA_SOURCE.value) {
+    if (formData.type === DATA_ADDRESS_TYPE_HTTP.value) {
       required.push(ASSET_DATA_ADDRESS_BASE_URL);
-    } else if (formData[ASSET_DATA_ADDRESS_TYPE] === DATA_ADDRESS_TYPE_CUSTOM.value) {
+    } else if (formData.type === DATA_ADDRESS_TYPE_CUSTOM.value) {
       required.push(ASSET_DATA_ADDRESS_DESCRIPTION);
     }
-  } else if (formData[DATA_OFFER_TYPE] === DATA_OFFER_TYPE_ON_REQUEST.value) {
+  } else if (formData.type === DATA_OFFER_TYPE_ON_REQUEST.value) {
     required.push(DATA_OFFER_CONTACT_EMAIL, DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT);
   }
 
@@ -41,9 +42,9 @@ export const computeRequiredDataOfferAddressProperties = (formData: DataAddress)
 
 export const computeRequiredDataAddressProperties = (formData: DataAddress): (keyof DataAddress)[] => {
   const required: (keyof DataAddress)[] = [];
-  if (formData[ASSET_DATA_ADDRESS_TYPE] === DATA_ADDRESS_TYPE_HTTP.value) {
+  if (formData.type === DATA_ADDRESS_TYPE_HTTP.value) {
     required.push(ASSET_DATA_ADDRESS_BASE_URL);
-  } else if (formData[ASSET_DATA_ADDRESS_TYPE] === DATA_ADDRESS_TYPE_CUSTOM.value) {
+  } else if (formData.type === DATA_ADDRESS_TYPE_CUSTOM.value) {
     required.push(ASSET_DATA_ADDRESS_DESCRIPTION);
   }
 
@@ -53,6 +54,9 @@ export const computeRequiredDataAddressProperties = (formData: DataAddress): (ke
 export const fromAssetForm = (formData: AssetInput) => {
   console.log("Pre Clean")
   console.log(formData)
+  formData["@id"] = formData.properties["@id"];
+  formData.properties["@id"] = "" ;
+
   const cleanFormDataObject = removeEmptyFields(formData);
   console.log("Post Clean")
   console.log(cleanFormDataObject)
@@ -60,9 +64,7 @@ export const fromAssetForm = (formData: AssetInput) => {
   return {
     "@type": "https://w3id.org/edc/v0.0.1/ns/Asset",
     "@id": cleanFormDataObject["@id"],
-    properties: {
-      [ASSET_ADVANCED_INFO_DATA_CATEGORY]: cleanFormDataObject.properties[ASSET_ADVANCED_INFO_DATA_CATEGORY]
-    },
+    properties: cleanFormDataObject.properties,
     privateProperties: cleanFormDataObject.privateProperties,
     dataAddress: cleanFormDataObject.dataAddress
   };
@@ -70,29 +72,31 @@ export const fromAssetForm = (formData: AssetInput) => {
 
 const httpDefault: HttpDataAddress = {
   type: "HttpData",
+  name: "",
+  path: "",
+  method: "GET",
+  baseUrl: "",
+  authKey: "",
+  authCode: "",
+  proxyBody: "",
+  proxyPath: "",
+  proxyQueryParams: "",
+  proxyMethod: "false",
+  contentType: "",
   [ASSET_DATA_ADDRESS_DESCRIPTION]: "",
-  [ASSET_DATA_ADDRESS_METHOD]: "GET",
-  [ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD]: false,
-  [ASSET_DATA_ADDRESS_BASE_URL]: "",
-  [ASSET_DATA_ADDRESS_HTTP_PROXY_PATH]: "",
   [ASSET_DATA_ADDRESS_QUERY_PARAMS]: [],
-  [ASSET_DATA_ADDRESS_ENABLE_QUERY_PARAMETERIZATION]: false,
   [ASSET_DATA_ADDRESS_ENABLE_BODY_PARAMETERIZATION]: false,
   [ASSET_DATA_ADDRESS_HTTP_HEADERS]: [],
   [ASSET_DATA_ADDRESS_HTTP_AUTH_ADD_HEADER]: ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_NONE,
   [ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE]: ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_VAULT_SECRET,
-  [ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_NAME]: "",
-  [ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_VALUE]: "",
-  [DATA_OFFER_TYPE]: "",
   [DATA_OFFER_CONTACT_EMAIL]: "",
   [DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT]: "",
 } ;
 
 const customDefault: BaseDataAddress = {
-  type: "",
-  [DATA_OFFER_TYPE]: "",
-  [DATA_OFFER_CONTACT_EMAIL]: "",
-  [DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT]: "",
+  type: "OnRequestOffer",
+  email: "",
+  preferred_email_subject: "",
 } ;
 
 export const defaultCreateAssetFormData: AssetInput = {
@@ -107,8 +111,6 @@ export const defaultCreateAssetFormData: AssetInput = {
     [ASSET_ENDPOINT_DOCUMENTATION]: "",
     [ASSET_PUBLISHER]: "",
     [ASSET_STANDARD_LICENSE]: "",
-    [DATA_OFFER_PUBLISH_MODE]: "",
-    [DATA_OFFER_CONSTRAINTS]: [] as any[],
 
     [ASSET_ADVANCED_INFO_DATA_CATEGORY]: "",
     [ASSET_ADVANCED_INFO_DATA_SUBCATEGORY]: "",
@@ -130,6 +132,7 @@ export const defaultCreateAssetFormData: AssetInput = {
 };
 
 export type AssetProperties = typeof defaultCreateAssetFormData.properties;
+
 const assetGeneralFieldsToShow = (asset: Asset, participantId: string, connectorEndpoint: string): AssetFieldShowProps[] => {
   const assetLanguage = readValue(asset.properties, ASSET_LANGUAGE);
 
@@ -293,10 +296,11 @@ const assetAdvancedFieldsToShow = (asset: Asset): AssetFieldShowProps[] => {
   }
   const temporalCoverage = readValue(asset.properties, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE);
   if (temporalCoverage) {
+    console.log(typeof temporalCoverage)
     advancedFields.push({
       icon: 'today',
       label: 'assets.new.fieldAdvancedInfoTemporalCoverage',
-      value: temporalCoverageValue(temporalCoverage.map((date: { "@value": string }) => date["@value"])),
+      value: temporalCoverageValue([temporalCoverage, temporalCoverage]),
     });
   }
 

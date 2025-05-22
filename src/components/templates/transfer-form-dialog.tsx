@@ -3,17 +3,15 @@ import {Dialog, DialogActions, DialogContent, DialogTitle, FormHelperText} from 
 import {T} from "@/i18n";
 import {Input} from "../atoms/input.tsx";
 import {MuiSelect} from "../atoms/mui-select.tsx";
-import {DATA_ADDRESS_TYPE_DATASINK, DATA_ADDRESS_TYPE_HTTP, DATA_ADDRESS_TYPE_TRANSFER_PROCESS, DATA_TRANSFER_TYPE
+import {ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_NAME, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_SELECT_OPTIONS, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_VAULT_SECRET, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_VALUE, ASSET_DATA_ADDRESS_HTTP_HEADERS, DATA_ADDRESS_TYPE_DATASINK, DATA_ADDRESS_TYPE_HTTP, DATA_ADDRESS_TYPE_TRANSFER_PROCESS, DATA_TRANSFER_TYPE
 } from "@/constants/data-address-types.ts";
 import {RadioButton} from "@/components/atoms/radio-button.tsx";
 import {KeyValuePairInputList} from "@/components/molecules/key-value-pair-input-list.tsx";
-import {ASSET_DATA_ADDRESS_ENABLE_QUERY_PARAMETERIZATION, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_SELECT_OPTIONS,ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_VAULT_SECRET} from "@/schema/asset.ts";
 import {theme} from "@/theme/ThemeProvider.tsx";
 import Typography from "@mui/material/Typography";
-import {TRANSFER_PROCESS_DATA_ADDRESS_TYPE, TRANSFER_PROCESS_DATA_DESTINATION, TRANSFER_PROCESS_HTTP_AUTH_HEADER_NAME, TRANSFER_PROCESS_HTTP_AUTH_HEADER_TYPE, TRANSFER_PROCESS_HTTP_AUTH_HEADER_VALUE, TRANSFER_PROCESS_HTTP_HEADERS, TRANSFER_PROCESS_HTTP_METHOD, TRANSFER_PROCESS_HTTP_PROXIED_BODY, TRANSFER_PROCESS_HTTP_PROXIED_BODY_CONTENT_TYPE, TRANSFER_PROCESS_HTTP_PROXIED_METHOD, TRANSFER_PROCESS_HTTP_PROXIED_PATH, TRANSFER_PROCESS_HTTP_PROXIED_QUERY_PARAMS, TRANSFER_PROCESS_HTTP_SHOW_AUTH_HEADER, TRANSFER_PROCESS_HTTP_URL, TRANSFER_PROCESS_SHOW_ALL_HTTP_PARAMETERIZATION_FIELDS} from "@/schema/transfer-process.ts";
-import {ContractAgreement, DataAddress, PolicyBuilder} from "@think-it-labs/edc-connector-client";
+import {ContractAgreement, DataAddress} from "@think-it-labs/edc-connector-client";
 import {ContractAgreementView} from "@think-it-labs/edc-connector-ui/contract-agreement-view.tsx";
-import {createTransferProcessRequest, defaultDataDestination} from "@/utilities/transfer-process.ts";
+import {createTransferProcessRequest, defaultDataDestination, TRANSFER_PROCESS_HTTP_SHOW_AUTH_HEADER, TRANSFER_PROCESS_SHOW_ALL_HTTP_PARAMETERIZATION_FIELDS} from "@/utilities/transfer-process.ts";
 import Button from "@mui/material/Button";
 import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
 import {enqueueSnackbar} from "notistack";
@@ -29,7 +27,7 @@ export interface TransferFormDialogProps {
 export function TransferFormDialog({ isOpen, onClose, translator }: TransferFormDialogProps): JSX.Element {
   const [formData, setFormData] = useState<DataAddress>(defaultDataDestination);
 
-  const [errors, setErrors] = useState<any>({});
+  const [errors, setErrors] = useState<DataAddress>({} as DataAddress);
   const contractAgreement = removeJsonLdSchemaFromProperties(ContractAgreementView.Item());
   
   const { connector } = useParticipantConnectorState();
@@ -70,38 +68,38 @@ export function TransferFormDialog({ isOpen, onClose, translator }: TransferForm
               <T string="assets.new.fieldDataAddressType"/>
             </label>
             <MuiSelect
-              name={TRANSFER_PROCESS_DATA_ADDRESS_TYPE}
+              name="data-address-type"
               id="data-address-type"
               label={translator("assets.new.fieldDataAddressType")}
               options={DATA_TRANSFER_TYPE}
-              error={errors[TRANSFER_PROCESS_DATA_ADDRESS_TYPE]}
-              value={formData[TRANSFER_PROCESS_DATA_ADDRESS_TYPE]}
-              onChange={(event) => setFormData({...formData, [TRANSFER_PROCESS_DATA_ADDRESS_TYPE]: event.target.value})}
+              error={errors["TRANSFER_PROCESS_DATA_ADDRESS_TYPE"]}
+              value={formData.type}
+              onChange={(event) => setFormData({...formData, type: event.target.value})}
             />
           </div>
 
-          {[DATA_ADDRESS_TYPE_DATASINK.value, DATA_ADDRESS_TYPE_TRANSFER_PROCESS.value].includes(formData[TRANSFER_PROCESS_DATA_ADDRESS_TYPE]) &&
+          {[DATA_ADDRESS_TYPE_DATASINK.value, DATA_ADDRESS_TYPE_TRANSFER_PROCESS.value].includes(formData.type) &&
             <Input
-              name={TRANSFER_PROCESS_DATA_DESTINATION}
+              name="properties-description"
               id="properties-description"
               key="properties-description"
               multiline
               rows={2}
-              label={DATA_TRANSFER_TYPE.find(option => option.value === formData[TRANSFER_PROCESS_DATA_ADDRESS_TYPE])?.text}
+              label={DATA_TRANSFER_TYPE.find(option => option.value === formData.type)?.text}
               placeholder={'{}'}
               required
-              helperText={typeof errors[TRANSFER_PROCESS_DATA_DESTINATION] === "string" ? errors[TRANSFER_PROCESS_DATA_DESTINATION] : ""}
+              helperText={typeof errors["TRANSFER_PROCESS_DATA_DESTINATION"] === "string" ? errors["TRANSFER_PROCESS_DATA_DESTINATION"] : ""}
               classes={{textField: {'& p': {color: theme.palette.error.main}}} as any}
-              error={errors[TRANSFER_PROCESS_DATA_DESTINATION]}
-              value={formData[TRANSFER_PROCESS_DATA_DESTINATION]}
-              onChange={(event) => setFormData({...formData, [TRANSFER_PROCESS_DATA_DESTINATION]: event.target.value})}
+              error={errors["TRANSFER_PROCESS_DATA_DESTINATION"]}
+              value={formData.description}
+              onChange={(event) => setFormData({...formData, description: event.target.value})}
             />
           }
-          {formData[TRANSFER_PROCESS_DATA_ADDRESS_TYPE] === DATA_ADDRESS_TYPE_HTTP.value &&
+          {formData.type === DATA_ADDRESS_TYPE_HTTP.value &&
             <>
               <div className="flex gap-x-3">
                 <MuiSelect
-                  name={TRANSFER_PROCESS_HTTP_METHOD}
+                  name="data-address-method"
                   id="data-address-method"
                   label={translator("assets.new.fieldDataAddressMethod")}
                   options={[
@@ -111,21 +109,21 @@ export function TransferFormDialog({ isOpen, onClose, translator }: TransferForm
                     {value: "DELETE"},
                     {value: "OPTIONS"},
                   ]}
-                  error={errors[TRANSFER_PROCESS_HTTP_METHOD]}
-                  value={formData[TRANSFER_PROCESS_HTTP_METHOD]}
-                  onChange={(event) => setFormData({...formData, [TRANSFER_PROCESS_HTTP_METHOD]: event.target.value})}
+                  error={errors["TRANSFER_PROCESS_HTTP_METHOD"]}
+                  value={formData.method}
+                  onChange={(event) => setFormData({...formData, method: event.target.value})}
                 />
                 <Input
-                  name={TRANSFER_PROCESS_HTTP_URL}
+                  name="data-address-base-url"
                   id="data-address-base-url"
                   data-testid="data-address-base-url"
                   type="url"
                   required
                   placeholder={"https://"}
                   label={translator("assets.new.fieldDataAddressUrl")}
-                  error={errors[TRANSFER_PROCESS_HTTP_URL]}
-                  value={formData[TRANSFER_PROCESS_HTTP_URL]}
-                  onChange={(event) => setFormData({...formData, [TRANSFER_PROCESS_HTTP_URL]: event.target.value})}
+                  error={errors["TRANSFER_PROCESS_HTTP_URL"]}
+                  value={formData.baseUrl}
+                  onChange={(event) => setFormData({...formData, baseUrl: event.target.value})}
                 />
               </div>
 
@@ -136,51 +134,51 @@ export function TransferFormDialog({ isOpen, onClose, translator }: TransferForm
                 >
                   <T string="assets.new.fieldDataAddressHeaderAuth"/>
                 </label>
-                {formData[TRANSFER_PROCESS_HTTP_SHOW_AUTH_HEADER] && <>
+                {formData["TRANSFER_PROCESS_HTTP_SHOW_AUTH_HEADER"] && <>
                   <MuiSelect
-                    name={TRANSFER_PROCESS_HTTP_AUTH_HEADER_TYPE}
+                    name="transfer-process-http-headers"
                     label={translator("assets.new.fieldDataAddressType")}
                     options={ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_SELECT_OPTIONS.map(option => ({
                       value: option.value,
                       text: translator(option.text)
                     }))}
-                    error={errors[TRANSFER_PROCESS_HTTP_AUTH_HEADER_TYPE]}
-                    value={formData[TRANSFER_PROCESS_HTTP_AUTH_HEADER_TYPE]}
+                    error={errors["TRANSFER_PROCESS_HTTP_AUTH_HEADER_TYPE"]}
+                    value={formData[ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE]}
                     onChange={(event) => setFormData({
                       ...formData,
-                      [TRANSFER_PROCESS_HTTP_AUTH_HEADER_TYPE]: event.target.value
+                      [ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE]: event.target.value
                     })}
                   />
 
                   <div className="grid sm:grid-cols-3 gap-2 w-full">
                     <Input
                       className="sm:col-span-1"
-                      name={TRANSFER_PROCESS_HTTP_AUTH_HEADER_NAME}
+                      name="transfer-process-http-header-name"
                       id="properties-publisher"
                       type="text"
                       label={<T string="assets.new.fieldDataAddressAuthHeaderName"/>}
                       placeholder={translator("assets.new.fieldDataAddressAuthHeaderNamePlaceholder")}
-                      value={formData[TRANSFER_PROCESS_HTTP_AUTH_HEADER_NAME]}
-                      error={errors[TRANSFER_PROCESS_HTTP_AUTH_HEADER_NAME]}
+                      value={formData[ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_NAME]}
+                      error={errors["ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_NAME"]}
                       onChange={(event) => setFormData({
                         ...formData,
-                        [TRANSFER_PROCESS_HTTP_AUTH_HEADER_NAME]: event.target.value
+                        [ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_NAME]: event.target.value
                       })}
                     />
 
                     <Input
                       className="sm:col-span-2"
-                      name={TRANSFER_PROCESS_HTTP_AUTH_HEADER_VALUE}
+                      name="transfer-process-http-header-value"
                       id="properties-standard-license"
                       type="text"
                       label={<T
-                        string={formData[TRANSFER_PROCESS_HTTP_AUTH_HEADER_TYPE] === ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_VAULT_SECRET ? "assets.new.fieldDataAddressAuthHeaderVaultValue" : "assets.new.fieldDataAddressAuthHeaderValue"}/>}
-                      placeholder={formData[TRANSFER_PROCESS_HTTP_AUTH_HEADER_TYPE] === ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_VAULT_SECRET ? "Mysecret123" : "Bearer ..."}
-                      value={formData[TRANSFER_PROCESS_HTTP_AUTH_HEADER_VALUE]}
-                      error={errors[TRANSFER_PROCESS_HTTP_AUTH_HEADER_VALUE]}
+                        string={formData[ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE] === ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_VAULT_SECRET ? "assets.new.fieldDataAddressAuthHeaderVaultValue" : "assets.new.fieldDataAddressAuthHeaderValue"}/>}
+                      placeholder={formData[ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE] === ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_VAULT_SECRET ? "Mysecret123" : "Bearer ..."}
+                      value={formData[ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_VALUE]}
+                      error={errors[ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_VALUE]}
                       onChange={(event) => setFormData({
                         ...formData,
-                        [TRANSFER_PROCESS_HTTP_AUTH_HEADER_VALUE]: event.target.value
+                        [ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_VALUE]: event.target.value
                       })}
                     />
                   </div>
@@ -210,24 +208,24 @@ export function TransferFormDialog({ isOpen, onClose, translator }: TransferForm
                   keyPlaceholder={translator("assets.new.fieldDataAddressHttpHeaderNamePlaceholder")}
                   valueLabel={translator("assets.new.fieldDataAddressHttpHeaderValue")}
                   valuePlaceholder={"..."}
-                  name={TRANSFER_PROCESS_HTTP_HEADERS}
+                  name="data-address-http-headers"
                   id="data-address-http-headers"
                   type="text"
                   required
-                  error={errors[TRANSFER_PROCESS_HTTP_HEADERS]}
-                  value={formData[TRANSFER_PROCESS_HTTP_HEADERS] as [] || []}
-                  onChange={(value) => setFormData({...formData, [TRANSFER_PROCESS_HTTP_HEADERS]: value})}
+                  error={errors[ASSET_DATA_ADDRESS_HTTP_HEADERS]}
+                  value={formData[ASSET_DATA_ADDRESS_HTTP_HEADERS] as [] || []}
+                  onChange={(value) => setFormData({...formData, [ASSET_DATA_ADDRESS_HTTP_HEADERS]: value})}
                 />
               </div>
             </>
           }
-          {[DATA_ADDRESS_TYPE_HTTP.value, DATA_ADDRESS_TYPE_DATASINK.value].includes(formData[TRANSFER_PROCESS_DATA_ADDRESS_TYPE]) &&
+          {[DATA_ADDRESS_TYPE_HTTP.value, DATA_ADDRESS_TYPE_DATASINK.value].includes(formData.type) &&
             <>
               {formData[TRANSFER_PROCESS_SHOW_ALL_HTTP_PARAMETERIZATION_FIELDS] ?
                 <div className="flex flex-col gap-y-6">
                   <div className="flex gap-x-3">
                     <MuiSelect
-                      name={TRANSFER_PROCESS_HTTP_PROXIED_METHOD}
+                      name="data-address-method"
                       id="data-address-method"
                       label={translator("transferProcesses.new.customMethod")}
                       options={[
@@ -240,33 +238,33 @@ export function TransferFormDialog({ isOpen, onClose, translator }: TransferForm
                       ]}
                       required
                       helperText={<T string="transferProcesses.new.requireProxyBodyTrue"/>}
-                      error={errors[TRANSFER_PROCESS_HTTP_PROXIED_METHOD]}
-                      value={formData[TRANSFER_PROCESS_HTTP_PROXIED_METHOD]}
+                      error={errors["TRANSFER_PROCESS_HTTP_PROXIED_METHOD"]}
+                      value={formData.proxyMethod}
                       onChange={(event) => setFormData({
                         ...formData,
-                        [TRANSFER_PROCESS_HTTP_PROXIED_METHOD]: event.target.value
+                        proxyMethod: event.target.value
                       })}
                     />
                     <Input
-                      name={TRANSFER_PROCESS_HTTP_PROXIED_PATH}
+                      name="data-address-base-url"
                       id="data-address-base-url"
                       data-testid="data-address-base-url"
                       type="url"
                       placeholder={"sub-path/endpoint"}
                       label={translator("transferProcesses.new.customSubpath")}
                       helperText={<T string="transferProcesses.new.requireProxyBodyTrue"/>}
-                      error={errors[TRANSFER_PROCESS_HTTP_PROXIED_PATH]}
-                      value={formData[TRANSFER_PROCESS_HTTP_PROXIED_PATH]}
+                      error={errors["TRANSFER_PROCESS_HTTP_PROXIED_PATH"]}
+                      value={formData.proxyPath}
                       onChange={(event) => setFormData({
                         ...formData,
-                        [TRANSFER_PROCESS_HTTP_PROXIED_PATH]: event.target.value
+                        proxyPath: event.target.value
                       })}
                     />
                   </div>
 
                   <div className="flex flex-col gap-y-5 items-start">
                     <KeyValuePairInputList
-                      name={TRANSFER_PROCESS_HTTP_PROXIED_QUERY_PARAMS}
+                      name="data-address-query-params"
                       id="data-address-query-params"
                       type="text"
                       label={translator("assets.new.fieldDataAddressQueryParams")}
@@ -275,29 +273,29 @@ export function TransferFormDialog({ isOpen, onClose, translator }: TransferForm
                       keyPlaceholder={translator("assets.new.fieldDataAddressQueryParamsKeyPlaceholder")}
                       valueLabel={translator("assets.new.fieldDataAddressQueryParamsValueLabel")}
                       valuePlaceholder="..."
-                      helperText={formData[ASSET_DATA_ADDRESS_ENABLE_QUERY_PARAMETERIZATION] ? translator("assets.new.fieldDataAddressQueryParamsHelper") : ""}
-                      error={errors[TRANSFER_PROCESS_HTTP_PROXIED_QUERY_PARAMS]}
-                      value={formData[TRANSFER_PROCESS_HTTP_PROXIED_QUERY_PARAMS] as [] || []}
-                      onChange={(value) => setFormData({...formData, [TRANSFER_PROCESS_HTTP_PROXIED_QUERY_PARAMS]: value})}
+                      helperText={formData.proxyQueryParams ? translator("assets.new.fieldDataAddressQueryParamsHelper") : ""}
+                      error={errors["TRANSFER_PROCESS_HTTP_PROXIED_QUERY_PARAMS"]}
+                      value={formData.proxyQueryParams as [] || []}
+                      onChange={(value) => setFormData({...formData, proxyQueryParams: value})}
                     />
                   </div>
 
                   <Input
-                    name={TRANSFER_PROCESS_HTTP_PROXIED_BODY_CONTENT_TYPE}
+                    name="properties-contenttype"
                     id="properties-contenttype"
                     label={<T string="transferProcesses.new.customRequestBodyContentType"/>}
                     placeholder="application/json"
                     helperText={<T string="transferProcesses.new.requireProxyBodyTrue"/>}
-                    value={formData[TRANSFER_PROCESS_HTTP_PROXIED_BODY_CONTENT_TYPE]}
-                    error={errors[TRANSFER_PROCESS_HTTP_PROXIED_BODY_CONTENT_TYPE]}
+                    value={formData.contentType}
+                    error={errors["TRANSFER_PROCESS_HTTP_PROXIED_BODY_CONTENT_TYPE"]}
                     onChange={(event) => setFormData({
                       ...formData,
-                      [TRANSFER_PROCESS_HTTP_PROXIED_BODY_CONTENT_TYPE]: event.target.value
+                      contentType: event.target.value
                     })}
                   />
 
                   <Input
-                    name={TRANSFER_PROCESS_HTTP_PROXIED_BODY}
+                    name="properties-description"
                     id="properties-description"
                     key="properties-description"
                     multiline
@@ -307,11 +305,11 @@ export function TransferFormDialog({ isOpen, onClose, translator }: TransferForm
                     required
                     helperText={<T string="transferProcesses.new.requireProxyBodyTrue"/>}
                     classes={{textField: {'& p': {color: theme.palette.error.main}}} as any}
-                    error={errors[TRANSFER_PROCESS_HTTP_PROXIED_BODY]}
-                    value={formData[TRANSFER_PROCESS_HTTP_PROXIED_BODY]}
+                    error={errors["TRANSFER_PROCESS_HTTP_PROXIED_BODY"]}
+                    value={formData.proxyBody}
                     onChange={(event) => setFormData({
                       ...formData,
-                      [TRANSFER_PROCESS_HTTP_PROXIED_BODY]: event.target.value
+                      proxyBody: event.target.value
                     })}
                   />
                 </div>

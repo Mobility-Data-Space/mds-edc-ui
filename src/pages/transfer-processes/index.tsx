@@ -21,37 +21,33 @@ export default function TransferProcessesListPage() {
   return (
     <SideDrawer title={<T string="transferProcesses.title" />}>
       <TransferProcessesList managementUrl={managementUrl}>
-        <div className="sm:col-span-1">
-          <label
-            htmlFor="hs-as-table-product-review-search"
-            className="sr-only"
-          >
-            <T global string="search" />
-          </label>
-          <div className="relative flex rounded-lg shadow-sm">
-            <TransferProcessesList.Search
-              name="hs-as-table-product-review-search"
-              className="py-3 px-4 ps-11 block w-full border-gray-200 shadow-sm rounded-s-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-              placeholder={globalTranslator("searchPlaceholder")}
-            />
-            <div className="absolute inset-y-0 start-0 flex items-center pointer-events-none z-20 ps-4">
-              <Search className="w-4 h-4" />
-            </div>
-            <TransferProcessesList.SearchTrigger className="py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-e-md border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
-              <T global string="search" />
-            </TransferProcessesList.SearchTrigger>
+        <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-gray-200">
+          <div className="inline-flex gap-x-2">
+            <Button
+              variant="secondary"
+              onClick={decrementPage}
+              disabled={!hasPrev}
+            >
+              <ChevronLeft className="w-4 h-4" />
+              Prev
+            </Button>
+
+            <Button
+              variant="secondary"
+              onClick={incrementPage}
+            >
+              Next
+              <ChevronRight className="w-4 h-4" />
+            </Button>
           </div>
         </div>
+
         <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">
           <Table>
             <Table.Head>
               <Table.Row>
                 <Table.Heading className="w-16">
                   #
-                </Table.Heading>
-
-                <Table.Heading>
-                  <T string="transferProcesses.headingId" />
                 </Table.Heading>
 
                 <Table.Heading>
@@ -64,10 +60,6 @@ export default function TransferProcessesListPage() {
 
                 <Table.Heading>
                   <T string="transferProcesses.headingAsset" />
-                </Table.Heading>
-
-                <Table.Heading>
-                  <T string="transferProcesses.headingCorrelationId" />
                 </Table.Heading>
               </Table.Row>
             </Table.Head>
@@ -89,11 +81,6 @@ export default function TransferProcessesListPage() {
                       >
                         {(page * 10) + (index + 1)}
                       </button>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <span className="font-semibold">
-                        {item.id}
-                      </span>
                     </Table.Cell>
                     <Table.Cell>
                       {item.state}
@@ -130,9 +117,6 @@ export default function TransferProcessesListPage() {
 
                       {item.assetId}
                     </Table.Cell>
-                    <Table.Cell>
-                      {item.correlationId}
-                    </Table.Cell>
                   </Table.Row>
                 )}
               </TransferProcessesList.Items>
@@ -140,26 +124,6 @@ export default function TransferProcessesListPage() {
           </Table>
         </div>
         
-        <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">
-          <div className="inline-flex gap-x-2">
-            <Button
-              variant="secondary"
-              onClick={decrementPage}
-              disabled={!hasPrev}
-            >
-              <ChevronLeft className="w-4 h-4" />
-              Prev
-            </Button>
-
-            <Button
-              variant="secondary"
-              onClick={incrementPage}
-            >
-              Next
-              <ChevronRight className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
         <TransferProcessesList.Loading>
           <div className="max-w-20 mx-auto mt-4 flex flex-col bg-white border shadow-sm rounded-xl p-4 md:p-5">
             <span

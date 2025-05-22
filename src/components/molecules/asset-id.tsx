@@ -3,6 +3,7 @@ import {T} from "@/i18n";
 import {Input} from "../atoms/input.tsx";
 import {theme} from "@/theme/ThemeProvider.tsx";
 import {AssetProperties} from "@/utilities/asset.ts";
+import { AssetInput } from "@think-it-labs/edc-connector-client";
 
 export interface AssetIdProps {
   translator: (key: string) => string;

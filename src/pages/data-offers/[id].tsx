@@ -9,26 +9,7 @@ import { T } from "@/i18n";
 import { useRouter } from "next/router";
 import React from "react";
 import SideDrawer from "@/components/organisms/side-drawer.tsx";
-import {ContractNegotiationView} from "@think-it-labs/edc-connector-ui/contract-negotiation-view.tsx";
-import {Constraint} from "@think-it-labs/edc-connector-client";
 import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog.ts";
-
-function DeleteContractDefinition() {
-  const { deleteItem } = useContractDefinitionContext();
-  const { push } = useRouter();
-
-  return (
-    <Button
-      variant="unstyled"
-      onClick={async () => {
-        await deleteItem();
-        push("/assets");
-      }}
-    >
-      Delete
-    </Button>
-  );
-}
 
 export default function ContractDefinitionViewPage() {
   const id = useRouter().query.id as string;

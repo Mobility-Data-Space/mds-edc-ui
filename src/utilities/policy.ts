@@ -6,9 +6,7 @@ export const fromPolicyDefinitionForm = (formData: Constraint[]) : PolicyDefinit
   const policy = new PolicyBuilder().type("Set").raw({
     permission: [
       {
-        action: {
-          type: "USE",
-        }, 
+        action: "use",
         constraint: formData
       }
     ]

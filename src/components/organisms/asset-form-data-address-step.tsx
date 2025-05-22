@@ -3,10 +3,9 @@ import {FormHelperText} from "@mui/material";
 import {T} from "@/i18n";
 import {Input} from "../atoms/input.tsx";
 import {MuiSelect} from "../atoms/mui-select.tsx";
-import {DATA_ADDRESS_SELECT_DATA, DATA_ADDRESS_TYPE_CUSTOM, DATA_ADDRESS_TYPE_HTTP} from "@/constants/data-address-types.ts";
+import {ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_SELECT_OPTIONS, ASSET_DATA_ADDRESS_BASE_URL, ASSET_DATA_ADDRESS_DESCRIPTION, ASSET_DATA_ADDRESS_ENABLE_BODY_PARAMETERIZATION, ASSET_DATA_ADDRESS_ENABLE_QUERY_PARAMETERIZATION, ASSET_DATA_ADDRESS_HTTP_AUTH_ADD_HEADER, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_NAME, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_NONE, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_VAULT_SECRET, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_VALUE, ASSET_DATA_ADDRESS_HTTP_HEADERS, ASSET_DATA_ADDRESS_QUERY_PARAMS, DATA_ADDRESS_SELECT_DATA, DATA_ADDRESS_TYPE_CUSTOM, DATA_ADDRESS_TYPE_HTTP, ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD} from "@/constants/data-address-types.ts";
 import {RadioButton} from "@/components/atoms/radio-button.tsx";
 import {KeyValuePairInputList} from "@/components/molecules/key-value-pair-input-list.tsx";
-import {ASSET_DATA_ADDRESS_BASE_URL, ASSET_DATA_ADDRESS_DESCRIPTION, ASSET_DATA_ADDRESS_ENABLE_BODY_PARAMETERIZATION, ASSET_DATA_ADDRESS_ENABLE_QUERY_PARAMETERIZATION, ASSET_DATA_ADDRESS_HTTP_AUTH_ADD_HEADER, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_NAME, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_NONE, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_SELECT_OPTIONS, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_VAULT_SECRET, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_VALUE, ASSET_DATA_ADDRESS_HTTP_HEADERS, ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD, ASSET_DATA_ADDRESS_HTTP_PROXY_PATH, ASSET_DATA_ADDRESS_METHOD, ASSET_DATA_ADDRESS_QUERY_PARAMS, ASSET_DATA_ADDRESS_TYPE} from "@/schema/asset.ts";
 import {theme} from "@/theme/ThemeProvider.tsx";
 import { DataAddress } from "@think-it-labs/edc-connector-client";
 
@@ -30,21 +29,21 @@ export function AssetFormDataAddressStep({ formData, errors, onChange, translato
           <T string="assets.new.fieldDataAddressType"/>
         </label>
         <MuiSelect
-          name={ASSET_DATA_ADDRESS_TYPE}
+          name="data-address-type"
           id="data-address-type"
           label={translator("assets.new.fieldDataAddressType")}
           options={DATA_ADDRESS_SELECT_DATA}
-          error={errors[ASSET_DATA_ADDRESS_TYPE]}
-          value={formData[ASSET_DATA_ADDRESS_TYPE]}
-          onChange={(event) => onChange({ ...formData, [ASSET_DATA_ADDRESS_TYPE]: event.target.value })}
+          error={errors.type}
+          value={formData.type}
+          onChange={(event) => onChange({ ...formData, type: event.target.value })}
         />
       </div>
 
-      {formData[ASSET_DATA_ADDRESS_TYPE] === DATA_ADDRESS_TYPE_CUSTOM.value &&
+      {formData.type === DATA_ADDRESS_TYPE_CUSTOM.value &&
         <Input
-          name={ASSET_DATA_ADDRESS_DESCRIPTION}
-          id="properties-description"
-          key="properties-description"
+          name="data-address-description"
+          id="data-address-description"
+          key="data-address-description"
           multiline
           rows={customDataSourceConfigRows}
           label={translator("assets.new.fieldCustomDatasourceConfig")}
@@ -53,11 +52,11 @@ export function AssetFormDataAddressStep({ formData, errors, onChange, translato
           helperText={typeof errors[ASSET_DATA_ADDRESS_DESCRIPTION] === "string" ? errors[ASSET_DATA_ADDRESS_DESCRIPTION] : ""}
           classes={{ textField: { '& p':{ color: theme.palette.error.main } }} as any}
           error={errors[ASSET_DATA_ADDRESS_DESCRIPTION]}
-          value={formData[ASSET_DATA_ADDRESS_DESCRIPTION]}
-          onChange={(event) => onChange({ ...formData, [ASSET_DATA_ADDRESS_DESCRIPTION]: event.target.value })}
+          value={formData.description}
+          onChange={(event) => onChange({ ...formData, description: event.target.value })}
         />
       }
-      {formData[ASSET_DATA_ADDRESS_TYPE] === DATA_ADDRESS_TYPE_HTTP.value &&
+      {formData.type === DATA_ADDRESS_TYPE_HTTP.value &&
         <>
           <div className="flex flex-col gap-y-5">
             <label
@@ -67,23 +66,23 @@ export function AssetFormDataAddressStep({ formData, errors, onChange, translato
               <T string="assets.new.fieldDataAddressMethodAndContentType"/>
             </label>
             <div>
-              {methodAlwaysShowing || ! formData[ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD] ?
+              {methodAlwaysShowing || ! JSON.parse(formData.proxyMethod) ?
                 <MuiSelect
-                  name={ASSET_DATA_ADDRESS_METHOD}
+                  name="data-address-method"
                   id="data-address-method"
                   label={translator("assets.new.fieldDataAddressMethod")}
                   options={[
                     {value: "GET"},
                     {value: "POST"},
                   ]}
-                  error={errors[ASSET_DATA_ADDRESS_METHOD]}
-                  value={formData[ASSET_DATA_ADDRESS_METHOD]}
-                  disabled={methodAlwaysShowing && !! formData[ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD]}
-                  onChange={(event) => onChange({ ...formData, [ASSET_DATA_ADDRESS_TYPE]: event.target.value })}
+                  error={errors.method}
+                  value={formData.method}
+                  disabled={methodAlwaysShowing && !! JSON.parse(formData.proxyMethod)}
+                  onChange={(event) => onChange({ ...formData, method: event.target.value })}
                 />
                 : ""
               }
-              {methodAlwaysShowing || formData[ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD] ?
+              {methodAlwaysShowing || JSON.parse(formData.proxyMethod) ?
                 <FormHelperText>
                   <T string="assets.new.fieldDataAddressHttpProxyMethodHelper" />
                 </FormHelperText>
@@ -96,8 +95,8 @@ export function AssetFormDataAddressStep({ formData, errors, onChange, translato
                 id="data-address-http-proxy-method"
                 labelTrue={translator("assets.new.fieldDataAddressHttpProxyMethodTrue")}
                 labelFalse={translator("assets.new.fieldDataAddressHttpProxyMethodFalse")}
-                value={formData[ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD]}
-                onChange={(value) => onChange({ ...formData, [ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD]: value })}
+                value={formData.proxyMethod}
+                onChange={(value) => onChange({ ...formData, proxyMethod: value })}
               />
             </div>
           </div>
@@ -109,10 +108,10 @@ export function AssetFormDataAddressStep({ formData, errors, onChange, translato
             >
               <T string="assets.new.fieldDataAddressUrl"/>
             </label>
-            {formData[ASSET_DATA_ADDRESS_HTTP_PROXY_PATH] && <FormHelperText>{translator("assets.new.fieldDataAddressHttpProxyPathHelper")}</FormHelperText>}
+            {formData.baseUrl && <FormHelperText>{translator("assets.new.fieldDataAddressHttpProxyPathHelper")}</FormHelperText>}
 
             <Input
-              name={ASSET_DATA_ADDRESS_BASE_URL}
+              name="data-address-base-url"
               id="data-address-base-url"
               data-testid="data-address-base-url"
               type="url"
@@ -120,15 +119,15 @@ export function AssetFormDataAddressStep({ formData, errors, onChange, translato
               placeholder={"https://"}
               label={translator("assets.new.fieldDataAddressUrl")}
               error={errors[ASSET_DATA_ADDRESS_BASE_URL]}
-              value={formData[ASSET_DATA_ADDRESS_BASE_URL]}
-              onChange={(event) => onChange({ ...formData, [ASSET_DATA_ADDRESS_BASE_URL]: event.target.value })}
+              value={formData.baseUrl}
+              onChange={(event) => onChange({ ...formData, baseUrl: event.target.value })}
             />
             <RadioButton
               labelTrue={translator("assets.new.fieldDataAddressHttpProxyPathTrue")}
               labelFalse={translator("assets.new.fieldDataAddressHttpProxyPathFalse")}
               id="data-address-http-proxy-path"
-              value={formData[ASSET_DATA_ADDRESS_HTTP_PROXY_PATH]}
-              onChange={(value) => onChange({ ...formData, [ASSET_DATA_ADDRESS_HTTP_PROXY_PATH]: value })}
+              value={formData.proxyPath}
+              onChange={(value) => onChange({ ...formData, proxyPath: value })}
             />
           </div>
 
@@ -211,9 +210,9 @@ export function AssetFormDataAddressStep({ formData, errors, onChange, translato
                   type="text"
                   label={<T string="assets.new.fieldDataAddressAuthHeaderName"/>}
                   placeholder={translator("assets.new.fieldDataAddressAuthHeaderNamePlaceholder")}
-                  value={formData[ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_NAME]}
+                  value={formData.authKey}
                   error={errors[ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_NAME]}
-                  onChange={(event) => onChange({...formData, [ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_NAME]: event.target.value})}
+                  onChange={(event) => onChange({...formData, authKey: event.target.value})}
                 />
 
                 <Input
@@ -223,9 +222,9 @@ export function AssetFormDataAddressStep({ formData, errors, onChange, translato
                   type="text"
                   label={<T string={formData[ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE] === ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_VAULT_SECRET ? "assets.new.fieldDataAddressAuthHeaderVaultValue" : "assets.new.fieldDataAddressAuthHeaderValue"}/>}
                   placeholder={formData[ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE] === ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_VAULT_SECRET ? "Mysecret123" : "Bearer ..."}
-                  value={formData[ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_VALUE]}
+                  value={formData.authCode}
                   error={errors[ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_VALUE]}
-                  onChange={(event) => onChange({...formData, [ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_VALUE]: event.target.value})}
+                  onChange={(event) => onChange({...formData, authCode: event.target.value})}
                 />
               </div>
             </>}

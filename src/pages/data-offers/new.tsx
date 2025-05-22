@@ -1,4 +1,4 @@
-import {useEdcClient, useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
+import { useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
 import { enqueueSnackbar } from "notistack";
 import { T, useTranslator } from "@/i18n";
 import React, {useEffect, useRef, useState} from "react";
@@ -10,6 +10,7 @@ import { defaultCreateContractDefinitionFormData } from "@/utilities/contract_de
 import {MuiSelect} from "@/components/atoms/mui-select.tsx";
 import {operatorIn} from "@/utilities/constraints";
 import {Button} from "@mui/material";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 
 const optionsGenerator = (data: { "@id": string }[]) => {
   return data.map(entry => ({
@@ -24,7 +25,9 @@ export default function CreateContractDefinitionPage() {
 
   const [assetIds, setAssetIds] = useState<{ value: string }[]>([]);
   const [policyIds, setPolicyIds] = useState<{ value: string }[]>([]);
-  const edcClient = useEdcClient();
+
+  const edcClient = useEdcConnectorClient({management: connector.managementUrl});
+  
   useEffect(() => {
     edcClient.management.assets.queryAll({ offset: 0 })
       .then(result => setAssetIds(optionsGenerator(result)))

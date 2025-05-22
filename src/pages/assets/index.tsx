@@ -1,18 +1,12 @@
 import React, {useState} from "react";
 import {useRouter} from "next/router";
-
 import { PlusCircle } from "lucide-react";
-
 import {Button as MuiButton, DialogContent} from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-
 import {Asset} from "@think-it-labs/edc-connector-client";
 import { AssetsList } from "@think-it-labs/edc-connector-ui/assets-list";
-
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { usePagination } from "@/hooks/use-pagination";
-import {T, useTranslator} from "@/i18n";
-import { Input } from "@/components/atoms/input";
+import {T} from "@/i18n";
 import SideDrawer from "@/components/organisms/side-drawer";
 import AssetCard from "@/components/organisms/asset-card";
 import AssetFormDialog from "@/components/templates/asset-form-dialog";
@@ -22,7 +16,6 @@ export default function AssetListPage() {
   const router = useRouter();
   const { connector } = useParticipantConnectorState();
   const { offset, limit } = usePagination();
-  const { translator } = useTranslator();
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
@@ -58,17 +51,6 @@ export default function AssetListPage() {
       <SideDrawer title={<T string="assets.title" />}>
         <AssetsList managementUrl={connector.managementUrl}>
           <div className="flex gap-x-4 py-4">
-            <Input
-              fullWidth={false}
-              placeholder={translator("assets.search")}
-              slots={{ htmlInput: (props) => <AssetsList.Search {...props} /> }}
-              slotProps={{
-                input: {
-                  classes: { root: "flex-grow" },
-                  startAdornment: <SearchIcon />,
-                }
-              }}
-            />
             <MuiButton
               data-testid="create-asset-modal-opener"
               variant="contained"
@@ -78,11 +60,9 @@ export default function AssetListPage() {
               <PlusCircle className="h-4 w-4" />
               <T string="assets.buttonAdd" />
             </MuiButton>
-
-            {/* TODO: move pagination here */}
           </div>
 
-          <div className="flex flex-wrap gap-2.5">
+          <div className="flex flex-wrap gap-3">
             <AssetsList.Items
               limit={limit}
               offset={offset}

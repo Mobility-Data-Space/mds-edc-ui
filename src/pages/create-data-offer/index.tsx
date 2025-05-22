@@ -3,10 +3,10 @@ import {Button, Checkbox, FormControlLabel, Divider, Typography} from "@mui/mate
 import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
 import {T, useTranslator} from "@/i18n";
 
-import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_DATA_ADDRESS_DESCRIPTION, ASSET_DATA_ADDRESS_TYPE, ASSET_TITLE, DATA_OFFER_CONSTRAINTS, DATA_OFFER_PUBLISH_MODE, DATA_OFFER_TYPE, } from "@/schema/asset.ts";
+import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_TITLE } from "@/schema/asset.ts";
 import RadioButtonsGroup from "@/components/atoms/radio-group.tsx";
 import {AssetContactEmailAndSubject} from "@/components/molecules/asset-contact-email-and-subject.tsx";
-import {DATA_ADDRESS_TYPE_CUSTOM, DATA_OFFER_TYPE_DATA_SOURCE, DATA_OFFER_TYPE_ON_REQUEST, DATA_OFFER_TYPES, PUBLISH_MODE_PUBLISH_RESTRICTED, PUBLISH_MODE_PUBLISH_UNRESTRICTED, PUBLISH_MODES} from "@/constants/data-address-types.ts";
+import {ASSET_DATA_ADDRESS_DESCRIPTION, DATA_ADDRESS_TYPE_CUSTOM, DATA_OFFER_TYPE_DATA_SOURCE, DATA_OFFER_TYPE_ON_REQUEST, DATA_OFFER_TYPES, PUBLISH_MODE_PUBLISH_RESTRICTED, PUBLISH_MODE_PUBLISH_UNRESTRICTED, PUBLISH_MODES} from "@/constants/data-address-types.ts";
 import {AssetDataCategoryAndSubcategory} from "@/components/molecules/asset-data-category-and-subcategory.tsx";
 import {AssetTitle} from "@/components/molecules/asset-title.tsx";
 import {AssetId} from "@/components/molecules/asset-id.tsx";
@@ -42,7 +42,8 @@ import { AssetFormDataAddressStep } from "@/components/organisms/asset-form-data
 interface DataOffer {
   asset: AssetInput,
   policy: PolicyDefinitionInput,
-  contract: ContractDefinitionInput
+  contract: ContractDefinitionInput,
+  publish_mode: typeof PUBLISH_MODE_PUBLISH_UNRESTRICTED
 }
 
 export default function CreateDataOfferPage() {
@@ -56,7 +57,8 @@ export default function CreateDataOfferPage() {
   const [formData, setFormData] = useState<DataOffer>({
     asset: defaultCreateAssetFormData,
     policy: defaultCreatePolicyFormData,
-    contract: defaultCreateContractDefinitionFormData
+    contract: defaultCreateContractDefinitionFormData,
+    publish_mode: PUBLISH_MODE_PUBLISH_UNRESTRICTED
   });
 
   const [errors, setErrors] = useState({ properties: {}, advancedInfo: {}, dataAddress: {} });
@@ -152,11 +154,11 @@ export default function CreateDataOfferPage() {
       }
     });
 
-    if (formDataToValidate[ASSET_DATA_ADDRESS_TYPE] === DATA_ADDRESS_TYPE_CUSTOM.value && formDataToValidate[ASSET_DATA_ADDRESS_DESCRIPTION] !== "") {
+    if (formDataToValidate.type === DATA_ADDRESS_TYPE_CUSTOM.value && formDataToValidate[ASSET_DATA_ADDRESS_DESCRIPTION] !== "") {
       try {
-        JSON.parse(formDataToValidate[ASSET_DATA_ADDRESS_DESCRIPTION] as string);
+        JSON.parse(formDataToValidate.description[ASSET_DATA_ADDRESS_DESCRIPTION] as string);
       } catch (e) {
-        newErrors[ASSET_DATA_ADDRESS_DESCRIPTION] = translator("assets.new.mustBeValidJson");
+        newErrors["ASSET_DATA_ADDRESS_DESCRIPTION"] = translator("assets.new.mustBeValidJson");
       }
     }
 
@@ -178,13 +180,16 @@ export default function CreateDataOfferPage() {
     }
 
     console.log(formData)
+    // create asset
+    // create policy
+    // create contract
   };
 
   const onFormSubmitFail = (error: Error) => {
     enqueueSnackbar(translator("assets.new.saveFail"));
   }
 
-  const dataOfferTypeIsDataSource = formData.asset.dataAddress[DATA_OFFER_TYPE] === DATA_OFFER_TYPE_DATA_SOURCE.value;
+  const dataOfferTypeIsDataSource = formData.asset.dataAddress.type === DATA_OFFER_TYPE_DATA_SOURCE.value;
 
   if (!connector) {
     return "No connector";
@@ -214,12 +219,12 @@ export default function CreateDataOfferPage() {
               </div>
               <div className="sm:col-span-2 flex flex-col gap-6">
                 <RadioButtonsGroup
-                  name={DATA_OFFER_TYPE}
+                  name="data-offer-type"
                   id="data-offer-type"
                   label={<T string="dataOffer.new.type"/>}
                   defaultValue={DATA_OFFER_TYPE_ON_REQUEST.value}
                   options={DATA_OFFER_TYPES}
-                  onChange={(value) => dataAddressFormOnChange({...formData.asset.dataAddress, [DATA_OFFER_TYPE]: value})}
+                  onChange={(value) => dataAddressFormOnChange({...formData.asset.dataAddress, type: value})}
                 />
                 {dataOfferTypeIsDataSource ?
                   <AssetFormDataAddressStep
@@ -658,27 +663,27 @@ export default function CreateDataOfferPage() {
               </div>
               <div className="sm:col-span-2 flex flex-col gap-6">
                 <RadioButtonsGroup
-                  name={DATA_OFFER_PUBLISH_MODE}
+                  name="data-offer-type"
                   id="data-offer-type"
                   label={<T string="dataOffer.new.type"/>}
                   defaultValue={PUBLISH_MODE_PUBLISH_UNRESTRICTED.value}
                   options={PUBLISH_MODES}
                   onChange={(value) => generalInfoFormOnChange({
                     ...formData.asset.properties,
-                    [DATA_OFFER_PUBLISH_MODE]: value
+                    publish_mode: value
                   })}
                 />
-                {formData.asset.properties[DATA_OFFER_PUBLISH_MODE] !== PUBLISH_MODE_PUBLISH_RESTRICTED.value ? "" : <div>
+                {formData.publish_mode !== PUBLISH_MODE_PUBLISH_RESTRICTED ? "" : <div>
                   <label
                     className="inline-block text-sm text-black font-medium mb-2"
                   >
                     <T string="dataOffer.new.policyExpression"/>
                   </label>
                   <PolicyExpression
-                    value={formData.asset.properties[DATA_OFFER_CONSTRAINTS] as []}
+                    value={formData.policy.policy.permission}
                     onChange={(value) => generalInfoFormOnChange({
                       ...formData.asset.properties,
-                      [DATA_OFFER_CONSTRAINTS]: value
+                      ["DATA_OFFER_CONSTRAINTS"]: value
                     })}
                   />
                 </div>

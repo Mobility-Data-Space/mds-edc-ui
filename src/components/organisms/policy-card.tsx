@@ -45,11 +45,8 @@ export default function PolicyCard({ policyDefinition, onClick }: PolicyCardProp
                 <Icon fontSize="large">policy</Icon>
               </div>
               <div>
-                <Typography variant="h4" className="!leading-none hover:underline cursor-pointer">
+                <Typography variant="h5" className="!leading-none hover:underline cursor-pointer">
                   {policyDefinition.id}
-                </Typography>
-                <Typography variant="body1" color="textSecondary">
-                  <T string="policyDefinitions.policy" />
                 </Typography>
               </div>
             </div>

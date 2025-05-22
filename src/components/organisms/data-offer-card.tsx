@@ -1,7 +1,7 @@
 import React from "react";
 import Typography from "@mui/material/Typography";
 import {Card, CardContent, Chip} from "@mui/material";
-import {Asset} from "@think-it-labs/edc-connector-client";
+import {Asset, Dataset} from "@think-it-labs/edc-connector-client";
 import {AssetIcon} from "@/components/atoms/asset-icon.tsx";
 import {
   ASSET_DESCRIPTION,
@@ -11,28 +11,28 @@ import {
 } from "@/schema/asset.ts";
 import {JsonLdValue, readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
 import {truncate} from "@/utilities/utilities.ts";
+import { datasetToAsset } from "@/utilities/catalog";
 
 export interface DataOfferCardProps {
-  asset: Asset,
+  dataset: Dataset,
   participantId: string,
   onClick?: () => void
 }
 
-export default function DataOfferCard({ asset, participantId, onClick = () => {} }: DataOfferCardProps) {
-  const asset_id = asset["@id"]
-  const keywords = asset.properties[ASSET_KEYWORDS] || [];
+export default function DataOfferCard({ dataset, participantId, onClick = () => {} }: DataOfferCardProps) {
+  const asset_id = dataset["@id"] ;
+  const keywords = dataset[ASSET_KEYWORDS] || [];
   const slicedKeywords = keywords.slice(0, 3);
   const remainingKeywordsCount = keywords.length - slicedKeywords.length;
 
-  const title = readValue(asset.properties, ASSET_TITLE);
-  const description = truncate(readValue(asset.properties, ASSET_DESCRIPTION), 200);
-  const version = readValue(asset.properties, ASSET_VERSION);
+  const description = truncate(readValue(dataset, ASSET_DESCRIPTION), 200);
+  const version = readValue(dataset, ASSET_VERSION);
 
   return (
     <Card className="w-[300px]" onClick={onClick}>
       <CardContent className="flex flex-col gap-y-3">
         <div className="flex flex-row gap-x-4 items-start">
-          <AssetIcon asset={asset} fontSize="large" />
+          <AssetIcon asset={datasetToAsset(dataset)} fontSize="large" />
           <div className="flex flex-col">
             <Typography variant="h4" className="!leading-none hover:underline cursor-pointer">
               {asset_id}

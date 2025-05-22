@@ -3,7 +3,7 @@ import { useParticipantConnectorState } from "@/hooks/use-participant-connector-
 import { T, useTranslator } from "@/i18n";
 import {Button, Step, StepContent, StepIconProps, StepLabel, Stepper} from "@mui/material";
 
-import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_DATA_ADDRESS_DESCRIPTION, ASSET_DATA_ADDRESS_TYPE, ASSET_TITLE, ASSET_VERSION} from "@/schema/asset.ts";
+import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_TITLE, ASSET_VERSION} from "@/schema/asset.ts";
 
 import {fromAssetForm, computeRequiredDataAddressProperties, generateId, defaultCreateAssetFormData, AssetProperties} from "@/utilities/asset.ts";
 import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
@@ -143,11 +143,11 @@ export default function AssetForm() {
       }
     });
 
-    if (formDataToValidate[ASSET_DATA_ADDRESS_TYPE] === DATA_ADDRESS_TYPE_CUSTOM.value && formDataToValidate[ASSET_DATA_ADDRESS_DESCRIPTION] !== "") {
+    if (formDataToValidate.type === DATA_ADDRESS_TYPE_CUSTOM.value && formDataToValidate.description !== "") {
       try {
-        JSON.parse(formDataToValidate[ASSET_DATA_ADDRESS_DESCRIPTION] as string);
+        JSON.parse(formDataToValidate.description as string);
       } catch (e) {
-        newErrors[ASSET_DATA_ADDRESS_DESCRIPTION] = translator("assets.new.mustBeValidJson");
+        newErrors.description = translator("assets.new.mustBeValidJson");
       }
     }
 

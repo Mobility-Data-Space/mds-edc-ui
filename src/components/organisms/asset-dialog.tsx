@@ -14,19 +14,18 @@ import { enqueueSnackbar } from 'notistack';
 
 interface AssetDialogProps {
   asset: Asset;
+  participantId: string;
+  connectorEndpoint: string;
+
   open: boolean;
   onClose: () => void;
   onEditClick?: () => void;
   deleteEnabled?: boolean;
-  participantId: string;
-  connectorEndpoint: string;
-  contractDefinitions?: ContractDefinition[];
-  assetIsOwned?: boolean;
   deleteItem?: () => Promise<void>;
   onDeleteSuccess?: () => void;
   contentStyle?: { [key: string]: string }
 }
-export default function AssetDialog({ open, onClose, asset, onEditClick, deleteEnabled = false, participantId, connectorEndpoint, contractDefinitions, assetIsOwned = true, deleteItem, onDeleteSuccess, contentStyle = {} }: AssetDialogProps) {
+export default function AssetDialog({ open, onClose, asset, onEditClick, deleteEnabled = false, participantId, connectorEndpoint, deleteItem, onDeleteSuccess, contentStyle = {} }: AssetDialogProps) {
   const id = asset["@id"];
   const title = readValue(asset.properties, ASSET_TITLE) || "";
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -49,7 +48,6 @@ export default function AssetDialog({ open, onClose, asset, onEditClick, deleteE
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
         title="assets.[id].deleteTitle"
-        /* TODO: translate */
         content={`Please confirm you want to delete Asset ${title}. This action cannot be undone.`}
         onConfirm={onDeleteConfirm}
 
@@ -69,7 +67,7 @@ export default function AssetDialog({ open, onClose, asset, onEditClick, deleteE
                   {title}
                 </Typography>
                 <Typography variant="body1" color="textSecondary">
-                  {participantId}
+                  {id}
                 </Typography>
               </div>
             </div>
@@ -89,7 +87,7 @@ export default function AssetDialog({ open, onClose, asset, onEditClick, deleteE
           </div>
         </DialogTitle>
         <DialogContent style={contentStyle}>
-          <AssetDetails asset={asset} participantId={participantId} connectorEndpoint={connectorEndpoint} contractDefinitions={contractDefinitions} assetIsOwned={assetIsOwned} />
+          <AssetDetails asset={asset} participantId={participantId} connectorEndpoint={connectorEndpoint} />
         </DialogContent>
         <DialogActions>
           <Button color="secondary" onClick={onClose}>

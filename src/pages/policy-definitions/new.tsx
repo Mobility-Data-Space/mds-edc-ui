@@ -9,6 +9,7 @@ import { fromPolicyDefinitionForm } from "@/utilities/policy";
 import PolicyExpression from "@/components/organisms/policy-expression";
 import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
 import { MultiplicityConstraint } from "@/utilities/constraints";
+import { Input } from "@/components/atoms/input";
 
 export default function CreatePolicyDefinitionPage() {
   const { push, connector } = useParticipantConnectorState();
@@ -49,7 +50,7 @@ export default function CreatePolicyDefinitionPage() {
       <div>
         <div className="text-3xl">
           <span data-testid="policy-definition-create-modal-title">
-            <T string="policyDefinition.new.title" />
+            <T string="policyDefinitions.new.title" />
           </span>
         </div>
   
@@ -66,16 +67,23 @@ export default function CreatePolicyDefinitionPage() {
                   <label
                     className="inline-block text-sm text-black font-medium mb-2"
                   >
-                    <T string="dataOffer.new.policyExpression"/>
+                    <T string="policyDefinitions.new.policyId"/>
+                  </label>
+                  <Input />
+                </div>
+              </div>
+            </div>
+            <div className="grid sm:grid-cols-3 gap-2 sm:gap-6">
+              <div className="sm:col-span-2 flex flex-col gap-6">
+                <div>
+                  <label
+                    className="inline-block text-sm text-black font-medium mb-2"
+                  >
+                    <T string="policyDefinitions.new.policyExpression"/>
                   </label>
                   <PolicyExpression
                     value={policyExpression}
-                    onChange={(value) => {
-                      console.log(value);
-                      console.log(policyExpression);
-                      onChange(value);
-                      console.log(policyExpression);
-                    }}
+                    onChange={(value) => { onChange(value) }}
                   />
                 </div>
               </div>

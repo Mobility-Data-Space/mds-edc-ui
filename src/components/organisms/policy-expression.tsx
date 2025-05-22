@@ -29,11 +29,6 @@ export default function PolicyExpression({ value, onChange, onRemove, title = ""
     return onChange(result);
   };
   
-  console.log(title) ;
-  console.log(value) ;
-  console.log(value?.length) ;
-  console.log(isFirstLevel) ;
-  console.log(isFirstLevel) ;
   const createOnRemove = (index: number) => () => {
     const result = [...value];
     result.splice(index, 1)

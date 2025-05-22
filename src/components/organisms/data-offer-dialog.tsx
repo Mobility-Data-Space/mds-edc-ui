@@ -1,34 +1,38 @@
 import React, {useState} from "react";
 import { T } from "@/i18n";
-import {Asset, ContractDefinition} from "@think-it-labs/edc-connector-client";
+import {Asset, ContractDefinition, Dataset, Offer, Policy} from "@think-it-labs/edc-connector-client";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
 import {ASSET_TITLE} from "@/schema/asset.ts";
 import Typography from "@mui/material/Typography";
 import {AssetIcon} from "@/components/atoms/asset-icon.tsx";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton} from "@mui/material";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton} from "@mui/material";
 import AssetDetails from "@/components/organisms/asset-details.tsx";
 import {DeleteDialog} from "@/components/molecules/delete-dialog.tsx";
 import { enqueueSnackbar } from 'notistack';
+import DataOfferDetails from "./data-offer-details";
+import { datasetToAsset } from "@/utilities/catalog";
+
+const HAS_POLICY = "http://www.w3.org/ns/odrl/2/hasPolicy";
 
 interface DataOfferDialogProps {
-  asset: Asset;
+  dataset: Dataset;
+  participantId: string;
+  counterPartyAddress: string;
+  assetIsOwned?: boolean;
   open: boolean;
   onClose: () => void;
   onEditClick?: () => void;
   deleteEnabled?: boolean;
-  participantId: string;
-  connectorEndpoint: string;
-  contractDefinitions?: ContractDefinition[];
-  assetIsOwned?: boolean;
   deleteItem?: () => Promise<void>;
   onDeleteSuccess?: () => void;
   contentStyle?: { [key: string]: string }
 }
-export default function DataOfferDialog({ open, onClose, asset, onEditClick, deleteEnabled = false, participantId, connectorEndpoint, contractDefinitions, assetIsOwned = true, deleteItem, onDeleteSuccess, contentStyle = {} }: DataOfferDialogProps) {
-  const id = asset["@id"];
-  const title = readValue(asset.properties, ASSET_TITLE) || "";
+
+export default function DataOfferDialog({ open, onClose, dataset, onEditClick, deleteEnabled = false, participantId, counterPartyAddress, assetIsOwned = true, deleteItem, onDeleteSuccess, contentStyle = {} }: DataOfferDialogProps) {
+  const id = dataset["@id"];
+  const title = readValue(dataset.properties, ASSET_TITLE) || "";
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const onDeleteConfirm = async () => {
@@ -49,11 +53,10 @@ export default function DataOfferDialog({ open, onClose, asset, onEditClick, del
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
         title="assets.[id].deleteTitle"
-        /* TODO: translate */
         content={`Please confirm you want to delete Asset ${title}. This action cannot be undone.`}
         onConfirm={onDeleteConfirm}
-
       />
+
       <Dialog
         open={open}
         maxWidth="lg"
@@ -63,19 +66,19 @@ export default function DataOfferDialog({ open, onClose, asset, onEditClick, del
         <DialogTitle>
           <div className="flex flex-row justify-between">
             <div className="flex flex-row gap-x-4 items-center">
-              <AssetIcon asset={asset} fontSize="large"/>
+              <AssetIcon asset={datasetToAsset(dataset)} fontSize="large"/>
               <div className="flex flex-col">
                 <Typography variant="h4">
                   {title}
                 </Typography>
                 <Typography variant="body1" color="textSecondary">
-                  {participantId}
+                  {id}
                 </Typography>
               </div>
             </div>
 
             <div>
-            {onEditClick &&
+              {onEditClick &&
                 <IconButton onClick={onEditClick}>
                   <EditIcon color="secondary"/>
                 </IconButton>
@@ -89,7 +92,13 @@ export default function DataOfferDialog({ open, onClose, asset, onEditClick, del
           </div>
         </DialogTitle>
         <DialogContent style={contentStyle}>
-          <AssetDetails asset={asset} participantId={participantId} connectorEndpoint={connectorEndpoint} contractDefinitions={contractDefinitions} assetIsOwned={assetIsOwned} />
+          <div className="flex flex-col gap-y-2.5">
+            <AssetDetails asset={datasetToAsset(dataset)} participantId={participantId} connectorEndpoint={counterPartyAddress} />
+          </div>
+          <div className="flex flex-col gap-y-2.5">
+            <span /> <span />
+            <DataOfferDetails counterPartyAddress={counterPartyAddress} offers={dataset[HAS_POLICY]} assetIsOwned={assetIsOwned} />
+          </div>
         </DialogContent>
         <DialogActions>
           <Button color="secondary" onClick={onClose}>

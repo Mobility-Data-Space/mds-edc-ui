@@ -96,24 +96,6 @@ export default function ContractDefinitionCard({ contractDefinition, onClick }: 
                   {getAssets(contractDefinition).join(", ")}
                 </Typography>
               </div>
-{/*
-              <div>
-                <Typography variant="body2" color="textDisabled">
-                  <T string="contractAgreements.otherConnector"/>
-                </Typography>
-                <Typography variant="body2">
-                  {/*TODO: otherConnector*/}{/*
-                </Typography>
-              </div>
-              <div>
-                <Typography variant="body2" color="textDisabled">
-                  <T string="contractAgreements.status"/>
-                </Typography>
-                <Typography variant="body2">
-                  {/*TODO: status*/}{/*
-                </Typography>
-              </div>
-*/}
             </div>
           </div>
 

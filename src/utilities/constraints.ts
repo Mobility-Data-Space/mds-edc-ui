@@ -1,83 +1,83 @@
 import { AtomicConstraint, Constraint } from "@think-it-labs/edc-connector-client";
 
 export const operatorEquals = {
-  value: 'EQ',
+  value: 'odrl:eq',
   text: '=',
   tooltip: 'Equal to',
 }
 
 export const operatorNotEqual = {
-  value: 'NEQ',
+  value: 'odrl:neq',
   text: '≠',
   tooltip: 'Not equal to',
 }
 
 export const operatorGreaterThanOrEqual = {
-  value: 'GEQ',
+  value: 'odrl:geq',
   text: '≥',
   tooltip: 'Greater than or equal to',
 };
 
 export const operatorGreaterThanOrEqual2 = {
-  value: 'GTEQ',
+  value: 'odrl:gteq',
   text: '≥',
   tooltip: 'Greater than or equal to',
 };
 
 export const operatorGreaterThan = {
-  value: 'GT',
+  value: 'odrl:gt',
   text: '>',
   tooltip: 'Greater than',
 };
 
 export const operatorLessThanOrEqual =   {
-  value: 'LEQ',
+  value: 'odrl:leq',
   text: '≤',
   tooltip: 'Less than or equal to',
 };
 
 export const operatorLessThanOrEqual2 =   {
-  value: 'LTEQ',
+  value: 'odrl:lteq',
   text: '≤',
   tooltip: 'Less than or equal to',
 };
 
 export const operatorLessThan = {
-  value: 'LT',
+  value: 'odrl:lt',
   text: '<',
   tooltip: 'Less than',
 };
 
 export const operatorIn = {
-  value: 'IN',
+  value: 'odrl:in',
   text: 'IN',
   tooltip: 'In',
 };
 
 export const operatorHasPart = {
-  value: 'HAS_PART',
+  value: 'odrl:has_part',
   text: 'HAS PART',
   tooltip: 'Has Part',
 };
 
 export const operatorIsA = {
-  value: 'IS_A',
+  value: 'odRl:is_a',
   text: 'IS A',
   tooltip: 'Is a',
 };
 
 export const operatorIsOneOf = {
-  value: 'IS_NONE_OF',
+  value: 'odrl:is_none_of',
   text: 'IS NONE OF',
   tooltip: 'Is none of',
 };
 export const operatorIsAnyOf = {
-  value: 'IS_ANY_OF',
+  value: 'odrl:is_any_of',
   text: 'IS ANY OF',
   tooltip: 'Is any of',
 };
 export const operatorIsAllOf = {
-  value: 'IS_ALL_OF',
+  value: 'odrl:is_all_of',
   text: 'IS ALL OF',
   tooltip: 'Is all of',
 };

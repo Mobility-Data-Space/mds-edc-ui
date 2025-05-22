@@ -69,10 +69,6 @@ export default function ContractNegotiationsListPage() {
                 </Table.Heading>
 
                 <Table.Heading>
-                  <T string="contractNegotiations.headingId" />
-                </Table.Heading>
-
-                <Table.Heading>
                   <T string="contractNegotiations.headingState" />
                 </Table.Heading>
 
@@ -107,11 +103,6 @@ export default function ContractNegotiationsListPage() {
                       >
                         {(page * 10) + (index + 1)}
                       </button>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <span className="font-semibold">
-                        {item.id}
-                      </span>
                     </Table.Cell>
                     <Table.Cell>
                       <span className="font-semibold">

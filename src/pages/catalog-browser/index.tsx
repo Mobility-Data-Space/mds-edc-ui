@@ -6,7 +6,7 @@ import React, {useState} from "react";
 import SideDrawer from "@/components/organisms/side-drawer.tsx";
 
 import {datasetToAsset, datasetToContractDefinitions} from "@/utilities/catalog";
-import {Asset, ContractDefinition} from "@think-it-labs/edc-connector-client";
+import {Asset, ContractDefinition, Dataset, Policy} from "@think-it-labs/edc-connector-client";
 
 import { ContractOffersList } from "@think-it-labs/edc-connector-ui/contract-offers-list";
 import LinkIcon from "@mui/icons-material/Link";
@@ -17,7 +17,7 @@ import {useDebounce} from "@/hooks/use-debounce.ts";
 import DataOfferDialog from "@/components/organisms/data-offer-dialog";
 import DataOfferCard from "@/components/organisms/data-offer-card";
 import SearchIcon from "@mui/icons-material/Search";
-import {Button} from "@/components/atoms/button.tsx";
+
 import {ChevronLeft, ChevronRight} from "lucide-react";
 
 export default function CatalogPage() {
@@ -25,7 +25,7 @@ export default function CatalogPage() {
   const { decrementPage, incrementPage, offset, limit, hasPrev } = usePagination();
   const { translator } = useTranslator();
 
-  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [isDataOfferDialogOpen, setIsDataOfferDialogOpen] = useState(false);
   const [isCounterPartyAddressDialogOpen, setIsCounterPartyAddressDialogOpen] = useState(false);
 
 
@@ -37,27 +37,22 @@ export default function CatalogPage() {
   const [counterPartyAddressToSearch, setCounterPartyAddressToSearch] = useState("") ;
   const { debounce: debouncedSetCounterPartyAddress } = useDebounce((url) => setCounterPartyAddressToSearch(url));
 
-  const [openAssetData, setOpenAssetData] = useState({
-    asset: {} as Asset,
-    participantId: "" as string,
-    contractDefinitions: [] as ContractDefinition[],
-  });
-
-  const openDetailsModal = (asset: Asset, participantId: string, contractDefinitions: ContractDefinition[]) => {
-    setIsDetailsModalOpen(true);
-    setOpenAssetData({ asset, participantId, contractDefinitions });
+  const [datasetToNegotiate, setDatasetToNegotiate] = useState<Dataset>({} as Dataset);
+  
+  const openDataOfferDialog = (dataset: Dataset) => {
+    setIsDataOfferDialogOpen(true);
+    setDatasetToNegotiate(dataset);
   };
 
   return (
     <>
       <DataOfferDialog
-        open={isDetailsModalOpen}
-        asset={openAssetData.asset}
-        participantId={openAssetData.participantId}
-        connectorEndpoint={counterPartyAddress}
-        contractDefinitions={openAssetData.contractDefinitions}
+        open={isDataOfferDialogOpen}
+        dataset={datasetToNegotiate}
+        participantId={connector.id}
+        counterPartyAddress={counterPartyAddress}
         assetIsOwned={counterPartyAddress === connector.protocolUrl}
-        onClose={() => setIsDetailsModalOpen(false)}
+        onClose={() => setIsDataOfferDialogOpen(false)}
         contentStyle={{ maxWidth: "90vw", width: "1000px" }}
       />
 
@@ -147,9 +142,9 @@ export default function CatalogPage() {
               {({item, index}) => (
                 <DataOfferCard
                   key={index}
-                  asset={datasetToAsset(item) as Asset}
-                  onClick={() => openDetailsModal(datasetToAsset(item) as any, counterPartyAddress, datasetToContractDefinitions(item))}
+                  dataset={item}
                   participantId={connector.id}
+                  onClick={() => openDataOfferDialog(item)}
                 />
               )}
             </ContractOffersList.Items>

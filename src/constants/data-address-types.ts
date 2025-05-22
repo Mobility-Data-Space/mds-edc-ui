@@ -1,5 +1,7 @@
+import { DataAddress } from "@think-it-labs/edc-connector-client";
+
 export const DATA_ADDRESS_TYPE_HTTP = {
-    value: 'Http',
+    value: "HttpData",
     text: 'REST-API Endpoint',
 };
 export const DATA_ADDRESS_TYPE_DATASINK = {
@@ -57,3 +59,30 @@ export const PUBLISH_MODE_DO_NOT_PUBLISH = {
 };
 
 export const PUBLISH_MODES = [PUBLISH_MODE_PUBLISH_UNRESTRICTED, PUBLISH_MODE_PUBLISH_RESTRICTED, PUBLISH_MODE_DO_NOT_PUBLISH];
+
+export const ASSET_DATA_ADDRESS_BASE_URL = "baseUrl"
+export const ASSET_DATA_ADDRESS_DESCRIPTION = "description"
+export const ASSET_DATA_ADDRESS_QUERY_PARAMS: string = "queryParams"
+
+export const DATA_OFFER_CONTACT_EMAIL = "email"
+export const DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT = "preferredEmailSubject"
+
+export const ASSET_DATA_ADDRESS_ENABLE_QUERY_PARAMETERIZATION: string = "enableQueryParameterization"
+export const ASSET_DATA_ADDRESS_ENABLE_BODY_PARAMETERIZATION = "enableBodyParameterization"
+
+export const ASSET_DATA_ADDRESS_HTTP_HEADERS = "headers"
+export const ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD = "proxyMethod"
+export const ASSET_DATA_ADDRESS_HTTP_PROXY_PATH = "proxyPath"
+
+export const ASSET_DATA_ADDRESS_HTTP_AUTH_ADD_HEADER: string = ""
+export const ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE = "authType"
+export const ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_VALUE = "Value"
+export const ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_NONE = ""
+export const ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_VAULT_SECRET: string = ""
+export const ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_NAME = "authKey"
+export const ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_VALUE  = "authCode"
+
+export const ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_SELECT_OPTIONS = [
+  { value: ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_VAULT_SECRET, text: "assets.new.fieldHttpAuthHeaderTypeWithVaultSecret" },
+  { value: ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_VALUE, text: "assets.new.fieldHttpAuthHeaderTypeWithValue" },
+];
