@@ -1,5 +1,5 @@
-import { ContractAgreement, Policy } from "@think-it-labs/edc-connector-client";
-import React, { useMemo } from "react";
+import {ContractAgreement, JsonLdObject, Policy} from "@think-it-labs/edc-connector-client";
+import React, {ReactNode, useMemo} from "react";
 import { PropsWithChildren, useCallback } from "react";
 import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
 import { Local, useLocalContext } from "./local";
@@ -63,6 +63,16 @@ ContractAgreementView.ProviderId = function ContractAgreementViewProviderId() {
 ContractAgreementView.Item = function ContractAgreementViewItem() {
   const { item } = useContractAgreementContext();
   return item;
+};
+
+ContractAgreementView.ContractSigningDate = function ContractAgreementViewContractSigningDate() {
+  const { item } = useContractAgreementContext();
+  return <>{item?.contractSigningDate && (new Date(item.contractSigningDate * 1000).toString())}</>;
+};
+
+ContractAgreementView.PolicyPermissions = function ContractAgreementViewContractSigningDate({ children }: { children: ({ item }: { item?: JsonLdObject[] }) => ReactNode }) {
+  const { item } = useContractAgreementContext();
+  return children({ item: item?.policy?.permissions });
 };
 
 ContractAgreementView.Loading = View.Loading;
