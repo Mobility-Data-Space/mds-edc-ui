@@ -34,9 +34,9 @@ import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-e
 import {enqueueSnackbar} from "notistack";
 import SideDrawer from "@/components/organisms/side-drawer";
 import { AssetInput, ContractDefinitionInput, DataAddress, PolicyDefinitionInput } from "@think-it-labs/edc-connector-client";
-import { defaultCreatePolicyFormData } from "@/utilities/policy";
-import { defaultCreateContractDefinitionFormData } from "@/utilities/contract_definition";
-import { defaultCreateAssetFormData, AssetProperties, computeRequiredDataOfferAddressProperties, generateId } from "@/utilities/asset"
+import { defaultCreatePolicyFormData, fromPolicyDefinitionForm } from "@/utilities/policy";
+import { defaultCreateContractDefinitionFormData, fromContractDefinitionForm } from "@/utilities/contract_definition";
+import { defaultCreateAssetFormData, AssetProperties, computeRequiredDataOfferAddressProperties, generateId, fromAssetForm } from "@/utilities/asset"
 import { AssetFormDataAddressStep } from "@/components/organisms/asset-form-data-address-step";
 
 interface DataOffer {
@@ -181,8 +181,17 @@ export default function CreateDataOfferPage() {
 
     console.log(formData)
     // create asset
+    client.management.assets.create(fromAssetForm(formData.asset))
+      .then()
+      .catch(error => enqueueSnackbar(translator("common.errorOccurred")));
     // create policy
+    client.management.policyDefinitions.create(fromPolicyDefinitionForm(formData.policy.policy.permissions))
+      .then()
+      .catch(error => enqueueSnackbar(translator("common.errorOccurred")));
     // create contract
+    client.management.contractDefinitions.create(fromContractDefinitionForm(formData.contract))
+      .then()
+      .catch(error => enqueueSnackbar(translator("common.errorOccurred")));
   };
 
   const onFormSubmitFail = (error: Error) => {

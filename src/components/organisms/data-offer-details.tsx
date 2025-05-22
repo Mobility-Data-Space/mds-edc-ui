@@ -24,11 +24,12 @@ import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use
 
 interface DataOfferDetailsProps {
   offers?: Policy[];
+  assetId: string;
   counterPartyAddress: string ;
   assetIsOwned: boolean;
 }
 
-export default function DataOfferDetails({ offers, counterPartyAddress, assetIsOwned = false }: DataOfferDetailsProps) {
+export default function DataOfferDetails({ offers, assetId, counterPartyAddress, assetIsOwned = false }: DataOfferDetailsProps) {
   const { connector } = useParticipantConnectorState() ;
   const { translator } = useTranslator();
 
@@ -63,7 +64,7 @@ export default function DataOfferDetails({ offers, counterPartyAddress, assetIsO
   const onNegotiateConfirm = (offer: Policy) => {
     console.log(offer)
 
-    const negotiation = createNegotiationRequest(offer, counterPartyAddress) ;
+    const negotiation = createNegotiationRequest(offer, counterPartyAddress, connector.id, assetId) ;
     edcClient.management.contractNegotiations.initiate(negotiation)
       .then(() => setNegotiateContractIsOpen(false))
       .catch(error => enqueueSnackbar(translator("common.errorOccurred")))
