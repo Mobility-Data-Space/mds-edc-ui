@@ -9,6 +9,9 @@ import { T } from "@/i18n";
 import { useRouter } from "next/router";
 import React from "react";
 import SideDrawer from "@/components/organisms/side-drawer.tsx";
+import {ContractNegotiationView} from "@think-it-labs/edc-connector-ui/contract-negotiation-view.tsx";
+import {Constraint} from "@think-it-labs/edc-connector-client";
+import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog.ts";
 
 function DeleteContractDefinition() {
   const { deleteItem } = useContractDefinitionContext();
@@ -37,14 +40,32 @@ export default function ContractDefinitionViewPage() {
         id={id}
         managementUrl={managementUrl}
       >
-        <h3 className="text-lg font-bold text-gray-800">
-          <ContractDefinitionView.Id />
-        </h3>
-        <p className="mt-1 text-xs font-medium uppercase text-gray-500">
-          <ContractDefinitionView.CreatedAt />
-        </p>
+        <ul>
+          <li className="mt-2">
+            <span className="font-bold"><T
+              string="contractDefinitions.[id].fieldId"/></span>: <ContractDefinitionView.AccessPolicy.Id/>
+          </li>
+          <li className="mt-2">
+            <span className="font-bold"><T
+              string="contractDefinitions.[id].fieldAccessPolicyId"/></span>: <ContractDefinitionView.AccessPolicy.Id/>
+          </li>
+          <li className="mt-2">
+            <span className="font-bold"><T
+              string="contractDefinitions.[id].fieldContractPolicyId"/></span>: <ContractDefinitionView.ContractPolicy.Id/>
+          </li>
+          <li className="mt-2">
+            <div className="flex gap-x-5">
 
-        <DeleteContractDefinition />
+            <span className="font-bold"><T
+              string="contractDefinitions.[id].fieldAssetSelector"/>: </span>
+              <ContractDefinitionView.AssetsSelector>
+                {({item}) => removeJsonLdSchemaFromProperties(item)?.map((constraint: any) =>
+                  (constraint.operandRight || constraint.rightOperand || [])[0]["@value"] || ""
+                )}
+              </ContractDefinitionView.AssetsSelector>
+            </div>
+          </li>
+        </ul>
       </ContractDefinitionView>
     </SideDrawer>
   );

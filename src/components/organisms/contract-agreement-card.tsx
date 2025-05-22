@@ -8,14 +8,14 @@ import {T} from "@/i18n";
 import {Timestamp} from "@think-it-labs/edc-connector-ui/timestamp.tsx";
 import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state.ts";
 
-export interface AssetCardProps {
+export interface ContractAgreementCard {
   contractAgreement: ContractAgreement;
   onClick: () => void;
 }
 
-export default function ContractAgreementCard({ contractAgreement, onClick }: AssetCardProps) {
+export default function ContractAgreementCard({ contractAgreement, onClick }: ContractAgreementCard) {
   const { connector } = useParticipantConnectorState();
-  console.log("ContractAgreementCard : ", contractAgreement);
+
   return (
     <ContractAgreementView id={contractAgreement.id} managementUrl={connector.managementUrl}>
       <Card className="w-[300px]" onClick={onClick}>

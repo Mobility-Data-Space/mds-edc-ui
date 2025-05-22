@@ -1,8 +1,5 @@
-import {
-  ContractDefinition,
-  PolicyDefinition,
-} from "@think-it-labs/edc-connector-client";
-import React from "react";
+import {ContractDefinition, Criterion, PolicyDefinition} from "@think-it-labs/edc-connector-client";
+import React, {ReactNode} from "react";
 import { PropsWithChildren, useCallback } from "react";
 import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
 import { PolicyDefinitionView } from "./policy-definition-view";
@@ -30,7 +27,7 @@ export function ContractDefinitionView(
     () => {
       if (id != undefined)
         return client.management.contractDefinitions.get(id)
-      
+
       return Promise.resolve(new ContractDefinition())
     },
     [client, id],
@@ -62,6 +59,11 @@ ContractDefinitionView.CreatedAt = function ContractDefinitionViewCreatedAt(
 ) {
   const { item } = useContractDefinitionContext();
   return <Timestamp {...props} milliseconds={item?.createdAt} />;
+};
+
+ContractDefinitionView.AssetsSelector = function PolicyDefinitionViewId({ children }: { children: ({ item }: { item?: Criterion[] }) => ReactNode }) {
+  const { item } = useContractDefinitionContext();
+  return children({ item: item?.assetsSelector });
 };
 
 ContractDefinitionView.Loading = View.Loading;
