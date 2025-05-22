@@ -1,19 +1,15 @@
 import React from "react";
 import {T} from "@/i18n";
-import {Input} from "../atoms/input.tsx";
-import {
-  ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS,
-  ASSET_VERSION, CreateAssetAdvancedInfoFormData,
-  CreateAssetPropertiesFormData,
-} from "@/schema/asset.ts";
+import {ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS} from "@/schema/asset.ts";
 import {IconButton, Tooltip} from "@mui/material";
 import {InfoOutlined} from "@mui/icons-material";
 import {KeyValuePairInputList} from "@/components/molecules/key-value-pair-input-list.tsx";
+import {AssetProperties} from "@/utilities/asset.ts";
 
 export interface AssetDataSamplesProps {
   translator: (key: string) => string;
-  formData: CreateAssetAdvancedInfoFormData;
-  onChange: (formData: CreateAssetAdvancedInfoFormData) => void;
+  formData: AssetProperties;
+  onChange: (formData: AssetProperties) => void;
   errors: { [key: string]: boolean };
   required?: boolean;
 }

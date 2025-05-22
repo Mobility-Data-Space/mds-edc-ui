@@ -1,77 +1,167 @@
-import { useConnectorDashboardState } from "@/hooks/use-connector-dashboard-state";
+import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { usePagination } from "@/hooks/use-pagination";
-import { T } from "@/i18n";
-
+import { T, useTranslator } from "@/i18n";
+import { Input } from "@/components/atoms/input";
 import React, {useState} from "react";
 import SideDrawer from "@/components/organisms/side-drawer.tsx";
-import AssetCard from "@/components/organisms/asset-card.tsx";
-import {Catalog} from "@think-it-labs/edc-connector-ui/catalog.tsx";
-import {dataSetToAsset, dataSetToContractDefinitions} from "@/schema/catalog.ts";
-import {Asset, ContractDefinition} from "@think-it-labs/edc-connector-client";
-import AssetDetailsDialog from "@/components/organisms/asset-details-dialog.tsx";
+
+import {datasetToAsset, datasetToContractDefinitions} from "@/utilities/catalog";
+import {Asset, ContractDefinition, Dataset, Policy} from "@think-it-labs/edc-connector-client";
+
+import { ContractOffersList } from "@think-it-labs/edc-connector-ui/contract-offers-list";
+import LinkIcon from "@mui/icons-material/Link";
+import InfoIcon from "@mui/icons-material/Info";
+import {IconButton, Pagination, Tooltip} from "@mui/material";
+import {CounterPartyAddressDialog} from "@/components/molecules/counter-party-address-dialog.tsx";
+import {useDebounce} from "@/hooks/use-debounce.ts";
+import DataOfferDialog from "@/components/organisms/data-offer-dialog";
+import DataOfferCard from "@/components/organisms/data-offer-card";
+import SearchIcon from "@mui/icons-material/Search";
+
+import {ChevronLeft, ChevronRight} from "lucide-react";
 
 export default function CatalogPage() {
-  const { connector } = useConnectorDashboardState();
-  const { offset, limit } = usePagination();
-  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-  const [openAssetData, setOpenAssetData] = useState({
-    asset: {} as Asset,
-    participantId: "" as string,
-    contractDefinitions: [] as ContractDefinition[],
-  });
+  const { connector } = useParticipantConnectorState();
+  const { decrementPage, incrementPage, offset, limit, hasPrev } = usePagination();
+  const { translator } = useTranslator();
 
-  const openDetailsModal = (asset: Asset, participantId: string, contractDefinitions: ContractDefinition[]) => {
-    setIsDetailsModalOpen(true);
-    setOpenAssetData({ asset, participantId, contractDefinitions });
+  const [isDataOfferDialogOpen, setIsDataOfferDialogOpen] = useState(false);
+  const [isCounterPartyAddressDialogOpen, setIsCounterPartyAddressDialogOpen] = useState(false);
+
+
+  const [shrinkSearch, setShrinkSearch] = useState(false);
+  const [searchValue, setSearchValue] = useState("") ;
+  const [searchValueToSearch, setSearchValueToSearch] = useState("") ;
+  const { debounce: debounceSetSearchValueToSearch } = useDebounce(setSearchValueToSearch);
+  const [counterPartyAddress, setCounterPartyAddress] = useState("") ;
+  const [counterPartyAddressToSearch, setCounterPartyAddressToSearch] = useState("") ;
+  const { debounce: debouncedSetCounterPartyAddress } = useDebounce((url) => setCounterPartyAddressToSearch(url));
+
+  const [datasetToNegotiate, setDatasetToNegotiate] = useState<Dataset>({} as Dataset);
+  
+  const openDataOfferDialog = (dataset: Dataset) => {
+    setIsDataOfferDialogOpen(true);
+    setDatasetToNegotiate(dataset);
   };
 
   return (
     <>
-      <SideDrawer title={<T string="catalog.title" />}>
-        <Catalog managementUrl={connector.managementUrl} protocolUrl={connector.protocolUrl} >
-          <Catalog.Provider>
-            {({ endpointUrl }) => (
-              <AssetDetailsDialog
-                open={isDetailsModalOpen}
-                asset={openAssetData.asset}
-                participantId={openAssetData.participantId}
-                connectorEndpoint={endpointUrl}
-                contractDefinitions={openAssetData.contractDefinitions}
-                onClose={() => setIsDetailsModalOpen(false)}
-                contentStyle={{ maxWidth: "90vw", width: "1000px" }}
-              />
-            )}
-          </Catalog.Provider>
-          <div className="flex justify-end py-4">
+      <DataOfferDialog
+        open={isDataOfferDialogOpen}
+        dataset={datasetToNegotiate}
+        participantId={connector.id}
+        counterPartyAddress={counterPartyAddress}
+        assetIsOwned={counterPartyAddress === connector.protocolUrl}
+        onClose={() => setIsDataOfferDialogOpen(false)}
+        contentStyle={{ maxWidth: "90vw", width: "1000px" }}
+      />
 
-            {/* TODO: move pagination here */}
+      <CounterPartyAddressDialog
+        open={isCounterPartyAddressDialogOpen}
+        onClose={() => setIsCounterPartyAddressDialogOpen(false)}
+        content={counterPartyAddress}
+      />
+
+      <SideDrawer title={<T string="catalog.title"/>}>
+        <div className="grid grid-cols-3 gap-x-3.5 py-4">
+          <div>
+            <Input
+              id="catalog-search"
+              fullWidth
+              data-testid="catalog-search"
+              type="text"
+              label={<T string="catalog.search"/>}
+              value={searchValue}
+              onFocus={() => setShrinkSearch(true)}
+              onBlur={(e) => setShrinkSearch(!!e.target.value)}
+              slotProps={{
+                input: {
+                  classes: {root: "flex-grow"},
+                  startAdornment: <SearchIcon className="mr-2"/>,
+                },
+                inputLabel: {
+                  shrink: shrinkSearch,
+                  className: shrinkSearch ? "" : "ml-7",
+                }
+              }}
+              onChange={(event) => {
+                setSearchValue(event.target.value);
+                debounceSetSearchValueToSearch(event.target.value);
+              }}
+            />
           </div>
-
+          <div>
+            <Input
+              id="catalog-url"
+              fullWidth
+              data-testid="catalog-url"
+              type="text"
+              label={<T string="catalog.connectorEndpoints"/>}
+              placeholder="https://other-connector.com/"
+              value={counterPartyAddress}
+              slotProps={{
+                input: {
+                  classes: {root: "flex-grow"},
+                  startAdornment: <LinkIcon className="mr-2"/>,
+                  endAdornment: <Tooltip title={translator("catalog.clickForDetails")}>
+                    <IconButton onClick={() => setIsCounterPartyAddressDialogOpen(true)}>
+                      <InfoIcon color="primary"/>
+                    </IconButton>
+                  </Tooltip>
+                }
+              }}
+              onChange={(event) => {
+                setCounterPartyAddress(event.target.value);
+                debouncedSetCounterPartyAddress(event.target.value);
+              }}
+            />
+          </div>
+          <div className="flex justify-end items-center">
+            <div className="inline-flex float-right gap-x-2">
+              <IconButton
+                onClick={decrementPage}
+                disabled={!hasPrev}
+              >
+                <ChevronLeft className="size-6"/>
+              </IconButton>
+              <IconButton
+                onClick={incrementPage}
+              >
+                <ChevronRight className="size-6"/>
+              </IconButton>
+            </div>
+          </div>
+        </div>
+        <ContractOffersList managementUrl={connector.managementUrl} counterPartyAddress={counterPartyAddressToSearch}>
           <div className="flex flex-wrap gap-2.5">
-            <Catalog.Items
+            <ContractOffersList.Items
               limit={limit}
               offset={offset}
               sortOrder="DESC"
             >
-              {({ item, index, participantId }) => (
-                <AssetCard asset={dataSetToAsset(item) as any} key={index} onClick={() => openDetailsModal(dataSetToAsset(item) as any, participantId, dataSetToContractDefinitions(item))} participantId={participantId} />
+              {({item, index}) => (
+                <DataOfferCard
+                  key={index}
+                  dataset={item}
+                  participantId={connector.id}
+                  onClick={() => openDataOfferDialog(item)}
+                />
               )}
-            </Catalog.Items>
+            </ContractOffersList.Items>
           </div>
-
-          <Catalog.Loading>
+          <ContractOffersList.Loading>
             <div className="max-w-20 mx-auto mt-4 flex flex-col bg-white border shadow-sm rounded-xl p-4 md:p-5">
-              <span
-                className="animate-spin mx-auto inline-block size-8 border-[3px] border-current border-t-transparent text-blue-600 rounded-full"
-                role="status"
-                aria-label="loading"
-              >
-                <span className="sr-only">Loading...</span>
-              </span>
+            <span
+              className="animate-spin mx-auto inline-block size-8 border-[3px] border-current border-t-transparent text-blue-600 rounded-full"
+              role="status"
+              aria-label="loading"
+            >
+              <span className="sr-only">Loading...</span>
+            </span>
             </div>
-          </Catalog.Loading>
-        </Catalog>
+          </ContractOffersList.Loading>
+        </ContractOffersList>
       </SideDrawer>
     </>
-  );
+);
 }

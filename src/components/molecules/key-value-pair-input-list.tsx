@@ -81,7 +81,8 @@ export function KeyValuePairInputList({
   value,
   onChange
 }: KeyValuePairInputListProps) {
-
+  console.log(keyLabel)
+  console.log(value)
   return (
     <div className="w-full flex flex-col gap-y-3">
       {value.map((tagInput, index) => (

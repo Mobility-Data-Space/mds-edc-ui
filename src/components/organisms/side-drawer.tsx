@@ -69,15 +69,15 @@ const routes: ReactNode[] = [
   />,
   <RouteNode
     key="contract-agreements"
-    href="/contracts"
-    title="Contracts"
+    href="/contract-agreements"
+    title="Contract Agreements"
     icon={<AssignmentTurnedInIcon {...iconsProps} />}
   />,
 
   <RouteNode
-    key="transfer-history"
-    href="/transfer-history"
-    title="Transfer History"
+    key="transfer-processes"
+    href="/transfer-processes"
+    title="Transfer Processes"
     icon={<AssignmentIcon {...iconsProps} />}
   />,
   // TODO: translate
@@ -85,25 +85,25 @@ const routes: ReactNode[] = [
     Provide
   </h3>,
   <RouteNode
-    key="create-asset"
-    href="/create-asset"
+    key="create-offer"
+    href="/create-data-offer"
     title="Create Data Offer"
     icon={<PostAddIcon {...iconsProps} />}
   />,
   <RouteNode
     key="assets"
-    href="/my-assets"
+    href="/assets"
     title="Assets"
     icon={<UploadIcon {...iconsProps} />}
   />,
   <RouteNode
     key="policy-definitions"
-    href="/policies"
+    href="/policy-definitions"
     title="Policies"
     icon={<PolicyIcon {...iconsProps} />}
   />,
   <RouteNode
-    key="contract-definitions"
+    key="data-offers"
     href="/data-offers"
     title="Data offers"
     icon={<RuleIcon {...iconsProps} />}
@@ -140,7 +140,16 @@ export default function SideDrawer(props: Props) {
   const drawer = (
     <div>
       <Toolbar >
-        <Image src="/mds_logo.svg" alt="Logo" height="57" width="0" className="m-2" style={{ height: "57px", width: "70%" }} />
+        <Image
+          src="/mds_logo.svg"
+          alt="Logo"
+          height={0}
+          width={0}
+          className="m-2"
+          priority
+          style={{ height: "57px", width: "70%" }}
+        />
+
       </Toolbar>
       <List>
         {routes.map((route: any) => {
@@ -161,7 +170,7 @@ export default function SideDrawer(props: Props) {
 
 
   return (
-    <Box className="bg-background" sx={{ display: 'flex', height: "100%" }}>
+    <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar
         elevation={0}

@@ -1,15 +1,13 @@
 import React from "react";
 import {T} from "@/i18n";
 import {Input} from "../atoms/input.tsx";
-import {
-  ASSET_ADVANCED_INFO_GEO_LOCATION, ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME,
-  CreateAssetAdvancedInfoFormData,
-} from "@/schema/asset.ts";
+import {ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME} from "@/schema/asset.ts";
+import {AssetProperties} from "@/utilities/asset.ts";
 
 export interface AssetSovereignLegalNameProps {
   translator: (key: string) => string;
-  formData: CreateAssetAdvancedInfoFormData;
-  onChange: (formData: CreateAssetAdvancedInfoFormData) => void;
+  formData: AssetProperties;
+  onChange: (formData: AssetProperties) => void;
   errors: { [key: string]: boolean };
   required?: boolean;
 }

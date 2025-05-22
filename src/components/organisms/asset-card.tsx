@@ -19,6 +19,7 @@ export interface AssetCardProps {
 }
 
 export default function AssetCard({ asset, participantId, onClick = () => {} }: AssetCardProps) {
+  const asset_id = asset["@id"]
   const keywords = asset.properties[ASSET_KEYWORDS] || [];
   const slicedKeywords = keywords.slice(0, 3);
   const remainingKeywordsCount = keywords.length - slicedKeywords.length;
@@ -34,7 +35,7 @@ export default function AssetCard({ asset, participantId, onClick = () => {} }: 
           <AssetIcon asset={asset} fontSize="large" />
           <div className="flex flex-col">
             <Typography variant="h4" className="!leading-none hover:underline cursor-pointer">
-              {title}
+              {asset_id}
             </Typography>
             <Typography variant="body1" color="textSecondary">
               {participantId}

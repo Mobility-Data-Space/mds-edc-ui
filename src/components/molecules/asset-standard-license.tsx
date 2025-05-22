@@ -1,15 +1,13 @@
 import React from "react";
 import {T} from "@/i18n";
 import {Input} from "../atoms/input.tsx";
-import {
-  ASSET_ID, ASSET_STANDARD_LICENSE,
-  CreateAssetPropertiesFormData,
-} from "@/schema/asset.ts";
+import {ASSET_STANDARD_LICENSE} from "@/schema/asset.ts";
+import {AssetProperties} from "@/utilities/asset.ts";
 
 export interface AssetStandardLicenseProps {
   translator: (key: string) => string;
-  formData: CreateAssetPropertiesFormData;
-  onChange: (formData: CreateAssetPropertiesFormData) => void;
+  formData: AssetProperties;
+  onChange: (formData: AssetProperties) => void;
   errors: { [key: string]: boolean };
   required?: boolean;
 }
