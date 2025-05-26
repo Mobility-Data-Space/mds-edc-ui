@@ -1,26 +1,20 @@
-import React, {useEffect, useMemo, useState} from "react";
-import {T, useTranslator} from "@/i18n";
-import {Asset, compact, ContractDefinition, ContractNegotiationRequest, Offer, Policy} from "@think-it-labs/edc-connector-client";
-import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
-import {ASSET_KEYWORDS, ASSET_DESCRIPTION, ASSET_TITLE} from "@/schema/asset.ts";
+import React, {useEffect, useState} from "react";
 import {Button, Checkbox, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Icon, Tooltip} from "@mui/material";
-import {MarkdownCollapsableText} from "@/components/molecules/markdown-collapsable-text.tsx";
-import Divider from "@mui/material/Divider";
-import AssetFieldGrid from "@/components/molecules/asset-field-grid.tsx";
-import {assetCustomFieldsToShow, assetFieldsToShow, assetPrivateFieldsToShow} from "@/utilities/asset.ts";
-import {AssetFieldShow} from "@/components/molecules/asset-field-show.tsx";
 import Typography from "@mui/material/Typography";
-import {convertOdrlToJsonHtml, removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
-import {ConstraintShow} from "@/components/molecules/constraint-show.tsx";
-import dynamic from "next/dynamic";
-import {ReactJsonViewProps} from "react-json-view";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import {ConfirmDialog} from "@/components/molecules/confirm-dialog.tsx";
-import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state.ts";
-
 import {enqueueSnackbar} from "notistack";
-import { createNegotiationRequest } from "@/utilities/contract_negotiations";
+import {ReactJsonViewProps} from "react-json-view";
+import dynamic from "next/dynamic";
+import {compact, Policy} from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
+
+import {AssetFieldShow} from "@/components/molecules/asset-field-show";
+import {ConstraintShow} from "@/components/molecules/constraint-show";
+import {ConfirmDialog} from "@/components/molecules/confirm-dialog";
+import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
+import {T, useTranslator} from "@/i18n";
+import { createNegotiationRequest } from "@/utilities/contract_negotiations";
+import {convertOdrlToJsonHtml, removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
 
 interface DataOfferDetailsProps {
   offers?: Policy[];

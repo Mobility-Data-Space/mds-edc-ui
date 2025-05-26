@@ -1,8 +1,10 @@
 import React from "react";
+
+import {Input} from "@/components/atoms/input";
+
 import {T} from "@/i18n";
-import {Input} from "../atoms/input.tsx";
-import {ASSET_ADVANCED_INFO_DATA_MODEL} from "@/schema/asset.ts";
-import {AssetProperties} from "@/utilities/asset.ts";
+import {ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_MODEL_ID} from "@/schema/asset";
+import {AssetProperties} from "@/utilities/asset";
 
 export interface AssetDataModelProps {
   translator: (key: string) => string;
@@ -22,9 +24,15 @@ export function AssetDataModel({ translator, formData, onChange, errors }: Asset
       label={<T string="assets.new.fieldAdvancedInfoDataModel"/>}
       placeholder={translator("assets.new.fieldAdvancedInfoDataModelPlaceholder")}
       tooltip={translator("assets.new.fieldAdvancedInfoDataModelTooltip")}
-      value={formData[ASSET_ADVANCED_INFO_DATA_MODEL]}
+      value={formData[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_ID]}
       error={errors[ASSET_ADVANCED_INFO_DATA_MODEL]}
-      onChange={(event) => onChange({...formData, [ASSET_ADVANCED_INFO_DATA_MODEL]: event.target.value})}
+      onChange={(event) => onChange({
+        ...formData, 
+        [ASSET_ADVANCED_INFO_DATA_MODEL]: {
+          ...formData[ASSET_ADVANCED_INFO_DATA_MODEL],
+          [ASSET_ADVANCED_INFO_DATA_MODEL_ID]: event.target.value
+        }
+      })}
     />
   );
 }

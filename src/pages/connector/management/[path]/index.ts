@@ -5,15 +5,12 @@ type Data = {
   name: string;
 };
 
-function removeProxyPrefix(url: string = "") {
-  return url.replace(new RegExp(`(${process.env.NEXT_PUBLIC_EDC_URL || ""})?/api\\?path=`, 'i'), "");
-}
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>,
 ) {
-  const url = removeProxyPrefix(req.url);
+  
+  const url = req.url as string;
 
   if (req.method?.toLowerCase() === "head") {
     return res.status(200).end();

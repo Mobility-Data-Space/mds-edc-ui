@@ -1,7 +1,9 @@
 import React from "react";
-import {ASSET_KEYWORDS} from "@/schema/asset.ts";
-import {KeywordsInput} from "@/components/atoms/keywords-input.tsx";
-import {AssetProperties} from "@/utilities/asset.ts";
+
+import {KeywordsInput} from "@/components/atoms/keywords-input";
+
+import {ASSET_KEYWORDS} from "@/schema/asset";
+import {AssetProperties} from "@/utilities/asset";
 
 export interface AssetKeywordsProps {
   translator: (key: string) => string;

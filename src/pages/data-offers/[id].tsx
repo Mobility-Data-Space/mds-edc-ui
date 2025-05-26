@@ -1,15 +1,12 @@
-import { Button } from "@/components/atoms/button";
-
+import { useRouter } from "next/router";
+import React from "react";
 import {
   ContractDefinitionView,
-  useContractDefinitionContext,
 } from "@think-it-labs/edc-connector-ui/contract-definition-view";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T } from "@/i18n";
-import { useRouter } from "next/router";
-import React from "react";
-import SideDrawer from "@/components/organisms/side-drawer.tsx";
-import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog.ts";
+import SideDrawer from "@/components/organisms/side-drawer";
+import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
 
 export default function ContractDefinitionViewPage() {
   const id = useRouter().query.id as string;

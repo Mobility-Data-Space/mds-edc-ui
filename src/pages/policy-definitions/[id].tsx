@@ -1,37 +1,16 @@
+import { useRouter } from "next/router";
+import React from "react";
+import {Button} from "@mui/material";
+import {Constraint} from "@think-it-labs/edc-connector-client";
 import {
   PolicyDefinitionView,
   usePolicyDefinitionContext,
 } from "@think-it-labs/edc-connector-ui/policy-definition-view";
-
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T } from "@/i18n";
-import { useRouter } from "next/router";
-import React from "react";
-import SideDrawer from "@/components/organisms/side-drawer.tsx";
-import {convertOdrlToJsonHtml, removeJsonLdSchemaFromProperties} from "@/utilities/catalog.ts";
-import {ConstraintShow} from "@/components/molecules/constraint-show.tsx";
-import {Constraint} from "@think-it-labs/edc-connector-client";
-import {Button} from "@mui/material";
-
-function DeletePolicyDefinition() {
-  const { deleteItem } = usePolicyDefinitionContext();
-  const { push } = useRouter();
-
-  return (
-    <div>
-      <Button
-        variant="contained"
-        color="error"
-        onClick={async () => {
-          await deleteItem();
-          push("/policy-definitions");
-        }}
-      >
-        Delete
-      </Button>
-    </div>
-  );
-}
+import SideDrawer from "@/components/organisms/side-drawer";
+import {convertOdrlToJsonHtml, removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
+import {ConstraintShow} from "@/components/molecules/constraint-show";
 
 export default function PolicyDefinitionPage() {
   const id = useRouter().query.id as string;

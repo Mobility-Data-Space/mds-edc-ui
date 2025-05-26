@@ -1,9 +1,11 @@
 import React from "react";
+
+import {MuiSelect} from "@/components/atoms/mui-select";
+
 import {T} from "@/i18n";
-import {MuiSelect} from "../atoms/mui-select.tsx";
-import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY} from "@/schema/asset.ts";
-import {DATA_CATEGORY_SELECT_DATA, DATA_SUBCATEGORIES_DATA, TYPE_DATA_CATEGORY} from "@/constants/data-category.ts";
-import {AssetProperties} from "@/utilities/asset.ts";
+import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME} from "@/schema/asset";
+import {DATA_CATEGORY_SELECT_DATA, DATA_SUBCATEGORIES_DATA, TYPE_DATA_CATEGORY} from "@/constants/data-category";
+import {AssetProperties} from "@/utilities/asset";
 
 export interface AssetDataCategoryAndSubcategoryProps {
   translator: (key: string) => string;
@@ -30,12 +32,14 @@ export function AssetDataCategoryAndSubcategory({ translator, formData, onChange
           id="advanced-info-data-category"
           placeholder={translator("assets.new.fieldAdvancedInfoDataCategoryPlaceholder")}
           options={DATA_CATEGORY_SELECT_DATA}
-          value={formData[ASSET_ADVANCED_INFO_DATA_CATEGORY]}
+          value={formData[ASSET_ADVANCED_INFO_MOBILITY_THEME][ASSET_ADVANCED_INFO_DATA_CATEGORY]}
           error={errors[ASSET_ADVANCED_INFO_DATA_CATEGORY]}
           onChange={(event) => onChange({
             ...formData,
-            [ASSET_ADVANCED_INFO_DATA_CATEGORY]: event.target.value,
-            [ASSET_ADVANCED_INFO_DATA_SUBCATEGORY]: ""
+            [ASSET_ADVANCED_INFO_MOBILITY_THEME]: {
+              ...formData[ASSET_ADVANCED_INFO_MOBILITY_THEME],
+              [ASSET_ADVANCED_INFO_DATA_CATEGORY]: event.target.value,
+            }
           })}
         />
       </div>
@@ -51,10 +55,16 @@ export function AssetDataCategoryAndSubcategory({ translator, formData, onChange
           name={ASSET_ADVANCED_INFO_DATA_SUBCATEGORY}
           id="advanced-info-data-subcategory"
           placeholder={translator("assets.new.fieldAdvancedInfoDataSubcategoryPlaceholder")}
-          options={DATA_SUBCATEGORIES_DATA[formData[ASSET_ADVANCED_INFO_DATA_CATEGORY] as TYPE_DATA_CATEGORY] || []}
-          value={formData[ASSET_ADVANCED_INFO_DATA_SUBCATEGORY]}
+          options={DATA_SUBCATEGORIES_DATA[formData[ASSET_ADVANCED_INFO_MOBILITY_THEME][ASSET_ADVANCED_INFO_DATA_CATEGORY] as TYPE_DATA_CATEGORY] || []}
+          value={formData[ASSET_ADVANCED_INFO_MOBILITY_THEME][ASSET_ADVANCED_INFO_DATA_SUBCATEGORY]}
           error={errors[ASSET_ADVANCED_INFO_DATA_SUBCATEGORY]}
-          onChange={(event) => onChange({...formData, [ASSET_ADVANCED_INFO_DATA_SUBCATEGORY]: event.target.value})}
+          onChange={(event) => onChange({
+            ...formData,
+            [ASSET_ADVANCED_INFO_MOBILITY_THEME]: {
+              ...formData[ASSET_ADVANCED_INFO_MOBILITY_THEME],
+              [ASSET_ADVANCED_INFO_DATA_SUBCATEGORY]: event.target.value,
+            }
+          })}
         />
       </div>
     </>

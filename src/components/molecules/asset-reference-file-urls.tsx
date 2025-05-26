@@ -1,10 +1,14 @@
 import React from "react";
-import {T} from "@/i18n";
-import {ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS} from "@/schema/asset.ts";
+
 import {IconButton, Tooltip} from "@mui/material";
 import {InfoOutlined} from "@mui/icons-material";
-import {KeyValuePairInputList} from "@/components/molecules/key-value-pair-input-list.tsx";
-import {AssetProperties} from "@/utilities/asset.ts";
+
+import {KeyValuePairInputList} from "@/components/molecules/key-value-pair-input-list";
+
+import {T} from "@/i18n";
+import {ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA, ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS} from "@/schema/asset";
+
+import {AssetProperties} from "@/utilities/asset";
 
 export interface AssetReferenceFileUrlsProps {
   translator: (key: string) => string;
@@ -35,9 +39,19 @@ export function AssetReferenceFileUrls({ translator, formData, onChange, errors 
       valueLabel={translator("assets.new.fieldAdvancedInfoReferenceFileUrlsValueLabel")}
       valuePlaceholder="https://my-org.com/my-data-offer/documentation/api-reference"
       error={errors[ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS]}
-      value={formData[ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] as []}
+      value={formData[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] as []}
       valueOnly
-      onChange={(value) => onChange({...formData, [ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS]: value})}
+      onChange={(value) => onChange(
+        {
+          ...formData, 
+          [ASSET_ADVANCED_INFO_DATA_MODEL]:{
+            ...formData[ASSET_ADVANCED_INFO_DATA_MODEL],
+            [ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA]: {
+              ...formData[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA],
+              [ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS]: value
+            }
+          }
+        })}
     />
   </>);
 }

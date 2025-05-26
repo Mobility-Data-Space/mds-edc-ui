@@ -1,23 +1,25 @@
 import React from "react";
+import {FormHelperText, Link} from "@mui/material";
+
+import {Input} from "@/components/atoms/input";
+import {AssetTransportMode} from "@/components/molecules/asset-transport-mode";
+import {AssetDataModel} from "@/components/molecules/asset-data-model";
+import {AssetDataSamples} from "@/components/molecules/asset-data-samples";
+import {AssetReferenceFileUrls} from "@/components/molecules/asset-reference-file-urls";
+import {AssetDataUpdateFrequency} from "@/components/molecules/asset-data-update-frequency";
+import {AssetGeoReferenceMethod} from "@/components/molecules/asset-geo-reference-method";
+import {AssetGeoLocations} from "@/components/molecules/asset-geo-locations";
+import {AssetNutsLocations} from "@/components/molecules/asset-nuts-locations";
+import {AssetSovereignLegalName} from "@/components/molecules/asset-sovereign-legal-name";
+import {AssetConditionsForUse} from "@/components/molecules/asset-conditions-for-use";
+import {AssetDataCategoryAndSubcategory} from "@/components/molecules/asset-data-category-and-subcategory";
+import {AssetTemporalCoverage} from "@/components/molecules/asset-temporal-coverage";
+
 import {T} from "@/i18n";
-import {Input} from "../atoms/input.tsx";
 import {
   ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION,
-} from "@/schema/asset.ts";
-import {FormHelperText, Link} from "@mui/material";
-import {AssetTransportMode} from "@/components/molecules/asset-transport-mode.tsx";
-import {AssetDataModel} from "@/components/molecules/asset-data-model.tsx";
-import {AssetDataSamples} from "@/components/molecules/asset-data-samples.tsx";
-import {AssetReferenceFileUrls} from "@/components/molecules/asset-reference-file-urls.tsx";
-import {AssetDataUpdateFrequency} from "@/components/molecules/asset-data-update-frequency.tsx";
-import {AssetGeoReferenceMethod} from "@/components/molecules/asset-geo-reference-method.tsx";
-import {AssetGeoLocations} from "@/components/molecules/asset-geo-locations.tsx";
-import {AssetNutsLocations} from "@/components/molecules/asset-nuts-locations.tsx";
-import {AssetSovereignLegalName} from "@/components/molecules/asset-sovereign-legal-name.tsx";
-import {AssetConditionsForUse} from "@/components/molecules/asset-conditions-for-use.tsx";
-import {AssetDataCategoryAndSubcategory} from "@/components/molecules/asset-data-category-and-subcategory.tsx";
-import {AssetTemporalCoverage} from "@/components/molecules/asset-temporal-coverage.tsx";
-import {AssetProperties} from "@/utilities/asset.ts";
+} from "@/schema/asset";
+import {AssetProperties} from "@/utilities/asset";
 
 export interface AssetFormAdvancedInfoStepProps {
   translator: (key: string) => string;

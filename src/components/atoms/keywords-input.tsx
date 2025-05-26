@@ -2,9 +2,8 @@ import React from "react";
 import { IconButton, Tooltip } from "@mui/material";
 import { TextFieldProps } from "@mui/material/TextField";
 import { InfoOutlined } from '@mui/icons-material';
-import { MuiChipsInput } from 'mui-chips-input'
-
 import FormControl from "@mui/material/FormControl";
+import { MuiChipsInput } from 'mui-chips-input'
 
 const chipKeyCodes = [",", ";", "Enter"];
 

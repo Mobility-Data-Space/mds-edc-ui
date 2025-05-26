@@ -1,10 +1,13 @@
 import React from "react";
-import {T} from "@/i18n";
-import {ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS} from "@/schema/asset.ts";
+
 import {IconButton, Tooltip} from "@mui/material";
 import {InfoOutlined} from "@mui/icons-material";
-import {KeyValuePairInputList} from "@/components/molecules/key-value-pair-input-list.tsx";
-import {AssetProperties} from "@/utilities/asset.ts";
+
+import {KeyValuePairInputList} from "@/components/molecules/key-value-pair-input-list";
+
+import {T} from "@/i18n";
+import {ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS} from "@/schema/asset";
+import {AssetProperties} from "@/utilities/asset";
 
 export interface AssetDataSamplesProps {
   translator: (key: string) => string;

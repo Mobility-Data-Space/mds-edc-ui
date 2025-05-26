@@ -1,18 +1,17 @@
-import {Asset} from "@think-it-labs/edc-connector-client";
-import {Icon, IconProps} from "@mui/material";
-import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
 import React from "react";
+import {Icon, IconProps} from "@mui/material";
 
-import {DATA_OFFER_TYPE_LIVE, DATA_OFFER_TYPE_ON_REQUEST} from "@/constants/data-address-types.ts";
+import {Asset} from "@think-it-labs/edc-connector-client";
+import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
 
+import { DataAddressTypes } from "@/utilities/data_address";
 
 export function AssetIcon({ asset, ...rest }: { asset: Asset } & IconProps): JSX.Element {
-  // TODO: if at least one contract offer is done, add check icon overlay
   let icon;
 
-  if (readValue(asset.dataAddress, "type") === DATA_OFFER_TYPE_ON_REQUEST.value) {
+  if (readValue(asset.dataAddress, "type") === DataAddressTypes.MDSOnRequestOffer) {
     icon = "contact";
-  } else if (readValue(asset.dataAddress, "type") === DATA_OFFER_TYPE_LIVE.value) {
+  } else if (readValue(asset.dataAddress, "type") === DataAddressTypes.HttpData) {
     icon = "upload";
   } else {
     icon = "sim_card"

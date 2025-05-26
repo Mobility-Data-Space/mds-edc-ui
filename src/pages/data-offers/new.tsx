@@ -1,16 +1,17 @@
-import { useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
-import { enqueueSnackbar } from "notistack";
-import { T, useTranslator } from "@/i18n";
 import React, {useEffect, useRef, useState} from "react";
-import SideDrawer from "@/components/organisms/side-drawer.tsx";
-import { ContractDefinitionFormWrapper } from "@think-it-labs/edc-connector-ui/contract-definition-form-wrapper";
-import { fromContractDefinitionForm } from "@/utilities/contract_definition";
-import {ContractDefinitionInput, CriterionInput} from "@think-it-labs/edc-connector-client";
-import { defaultCreateContractDefinitionFormData } from "@/utilities/contract_definition";
-import {MuiSelect} from "@/components/atoms/mui-select.tsx";
-import {operatorIn} from "@/utilities/constraints";
+import { enqueueSnackbar } from "notistack";
 import {Button} from "@mui/material";
+import {ContractDefinitionInput, CriterionInput} from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
+import { ContractDefinitionFormWrapper } from "@think-it-labs/edc-connector-ui/contract-definition-form-wrapper";
+import { useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
+import { T, useTranslator } from "@/i18n";
+import SideDrawer from "@/components/organisms/side-drawer";
+import { fromContractDefinitionForm } from "@/utilities/contract_definition";
+import { defaultCreateContractDefinitionFormData } from "@/utilities/contract_definition";
+import {MuiSelect} from "@/components/atoms/mui-select";
+import {operatorIn} from "@/utilities/policy-constraints";
+import { Input } from "@/components/atoms/input";
 
 const optionsGenerator = (data: { "@id": string }[]) => {
   return data.map(entry => ({
@@ -81,8 +82,25 @@ export default function CreateContractDefinitionPage() {
         formData={() => fromContractDefinitionForm(formData)}
         onSuccess={() => push("/data-offers")}
         onFailure={onFormSubmitFail}
-      >
+      >   
         <div className="flex flex-col gap-y-5">
+          <div>
+            <label
+              className="inline-block text-sm text-black font-medium mb-2"
+            >
+              <T string="policyDefinitions.new.policyId"/>
+            </label>
+            <Input
+                  required
+                  name="contract-definition-id"
+                  id="contract-definition-id"
+                  data-testid="contract-definition-id"
+                  type="text"
+                  placeholder="contract definition id"
+                  value={formData["@id"]}
+                  onChange={(event) => onChange({...formData, ["@id"]: event.target.value})}
+                />
+          </div>
           <MuiSelect
             multiple
             name="assets-selector"

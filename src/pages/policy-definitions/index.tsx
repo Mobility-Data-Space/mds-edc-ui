@@ -1,19 +1,15 @@
+import {ChevronLeft, ChevronRight, CirclePlus, Plus, Search} from "lucide-react";
+import React from "react";
+import {Button as MuiButton, IconButton} from "@mui/material";
 import { PolicyDefinitionsList } from "@think-it-labs/edc-connector-ui/policy-definitions-list";
-import { Timestamp } from "@think-it-labs/edc-connector-ui/timestamp";
 import PolicyCard from "@/components/organisms/policy-card";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { usePagination } from "@/hooks/use-pagination";
 import { T, useTranslator } from "@/i18n";
-import {ChevronLeft, ChevronRight, CirclePlus, Plus, Search} from "lucide-react";
-import React from "react";
-import SideDrawer from "@/components/organisms/side-drawer.tsx";
-import {Button as MuiButton, IconButton} from "@mui/material";
-import { Button } from "@/components/atoms/button";
-import Typography from "@mui/material/Typography";
+import SideDrawer from "@/components/organisms/side-drawer";
 
 export default function PolicyDefinitionListPage() {
   const { push, connector } = useParticipantConnectorState();
-  const { globalTranslator } = useTranslator();
 
   const { decrementPage, incrementPage, offset, limit, hasPrev, page } =
     usePagination();

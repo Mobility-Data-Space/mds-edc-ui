@@ -1,15 +1,14 @@
 
+import { useRouter } from "next/router";
+import React, {useState} from "react";
+import Button from "@mui/material/Button";
 import { ContractAgreementView } from "@think-it-labs/edc-connector-ui/contract-agreement-view";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
-import { useRouter } from "next/router";
-import React, {useState} from "react";
-import SideDrawer from "@/components/organisms/side-drawer.tsx";
-import Button from "@mui/material/Button";
-import {TransferFormDialog} from "@/components/templates/transfer-form-dialog.tsx";
-import {Constraint} from "@think-it-labs/edc-connector-client";
-import {ConstraintShow} from "@/components/molecules/constraint-show.tsx";
-import {convertOdrlToJsonHtml, removeJsonLdSchemaFromProperties} from "@/utilities/catalog.ts";
+import SideDrawer from "@/components/organisms/side-drawer";
+import {TransferFormDialog} from "@/components/templates/transfer-form-dialog";
+import {ConstraintShow} from "@/components/molecules/constraint-show";
+import {convertOdrlToJsonHtml, removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
 
 export default function ContractAgreementViewPage() {
   const id = useRouter().query.id as string;

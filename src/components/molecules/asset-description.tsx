@@ -1,9 +1,12 @@
 import React from "react";
-import {T} from "@/i18n";
-import {Input} from "../atoms/input.tsx";
-import {ASSET_DESCRIPTION} from "@/schema/asset.ts";
+
 import {FormHelperText, Link} from "@mui/material";
-import {AssetProperties} from "@/utilities/asset.ts";
+
+import {Input} from "@/components/atoms/input";
+
+import {T} from "@/i18n";
+import {ASSET_DESCRIPTION} from "@/schema/asset";
+import {AssetProperties} from "@/utilities/asset";
 
 export interface AssetDescriptionProps {
   translator: (key: string) => string;

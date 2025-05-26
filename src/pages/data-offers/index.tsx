@@ -1,15 +1,12 @@
-import { Button } from "@/components/atoms/button";
-
-import { ContractDefinitionsList } from "@think-it-labs/edc-connector-ui/contract-definitions-list";
-import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
-import DataOfferCard from "@/components/organisms/data-offer-card";
-import { usePagination } from "@/hooks/use-pagination";
-import { T, useTranslator } from "@/i18n";
 import {ChevronLeft, ChevronRight, CirclePlus, Plus, Search} from "lucide-react";
 import React from "react";
-import SideDrawer from "@/components/organisms/side-drawer.tsx";
-import ContractDefinitionCard from "@/components/organisms/contract-definition-card.tsx";
 import {Button as MuiButton, IconButton} from "@mui/material";
+import { ContractDefinitionsList } from "@think-it-labs/edc-connector-ui/contract-definitions-list";
+import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
+import { usePagination } from "@/hooks/use-pagination";
+import { T, useTranslator } from "@/i18n";
+import SideDrawer from "@/components/organisms/side-drawer";
+import ContractDefinitionCard from "@/components/organisms/contract-definition-card.tsx";
 
 export default function AssetListPage() {
   const { push, connector } = useParticipantConnectorState();

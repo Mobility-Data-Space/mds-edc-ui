@@ -1,10 +1,13 @@
 import React from "react";
-import {T} from "@/i18n";
-import {ASSET_ADVANCED_INFO_NUTS_LOCATIONS} from "@/schema/asset.ts";
+
 import {IconButton, Tooltip} from "@mui/material";
 import {InfoOutlined} from "@mui/icons-material";
-import {KeyValuePairInputList} from "@/components/molecules/key-value-pair-input-list.tsx";
-import {AssetProperties} from "@/utilities/asset.ts";
+
+import {KeyValuePairInputList} from "@/components/molecules/key-value-pair-input-list";
+
+import {T} from "@/i18n";
+import {AssetProperties} from "@/utilities/asset";
+import { ASSET_ADVANCED_INFO_GEO_LOCATION, ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS } from "@/schema/asset";
 
 export interface AssetNutsLocationsProps {
   translator: (key: string) => string;
@@ -27,17 +30,23 @@ export function AssetNutsLocations({ translator, formData, onChange, errors }: A
     </label>
 
     <KeyValuePairInputList
-      name={ASSET_ADVANCED_INFO_NUTS_LOCATIONS}
+      name={ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS}
       id="advanced-info-nuts-locations"
       type="text"
       label={translator("assets.new.fieldAdvancedInfoNutsLocation")}
       addText={translator("assets.new.fieldAdvancedInfoNutsLocationAddText")}
       valueLabel={translator("assets.new.fieldAdvancedInfoNutsLocationValueLabel")}
       valuePlaceholder="DE929"
-      error={errors[ASSET_ADVANCED_INFO_NUTS_LOCATIONS]}
-      value={formData[ASSET_ADVANCED_INFO_NUTS_LOCATIONS] as []}
+      error={errors[ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS]}
+      value={formData[ASSET_ADVANCED_INFO_GEO_LOCATION][ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS] as []}
       valueOnly
-      onChange={(value) => onChange({...formData, [ASSET_ADVANCED_INFO_NUTS_LOCATIONS]: value})}
+      onChange={(value) => onChange({
+        ...formData, 
+        [ASSET_ADVANCED_INFO_GEO_LOCATION]: {
+          ...formData[ASSET_ADVANCED_INFO_GEO_LOCATION],
+          [ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS]: value
+        }
+      })}
     />
   </>);
 }

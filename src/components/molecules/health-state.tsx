@@ -1,5 +1,5 @@
 import { ConnectorStatusChildProps } from "@think-it-labs/edc-connector-ui/connector";
-import { Indicator } from "../atoms/indicator";
+import { Indicator } from "@/components/atoms/indicator";
 
 export function HealthState(
   { status, isLoading, error }: ConnectorStatusChildProps,

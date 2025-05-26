@@ -13,12 +13,6 @@ export const operatorNotEqual = {
 }
 
 export const operatorGreaterThanOrEqual = {
-  value: 'odrl:geq',
-  text: '≥',
-  tooltip: 'Greater than or equal to',
-};
-
-export const operatorGreaterThanOrEqual2 = {
   value: 'odrl:gteq',
   text: '≥',
   tooltip: 'Greater than or equal to',
@@ -31,12 +25,6 @@ export const operatorGreaterThan = {
 };
 
 export const operatorLessThanOrEqual =   {
-  value: 'odrl:leq',
-  text: '≤',
-  tooltip: 'Less than or equal to',
-};
-
-export const operatorLessThanOrEqual2 =   {
   value: 'odrl:lteq',
   text: '≤',
   tooltip: 'Less than or equal to',
@@ -49,7 +37,7 @@ export const operatorLessThan = {
 };
 
 export const operatorIn = {
-  value: 'odrl:in',
+  value: 'in',
   text: 'IN',
   tooltip: 'In',
 };
@@ -71,18 +59,20 @@ export const operatorIsOneOf = {
   text: 'IS NONE OF',
   tooltip: 'Is none of',
 };
+
 export const operatorIsAnyOf = {
   value: 'odrl:is_any_of',
   text: 'IS ANY OF',
   tooltip: 'Is any of',
 };
+
 export const operatorIsAllOf = {
   value: 'odrl:is_all_of',
   text: 'IS ALL OF',
   tooltip: 'Is all of',
 };
 
-export const operators = [ operatorEquals, operatorNotEqual, operatorGreaterThanOrEqual, operatorGreaterThanOrEqual2, operatorGreaterThan, operatorLessThanOrEqual, operatorLessThanOrEqual2, operatorLessThan, operatorIn, operatorHasPart, operatorIsA, operatorIsOneOf, operatorIsAnyOf, operatorIsAllOf ];
+export const operators = [ operatorEquals, operatorNotEqual, operatorGreaterThanOrEqual, operatorGreaterThan, operatorLessThanOrEqual, operatorLessThan, operatorIn, operatorHasPart, operatorIsA, operatorIsOneOf, operatorIsAnyOf, operatorIsAllOf ];
 
 export const consumerParticipantIdOperators = [operatorEquals, operatorIn];
 
@@ -114,18 +104,6 @@ export const createTimespanAndConstraint = ([startDate, endDate]: [string, strin
     createTimeRestrictionConstraint(startDate, operatorGreaterThanOrEqual.value), 
     createTimeRestrictionConstraint(endDate, operatorLessThanOrEqual.value)
   ],
-});
-
-export const createAndConstraint = (): AndConstraint => ({
-  and: [] satisfies (AtomicConstraint|MultiplicityConstraint)[],
-});
-
-export const createOrConstraint = (): OrConstraint => ({
-  or: [] satisfies (AtomicConstraint|MultiplicityConstraint)[],
-});
-
-export const createXOneConstraint = (): XoneConstraint => ({
-  xone: [] satisfies (AtomicConstraint|MultiplicityConstraint)[],
 });
 
 export interface OrConstraint extends Constraint {

@@ -1,8 +1,10 @@
 import React from "react";
+
+import DateRangePicker from "@/components/molecules/date-range-picker";
+
 import {T} from "@/i18n";
-import {ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE} from "@/schema/asset.ts";
-import DateRangePicker from "@/components/molecules/date-range-picker.tsx";
-import {AssetProperties} from "@/utilities/asset.ts";
+import {ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START} from "@/schema/asset";
+import {AssetProperties} from "@/utilities/asset";
 
 export interface AssetTemporalCoverageProps {
   translator: (key: string) => string;
@@ -25,7 +27,10 @@ export function AssetTemporalCoverage({ translator, formData, onChange, errors }
         [ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE]: value
       })}
       error={errors[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE]}
-      value={formData[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE] as [string, string]}
+      value={[
+        formData[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE][ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START] as string, 
+        formData[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE][ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END] as string
+      ]}
     />
   );
 }

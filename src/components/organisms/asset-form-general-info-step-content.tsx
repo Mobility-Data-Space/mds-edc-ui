@@ -1,15 +1,17 @@
 import React from "react";
+
+import {AssetId} from "@/components/molecules/asset-id";
+import {AssetVersion} from "@/components/molecules/asset-version";
+import {AssetTitle} from "@/components/molecules/asset-title";
+import {AssetDescription} from "@/components/molecules/asset-description";
+import {AssetKeywords} from "@/components/molecules/asset-keywords";
+import {AssetLanguage} from "@/components/molecules/asset-language";
+import {AssetEndpointDocumentation} from "@/components/molecules/asset-endpoint-documentation";
+import {AssetContentType} from "@/components/molecules/asset-content-type";
+import {AssetPublisher} from "@/components/molecules/asset-publisher";
+import {AssetStandardLicense} from "@/components/molecules/asset-standard-license";
+
 import {T} from "@/i18n";
-import {AssetId} from "@/components/molecules/asset-id.tsx";
-import {AssetVersion} from "@/components/molecules/asset-version.tsx";
-import {AssetTitle} from "@/components/molecules/asset-title.tsx";
-import {AssetDescription} from "@/components/molecules/asset-description.tsx";
-import {AssetKeywords} from "@/components/molecules/asset-keywords.tsx";
-import {AssetLanguage} from "@/components/molecules/asset-language.tsx";
-import {AssetEndpointDocumentation} from "@/components/molecules/asset-endpoint-documentation.tsx";
-import {AssetContentType} from "@/components/molecules/asset-content-type.tsx";
-import {AssetPublisher} from "@/components/molecules/asset-publisher.tsx";
-import {AssetStandardLicense} from "@/components/molecules/asset-standard-license.tsx";
 import { AssetProperties } from "@/utilities/asset";
 
 export interface AssetFormGeneralInfoStepProps {

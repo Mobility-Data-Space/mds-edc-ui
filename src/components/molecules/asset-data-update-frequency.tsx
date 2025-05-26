@@ -1,8 +1,10 @@
 import React from "react";
+
+import {Input} from "@/components/atoms/input";
+
 import {T} from "@/i18n";
-import {Input} from "../atoms/input.tsx";
-import {ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY} from "@/schema/asset.ts";
-import {AssetProperties} from "@/utilities/asset.ts";
+import {ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY} from "@/schema/asset";
+import {AssetProperties} from "@/utilities/asset";
 
 export interface AssetDataUpdateFrequencyProps {
   translator: (key: string) => string;

@@ -1,9 +1,11 @@
 import React from "react";
-import {MultiTranslate, T} from "@/i18n";
+
 import {Button, Icon} from "@mui/material";
 import Typography from "@mui/material/Typography";
-import {Dialog, DialogActions, DialogContent, DialogTitle} from '@mui/material';
-import {AssetFieldDialog} from "@/components/molecules/asset-field-dialog.tsx";
+
+import {AssetFieldDialog} from "@/components/molecules/asset-field-dialog";
+
+import {MultiTranslate, T} from "@/i18n";
 
 export interface AssetFieldShowProps {
   icon: string;

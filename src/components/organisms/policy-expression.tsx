@@ -1,14 +1,13 @@
 import React, {ReactNode} from "react";
-
+import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
 import Typography from "@mui/material/Typography";
 import {IconButton} from "@mui/material";
 import {Minus} from "lucide-react";
-import {TreeBranch} from "@/components/atoms/tree-branch.tsx";
-import {TreeLeaf} from "@/components/atoms/tree-leaf.tsx";
-import {Constraint} from "@/components/molecules/constraint.tsx";
-import {AddConstraintButton} from "@/components/organisms/add-constraint-button.tsx";
-import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
-import { MultiplicityConstraint } from "@/utilities/constraints";
+import {TreeBranch} from "@/components/atoms/tree-branch";
+import {TreeLeaf} from "@/components/atoms/tree-leaf";
+import {Constraint} from "@/components/molecules/constraint";
+import {AddConstraintButton} from "@/components/organisms/add-constraint-button";
+import { MultiplicityConstraint } from "@/utilities/policy-constraints";
 
 export interface PolicyExpressionProps {
   value: (AtomicConstraint|MultiplicityConstraint)[];

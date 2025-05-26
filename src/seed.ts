@@ -1,4 +1,3 @@
-/*
 import {
   Dataset,
   EdcConnectorClient,
@@ -7,9 +6,8 @@ import {
   PolicyBuilder,
 } from "@think-it-labs/edc-connector-client";
 import { randomUUID } from "node:crypto";
-import { USE_CASES } from "./constants/use-cases.ts";
-import { DATASPACE } from "./constants/dataspace.ts";
-import { waitForNegotiationState } from "./seed-util.ts";
+import { DATASPACE } from "./constants/dataspace";
+import { waitForNegotiationState } from "./seed-util";
 
 const SEED = parseInt(process.env.SEED || "25");
 
@@ -667,4 +665,4 @@ async function main() {
 main()
   .then(() => console.log("DONE"))
   .catch(console.error);
-*/
+

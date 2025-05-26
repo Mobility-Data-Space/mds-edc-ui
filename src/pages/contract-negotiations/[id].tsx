@@ -1,12 +1,9 @@
-
-import {
-  ContractNegotiationView,
-} from "@think-it-labs/edc-connector-ui/contract-negotiation-view";
-import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
-import { T } from "@/i18n";
 import { useRouter } from "next/router";
 import React from "react";
-import SideDrawer from "@/components/organisms/side-drawer.tsx";
+import { ContractNegotiationView } from "@think-it-labs/edc-connector-ui/contract-negotiation-view";
+import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
+import { T } from "@/i18n";
+import SideDrawer from "@/components/organisms/side-drawer";
 
 export default function ContractNegotiationViewPage() {
   const id = useRouter().query.id as string;
