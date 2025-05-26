@@ -1,9 +1,11 @@
 import React from "react";
-import {T} from "@/i18n";
+
 import {Button, Icon} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from '@mui/material';
-import {AssetFieldShowProps} from "@/components/molecules/asset-field-show.tsx";
+
+import {AssetFieldShowProps} from "@/components/molecules/asset-field-show";
+import {T} from "@/i18n";
 
 export function AssetFieldDialog({ icon, label, subLabel, value, valueTitle, isOpen, onClose }: AssetFieldShowProps & { isOpen: boolean, onClose: () => void }): JSX.Element {
   const nonNullValue = value || "";

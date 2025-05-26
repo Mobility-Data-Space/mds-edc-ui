@@ -1,53 +1,53 @@
 import React, {useEffect, useRef, useState} from "react";
 import {Button, Checkbox, FormControlLabel, Divider, Typography} from "@mui/material";
+import {enqueueSnackbar} from "notistack";
+import { AssetInput, ContractDefinitionInput, DataAddress, PolicyDefinitionInput } from "@think-it-labs/edc-connector-client";
+import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
 import {T, useTranslator} from "@/i18n";
-
-import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_TITLE } from "@/schema/asset.ts";
-import RadioButtonsGroup from "@/components/atoms/radio-group.tsx";
-import {AssetContactEmailAndSubject} from "@/components/molecules/asset-contact-email-and-subject.tsx";
-import {ASSET_DATA_ADDRESS_DESCRIPTION, DATA_ADDRESS_TYPE_CUSTOM, DATA_OFFER_TYPE_DATA_SOURCE, DATA_OFFER_TYPE_ON_REQUEST, DATA_OFFER_TYPES, PUBLISH_MODE_PUBLISH_RESTRICTED, PUBLISH_MODE_PUBLISH_UNRESTRICTED, PUBLISH_MODES} from "@/constants/data-address-types.ts";
-import {AssetDataCategoryAndSubcategory} from "@/components/molecules/asset-data-category-and-subcategory.tsx";
-import {AssetTitle} from "@/components/molecules/asset-title.tsx";
-import {AssetId} from "@/components/molecules/asset-id.tsx";
-import {AssetDescription} from "@/components/molecules/asset-description.tsx";
-import {AssetKeywords} from "@/components/molecules/asset-keywords.tsx";
-import {AssetLanguage} from "@/components/molecules/asset-language.tsx";
-import {AssetVersion} from "@/components/molecules/asset-version.tsx";
-import {AssetTransportMode} from "@/components/molecules/asset-transport-mode.tsx";
-import {AssetDataModel} from "@/components/molecules/asset-data-model.tsx";
-import {AssetContentType} from "@/components/molecules/asset-content-type.tsx";
-import {AssetEndpointDocumentation} from "@/components/molecules/asset-endpoint-documentation.tsx";
-import {AssetDataSamples} from "@/components/molecules/asset-data-samples.tsx";
-import {AssetReferenceFileUrls} from "@/components/molecules/asset-reference-file-urls.tsx";
-import {AssetDataUpdateFrequency} from "@/components/molecules/asset-data-update-frequency.tsx";
-import {AssetGeoReferenceMethod} from "@/components/molecules/asset-geo-reference-method.tsx";
-import {AssetGeoLocations} from "@/components/molecules/asset-geo-locations.tsx";
-import {AssetNutsLocations} from "@/components/molecules/asset-nuts-locations.tsx";
-import {AssetSovereignLegalName} from "@/components/molecules/asset-sovereign-legal-name.tsx";
-import {AssetPublisher} from "@/components/molecules/asset-publisher.tsx";
-import {AssetStandardLicense} from "@/components/molecules/asset-standard-license.tsx";
-import {AssetConditionsForUse} from "@/components/molecules/asset-conditions-for-use.tsx";
-import {AssetTemporalCoverage} from "@/components/molecules/asset-temporal-coverage.tsx";
-import PolicyExpression from "@/components/organisms/policy-expression.tsx";
-import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
-import {enqueueSnackbar} from "notistack";
+import RadioButtonsGroup from "@/components/atoms/radio-group";
+import {AssetContactEmailAndSubject} from "@/components/molecules/asset-contact-email-and-subject";
+import {AssetDataCategoryAndSubcategory} from "@/components/molecules/asset-data-category-and-subcategory";
+import {AssetTitle} from "@/components/molecules/asset-title";
+import {AssetId} from "@/components/molecules/asset-id";
+import {AssetDescription} from "@/components/molecules/asset-description";
+import {AssetKeywords} from "@/components/molecules/asset-keywords";
+import {AssetLanguage} from "@/components/molecules/asset-language";
+import {AssetVersion} from "@/components/molecules/asset-version";
+import {AssetTransportMode} from "@/components/molecules/asset-transport-mode";
+import {AssetDataModel} from "@/components/molecules/asset-data-model";
+import {AssetContentType} from "@/components/molecules/asset-content-type";
+import {AssetEndpointDocumentation} from "@/components/molecules/asset-endpoint-documentation";
+import {AssetDataSamples} from "@/components/molecules/asset-data-samples";
+import {AssetReferenceFileUrls} from "@/components/molecules/asset-reference-file-urls";
+import {AssetDataUpdateFrequency} from "@/components/molecules/asset-data-update-frequency";
+import {AssetGeoReferenceMethod} from "@/components/molecules/asset-geo-reference-method";
+import {AssetGeoLocations} from "@/components/molecules/asset-geo-locations";
+import {AssetNutsLocations} from "@/components/molecules/asset-nuts-locations";
+import {AssetSovereignLegalName} from "@/components/molecules/asset-sovereign-legal-name";
+import {AssetPublisher} from "@/components/molecules/asset-publisher";
+import {AssetStandardLicense} from "@/components/molecules/asset-standard-license";
+import {AssetConditionsForUse} from "@/components/molecules/asset-conditions-for-use";
+import {AssetTemporalCoverage} from "@/components/molecules/asset-temporal-coverage";
+import PolicyExpression from "@/components/organisms/policy-expression";
 import SideDrawer from "@/components/organisms/side-drawer";
-import { AssetInput, ContractDefinitionInput, DataAddress, PolicyDefinitionInput } from "@think-it-labs/edc-connector-client";
+import { AssetFormDataAddressStep } from "@/components/organisms/asset-form-data-address-step";
 import { defaultCreatePolicyFormData, fromPolicyDefinitionForm } from "@/utilities/policy";
 import { defaultCreateContractDefinitionFormData, fromContractDefinitionForm } from "@/utilities/contract_definition";
-import { defaultCreateAssetFormData, AssetProperties, computeRequiredDataOfferAddressProperties, generateId, fromAssetForm } from "@/utilities/asset"
-import { AssetFormDataAddressStep } from "@/components/organisms/asset-form-data-address-step";
+import { defaultCreateAssetFormData, AssetProperties, generateId, fromAssetForm } from "@/utilities/asset"
+import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_TITLE } from "@/schema/asset";
+import {DATA_ADDRESS_TYPE_CUSTOM_JSON, DATA_OFFER_TYPE_DATA_SOURCE, DATA_OFFER_TYPE_ON_REQUEST, DATA_OFFER_TYPES, PUBLISH_MODE_PUBLISH_RESTRICTED, PUBLISH_MODE_PUBLISH_UNRESTRICTED, PUBLISH_MODES} from "@/constants/data-address-types";
+import { DataAddressTypes } from "@/utilities/data_address";
+
 
 interface DataOffer {
   asset: AssetInput,
   policy: PolicyDefinitionInput,
-  contract: ContractDefinitionInput,
-  publish_mode: typeof PUBLISH_MODE_PUBLISH_UNRESTRICTED
+  contract: ContractDefinitionInput
 }
 
 export default function CreateDataOfferPage() {
-  const { push, connector } = useParticipantConnectorState();
+  const { connector } = useParticipantConnectorState();
 
   const [showAdvancedFields, setShowAdvancedFields] = useState(false);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
@@ -57,9 +57,9 @@ export default function CreateDataOfferPage() {
   const [formData, setFormData] = useState<DataOffer>({
     asset: defaultCreateAssetFormData,
     policy: defaultCreatePolicyFormData,
-    contract: defaultCreateContractDefinitionFormData,
-    publish_mode: PUBLISH_MODE_PUBLISH_UNRESTRICTED
+    contract: defaultCreateContractDefinitionFormData
   });
+  const [publishMode, setPublishMode] = useState("")
 
   const [errors, setErrors] = useState({ properties: {}, advancedInfo: {}, dataAddress: {} });
 
@@ -147,16 +147,10 @@ export default function CreateDataOfferPage() {
 
   const validateDataAddress = (formDataToValidate: DataAddress) => {
     const newErrors: { [key: string]: boolean | string } = {};
-    const required = computeRequiredDataOfferAddressProperties(formDataToValidate);
-    required.forEach((propertyName) => {
-      if (! formDataToValidate[propertyName]) {
-        newErrors[propertyName] = true;
-      }
-    });
 
-    if (formDataToValidate.type === DATA_ADDRESS_TYPE_CUSTOM.value && formDataToValidate[ASSET_DATA_ADDRESS_DESCRIPTION] !== "") {
+    if (formDataToValidate.type === DataAddressTypes.CustomJson && formDataToValidate.description !== "") {
       try {
-        JSON.parse(formDataToValidate.description[ASSET_DATA_ADDRESS_DESCRIPTION] as string);
+        JSON.parse(formDataToValidate.description as string);
       } catch (e) {
         newErrors["ASSET_DATA_ADDRESS_DESCRIPTION"] = translator("assets.new.mustBeValidJson");
       }
@@ -185,7 +179,7 @@ export default function CreateDataOfferPage() {
       .then()
       .catch(error => enqueueSnackbar(translator("common.errorOccurred")));
     // create policy
-    client.management.policyDefinitions.create(fromPolicyDefinitionForm(formData.policy.policy.permissions))
+    client.management.policyDefinitions.create(fromPolicyDefinitionForm(formData.policy.policy.permissions, ""))
       .then()
       .catch(error => enqueueSnackbar(translator("common.errorOccurred")));
     // create contract
@@ -198,7 +192,7 @@ export default function CreateDataOfferPage() {
     enqueueSnackbar(translator("assets.new.saveFail"));
   }
 
-  const dataOfferTypeIsDataSource = formData.asset.dataAddress.type === DATA_OFFER_TYPE_DATA_SOURCE.value;
+  const dataOfferTypeIsDataSource = formData.asset.dataAddress.type !== DataAddressTypes.MDSOnRequestOffer;
 
   if (!connector) {
     return "No connector";
@@ -227,29 +221,14 @@ export default function CreateDataOfferPage() {
                 </label>
               </div>
               <div className="sm:col-span-2 flex flex-col gap-6">
-                <RadioButtonsGroup
-                  name="data-offer-type"
-                  id="data-offer-type"
-                  label={<T string="dataOffer.new.type"/>}
-                  defaultValue={DATA_OFFER_TYPE_ON_REQUEST.value}
-                  options={DATA_OFFER_TYPES}
-                  onChange={(value) => dataAddressFormOnChange({...formData.asset.dataAddress, type: value})}
+                <AssetFormDataAddressStep
+                  translator={translator}
+                  formData={formData.asset.dataAddress}
+                  onChange={dataAddressFormOnChange}
+                  errors={errors.dataAddress}
+                  methodAlwaysShowing
+                  customDataSourceConfigRows={6}
                 />
-                {dataOfferTypeIsDataSource ?
-                  <AssetFormDataAddressStep
-                    translator={translator}
-                    formData={formData.asset.dataAddress}
-                    onChange={dataAddressFormOnChange}
-                    errors={errors.dataAddress}
-                    methodAlwaysShowing
-                    customDataSourceConfigRows={6}
-                  /> :
-                  <AssetContactEmailAndSubject
-                    translator={translator}
-                    formData={formData.asset.dataAddress}
-                    onChange={dataAddressFormOnChange}
-                    errors={errors.dataAddress}
-                  />}
               </div>
             </div>
 
@@ -677,12 +656,11 @@ export default function CreateDataOfferPage() {
                   label={<T string="dataOffer.new.type"/>}
                   defaultValue={PUBLISH_MODE_PUBLISH_UNRESTRICTED.value}
                   options={PUBLISH_MODES}
-                  onChange={(value) => generalInfoFormOnChange({
-                    ...formData.asset.properties,
-                    publish_mode: value
-                  })}
+                  onChange={(value) => {
+                    setPublishMode(value)
+                  }}
                 />
-                {formData.publish_mode !== PUBLISH_MODE_PUBLISH_RESTRICTED ? "" : <div>
+                {publishMode !== PUBLISH_MODE_PUBLISH_RESTRICTED.value ? "" : <div>
                   <label
                     className="inline-block text-sm text-black font-medium mb-2"
                   >
@@ -690,10 +668,9 @@ export default function CreateDataOfferPage() {
                   </label>
                   <PolicyExpression
                     value={formData.policy.policy.permission}
-                    onChange={(value) => generalInfoFormOnChange({
-                      ...formData.asset.properties,
-                      ["DATA_OFFER_CONSTRAINTS"]: value
-                    })}
+                    onChange={(value) => {
+                      formData.policy.policy.permission = value
+                    }}
                   />
                 </div>
                 }

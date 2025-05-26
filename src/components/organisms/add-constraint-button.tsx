@@ -1,25 +1,25 @@
-import {
-  createAndConstraint,
-  createOrConstraint,
-  createParticipantIdConstraint,
-  createTimeRestrictionConstraint,
-  createTimespanAndConstraint,
-  createXOneConstraint,
-  MultiplicityConstraint
-} from "@/utilities/constraints";
-import {T, useTranslator} from "@/i18n";
 import * as React from "react";
-import {Button as MuiButton, IconButton, Tooltip, TooltipProps} from "@mui/material";
 import {Plus} from "lucide-react";
+import {Button as MuiButton, IconButton, Tooltip, TooltipProps} from "@mui/material";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import DateRangePicker from "@/components/molecules/date-range-picker.tsx";
-import {DATE_FORMAT} from "@/utilities/date.ts";
 import Popover from "@mui/material/Popover";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
+import DateRangePicker from "@/components/molecules/date-range-picker";
+import {
+  AndConstraint,
+  createParticipantIdConstraint,
+  createTimeRestrictionConstraint,
+  createTimespanAndConstraint,
+  MultiplicityConstraint,
+  OrConstraint,
+  XoneConstraint
+} from "@/utilities/policy-constraints";
+import {T, useTranslator} from "@/i18n";
+import {DATE_FORMAT} from "@/utilities/date";
 
 export interface AddConstraintButtonProps {
   showAddButton?: boolean;
@@ -205,21 +205,21 @@ export function AddConstraintButton({showAddButton = false, onClick}: AddConstra
         >
           <div className="flex flex-col">
             <Tooltip {...tooltipProps} title={translator("dataOffer.new.policyExpressionAndTooltip")}>
-              <Button variant="text" color="secondary" onClick={() => onAddWithClose(createAndConstraint())}>
+              <Button variant="text" color="secondary" onClick={() => onAddWithClose({ and: []} as AndConstraint)}>
                 <Typography align="left" variant="body2" className="w-full p-2">
                   <T string="dataOffer.new.policyExpressionAnd"/>
                 </Typography>
               </Button>
             </Tooltip>
             <Tooltip {...tooltipProps} title={translator("dataOffer.new.policyExpressionOrTooltip")}>
-              <Button variant="text" color="secondary" onClick={() => onAddWithClose(createOrConstraint())}>
+              <Button variant="text" color="secondary" onClick={() => onAddWithClose({ or: []} as OrConstraint)}>
                 <Typography align="left" variant="body2" className="w-full p-2">
                   <T string="dataOffer.new.policyExpressionOr"/>
                 </Typography>
               </Button>
             </Tooltip>
             <Tooltip {...tooltipProps} title={translator("dataOffer.new.policyExpressionXoneTooltip")}>
-              <Button variant="text" color="secondary" onClick={() => onAddWithClose(createXOneConstraint())}>
+              <Button variant="text" color="secondary" onClick={() => onAddWithClose({ xone: []} as XoneConstraint)}>
                 <Typography align="left" variant="body2" className="w-full p-2">
                   <T string="dataOffer.new.policyExpressionXone"/>
                 </Typography>

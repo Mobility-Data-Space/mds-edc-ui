@@ -2,12 +2,12 @@ import React from "react";
 import Typography from "@mui/material/Typography";
 import {Card, CardContent, Icon} from "@mui/material";
 import {ContractDefinition} from "@think-it-labs/edc-connector-client";
-import {ContractAgreementView} from "@think-it-labs/edc-connector-ui/contract-agreement-view.tsx";
+import {ContractDefinitionsList} from "@think-it-labs/edc-connector-ui/contract-definitions-list";
+import {ContractDefinitionView} from "@think-it-labs/edc-connector-ui/contract-definition-view";
 import {T} from "@/i18n";
-import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state.ts";
-import {ContractDefinitionsList} from "@think-it-labs/edc-connector-ui/contract-definitions-list.tsx";
-import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog.ts";
-import {ContractDefinitionView} from "@think-it-labs/edc-connector-ui/contract-definition-view.tsx";
+import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
+import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
+
 
 interface Constraint {
   operandLeft?: { "@value": string }[],

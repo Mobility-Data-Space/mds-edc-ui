@@ -1,15 +1,14 @@
-import { Button } from "@/components/atoms/button";
-import { Table } from "@/components/atoms/table";
+import React from "react";
+import { ChevronLeft, ChevronRight, Search } from "lucide-react";
+import {IconButton} from "@mui/material";
 import { ContractAgreementView } from "@think-it-labs/edc-connector-ui/contract-agreement-view";
 import { ContractNegotiationsList } from "@think-it-labs/edc-connector-ui/contract-negotiations-list";
 import { Timestamp } from "@think-it-labs/edc-connector-ui/timestamp";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { usePagination } from "@/hooks/use-pagination";
 import { T, useTranslator } from "@/i18n";
-import { ChevronLeft, ChevronRight, Search } from "lucide-react";
-import React from "react";
-import SideDrawer from "@/components/organisms/side-drawer.tsx";
-import {IconButton} from "@mui/material";
+import SideDrawer from "@/components/organisms/side-drawer";
+import { Table } from "@/components/atoms/table";
 
 export default function ContractNegotiationsListPage() {
   const { push, connector } = useParticipantConnectorState();
@@ -110,6 +109,7 @@ export default function ContractNegotiationsListPage() {
                       </span>
                     </Table.Cell>
                     <Table.Cell>
+                      {!item.contractAgreementId ? "" : 
                       <ContractAgreementView
                         managementUrl={managementUrl}
                         id={item.contractAgreementId}
@@ -122,6 +122,7 @@ export default function ContractNegotiationsListPage() {
                           <ContractAgreementView.Id />
                         </p>
                       </ContractAgreementView>
+                      }
                     </Table.Cell>
                     <Table.Cell>
                       {item.counterPartyAddress || "n.a."}

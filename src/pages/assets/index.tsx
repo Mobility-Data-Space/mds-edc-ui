@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {useRouter} from "next/router";
 import { PlusCircle } from "lucide-react";
-import {Button as MuiButton, DialogContent} from '@mui/material';
+import {Button as MuiButton} from '@mui/material';
 import {Asset} from "@think-it-labs/edc-connector-client";
 import { AssetsList } from "@think-it-labs/edc-connector-ui/assets-list";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
@@ -9,8 +9,8 @@ import { usePagination } from "@/hooks/use-pagination";
 import {T} from "@/i18n";
 import SideDrawer from "@/components/organisms/side-drawer";
 import AssetCard from "@/components/organisms/asset-card";
-import AssetFormDialog from "@/components/templates/asset-form-dialog";
 import AssetDialog from "@/components/organisms/asset-dialog";
+import AssetFormDialog from "@/components/templates/asset-form-dialog";
 
 export default function AssetListPage() {
   const router = useRouter();

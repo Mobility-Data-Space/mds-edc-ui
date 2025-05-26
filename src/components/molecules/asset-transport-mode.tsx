@@ -1,8 +1,10 @@
 import React from "react";
-import {ASSET_ADVANCED_INFO_TRANSPORT_MODE} from "@/schema/asset.ts";
-import {MuiSelect} from "@/components/atoms/mui-select.tsx";
-import {GEO_REFERENCE_DATA} from "@/constants/data-category.ts";
-import {AssetProperties} from "@/utilities/asset.ts";
+
+import {MuiSelect} from "@/components/atoms/mui-select";
+
+import {ASSET_ADVANCED_INFO_TRANSPORT_MODE} from "@/schema/asset";
+import {GEO_REFERENCE_DATA} from "@/constants/data-category";
+import {AssetProperties} from "@/utilities/asset";
 
 export interface AssetTransportModeProps {
   translator: (key: string) => string;

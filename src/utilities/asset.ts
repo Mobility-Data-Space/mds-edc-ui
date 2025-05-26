@@ -1,12 +1,12 @@
 import {removeEmptyFields} from "@/utilities/form.ts";
-import {ASSET_DATA_ADDRESS_BASE_URL, ASSET_DATA_ADDRESS_DESCRIPTION, ASSET_DATA_ADDRESS_ENABLE_BODY_PARAMETERIZATION, ASSET_DATA_ADDRESS_HTTP_AUTH_ADD_HEADER, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_NAME, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_NONE, ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_VAULT_SECRET, ASSET_DATA_ADDRESS_HTTP_HEADERS, ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD, ASSET_DATA_ADDRESS_HTTP_PROXY_PATH, ASSET_DATA_ADDRESS_QUERY_PARAMS, DATA_ADDRESS_TYPE_CUSTOM, DATA_ADDRESS_TYPE_HTTP, DATA_OFFER_CONTACT_EMAIL, DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT, DATA_OFFER_TYPE_DATA_SOURCE, DATA_OFFER_TYPE_ON_REQUEST} from "@/constants/data-address-types.ts";
-import {Asset, AssetInput, BaseDataAddress, DataAddress, HttpDataAddress} from "@think-it-labs/edc-connector-client";
-import {AssetFieldShowProps} from "@/components/molecules/asset-field-show.tsx";
-import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
-import {ENGLISH_SELECT_DATA, LANGUAGES} from "@/constants/languages.ts";
+import {Asset, AssetInput, DataAddress} from "@think-it-labs/edc-connector-client";
+import {AssetFieldShowProps} from "@/components/molecules/asset-field-show";
+import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
+import {ENGLISH_SELECT_DATA, LANGUAGES} from "@/constants/languages";
 import {DELIMITER} from "@/i18n";
-import {extractArrayValues} from "@/utilities/utilities.ts";
-import {ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE, ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY, ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY, ASSET_ADVANCED_INFO_GEO_LOCATION, ASSET_ADVANCED_INFO_GEO_REFERENCE_METHOD, ASSET_ADVANCED_INFO_NUTS_LOCATIONS, ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION, ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS, ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE, ASSET_ADVANCED_INFO_TRANSPORT_MODE, ASSET_CONTENT_TYPE, ASSET_DESCRIPTION, ASSET_ENDPOINT_DOCUMENTATION, ASSET_KEYWORDS, ASSET_LANGUAGE, ASSET_PUBLISHER, ASSET_STANDARD_LICENSE, ASSET_TITLE, ASSET_VERSION} from "@/schema/asset.ts";
+import {extractArrayValues} from "@/utilities/utilities";
+import {ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE, ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_MODEL_ID, ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA, ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY, ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY, ASSET_ADVANCED_INFO_GEO_LOCATION, ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL, ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS, ASSET_ADVANCED_INFO_GEO_REFERENCE_METHOD, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION, ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START, ASSET_ADVANCED_INFO_TRANSPORT_MODE, ASSET_CONTENT_TYPE, ASSET_DESCRIPTION, ASSET_ENDPOINT_DOCUMENTATION, ASSET_KEYWORDS, ASSET_LANGUAGE, ASSET_ORGANIZATION, ASSET_PUBLISHER, ASSET_STANDARD_LICENSE, ASSET_TITLE, ASSET_VERSION} from "@/schema/asset";
+import { defaultHttpDataAddress } from "./data_address";
 
 const temporalCoverageValue = ([start, end]: [string, string]) => {
   console.log(start, end)
@@ -25,35 +25,10 @@ const temporalCoverageValue = ([start, end]: [string, string]) => {
   return `${start} - ${end}`;
 }
 
-export const computeRequiredDataOfferAddressProperties = (formData: DataAddress): (keyof DataAddress)[] => {
-  const required: (keyof DataAddress)[] = [];
-  if (formData.type === DATA_OFFER_TYPE_DATA_SOURCE.value) {
-    if (formData.type === DATA_ADDRESS_TYPE_HTTP.value) {
-      required.push(ASSET_DATA_ADDRESS_BASE_URL);
-    } else if (formData.type === DATA_ADDRESS_TYPE_CUSTOM.value) {
-      required.push(ASSET_DATA_ADDRESS_DESCRIPTION);
-    }
-  } else if (formData.type === DATA_OFFER_TYPE_ON_REQUEST.value) {
-    required.push(DATA_OFFER_CONTACT_EMAIL, DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT);
-  }
-
-  return required;
-};
-
-export const computeRequiredDataAddressProperties = (formData: DataAddress): (keyof DataAddress)[] => {
-  const required: (keyof DataAddress)[] = [];
-  if (formData.type === DATA_ADDRESS_TYPE_HTTP.value) {
-    required.push(ASSET_DATA_ADDRESS_BASE_URL);
-  } else if (formData.type === DATA_ADDRESS_TYPE_CUSTOM.value) {
-    required.push(ASSET_DATA_ADDRESS_DESCRIPTION);
-  }
-
-  return required;
-};
-
 export const fromAssetForm = (formData: AssetInput) => {
   console.log("Pre Clean")
   console.log(formData)
+  
   formData["@id"] = formData.properties["@id"];
   formData.properties["@id"] = "" ;
 
@@ -70,35 +45,6 @@ export const fromAssetForm = (formData: AssetInput) => {
   };
 };
 
-const httpDefault: HttpDataAddress = {
-  type: "HttpData",
-  name: "",
-  path: "",
-  method: "GET",
-  baseUrl: "",
-  authKey: "",
-  authCode: "",
-  proxyBody: "",
-  proxyPath: "",
-  proxyQueryParams: "",
-  proxyMethod: "false",
-  contentType: "",
-  [ASSET_DATA_ADDRESS_DESCRIPTION]: "",
-  [ASSET_DATA_ADDRESS_QUERY_PARAMS]: [],
-  [ASSET_DATA_ADDRESS_ENABLE_BODY_PARAMETERIZATION]: false,
-  [ASSET_DATA_ADDRESS_HTTP_HEADERS]: [],
-  [ASSET_DATA_ADDRESS_HTTP_AUTH_ADD_HEADER]: ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_NONE,
-  [ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE]: ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_VAULT_SECRET,
-  [DATA_OFFER_CONTACT_EMAIL]: "",
-  [DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT]: "",
-} ;
-
-const customDefault: BaseDataAddress = {
-  type: "OnRequestOffer",
-  email: "",
-  preferred_email_subject: "",
-} ;
-
 export const defaultCreateAssetFormData: AssetInput = {
   "@id": "",
   properties: {
@@ -113,23 +59,40 @@ export const defaultCreateAssetFormData: AssetInput = {
     [ASSET_PUBLISHER]: "",
     [ASSET_STANDARD_LICENSE]: "",
 
-    [ASSET_ADVANCED_INFO_DATA_CATEGORY]: "",
-    [ASSET_ADVANCED_INFO_DATA_SUBCATEGORY]: "",
+    [ASSET_ADVANCED_INFO_MOBILITY_THEME]: {
+      [ASSET_ADVANCED_INFO_DATA_CATEGORY]: "",
+      [ASSET_ADVANCED_INFO_DATA_SUBCATEGORY]: ""
+    },
+    
+    
     [ASSET_ADVANCED_INFO_TRANSPORT_MODE]: "",
     [ASSET_ADVANCED_INFO_GEO_REFERENCE_METHOD]: "",
-    [ASSET_ADVANCED_INFO_DATA_MODEL]: "",
-    [ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME]: "",
+
+    [ASSET_ADVANCED_INFO_DATA_MODEL]: {
+      [ASSET_ADVANCED_INFO_DATA_MODEL_ID]: "",
+      [ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA]: {
+        [ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS]: [],
+        [ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION]: ""
+      }
+    },
+    [ASSET_ORGANIZATION]: "",
     [ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY]: "",
-    [ASSET_ADVANCED_INFO_GEO_LOCATION]: "",
-    [ASSET_ADVANCED_INFO_NUTS_LOCATIONS]: [] as any[],
-    [ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS]: [] as any[],
-    [ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS]: [] as any[],
-    [ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION]: "",
-    [ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE]: ["", ""] satisfies [string, string],
+    [ASSET_ADVANCED_INFO_GEO_LOCATION]: {
+      [ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL]: "",
+      [ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS]: [] as any[],
+    },
+    
+    [ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS]: [] as any,
+  
+    [ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE]: {
+      [ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START]: "",
+      [ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END]: ""
+    },
+
     [ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE]: "",
   },
   privateProperties: {},
-  dataAddress: httpDefault,
+  dataAddress: defaultHttpDataAddress,
 };
 
 export type AssetProperties = typeof defaultCreateAssetFormData.properties;
@@ -175,7 +138,7 @@ const assetGeneralFieldsToShow = (asset: Asset, participantId: string, connector
     },
     {
       label: "assets.new.creatorOrganizationName",
-      value: "",  // TODO creatorOrganizationName,
+      value: readValue(asset.properties, ASSET_ORGANIZATION),
       icon: "account_circle"
     },
     {
@@ -214,7 +177,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): AssetFieldShowProps[] => {
       value: dataSubcategory,
     });
   }
-  const dataModel = readValue(asset.properties, ASSET_ADVANCED_INFO_DATA_MODEL)
+  const dataModel = readValue(asset.properties, ASSET_ADVANCED_INFO_DATA_MODEL_ID)
   if (dataModel) {
     advancedFields.push({
       icon: 'category',
@@ -230,7 +193,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): AssetFieldShowProps[] => {
       value: geoReferenceMethod,
     });
   }
-  const geoLocation = readValue(asset.properties, ASSET_ADVANCED_INFO_GEO_LOCATION)
+  const geoLocation = readValue(asset.properties, ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL)
   if (geoLocation) {
     advancedFields.push({
       icon: 'location_on',
@@ -239,7 +202,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): AssetFieldShowProps[] => {
     });
   }
 
-  const nutsLocations = readValue(asset.properties, ASSET_ADVANCED_INFO_NUTS_LOCATIONS)
+  const nutsLocations = readValue(asset.properties, ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS)
   if (nutsLocations?.length) {
     advancedFields.push({
       icon: 'location_on',
@@ -247,7 +210,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): AssetFieldShowProps[] => {
       value: extractArrayValues(nutsLocations).join(DELIMITER),
     });
   }
-  const sovereignLegalName = readValue(asset.properties, ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME)
+  const sovereignLegalName = readValue(asset.properties, ASSET_ORGANIZATION)
   if (sovereignLegalName) {
     advancedFields.push({
       icon: 'account_balance',
@@ -312,20 +275,16 @@ const assetDataAddressFieldsToShow = (asset: Asset): AssetFieldShowProps[] => {
   const dataAddressFieldsToMerge = [
     {
       label: "assets.new.httpProxyMethod",
-      value: readValue(asset.dataAddress, ASSET_DATA_ADDRESS_HTTP_PROXY_METHOD),
+      value: readValue(asset.dataAddress, "proxyMethod"),
     },
     {
       label: "assets.new.httpProxyPath",
-      value: readValue(asset.dataAddress, ASSET_DATA_ADDRESS_HTTP_PROXY_PATH),
+      value: readValue(asset.dataAddress, "proxyPath"),
     },
     {
       label: "assets.new.fieldDataAddressQueryParams",
-      value: readValue(asset.dataAddress, ASSET_DATA_ADDRESS_QUERY_PARAMS),
-    },
-    {
-      label: "assets.new.enableBodyParameterization",
-      value: readValue(asset.dataAddress, ASSET_DATA_ADDRESS_ENABLE_BODY_PARAMETERIZATION),
-    },
+      value: readValue(asset.dataAddress, "proxyQueryParams"),
+    }
   ];
 
   const dataSourceText = !dataAddressFieldsToMerge.some((field) => field.value) ? 'Disabled' :
@@ -373,23 +332,6 @@ export const assetPrivateFieldsToShow = (asset: Asset): AssetFieldShowProps[] =>
     value: value[0]["@value"],
     icon: "category"
   }));
-};
-
-export const assetCustomFieldsToShow = (asset: Asset): AssetFieldShowProps[] => {
-  const dataAddressDescription = readValue(asset.dataAddress, ASSET_DATA_ADDRESS_DESCRIPTION)
-  let customProperties = {};
-  try {
-    customProperties = JSON.parse(dataAddressDescription);
-  } catch (error) {
-    return [];
-  }
-
-  return Object.entries(customProperties)
-  .map(([label, value]) => ({
-    label,
-    value: value as string,
-    icon: "category"
-  }))
 };
 
 export const generateId = (title?: string, version?: string) => {

@@ -1,5 +1,5 @@
 import { test, expect, } from '@playwright/test';
-import {TRAFFIC_INFORMATION} from "@/constants/data-category.ts";
+import {TRAFFIC_INFORMATION} from "@/constants/data-category";
 
 test("assets modal creates asset", async ({ page }) => {
   await page.goto("http://localhost:3000/assets");

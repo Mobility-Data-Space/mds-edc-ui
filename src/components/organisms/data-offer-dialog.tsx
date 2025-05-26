@@ -1,17 +1,17 @@
 import React, {useState} from "react";
-import { T } from "@/i18n";
-import {Asset, ContractDefinition, Dataset, Offer, Policy} from "@think-it-labs/edc-connector-client";
+import { enqueueSnackbar } from 'notistack';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
-import {ASSET_TITLE} from "@/schema/asset.ts";
 import Typography from "@mui/material/Typography";
-import {AssetIcon} from "@/components/atoms/asset-icon.tsx";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton} from "@mui/material";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton} from "@mui/material";
+import {Dataset} from "@think-it-labs/edc-connector-client";
+import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
+import {AssetIcon} from "@/components/atoms/asset-icon";
+import DataOfferDetails from "@/components/organisms/data-offer-details";
 import AssetDetails from "@/components/organisms/asset-details.tsx";
 import {DeleteDialog} from "@/components/molecules/delete-dialog.tsx";
-import { enqueueSnackbar } from 'notistack';
-import DataOfferDetails from "./data-offer-details";
+import { T } from "@/i18n";
+import {ASSET_TITLE} from "@/schema/asset";
 import { datasetToAsset } from "@/utilities/catalog";
 
 const HAS_POLICY = "http://www.w3.org/ns/odrl/2/hasPolicy";

@@ -1,7 +1,8 @@
-import SideDrawer from "@/components/organisms/side-drawer.tsx";
-import {T} from "@/i18n";
 import {useRouter} from "next/router";
 import {useEffect} from "react";
+import SideDrawer from "@/components/organisms/side-drawer";
+import {T} from "@/i18n";
+
 
 export default function ConnectorPage() {
   const router = useRouter();

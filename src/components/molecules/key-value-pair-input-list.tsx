@@ -1,6 +1,6 @@
 import {TextFieldProps} from "@mui/material/TextField";
-import {KeyValuePairInput, Tag} from "@/components/atoms/key-value-pair-input.tsx";
 import {Button, FormHelperText} from "@mui/material";
+import {KeyValuePairInput, Tag} from "@/components/atoms/key-value-pair-input";
 
 export type KeyValuePairInputListProps =  Omit<TextFieldProps, "onChange"> & {
   addText?: string;
@@ -81,8 +81,6 @@ export function KeyValuePairInputList({
   value,
   onChange
 }: KeyValuePairInputListProps) {
-  console.log(keyLabel)
-  console.log(value)
   return (
     <div className="w-full flex flex-col gap-y-3">
       {value.map((tagInput, index) => (

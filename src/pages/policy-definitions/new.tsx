@@ -1,14 +1,14 @@
-import { T, useTranslator } from "@/i18n";
 import React, { useRef, useState } from "react";
-import SideDrawer from "@/components/organisms/side-drawer.tsx";
 import Button from "@mui/material/Button";
 import { enqueueSnackbar } from "notistack";
-import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
+import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
 import { PolicyDefinitionFormWrapper } from "@think-it-labs/edc-connector-ui/policy-definition-form-wrapper";
+import { T, useTranslator } from "@/i18n";
+import SideDrawer from "@/components/organisms/side-drawer";
+import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { fromPolicyDefinitionForm } from "@/utilities/policy";
 import PolicyExpression from "@/components/organisms/policy-expression";
-import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
-import { MultiplicityConstraint } from "@/utilities/constraints";
+import { MultiplicityConstraint } from "@/utilities/policy-constraints";
 import { Input } from "@/components/atoms/input";
 
 export default function CreatePolicyDefinitionPage() {
@@ -18,14 +18,15 @@ export default function CreatePolicyDefinitionPage() {
   const { translator } = useTranslator();
 
   const [formData, setFormData] = useState<(AtomicConstraint|MultiplicityConstraint)[]>([]);
+  const [policyId, setPolicyId] = useState("") ;
   const [policyExpression, setPolicyExpression] = useState<(AtomicConstraint|MultiplicityConstraint)[]>([]);
 
-  const [errors, setErrors] = useState({ title: false, content: false });
-
   const validateForm = () => true ;
-  const onChange = (newFormData: (AtomicConstraint|MultiplicityConstraint)[]) => {
+  const onChange = (newFormData: (AtomicConstraint|MultiplicityConstraint)[], policyId:string) => {
+    console.log(newFormData)
     setFormData([ ...newFormData ]);
     setPolicyExpression([ ...newFormData ]);
+    setPolicyId(policyId);
   }
   const onSubmit = () => {
     if (!validateForm()) {
@@ -47,16 +48,10 @@ export default function CreatePolicyDefinitionPage() {
 
   return (
     <SideDrawer title={<T string="policyDefinitions.new.title" />}>
-      <div>
-        <div className="text-3xl">
-          <span data-testid="policy-definition-create-modal-title">
-            <T string="policyDefinitions.new.title" />
-          </span>
-        </div>
-  
+      <div>  
         <PolicyDefinitionFormWrapper
           managementUrl={connector.managementUrl}
-          formData={() => fromPolicyDefinitionForm(formData)}
+          formData={() => fromPolicyDefinitionForm(formData, policyId)}
           onSuccess={() => push("/policy-definitions")}
           onFailure={onFormSubmitFail}
         >
@@ -69,7 +64,16 @@ export default function CreatePolicyDefinitionPage() {
                   >
                     <T string="policyDefinitions.new.policyId"/>
                   </label>
-                  <Input />
+                  <Input
+                        required
+                        name="policy-id"
+                        id="policy-id"
+                        data-testid="policy-id"
+                        type="text"
+                        placeholder="policy id"
+                        value={policyId}
+                        onChange={(event) => onChange(formData, event.target.value)}
+                      />
                 </div>
               </div>
             </div>
@@ -83,7 +87,7 @@ export default function CreatePolicyDefinitionPage() {
                   </label>
                   <PolicyExpression
                     value={policyExpression}
-                    onChange={(value) => { onChange(value) }}
+                    onChange={(value) => { onChange(value, policyId) }}
                   />
                 </div>
               </div>

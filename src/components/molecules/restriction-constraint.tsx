@@ -1,8 +1,10 @@
-import {AndConstraint, MultiplicityConstraint, OrConstraint, XoneConstraint} from "@/utilities/constraints";
 import * as React from "react";
-import {ConstraintProps} from "@/components/molecules/constraint.tsx";
-import PolicyExpression from "@/components/organisms/policy-expression.tsx";
 import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
+
+import {ConstraintProps} from "@/components/molecules/constraint";
+import PolicyExpression from "@/components/organisms/policy-expression";
+
+import {AndConstraint, MultiplicityConstraint, OrConstraint, XoneConstraint} from "@/utilities/policy-constraints";
 
 export function RestrictionConstraint({value, onChange, onRemove}: ConstraintProps) {
   if (value.hasOwnProperty("and")){

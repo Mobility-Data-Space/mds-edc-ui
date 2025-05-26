@@ -1,8 +1,10 @@
 import React from "react";
-import {ASSET_LANGUAGE} from "@/schema/asset.ts";
-import {MuiSelect} from "@/components/atoms/mui-select.tsx";
-import {HIGHLIGHTED_LANGUAGE_SELECT_DATA, LANGUAGE_SELECT_DATA} from "@/constants/languages.ts";
-import {AssetProperties} from "@/utilities/asset.ts";
+
+import {MuiSelect} from "@/components/atoms/mui-select";
+
+import {ASSET_LANGUAGE} from "@/schema/asset";
+import {HIGHLIGHTED_LANGUAGE_SELECT_DATA, LANGUAGE_SELECT_DATA} from "@/constants/languages";
+import {AssetProperties} from "@/utilities/asset";
 
 export interface AssetLanguageProps {
   formData: AssetProperties;

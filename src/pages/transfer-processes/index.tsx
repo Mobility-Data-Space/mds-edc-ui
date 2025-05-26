@@ -1,20 +1,19 @@
-import { Button } from "@/components/atoms/button";
-import { Table } from "@/components/atoms/table";
-
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import React from "react";
 import { AssetView } from "@think-it-labs/edc-connector-ui/asset-view";
 import { ContractAgreementView } from "@think-it-labs/edc-connector-ui/contract-agreement-view";
 import { TransferProcessesList } from "@think-it-labs/edc-connector-ui/transfer-processes-list";
+import { Button } from "@/components/atoms/button";
+import { Table } from "@/components/atoms/table";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { usePagination } from "@/hooks/use-pagination";
-import { T, useTranslator } from "@/i18n";
-import { ChevronLeft, ChevronRight, Search } from "lucide-react";
-import React from "react";
-import SideDrawer from "@/components/organisms/side-drawer.tsx";
+import { T } from "@/i18n";
+import SideDrawer from "@/components/organisms/side-drawer";
 
 export default function TransferProcessesListPage() {
   const { push, connector } = useParticipantConnectorState();
   const managementUrl = connector?.managementUrl as string;
-  const { globalTranslator } = useTranslator();
+
   const { decrementPage, incrementPage, offset, limit, hasPrev, page } =
     usePagination();
   
@@ -113,9 +112,8 @@ export default function TransferProcessesListPage() {
                         <p className="text-xs">
                           <AssetView.ContentType />
                         </p>
+                        <AssetView.Id />
                       </AssetView>
-
-                      {item.assetId}
                     </Table.Cell>
                   </Table.Row>
                 )}

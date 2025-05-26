@@ -1,18 +1,13 @@
-import { Button } from "@/components/atoms/button";
-import { Table } from "@/components/atoms/table";
-
+import React from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import {IconButton} from "@mui/material";
 import { ContractAgreementsList } from "@think-it-labs/edc-connector-ui/contract-agreements-list";
-import { Timestamp } from "@think-it-labs/edc-connector-ui/timestamp";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { usePagination } from "@/hooks/use-pagination";
 import { T, useTranslator } from "@/i18n";
-import { ChevronLeft, ChevronRight, Search } from "lucide-react";
-import React from "react";
-import SideDrawer from "@/components/organisms/side-drawer.tsx";
-import { ContractAgreementView } from "@think-it-labs/edc-connector-ui/contract-agreement-view";
-import ContractAgreementCard from "@/components/organisms/contract-agreement-card.tsx";
-import {Card, CardContent, Icon, IconButton} from "@mui/material";
-import Typography from "@mui/material/Typography";
+
+import SideDrawer from "@/components/organisms/side-drawer";
+import ContractAgreementCard from "@/components/organisms/contract-agreement-card";
 
 export default function ContractAgreementsListPage() {
   const { push, connector } = useParticipantConnectorState();
