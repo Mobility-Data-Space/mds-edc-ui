@@ -1,14 +1,4 @@
-// Context
-export const CONTEXT_DCT = { prefix: "dct:", value: "http://purl.org/dc/terms/" };
-export const CONTEXT_DCAT = { prefix: "dcat:", value: "http://www.w3.org/ns/dcat#" };
-export const CONTEXT_MOBILITYDCAT_AP = { prefix: "mobilitydcatap:", value: "https://w3id.org/mobilitydcat-ap/" };
-export const CONTEXT_MOBILITYDCAT_AP_THEME = { prefix: "mobilitydcatap-theme:", value: "https://w3id.org/mobilitydcat-ap/mobility-theme/" };
-export const CONTEXT_ADMS = { prefix: "adms:", value: "http://www.w3.org/ns/adms#" };
-export const CONTEXT_OWL = { prefix: "owl:", value: "http://www.w3.org/2002/07/owl#" };
-export const CONTEXT_SKOS = { prefix: "skos:", value: "http://www.w3.org/2002/07/owl#" };
-
-export const CONTEXT_RDFS = { prefix: "rdfs:", value: "http://www.w3.org/2000/01/rdf-schema#" };
-export const CONTEXT_XSD = { prefix: "xsd:", value: "http://www.w3.org/2001/XMLSchema#" };
+import {CONTEXT_DCT, CONTEXT_DCAT, CONTEXT_OWL, CONTEXT_MOBILITYDCAT_AP, CONTEXT_MOBILITYDCAT_AP_THEME, CONTEXT_RDFS, CONTEXT_SKOS, CONTEXT_ADMS} from "@/schema/context.ts";
 
 // Asset Properties
 export const ASSET_TITLE = `${CONTEXT_DCT.value}title`;
