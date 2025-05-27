@@ -48,7 +48,6 @@ export default function ContractAgreementDetails({ contractAgreement, participan
     }).then(setTransferProcesses);
   }, [contractAgreement.id])
 
-  console.log("transferProcesses : ", transferProcesses)
   return (
     <>
       <div className="flex flex-col gap-y-9">

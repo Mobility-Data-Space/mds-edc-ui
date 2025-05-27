@@ -1,3 +1,4 @@
+/*
 import {
   Dataset,
   EdcConnectorClient,
@@ -666,3 +667,4 @@ main()
   .then(() => console.log("DONE"))
   .catch(console.error);
 
+*/
