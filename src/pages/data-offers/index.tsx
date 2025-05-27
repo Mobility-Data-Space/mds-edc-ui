@@ -1,12 +1,15 @@
-import {ChevronLeft, ChevronRight, CirclePlus, Plus, Search} from "lucide-react";
-import React from "react";
-import {Button as MuiButton, IconButton} from "@mui/material";
+import React, {useState} from "react";
+import {ChevronLeft, ChevronRight, CirclePlus} from "lucide-react";
+import {Button as MuiButton, IconButton, Icon} from "@mui/material";
 import { ContractDefinitionsList } from "@think-it-labs/edc-connector-ui/contract-definitions-list";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { usePagination } from "@/hooks/use-pagination";
 import { T, useTranslator } from "@/i18n";
 import SideDrawer from "@/components/organisms/side-drawer";
 import ContractDefinitionCard from "@/components/organisms/contract-definition-card.tsx";
+import {JsonLdDialog} from "@/components/molecules/JsonLdDialog.tsx";
+import {TitleWithIcon} from "@/components/atoms/TitleWithIcon.tsx";
+import {ContractDefinition} from "@think-it-labs/edc-connector-client";
 
 export default function AssetListPage() {
   const { push, connector } = useParticipantConnectorState();
@@ -14,8 +17,30 @@ export default function AssetListPage() {
   const managementUrl = connector?.managementUrl as string;
   const { decrementPage, incrementPage, offset, limit, hasPrev, page } =
     usePagination();
+
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+
+  const [openDataOfferData, setOpenDataOfferData] = useState({
+    contractDefinition: {} as ContractDefinition,
+  });
+
+  const openDetailsModal = (contractDefinition: ContractDefinition) => {
+    setIsDetailsModalOpen(true);
+    setOpenDataOfferData({ contractDefinition });
+  };
+
   return (
     <SideDrawer title={<T string="contractDefinitions.title" />}>
+      <JsonLdDialog
+        isOpen={isDetailsModalOpen}
+        jsonLdObject={openDataOfferData.contractDefinition}
+        onClose={() => setIsDetailsModalOpen(false)}
+        title={<TitleWithIcon
+          title={openDataOfferData.contractDefinition?.id}
+          subtitle={<T string="policyDefinitions.policy" />}
+          icon={<Icon fontSize="large">policy</Icon>}
+        />}
+      />
       <ContractDefinitionsList managementUrl={managementUrl}>
         <div className="flex gap-x-5">
           <div className="flex items-center">
@@ -42,7 +67,7 @@ export default function AssetListPage() {
             </div>
           </div>
         </div>
-        
+
         <div className="flex flex-wrap gap-4 py-4">
           <ContractDefinitionsList.Items
             limit={limit}
@@ -50,8 +75,11 @@ export default function AssetListPage() {
             sortOrder="DESC"
           >
             {({item, index}) => (
-              <ContractDefinitionCard key={index} contractDefinition={item}
-                                      onClick={() => push(`/data-offers/${item.id}`)}/>
+              <ContractDefinitionCard
+                key={index}
+                contractDefinition={item}
+                onClick={() => openDetailsModal(item)}
+              />
             )}
           </ContractDefinitionsList.Items>
         </div>
