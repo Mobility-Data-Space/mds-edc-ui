@@ -4,13 +4,12 @@ services:
       context: ./
       dockerfile: Dockerfile
       args:
-        GITHUB_TOKEN: ${GITHUB_TOKEN}
-        NEXT_PUBLIC_EDC_URL: "http://localhost:3000"
+        NEXT_PUBLIC_EDC_PUBLIC_URL: "http://edc-1:8185/public"
         NEXT_PUBLIC_EDC_ID: "participant_1"
         NEXT_PUBLIC_EDC_NAME: "participant_1_edc_name"
-        NEXT_PUBLIC_EDC_MANAGEMENT_URL: "http://edc-1:8182/management"
+        NEXT_PUBLIC_EDC_MANAGEMENT_URL: "http://edc-1:8182/api/management"
         NEXT_PUBLIC_EDC_DEFAULT_URL: "http://edc-1:8181/api"
-        NEXT_PUBLIC_EDC_PROTOCOL_URL: "http://edc-1:8183/protocol"
+        NEXT_PUBLIC_EDC_PROTOCOL_URL: "http://edc-1:8183/api/dsp"
     ports:
       - "3000:3000"
 
@@ -22,13 +21,13 @@ services:
       EDC_HOSTNAME: "edc-participant-1"
       WEB_HTTP_PATH: "/api"
       WEB_HTTP_PORT: "8181"
-      WEB_HTTP_CONTROL_PATH: "/control"
+      WEB_HTTP_CONTROL_PATH: "/api/control"
       WEB_HTTP_CONTROL_PORT: "8186"
-      WEB_HTTP_MANAGEMENT_PATH: "/management"
+      WEB_HTTP_MANAGEMENT_PATH: "/api/management"
       WEB_HTTP_MANAGEMENT_PORT: "8182"
-      WEB_HTTP_PROTOCOL_PATH: "/protocol"
+      WEB_HTTP_PROTOCOL_PATH: "/api/dsp"
       WEB_HTTP_PROTOCOL_PORT: "8183"
-      WEB_HTTP_VERSION_PATH: "/version"
+      WEB_HTTP_VERSION_PATH: "/api/version"
       WEB_HTTP_VERSION_PORT: "8184"
       WEB_HTTP_PUBLIC_PATH: "/public"
       WEB_HTTP_PUBLIC_PORT: "8185"
@@ -50,7 +49,7 @@ services:
       dockerfile: Dockerfile
       args:
         GITHUB_TOKEN: ${GITHUB_TOKEN}
-        NEXT_PUBLIC_EDC_URL: "http://localhost:3001"
+        NEXT_PUBLIC_EDC_PUBLIC_URL: "http://edc-2:8185/public"
         NEXT_PUBLIC_EDC_ID: "participant_2"
         NEXT_PUBLIC_EDC_NAME: "participant_2_edc_name"
         NEXT_PUBLIC_EDC_MANAGEMENT_URL: "http://edc-2:8182/management"
@@ -67,13 +66,13 @@ services:
       EDC_HOSTNAME: "edc-participant-2"
       WEB_HTTP_PATH: "/api"
       WEB_HTTP_PORT: "8181"
-      WEB_HTTP_CONTROL_PATH: "/control"
+      WEB_HTTP_CONTROL_PATH: "/api/control"
       WEB_HTTP_CONTROL_PORT: "8186"
-      WEB_HTTP_MANAGEMENT_PATH: "/management"
+      WEB_HTTP_MANAGEMENT_PATH: "/api/management"
       WEB_HTTP_MANAGEMENT_PORT: "8182"
-      WEB_HTTP_PROTOCOL_PATH: "/protocol"
+      WEB_HTTP_PROTOCOL_PATH: "/api/dsp"
       WEB_HTTP_PROTOCOL_PORT: "8183"
-      WEB_HTTP_VERSION_PATH: "/version"
+      WEB_HTTP_VERSION_PATH: "/api/version"
       WEB_HTTP_VERSION_PORT: "8184"
       WEB_HTTP_PUBLIC_PATH: "/public"
       WEB_HTTP_PUBLIC_PORT: "8185"

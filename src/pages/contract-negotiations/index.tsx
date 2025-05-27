@@ -13,7 +13,7 @@ import { Table } from "@/components/atoms/table";
 import ContractNegotiationDialog from "@/components/organisms/contract-negotiation-dialog.tsx";
 
 export default function ContractNegotiationsListPage() {
-  const { push, connector } = useParticipantConnectorState();
+  const { connector } = useParticipantConnectorState();
   const managementUrl = connector?.managementUrl as string;
   const { globalTranslator, translator } = useTranslator();
   const { decrementPage, incrementPage, offset, limit, hasPrev, page } =

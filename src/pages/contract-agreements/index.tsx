@@ -11,7 +11,7 @@ import ContractAgreementDialog from "@/components/organisms/contract-agreement-d
 import { ContractAgreement } from "@think-it-labs/edc-connector-client";
 
 export default function ContractAgreementsListPage() {
-  const { push, connector } = useParticipantConnectorState();
+  const { connector } = useParticipantConnectorState();
   const managementUrl = connector?.managementUrl as string;
 
   const { translator } = useTranslator();

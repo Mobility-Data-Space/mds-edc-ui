@@ -295,6 +295,8 @@ export const en = {
           "Describe a new policy by defining rules which ensure owned data is accessed in a specific way, following strict requirements.",
         buttonCancel: "Cancel",
         buttonSave: "Save changes",
+        policyId: "Policy ID",
+        policyExpression: "Policy Expression"
       },
       constraint: {
         POLICY_EVALUATION_TIME: "Time Restriction",

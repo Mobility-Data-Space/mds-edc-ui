@@ -7,8 +7,8 @@ import { ContractDefinitionFormWrapper } from "@think-it-labs/edc-connector-ui/c
 import { useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
 import SideDrawer from "@/components/organisms/side-drawer";
-import { fromContractDefinitionForm } from "@/utilities/contract_definition";
-import { defaultCreateContractDefinitionFormData } from "@/utilities/contract_definition";
+import { fromContractDefinitionForm } from "@/utilities/contract-definition";
+import { defaultCreateContractDefinitionFormData } from "@/utilities/contract-definition";
 import {MuiSelect} from "@/components/atoms/mui-select";
 import {operatorIn} from "@/utilities/policy-constraints";
 import { Input } from "@/components/atoms/input";

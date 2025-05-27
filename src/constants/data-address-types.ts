@@ -1,4 +1,4 @@
-import { DataAddressTypes } from "@/utilities/data_address";
+import { DataAddressTypes } from "@/utilities/data-address";
 
 export const DATA_ADDRESS_TYPE_HTTP = {
     value: DataAddressTypes.HttpData,

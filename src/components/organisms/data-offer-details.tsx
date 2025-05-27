@@ -1,22 +1,17 @@
 import React, {useEffect, useState} from "react";
-import {Button, Checkbox, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Icon, Tooltip} from "@mui/material";
+import {Button, Icon, Tooltip} from "@mui/material";
 import Typography from "@mui/material/Typography";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import {enqueueSnackbar} from "notistack";
-import {ReactJsonViewProps} from "react-json-view";
-import dynamic from "next/dynamic";
 import {compact, Policy} from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
-import {JsonLdDialog} from "@/components/molecules/JsonLdDialog.tsx";
 import {TitleWithIcon} from "@/components/atoms/TitleWithIcon.tsx";
 
 import {FieldShow} from "@/components/molecules/field-show.tsx";
-import {ConstraintShow} from "@/components/molecules/constraint-show";
 import {ConfirmDialog} from "@/components/molecules/confirm-dialog";
 import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
 import {T, useTranslator} from "@/i18n";
-import { createNegotiationRequest } from "@/utilities/contract_negotiations";
-import {convertOdrlToJsonHtml, removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
+import { createNegotiationRequest } from "@/utilities/contract-negotiations";
+import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
 import {PolicyConstraintShow} from "@/components/molecules/policy-constraint-show.tsx";
 
 interface DataOfferDetailsProps {

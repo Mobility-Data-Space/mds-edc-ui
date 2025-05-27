@@ -70,7 +70,7 @@ export default function CreatePolicyDefinitionPage() {
                         id="policy-id"
                         data-testid="policy-id"
                         type="text"
-                        placeholder="policy id"
+                        placeholder={translator("policyDefinitions.new.policyId")}
                         value={policyId}
                         onChange={(event) => onChange(formData, event.target.value)}
                       />

@@ -1,5 +1,5 @@
 import {ContractAgreement, DataAddress, TransferProcessInput} from "@think-it-labs/edc-connector-client";
-import { DataAddressTypes } from "./data_address";
+import { DataAddressTypes } from "./data-address";
 
 export const TRANSFER_TYPE_PULL = "_PULL" ;
 export const TRANSFER_TYPE_PUSH = "_PUSH" ;
