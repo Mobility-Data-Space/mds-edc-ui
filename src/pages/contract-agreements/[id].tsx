@@ -1,4 +1,3 @@
-
 import { useRouter } from "next/router";
 import React, {useState} from "react";
 import Button from "@mui/material/Button";
@@ -9,6 +8,7 @@ import SideDrawer from "@/components/organisms/side-drawer";
 import {TransferFormDialog} from "@/components/templates/transfer-form-dialog";
 import {ConstraintShow} from "@/components/molecules/constraint-show";
 import {convertOdrlToJsonHtml, removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
+import {ContractAgreement} from "@think-it-labs/edc-connector-client";
 
 export default function ContractAgreementViewPage() {
   const id = useRouter().query.id as string;
@@ -25,6 +25,7 @@ export default function ContractAgreementViewPage() {
         managementUrl={managementUrl}
       >
         <TransferFormDialog
+          contractAgreementLd={ContractAgreementView.Item() as ContractAgreement}
           isOpen={isTransferModalOpen}
           onClose={() => setIsTransferModalOpen(false)}
           translator={translator}

@@ -3,11 +3,11 @@ import React from "react";
 import {Button, Icon} from "@mui/material";
 import Typography from "@mui/material/Typography";
 
-import {AssetFieldDialog} from "@/components/molecules/asset-field-dialog";
+import {FieldDialog} from "@/components/molecules/field-dialog.tsx";
 
 import {MultiTranslate, T} from "@/i18n";
 
-export interface AssetFieldShowProps {
+export interface FieldShowProps {
   icon: string;
   label: string;
   value?: string;
@@ -16,7 +16,7 @@ export interface AssetFieldShowProps {
   valueTitle?: string;
 }
 
-export function AssetFieldShow({ icon, label, value, valueTitle, subLabel, openModalText}: AssetFieldShowProps): JSX.Element {
+export function FieldShow({ icon, label, value, valueTitle, subLabel, openModalText}: FieldShowProps): JSX.Element {
   const nonNullValue = value || "";
   const [dialogIsOpen, setDialogIsOpen] = React.useState(false);
 
@@ -34,7 +34,7 @@ export function AssetFieldShow({ icon, label, value, valueTitle, subLabel, openM
           </Typography>
         </div> :
         <>
-          <AssetFieldDialog
+          <FieldDialog
             icon={icon}
             value={nonNullValue}
             valueTitle={valueTitle}

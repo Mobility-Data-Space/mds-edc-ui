@@ -2,17 +2,15 @@ import React, {useState} from "react";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import Typography from "@mui/material/Typography";
 import { enqueueSnackbar } from 'notistack';
 import {Asset} from "@think-it-labs/edc-connector-client";
 import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
-
 import {AssetIcon} from "@/components/atoms/asset-icon";
 import AssetDetails from "@/components/organisms/asset-details";
 import {DeleteDialog} from "@/components/molecules/delete-dialog";
 import { T } from "@/i18n";
 import {ASSET_TITLE} from "@/schema/asset";
-
+import {TitleWithIcon} from "@/components/atoms/TitleWithIcon.tsx";
 
 interface AssetDialogProps {
   asset: Asset;
@@ -54,7 +52,7 @@ export default function AssetDialog({ open, onClose, asset, onEditClick, deleteE
         content={`Please confirm you want to delete Asset ${title}. This action cannot be undone.`}
         onConfirm={onDeleteConfirm}
       />
-      
+
       <Dialog
         open={open}
         maxWidth="lg"
@@ -63,17 +61,7 @@ export default function AssetDialog({ open, onClose, asset, onEditClick, deleteE
       >
         <DialogTitle>
           <div className="flex flex-row justify-between">
-            <div className="flex flex-row gap-x-4 items-center">
-              <AssetIcon asset={asset} fontSize="large"/>
-              <div className="flex flex-col">
-                <Typography variant="h4">
-                  {title}
-                </Typography>
-                <Typography variant="body1" color="textSecondary">
-                  {id}
-                </Typography>
-              </div>
-            </div>
+            <TitleWithIcon icon={<AssetIcon asset={asset} fontSize="large"/>} title={title} subtitle={id} />
 
             <div>
             {onEditClick &&
