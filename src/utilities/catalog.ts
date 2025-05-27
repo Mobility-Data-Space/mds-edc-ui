@@ -52,8 +52,9 @@ export const convertOdrlToJsonHtml = (processedJson: any, valueDelimiter = " "):
     return processedJson;
   }
 
-  if (!! processedJson["action"]) {
-    const value = processedJson["action"] && processedJson["action"][0] && processedJson["action"][0]["@id"];
+  if (!! processedJson.action) {
+    const action = processedJson.action[0] || processedJson.action;
+    const value = action["@id"];
     return `Action${valueDelimiter}:${valueDelimiter}${value}`;
   }
 

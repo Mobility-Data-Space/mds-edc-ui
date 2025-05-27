@@ -8,7 +8,7 @@ import {Asset} from "@think-it-labs/edc-connector-client";
 import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
 
 import {MarkdownCollapsableText} from "@/components/molecules/markdown-collapsable-text";
-import AssetFieldGrid from "@/components/molecules/asset-field-grid";
+import FieldGrid from "@/components/molecules/field-grid.tsx";
 import {T} from "@/i18n";
 import {ASSET_KEYWORDS, ASSET_DESCRIPTION} from "@/schema/asset";
 import { assetFieldsToShow, assetPrivateFieldsToShow} from "@/utilities/asset";
@@ -53,8 +53,8 @@ export default function AssetDetails({ asset, participantId, connectorEndpoint }
       </div>
 
       <div className="flex flex-col gap-y-9">
-        <AssetFieldGrid fields={shownFields}/>
-        <AssetFieldGrid fields={privateFields} label="assets.new.privateProperties"/>
+        <FieldGrid fields={shownFields}/>
+        <FieldGrid fields={privateFields} label="assets.new.privateProperties"/>
       </div>
     </div>
   );

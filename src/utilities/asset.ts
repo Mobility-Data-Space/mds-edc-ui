@@ -1,6 +1,6 @@
 import {removeEmptyFields} from "@/utilities/form.ts";
 import {Asset, AssetInput, DataAddress} from "@think-it-labs/edc-connector-client";
-import {AssetFieldShowProps} from "@/components/molecules/asset-field-show";
+import {FieldShowProps} from "@/components/molecules/field-show.tsx";
 import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
 import {ENGLISH_SELECT_DATA, LANGUAGES} from "@/constants/languages";
 import {DELIMITER} from "@/i18n";
@@ -28,14 +28,14 @@ const temporalCoverageValue = ([start, end]: [string, string]) => {
 export const fromAssetForm = (formData: AssetInput) => {
   console.log("Pre Clean")
   console.log(formData)
-  
+
   formData["@id"] = formData.properties["@id"];
   formData.properties["@id"] = "" ;
 
   const cleanFormDataObject = removeEmptyFields(formData);
   console.log("Post Clean")
   console.log(cleanFormDataObject)
-  
+
   return {
     "@type": "https://w3id.org/edc/v0.0.1/ns/Asset",
     "@id": cleanFormDataObject["@id"],
@@ -63,8 +63,8 @@ export const defaultCreateAssetFormData: AssetInput = {
       [ASSET_ADVANCED_INFO_DATA_CATEGORY]: "",
       [ASSET_ADVANCED_INFO_DATA_SUBCATEGORY]: ""
     },
-    
-    
+
+
     [ASSET_ADVANCED_INFO_TRANSPORT_MODE]: "",
     [ASSET_ADVANCED_INFO_GEO_REFERENCE_METHOD]: "",
 
@@ -81,9 +81,9 @@ export const defaultCreateAssetFormData: AssetInput = {
       [ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL]: "",
       [ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS]: [] as any[],
     },
-    
+
     [ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS]: [] as any,
-  
+
     [ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE]: {
       [ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START]: "",
       [ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END]: ""
@@ -97,7 +97,7 @@ export const defaultCreateAssetFormData: AssetInput = {
 
 export type AssetProperties = typeof defaultCreateAssetFormData.properties;
 
-const assetGeneralFieldsToShow = (asset: Asset, participantId: string, connectorEndpoint: string): AssetFieldShowProps[] => {
+export const assetGeneralFieldsToShow = (asset: Asset, participantId: string, connectorEndpoint: string): FieldShowProps[] => {
   const assetLanguage = readValue(asset.properties, ASSET_LANGUAGE);
 
   return [
@@ -149,7 +149,7 @@ const assetGeneralFieldsToShow = (asset: Asset, participantId: string, connector
   ];
 };
 
-const assetAdvancedFieldsToShow = (asset: Asset): AssetFieldShowProps[] => {
+const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
   const advancedFields = [];
   const assetTitle = readValue(asset.properties, ASSET_TITLE) || "";
 
@@ -271,7 +271,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): AssetFieldShowProps[] => {
   return advancedFields;
 };
 
-const assetDataAddressFieldsToShow = (asset: Asset): AssetFieldShowProps[] => {
+const assetDataAddressFieldsToShow = (asset: Asset): FieldShowProps[] => {
   const dataAddressFieldsToMerge = [
     {
       label: "assets.new.httpProxyMethod",
@@ -313,7 +313,7 @@ const assetDataAddressFieldsToShow = (asset: Asset): AssetFieldShowProps[] => {
   return dataSourceFields;
 };
 
-export const assetFieldsToShow = (asset: Asset, participantId: string, connectorEndpoint: string): AssetFieldShowProps[] => {
+export const assetFieldsToShow = (asset: Asset, participantId: string, connectorEndpoint: string): FieldShowProps[] => {
   return [
     ...assetGeneralFieldsToShow(asset, participantId, connectorEndpoint),
     ...assetDataAddressFieldsToShow(asset),
@@ -321,7 +321,7 @@ export const assetFieldsToShow = (asset: Asset, participantId: string, connector
   ]
 };
 
-export const assetPrivateFieldsToShow = (asset: Asset): AssetFieldShowProps[] => {
+export const assetPrivateFieldsToShow = (asset: Asset): FieldShowProps[] => {
   const objectEntries = Object.entries(asset.privateProperties);
   if (objectEntries.length === 0) {
     return [];

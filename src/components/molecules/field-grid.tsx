@@ -2,17 +2,17 @@ import React from "react";
 
 import Typography from "@mui/material/Typography";
 
-import {AssetFieldShowProps, AssetFieldShow} from "@/components/molecules/asset-field-show";
+import {FieldShowProps, FieldShow} from "@/components/molecules/field-show.tsx";
 
 import { T } from "@/i18n";
 
-interface AssetFieldGridProps {
-  fields: AssetFieldShowProps[];
+interface FieldGridProps {
+  fields: FieldShowProps[];
   label?: string;
   className?: string;
 }
 
-export default function AssetFieldGrid({ fields, label, className = "" }: AssetFieldGridProps) {
+export default function FieldGrid({ fields, label, className = "" }: FieldGridProps) {
   if (fields.length === 0) {
     return "";
   }
@@ -26,7 +26,7 @@ export default function AssetFieldGrid({ fields, label, className = "" }: AssetF
       }
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
         {fields.map((field, index) =>
-          <AssetFieldShow {...field} key={index}/>
+          <FieldShow {...field} key={index}/>
         )}
       </div>
     </div>

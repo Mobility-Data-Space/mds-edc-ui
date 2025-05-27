@@ -4,10 +4,10 @@ import {Button, Icon} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from '@mui/material';
 
-import {AssetFieldShowProps} from "@/components/molecules/asset-field-show";
+import {FieldShowProps} from "@/components/molecules/field-show.tsx";
 import {T} from "@/i18n";
 
-export function AssetFieldDialog({ icon, label, subLabel, value, valueTitle, isOpen, onClose }: AssetFieldShowProps & { isOpen: boolean, onClose: () => void }): JSX.Element {
+export function FieldDialog({ icon, label, subLabel, value, valueTitle, isOpen, onClose }: FieldShowProps & { isOpen: boolean, onClose: () => void }): JSX.Element {
   const nonNullValue = value || "";
   const nonNullValueTitle = valueTitle || "";
 

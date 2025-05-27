@@ -3,7 +3,6 @@ import React, {useEffect, useState} from "react";
 import { PropsWithChildren, useCallback } from "react";
 import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
 import { useViewContext, View } from "./view";
-import {removeJsonLdSchemaFromProperties} from "../../../../src/utilities/catalog";
 
 export const useContractNegotiationContext = () => {
   const { item } = useViewContext<ContractNegotiation>();

@@ -1,15 +1,12 @@
 import React, {useState} from "react";
 import {enqueueSnackbar} from "notistack";
-import {Dialog, DialogActions, DialogContent, DialogTitle, FormHelperText} from "@mui/material";
+import {Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import {ContractAgreement, DataAddress} from "@think-it-labs/edc-connector-client";
-import {ContractAgreementView} from "@think-it-labs/edc-connector-ui/contract-agreement-view";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
-
 import {Input} from "@/components/atoms/input";
 import {MuiSelect} from "@/components/atoms/mui-select";
-
 import {T} from "@/i18n";
 import { DATA_ADDRESS_SELECT_DATA } from "@/constants/data-address-types";
 import {theme} from "@/theme/ThemeProvider";
@@ -22,19 +19,19 @@ export interface TransferFormDialogProps {
   isOpen: boolean,
   onClose: () => void,
   translator: (key: string) => string,
+  contractAgreementLd: ContractAgreement,
 }
 
-export function TransferFormDialog({ isOpen, onClose, translator }: TransferFormDialogProps): JSX.Element {
+export function TransferFormDialog({ contractAgreementLd, isOpen, onClose, translator }: TransferFormDialogProps): JSX.Element {
   const [formData, setFormData] = useState<DataAddress>(defaultHttpDataAddress);
 
   const [errors, setErrors] = useState<DataAddress>({} as DataAddress);
-  const contractAgreement = removeJsonLdSchemaFromProperties(ContractAgreementView.Item());
-  
+  const contractAgreement = removeJsonLdSchemaFromProperties(contractAgreementLd);
   const { connector } = useParticipantConnectorState();
   const edcClient = useEdcConnectorClient({management: connector.managementUrl}) ;
 
   const onSubmit = () => {
-    const agreement: Partial<ContractAgreement> = { 
+    const agreement: Partial<ContractAgreement> = {
       assetId: contractAgreement?.assetId[0] && contractAgreement?.assetId[0]["@value"],
       providerId: contractAgreement?.providerId[0] && contractAgreement?.providerId[0]["@value"],
       consumerId: contractAgreement?.consumerId[0] && contractAgreement?.consumerId[0]["@value"],

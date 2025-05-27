@@ -24,7 +24,7 @@ export default function AssetListPage() {
     asset: {} as Asset,
     deleteItem: async () => {},
   });
-  
+
   const openDetailsModal = (asset: Asset, deleteItem: () => Promise<void> = async () => {}) => {
     setIsDetailsModalOpen(true);
     setOpenAssetData({ asset, deleteItem });
@@ -34,7 +34,8 @@ export default function AssetListPage() {
     <>
       <AssetFormDialog
         open={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)} />
+        onClose={() => setIsCreateModalOpen(false)}
+      />
 
       <AssetDialog
         open={isDetailsModalOpen}
