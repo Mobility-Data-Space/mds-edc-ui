@@ -9,6 +9,5 @@ export const createNegotiationRequest = (offer: Policy, counterPartyAddress:stri
             target: assetId
         }).build()
     };
-    // DEBUG console.log(negotiation)
     return negotiation ;
 }

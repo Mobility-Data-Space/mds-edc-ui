@@ -12,7 +12,7 @@ import { DATA_ADDRESS_SELECT_DATA } from "@/constants/data-address-types";
 import {theme} from "@/theme/ThemeProvider";
 import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
 import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
-import { DataAddressTypes, defaultHttpDataAddress } from "@/utilities/data_address";
+import { DataAddressTypes, defaultHttpDataAddress } from "@/utilities/data-address";
 import {createTransferProcessRequest} from "@/utilities/transfer-process";
 
 export interface TransferFormDialogProps {

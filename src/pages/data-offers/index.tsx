@@ -4,7 +4,7 @@ import {Button as MuiButton, IconButton, Icon} from "@mui/material";
 import { ContractDefinitionsList } from "@think-it-labs/edc-connector-ui/contract-definitions-list";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { usePagination } from "@/hooks/use-pagination";
-import { T, useTranslator } from "@/i18n";
+import { T } from "@/i18n";
 import SideDrawer from "@/components/organisms/side-drawer";
 import ContractDefinitionCard from "@/components/organisms/contract-definition-card.tsx";
 import {JsonLdDialog} from "@/components/molecules/JsonLdDialog.tsx";
@@ -13,7 +13,6 @@ import {ContractDefinition} from "@think-it-labs/edc-connector-client";
 
 export default function AssetListPage() {
   const { push, connector } = useParticipantConnectorState();
-  const { globalTranslator } = useTranslator();
   const managementUrl = connector?.managementUrl as string;
   const { decrementPage, incrementPage, offset, limit, hasPrev, page } =
     usePagination();
