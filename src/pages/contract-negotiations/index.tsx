@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import {IconButton} from "@mui/material";
 import { ContractAgreementView } from "@think-it-labs/edc-connector-ui/contract-agreement-view";
@@ -8,17 +8,38 @@ import { useParticipantConnectorState } from "@/hooks/use-participant-connector-
 import { usePagination } from "@/hooks/use-pagination";
 import { T, useTranslator } from "@/i18n";
 import SideDrawer from "@/components/organisms/side-drawer";
+import {ContractNegotiation} from "@think-it-labs/edc-connector-client";
 import { Table } from "@/components/atoms/table";
+import ContractNegotiationDialog from "@/components/organisms/contract-negotiation-dialog.tsx";
 
 export default function ContractNegotiationsListPage() {
   const { push, connector } = useParticipantConnectorState();
   const managementUrl = connector?.managementUrl as string;
-  const { globalTranslator } = useTranslator();
+  const { globalTranslator, translator } = useTranslator();
   const { decrementPage, incrementPage, offset, limit, hasPrev, page } =
     usePagination();
 
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+
+  const [openContractNegotiationData, setOpenContractNegotiationData] = useState({
+    contractNegotiation: {} as ContractNegotiation,
+  });
+
+  const openDetailsModal = (contractNegotiation: ContractNegotiation) => {
+    setIsDetailsModalOpen(true);
+    setOpenContractNegotiationData({ contractNegotiation });
+  };
+
   return (
     <SideDrawer title={<T string="contractNegotiations.title" />}>
+      <ContractNegotiationDialog
+        open={isDetailsModalOpen}
+        contractNegotiation={openContractNegotiationData.contractNegotiation}
+        onClose={() => setIsDetailsModalOpen(false)}
+        participantId={connector.id}
+        contentStyle={{ maxWidth: "90vw", width: "1000px" }}
+        translator={translator}
+      />
       <ContractNegotiationsList managementUrl={managementUrl}>
         <div className="flex gap-x-5">
           <div className="flex-grow">
@@ -93,7 +114,7 @@ export default function ContractNegotiationsListPage() {
               >
                 {({ item, index }) => (
                   <Table.Row
-                    onClick={() => push(`/contract-negotiations/${item.id}`)}
+                    onClick={() => openDetailsModal(item)}
                   >
                     <Table.Cell>
                       <button
@@ -109,7 +130,7 @@ export default function ContractNegotiationsListPage() {
                       </span>
                     </Table.Cell>
                     <Table.Cell>
-                      {!item.contractAgreementId ? "" : 
+                      {!item.contractAgreementId ? "" :
                       <ContractAgreementView
                         managementUrl={managementUrl}
                         id={item.contractAgreementId}

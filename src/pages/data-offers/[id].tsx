@@ -1,8 +1,6 @@
 import { useRouter } from "next/router";
 import React from "react";
-import {
-  ContractDefinitionView,
-} from "@think-it-labs/edc-connector-ui/contract-definition-view";
+import {ContractDefinitionView,} from "@think-it-labs/edc-connector-ui/contract-definition-view";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T } from "@/i18n";
 import SideDrawer from "@/components/organisms/side-drawer";

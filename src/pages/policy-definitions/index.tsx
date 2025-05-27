@@ -1,12 +1,15 @@
-import {ChevronLeft, ChevronRight, CirclePlus, Plus, Search} from "lucide-react";
-import React from "react";
-import {Button as MuiButton, IconButton} from "@mui/material";
+import React, {useState} from "react";
+import {ChevronLeft, ChevronRight, CirclePlus} from "lucide-react";
+import {Button as MuiButton, IconButton, Icon} from "@mui/material";
 import { PolicyDefinitionsList } from "@think-it-labs/edc-connector-ui/policy-definitions-list";
 import PolicyCard from "@/components/organisms/policy-card";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { usePagination } from "@/hooks/use-pagination";
-import { T, useTranslator } from "@/i18n";
+import { T } from "@/i18n";
 import SideDrawer from "@/components/organisms/side-drawer";
+import {PolicyDefinition} from "@think-it-labs/edc-connector-client";
+import {JsonLdDialog} from "@/components/molecules/JsonLdDialog.tsx";
+import {TitleWithIcon} from "@/components/atoms/TitleWithIcon.tsx";
 
 export default function PolicyDefinitionListPage() {
   const { push, connector } = useParticipantConnectorState();
@@ -16,8 +19,29 @@ export default function PolicyDefinitionListPage() {
 
   const managementUrl = connector?.managementUrl as string;
 
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+
+  const [openPolicyDefinitionData, setOpenPolicyDefinitionData] = useState({
+    policyDefinition: {} as PolicyDefinition,
+  });
+
+  const openDetailsModal = (policyDefinition: PolicyDefinition) => {
+    setIsDetailsModalOpen(true);
+    setOpenPolicyDefinitionData({ policyDefinition });
+  };
+
   return (
     <SideDrawer title={<T string="policyDefinitions.title" />}>
+      <JsonLdDialog
+        isOpen={isDetailsModalOpen}
+        jsonLdObject={openPolicyDefinitionData.policyDefinition?.policy?.permissions}
+        onClose={() => setIsDetailsModalOpen(false)}
+        title={<TitleWithIcon
+          title={openPolicyDefinitionData.policyDefinition?.id}
+          subtitle={<T string="policyDefinitions.policy" />}
+          icon={<Icon fontSize="large">policy</Icon>}
+        />}
+      />
       <PolicyDefinitionsList managementUrl={managementUrl}>
         <div className="flex gap-x-5">
           <div className="flex items-center">
@@ -52,7 +76,11 @@ export default function PolicyDefinitionListPage() {
             sortOrder="DESC"
           >
             {({item, index}) => (
-              <PolicyCard key={index} policyDefinition={item} onClick={() => push(`/policy-definitions/${item.id}`)}/>
+              <PolicyCard
+                key={index}
+                policyDefinition={item}
+                onClick={() => openDetailsModal(item)}
+              />
             )}
           </PolicyDefinitionsList.Items>
         </div>

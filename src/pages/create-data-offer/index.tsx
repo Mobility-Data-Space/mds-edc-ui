@@ -6,7 +6,6 @@ import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-e
 import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
 import {T, useTranslator} from "@/i18n";
 import RadioButtonsGroup from "@/components/atoms/radio-group";
-import {AssetContactEmailAndSubject} from "@/components/molecules/asset-contact-email-and-subject";
 import {AssetDataCategoryAndSubcategory} from "@/components/molecules/asset-data-category-and-subcategory";
 import {AssetTitle} from "@/components/molecules/asset-title";
 import {AssetId} from "@/components/molecules/asset-id";
@@ -36,9 +35,8 @@ import { defaultCreatePolicyFormData, fromPolicyDefinitionForm } from "@/utiliti
 import { defaultCreateContractDefinitionFormData, fromContractDefinitionForm } from "@/utilities/contract_definition";
 import { defaultCreateAssetFormData, AssetProperties, generateId, fromAssetForm } from "@/utilities/asset"
 import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_TITLE } from "@/schema/asset";
-import {DATA_ADDRESS_TYPE_CUSTOM_JSON, DATA_OFFER_TYPE_DATA_SOURCE, DATA_OFFER_TYPE_ON_REQUEST, DATA_OFFER_TYPES, PUBLISH_MODE_PUBLISH_RESTRICTED, PUBLISH_MODE_PUBLISH_UNRESTRICTED, PUBLISH_MODES} from "@/constants/data-address-types";
+import {PUBLISH_MODE_PUBLISH_RESTRICTED, PUBLISH_MODE_PUBLISH_UNRESTRICTED, PUBLISH_MODES} from "@/constants/data-address-types";
 import { DataAddressTypes } from "@/utilities/data_address";
-
 
 interface DataOffer {
   asset: AssetInput,
@@ -53,7 +51,7 @@ export default function CreateDataOfferPage() {
   const submitButtonRef = useRef<HTMLButtonElement>(null);
 
   const { translator } = useTranslator();
-  
+
   const [formData, setFormData] = useState<DataOffer>({
     asset: defaultCreateAssetFormData,
     policy: defaultCreatePolicyFormData,
