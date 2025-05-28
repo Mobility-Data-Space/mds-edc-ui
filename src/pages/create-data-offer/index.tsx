@@ -32,11 +32,11 @@ import PolicyExpression from "@/components/organisms/policy-expression";
 import SideDrawer from "@/components/organisms/side-drawer";
 import { AssetFormDataAddressStep } from "@/components/organisms/asset-form-data-address-step";
 import { defaultCreatePolicyFormData, fromPolicyDefinitionForm } from "@/utilities/policy";
-import { defaultCreateContractDefinitionFormData, fromContractDefinitionForm } from "@/utilities/contract_definition";
+import { defaultCreateContractDefinitionFormData, fromContractDefinitionForm } from "@/utilities/contract-definition.ts";
 import { defaultCreateAssetFormData, AssetProperties, generateId, fromAssetForm } from "@/utilities/asset"
 import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_TITLE } from "@/schema/asset";
 import {PUBLISH_MODE_PUBLISH_RESTRICTED, PUBLISH_MODE_PUBLISH_UNRESTRICTED, PUBLISH_MODES} from "@/constants/data-address-types";
-import { DataAddressTypes } from "@/utilities/data_address";
+import { DataAddressTypes } from "@/utilities/data-address.ts";
 
 interface DataOffer {
   asset: AssetInput,

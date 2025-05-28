@@ -1,14 +1,14 @@
 import React, {useEffect, useRef, useState} from "react";
 import { enqueueSnackbar } from "notistack";
 import {Button} from "@mui/material";
-import {ContractDefinitionInput, CriterionInput} from "@think-it-labs/edc-connector-client";
+import {CriterionInput} from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 import { ContractDefinitionFormWrapper } from "@think-it-labs/edc-connector-ui/contract-definition-form-wrapper";
 import { useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
 import SideDrawer from "@/components/organisms/side-drawer";
-import { fromContractDefinitionForm } from "@/utilities/contract_definition";
-import { defaultCreateContractDefinitionFormData } from "@/utilities/contract_definition";
+import {fromContractDefinitionForm, MdsContractDefinitionInput} from "@/utilities/contract-definition.ts";
+import { defaultCreateContractDefinitionFormData } from "@/utilities/contract-definition.ts";
 import {MuiSelect} from "@/components/atoms/mui-select";
 import {operatorIn} from "@/utilities/policy-constraints";
 import { Input } from "@/components/atoms/input";
@@ -28,7 +28,7 @@ export default function CreateContractDefinitionPage() {
   const [policyIds, setPolicyIds] = useState<{ value: string }[]>([]);
 
   const edcClient = useEdcConnectorClient({management: connector.managementUrl});
-  
+
   useEffect(() => {
     edcClient.management.assets.queryAll({ offset: 0 })
       .then(result => setAssetIds(optionsGenerator(result)))
@@ -39,12 +39,12 @@ export default function CreateContractDefinitionPage() {
       .catch(error => setPolicyIds([]));
   }, []);
 
-  const [formData, setFormData] = useState<ContractDefinitionInput>(defaultCreateContractDefinitionFormData);
+  const [formData, setFormData] = useState<MdsContractDefinitionInput>(defaultCreateContractDefinitionFormData);
   const validateForm = () => true ;
 
   const { translator } = useTranslator();
 
-  const onChange = (newFormData: ContractDefinitionInput) => {
+  const onChange = (newFormData: MdsContractDefinitionInput) => {
     setFormData({ ...newFormData });
   }
   const onSubmit = () => {
@@ -82,7 +82,7 @@ export default function CreateContractDefinitionPage() {
         formData={() => fromContractDefinitionForm(formData)}
         onSuccess={() => push("/data-offers")}
         onFailure={onFormSubmitFail}
-      >   
+      >
         <div className="flex flex-col gap-y-5">
           <div>
             <label

@@ -4,7 +4,7 @@ import {Icon, IconProps} from "@mui/material";
 import {Asset} from "@think-it-labs/edc-connector-client";
 import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
 
-import { DataAddressTypes } from "@/utilities/data_address";
+import { DataAddressTypes } from "@/utilities/data-address.ts";
 
 export function AssetIcon({ asset, ...rest }: { asset: Asset } & IconProps): JSX.Element {
   let icon;

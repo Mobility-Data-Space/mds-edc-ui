@@ -15,7 +15,7 @@ import {ConstraintShow} from "@/components/molecules/constraint-show";
 import {ConfirmDialog} from "@/components/molecules/confirm-dialog";
 import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
 import {T, useTranslator} from "@/i18n";
-import { createNegotiationRequest } from "@/utilities/contract_negotiations";
+import { createNegotiationRequest } from "@/utilities/contract-negotiations.ts";
 import {convertOdrlToJsonHtml, removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
 import {PolicyConstraintShow} from "@/components/molecules/policy-constraint-show.tsx";
 

@@ -8,7 +8,7 @@ import {RadioButton} from "@/components/atoms/radio-button";
 
 import {DATA_ADDRESS_SELECT_DATA} from "@/constants/data-address-types";
 import {theme} from "@/theme/ThemeProvider";
-import { DataAddressTypes } from "@/utilities/data_address";
+import { DataAddressTypes } from "@/utilities/data-address.ts";
 
 export interface AssetDataAddressFormStepProps {
   translator: (key: string) => string,
