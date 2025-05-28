@@ -16,7 +16,7 @@ export default function TransferProcessesListPage() {
 
   const { decrementPage, incrementPage, offset, limit, hasPrev, page } =
     usePagination();
-  
+
   return (
     <SideDrawer title={<T string="transferProcesses.title" />}>
       <TransferProcessesList managementUrl={managementUrl}>
@@ -71,6 +71,7 @@ export default function TransferProcessesListPage() {
               >
                 {({ item, index }) => (
                   <Table.Row
+                    key={index}
                     onClick={() => push(`/transfer-processes/${item.id}`)}
                   >
                     <Table.Cell>
@@ -121,7 +122,7 @@ export default function TransferProcessesListPage() {
             </Table.Body>
           </Table>
         </div>
-        
+
         <TransferProcessesList.Loading>
           <div className="max-w-20 mx-auto mt-4 flex flex-col bg-white border shadow-sm rounded-xl p-4 md:p-5">
             <span

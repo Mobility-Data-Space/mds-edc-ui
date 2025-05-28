@@ -30,7 +30,7 @@ export default function AssetForm() {
 
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState<AssetInput>(defaultCreateAssetFormData);
-  
+
   const [existingIds, setExistingIds] = useState<string[]>([]);
   const [errors, setErrors] = useState({ properties: {}, dataAddress: {} });
 

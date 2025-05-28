@@ -1,4 +1,4 @@
-import React, {useMemo, useState, useEffect} from "react";
+import React, {useState, useEffect} from "react";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 import { T } from "@/i18n";
 import {Asset, ContractAgreement} from "@think-it-labs/edc-connector-client";
@@ -36,7 +36,7 @@ export default function ContractAgreementDetails({ contractAgreement, participan
 
   useEffect(() => {
     edcClient.management.assets.get(contractAgreement.assetId).then(setAsset);
-  }, [contractAgreement.assetId])
+  }, [contractAgreement.assetId]);
 
   useEffect(() => {
     edcClient.management.transferProcesses.queryAll({
@@ -46,7 +46,7 @@ export default function ContractAgreementDetails({ contractAgreement, participan
         "operandRight": contractAgreement.id
       }]
     }).then(setTransferProcesses);
-  }, [contractAgreement.id])
+  }, [contractAgreement.id]);
 
   return (
     <>
