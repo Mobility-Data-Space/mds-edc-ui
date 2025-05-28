@@ -1,6 +1,6 @@
-import React, {useState} from "react";
+import React, {useState, MouseEvent, useMemo} from "react";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
-import {IconButton} from "@mui/material";
+import {Button, IconButton, Icon} from "@mui/material";
 import {ContractAgreementView} from "@think-it-labs/edc-connector-ui/contract-agreement-view";
 import { ContractNegotiationsList } from "@think-it-labs/edc-connector-ui/contract-negotiations-list";
 import { Timestamp } from "@think-it-labs/edc-connector-ui/timestamp";
@@ -11,6 +11,8 @@ import SideDrawer from "@/components/organisms/side-drawer";
 import {ContractNegotiation} from "@think-it-labs/edc-connector-client";
 import { Table } from "@/components/atoms/table";
 import ContractNegotiationDialog from "@/components/organisms/contract-negotiation-dialog.tsx";
+import {AgreementsRetirementController} from "../../../vendors/think-it-labs/edc-connector-client/src/controllers/management-controllers/contract-negotiation-controller.ts";
+import {enqueueSnackbar} from "notistack";
 
 const CreatedAt = ({ item }: { item: ContractNegotiation }) => {
   const createdAt = item && item["https://w3id.org/edc/v0.0.1/ns/createdAt"];
@@ -35,9 +37,27 @@ export default function ContractNegotiationsListPage() {
     contractNegotiation: {} as ContractNegotiation,
   });
 
+  const agreementsRetirementController = useMemo(() => new AgreementsRetirementController(connector.managementUrl), [connector.managementUrl]);
+
   const openDetailsModal = (contractNegotiation: ContractNegotiation) => {
     setIsDetailsModalOpen(true);
     setOpenContractNegotiationData({ contractNegotiation });
+  };
+
+  const onApproveClick = (item: ContractNegotiation, event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+
+    agreementsRetirementController.retireAgreement(item.contractAgreementId)
+      .then(() => enqueueSnackbar(translator("contractNegotiations.approveSuccess")))
+      .catch((error) => enqueueSnackbar(translator("contractNegotiations.approveError")))
+  };
+
+  const onRejectClick = (item: ContractNegotiation, event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+
+    agreementsRetirementController.reactivateRetired(item.contractAgreementId)
+      .then(() => enqueueSnackbar(translator("contractNegotiations.rejectSuccess")))
+      .catch((error) => enqueueSnackbar(translator("contractNegotiations.rejectError")))
   };
 
   return (
@@ -113,6 +133,14 @@ export default function ContractNegotiationsListPage() {
                 <Table.Heading>
                   <T string="contractNegotiations.headingCreatedAt" />
                 </Table.Heading>
+
+                <Table.Heading>
+                  <T string="contractNegotiations.headingApprove" />
+                </Table.Heading>
+
+                <Table.Heading>
+                  <T string="contractNegotiations.headingReject" />
+                </Table.Heading>
               </Table.Row>
             </Table.Head>
 
@@ -161,6 +189,26 @@ export default function ContractNegotiationsListPage() {
                     </Table.Cell>
                     <Table.Cell>
                       <CreatedAt item={item} />
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Button
+                        startIcon={<Icon>doneOutline</Icon>}
+                        variant="contained"
+                        color="success"
+                        onClick={(event) => onApproveClick(item, event)}
+                      >
+                        <T string="contractNegotiations.headingApprove" />
+                      </Button>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Button
+                        startIcon={<Icon>close</Icon>}
+                        variant="contained"
+                        color="error"
+                        onClick={(event) => onRejectClick(item, event)}
+                      >
+                        <T string="contractNegotiations.headingReject" />
+                      </Button>
                     </Table.Cell>
                   </Table.Row>
                 )}
