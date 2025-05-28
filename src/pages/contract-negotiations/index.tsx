@@ -12,6 +12,18 @@ import {ContractNegotiation} from "@think-it-labs/edc-connector-client";
 import { Table } from "@/components/atoms/table";
 import ContractNegotiationDialog from "@/components/organisms/contract-negotiation-dialog.tsx";
 
+const CreatedAt = ({ item }: { item: ContractNegotiation }) => {
+  const createdAt = item && item["https://w3id.org/edc/v0.0.1/ns/createdAt"];
+  const createdAtValue = createdAt && createdAt[0] && createdAt[0]["@value"];
+  return <Timestamp milliseconds={createdAtValue} />
+}
+
+const CounterPartyId = ({ item }: { item: ContractNegotiation }) => {
+  const counterPartyId = item["https://w3id.org/edc/v0.0.1/ns/counterPartyId"];
+  const counterPartyIdValue = counterPartyId && counterPartyId[0] && counterPartyId[0]["@value"];
+  return <>{counterPartyIdValue}</>
+}
+
 export default function ContractNegotiationsListPage() {
   const { push, connector } = useParticipantConnectorState();
   const managementUrl = connector?.managementUrl as string;
@@ -145,10 +157,10 @@ export default function ContractNegotiationsListPage() {
                       }
                     </Table.Cell>
                     <Table.Cell>
-                      {item.counterPartyAddress || "n.a."}
+                      <CounterPartyId item={item} />
                     </Table.Cell>
                     <Table.Cell>
-                      <Timestamp milliseconds={item.createdAt} />
+                      <CreatedAt item={item} />
                     </Table.Cell>
                   </Table.Row>
                 )}
