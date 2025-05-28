@@ -39,7 +39,7 @@ export function renderSelectValue(value: unknown, placeholder: string = "", opti
 export function MuiSelect({ label, options, highlights = [], id = "", defaultValue = "", name, value = "", error = false, onChange, placeholder = "", required = false, disabled = false, helperText = "" }: Omit<SelectProps, "label"> & { label: string }): JSX.Element {
   const hasHighlights = highlights && highlights.length > 0;
   const notValue = ! value;
-  const [labelPlaceholder, setLabelPlaceholder] = useState("");
+  const [labelPlaceholder, setLabelPlaceholder] = useState(value ? label : "");
 
   useEffect(() => {
     if (defaultValue && name && notValue) {
@@ -47,13 +47,25 @@ export function MuiSelect({ label, options, highlights = [], id = "", defaultVal
     }
   }, [defaultValue, name, onChange, notValue]);
 
+  const onFocus = () => {
+    if (! value) {
+      setLabelPlaceholder(label);
+    }
+  }
+
+  const onBlur = () => {
+    if (! value) {
+      setLabelPlaceholder("");
+    }
+  }
+
   return (
     <FormControl fullWidth disabled={disabled} required={required} color="secondary">
       <InputLabel id={id}>{label}</InputLabel>
       <Select
         id={id}
-        onFocus={() => setLabelPlaceholder(label)}
-        onBlur={() => setLabelPlaceholder("")}
+        onFocus={onFocus}
+        onBlur={onBlur}
         inputProps={{ 'data-testid': id }}
         disabled={disabled}
         color="secondary"
