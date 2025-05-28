@@ -12,6 +12,7 @@ import { defaultCreateContractDefinitionFormData } from "@/utilities/contract-de
 import {MuiSelect} from "@/components/atoms/mui-select";
 import {operatorIn} from "@/utilities/policy-constraints";
 import { Input } from "@/components/atoms/input";
+import {Checkbox} from "@/components/atoms/checkbox.tsx";
 
 const optionsGenerator = (data: { "@id": string }[]) => {
   return data.map(entry => ({
@@ -76,7 +77,7 @@ export default function CreateContractDefinitionPage() {
   }
 
   return (
-    <SideDrawer title={<T string="contractDefinitions.new.title" />}>
+    <SideDrawer title={<T string="contractDefinitions.new.publishNewDataOffer" />}>
       <ContractDefinitionFormWrapper
         managementUrl={managementUrl}
         formData={() => fromContractDefinitionForm(formData)}
@@ -85,21 +86,15 @@ export default function CreateContractDefinitionPage() {
       >
         <div className="flex flex-col gap-y-5">
           <div>
-            <label
-              className="inline-block text-sm text-black font-medium mb-2"
-            >
-              <T string="policyDefinitions.new.policyId"/>
-            </label>
             <Input
-                  required
-                  name="contract-definition-id"
-                  id="contract-definition-id"
-                  data-testid="contract-definition-id"
-                  type="text"
-                  placeholder="contract definition id"
-                  value={formData["@id"]}
-                  onChange={(event) => onChange({...formData, ["@id"]: event.target.value})}
-                />
+              required
+              name="contract-definition-id"
+              id="contract-definition-id"
+              data-testid="contract-definition-id"
+              label={translator("contractDefinitions.new.id")}
+              value={formData["@id"]}
+              onChange={(event) => onChange({...formData, ["@id"]: event.target.value})}
+            />
           </div>
           <MuiSelect
             multiple
@@ -133,6 +128,20 @@ export default function CreateContractDefinitionPage() {
             options={policyIds}
             value={formData.accessPolicyId}
             onChange={(event) => onChange({ ...formData, accessPolicyId: event.target.value })}
+          />
+
+          <Checkbox
+            label={translator("contractDefinitions.new.manualApproval")}
+            value={formData.manualApproval}
+            onChange={(event) => {
+              console.log("checkbox : ", {
+                target: event.target,
+                value: event.target.value,
+                manualApproval: formData.manualApproval,
+                formData
+              })
+              onChange({ ...formData, manualApproval: event.target.checked })
+            }}
           />
 
           <div className="flex flex-row self-end gap-x-5">
