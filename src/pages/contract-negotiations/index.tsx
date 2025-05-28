@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import {IconButton} from "@mui/material";
-import { ContractAgreementView } from "@think-it-labs/edc-connector-ui/contract-agreement-view";
+import {ContractAgreementView} from "@think-it-labs/edc-connector-ui/contract-agreement-view";
 import { ContractNegotiationsList } from "@think-it-labs/edc-connector-ui/contract-negotiations-list";
 import { Timestamp } from "@think-it-labs/edc-connector-ui/timestamp";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
@@ -16,9 +16,7 @@ export default function ContractNegotiationsListPage() {
   const { push, connector } = useParticipantConnectorState();
   const managementUrl = connector?.managementUrl as string;
   const { globalTranslator, translator } = useTranslator();
-  const { decrementPage, incrementPage, offset, limit, hasPrev, page } =
-    usePagination();
-
+  const { decrementPage, incrementPage, offset, limit, hasPrev, page } = usePagination();
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
   const [openContractNegotiationData, setOpenContractNegotiationData] = useState({
@@ -114,6 +112,7 @@ export default function ContractNegotiationsListPage() {
               >
                 {({ item, index }) => (
                   <Table.Row
+                    key={index}
                     onClick={() => openDetailsModal(item)}
                   >
                     <Table.Cell>

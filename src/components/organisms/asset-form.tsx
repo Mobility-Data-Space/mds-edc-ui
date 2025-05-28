@@ -15,7 +15,7 @@ import { T, useTranslator } from "@/i18n";
 import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_TITLE, ASSET_VERSION} from "@/schema/asset";
 import {fromAssetForm, generateId, defaultCreateAssetFormData, AssetProperties} from "@/utilities/asset";
 import {DATA_ADDRESS_TYPE_CUSTOM_JSON} from "@/constants/data-address-types";
-import { DataAddressTypes } from "@/utilities/data_address";
+import { DataAddressTypes } from "@/utilities/data-address.ts";
 
 const stepLabelSharedProps = {
   className: "w-full justify-start p-4",
@@ -30,7 +30,7 @@ export default function AssetForm() {
 
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState<AssetInput>(defaultCreateAssetFormData);
-  
+
   const [existingIds, setExistingIds] = useState<string[]>([]);
   const [errors, setErrors] = useState({ properties: {}, dataAddress: {} });
 

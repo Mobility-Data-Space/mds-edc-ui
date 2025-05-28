@@ -1,10 +1,6 @@
 import React, {ReactNode, useEffect, useState} from "react";
 import {T} from "@/i18n";
-import {Input} from "../atoms/input.tsx";
-import {theme} from "@/theme/ThemeProvider.tsx";
-import {AssetProperties} from "@/utilities/asset.ts";
-import {AssetInput, JsonLdObject} from "@think-it-labs/edc-connector-client";
-import {Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, Icon} from "@mui/material";
+import {Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
 import {replaceUrlPrefixes} from "@/utilities/catalog.ts";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import {ReactJsonViewProps} from "react-json-view";
