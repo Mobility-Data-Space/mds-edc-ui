@@ -1,5 +1,5 @@
-import React, {ReactNode, useEffect} from "react";
-import {Select, SelectProps as MuiSelectProps, MenuItem, InputLabel, FormHelperText} from "@mui/material";
+import React, {ReactNode, useEffect, useState} from "react";
+import { Select, SelectProps as MuiSelectProps, MenuItem, InputLabel, FormHelperText} from "@mui/material";
 import Divider from '@mui/material/Divider';
 import FormControl from "@mui/material/FormControl";
 import Typography from "@mui/material/Typography";
@@ -36,9 +36,11 @@ export function renderSelectValue(value: unknown, placeholder: string = "", opti
   return <>{option && option.text ? option.text : value}</>;
 }
 
-export function MuiSelect({ label, options, highlights = [], id = "", defaultValue = "", name, value = "", error = false, onChange, placeholder = "", required = false, disabled = false, helperText = "" }: SelectProps): JSX.Element {
+export function MuiSelect({ label, options, highlights = [], id = "", defaultValue = "", name, value = "", error = false, onChange, placeholder = "", required = false, disabled = false, helperText = "" }: Omit<SelectProps, "label"> & { label: string }): JSX.Element {
   const hasHighlights = highlights && highlights.length > 0;
   const notValue = ! value;
+  const [labelPlaceholder, setLabelPlaceholder] = useState("");
+
   useEffect(() => {
     if (defaultValue && name && notValue) {
       onChange(defaultValue)
@@ -47,14 +49,17 @@ export function MuiSelect({ label, options, highlights = [], id = "", defaultVal
 
   return (
     <FormControl fullWidth disabled={disabled} required={required} color="secondary">
-      <InputLabel>{label}</InputLabel>
+      <InputLabel id={id}>{label}</InputLabel>
       <Select
         id={id}
+        onFocus={() => setLabelPlaceholder(label)}
+        onBlur={() => setLabelPlaceholder("")}
         inputProps={{ 'data-testid': id }}
         disabled={disabled}
         color="secondary"
         required={required}
-        label={label}
+        label={labelPlaceholder}
+        labelId={id}
         value={value || ""}
         defaultValue={defaultValue}
         fullWidth
