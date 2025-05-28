@@ -270,8 +270,13 @@ export const en = {
       },
       new: {
         title: "Create a contract definition",
-        description:
-          "Describe a new policy by defining rules which ensure owned data is accessed in a specific way, following strict requirements.",
+        description: "Describe a new policy by defining rules which ensure owned data is accessed in a specific way, following strict requirements.",
+        id: "ID",
+        publishNewDataOffer: "Publish New Data Offer",
+        accessPolicy: "Access Policy",
+        contractPolicy: "Contract Policy",
+        assets: "Assets",
+        manualApproval: "Manual Approval",
         buttonCancel: "Cancel",
         buttonSave: "Save changes",
       },
