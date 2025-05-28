@@ -103,33 +103,33 @@ export default function CreateContractDefinitionPage() {
           </div>
           <MuiSelect
             multiple
+            required
             name="assets-selector"
             id="asset-id"
             data-testid="asset-id"
-            type="text"
-            placeholder="asset id"
+            label={translator("contractDefinitions.new.assets")}
             options={assetIds}
             value={idReader(formData.assetsSelector)}
             onChange={(event) => onChange({ ...formData, assetsSelector: idSelector(event.target.value)})}
           />
 
           <MuiSelect
+            required
             name="contract-policy-id"
             id="contract-policy-id"
             data-testid="contract-policy-id"
-            type="text"
-            placeholder="contract-policy-id"
+            label={translator("contractDefinitions.new.contractPolicy")}
             options={policyIds}
             value={formData.contractPolicyId}
             onChange={(event) => onChange({ ...formData, contractPolicyId: event.target.value })}
           />
 
           <MuiSelect
+            required
             name="access-policy-id"
             id="access-policy-id"
             data-testid="access-policy-id"
-            type="text"
-            placeholder="access-policy-id"
+            label={translator("contractDefinitions.new.accessPolicy")}
             options={policyIds}
             value={formData.accessPolicyId}
             onChange={(event) => onChange({ ...formData, accessPolicyId: event.target.value })}
