@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, MouseEvent, useMemo} from "react";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import {Button, IconButton, Icon} from "@mui/material";
 import {ContractAgreementView} from "@think-it-labs/edc-connector-ui/contract-agreement-view";
@@ -8,20 +8,16 @@ import { useParticipantConnectorState } from "@/hooks/use-participant-connector-
 import { usePagination } from "@/hooks/use-pagination";
 import { T, useTranslator } from "@/i18n";
 import SideDrawer from "@/components/organisms/side-drawer";
-import {ContractNegotiation} from "@think-it-labs/edc-connector-client";
+import {ContractNegotiation, CriterionInput} from "@think-it-labs/edc-connector-client";
 import { Table } from "@/components/atoms/table";
 import ContractNegotiationDialog from "@/components/organisms/contract-negotiation-dialog.tsx";
+import {enqueueSnackbar} from "notistack";
+import { MDSManualApprovalController } from "@/utilities/contract-negotiations.ts";
 
 const CreatedAt = ({ item }: { item: ContractNegotiation }) => {
   const createdAt = item && item["https://w3id.org/edc/v0.0.1/ns/createdAt"];
   const createdAtValue = createdAt && createdAt[0] && createdAt[0]["@value"];
   return <Timestamp milliseconds={createdAtValue} />
-}
-
-const CounterPartyId = ({ item }: { item: ContractNegotiation }) => {
-  const counterPartyId = item["https://w3id.org/edc/v0.0.1/ns/counterPartyId"];
-  const counterPartyIdValue = counterPartyId && counterPartyId[0] && counterPartyId[0]["@value"];
-  return <>{counterPartyIdValue}</>
 }
 
 const CounterPartyAddress = ({ item }: { item: ContractNegotiation }) => {
@@ -30,7 +26,7 @@ const CounterPartyAddress = ({ item }: { item: ContractNegotiation }) => {
   return <>{counterPartyAddressValue}</>
 }
 
-export default function ContractNegotiationsListPage() {
+export default function ContractNegotiationsManualApprovalListPage() {
   const { connector } = useParticipantConnectorState();
   const managementUrl = connector?.managementUrl as string;
   const { globalTranslator, translator } = useTranslator();
@@ -41,10 +37,36 @@ export default function ContractNegotiationsListPage() {
     contractNegotiation: {} as ContractNegotiation,
   });
 
+  const mdsManualApprovalController = useMemo(() => new MDSManualApprovalController(connector.managementUrl), [connector.managementUrl]);
+
   const openDetailsModal = (contractNegotiation: ContractNegotiation) => {
     setIsDetailsModalOpen(true);
     setOpenContractNegotiationData({ contractNegotiation });
   };
+
+  const onApproveClick = (item: ContractNegotiation, event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+
+    mdsManualApprovalController.approve(item["@id"])
+      .then(() => enqueueSnackbar(translator("contractNegotiations.approveSuccess")))
+      .catch((error) => enqueueSnackbar(translator("contractNegotiations.approveError")))
+  };
+
+  const onRejectClick = (item: ContractNegotiation, event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+
+    mdsManualApprovalController.reject(item["@id"])
+      .then(() => enqueueSnackbar(translator("contractNegotiations.rejectSuccess")))
+      .catch((error) => enqueueSnackbar(translator("contractNegotiations.rejectError")))
+  };
+
+  const pendingFilter: CriterionInput[] = [
+    {
+      operandLeft: "pending",
+      operator: "=",
+      operandRight: true
+    }
+  ];
 
   return (
     <SideDrawer title={<T string="contractNegotiations.title" />}>
@@ -109,15 +131,19 @@ export default function ContractNegotiationsListPage() {
                 </Table.Heading>
 
                 <Table.Heading>
-                  <T string="contractNegotiations.headingContractAgreement" />
-                </Table.Heading>
-
-                <Table.Heading>
                   <T string="contractNegotiations.headingCounterPartyAddress" />
                 </Table.Heading>
 
                 <Table.Heading>
                   <T string="contractNegotiations.headingCreatedAt" />
+                </Table.Heading>
+
+                <Table.Heading>
+                  <T string="contractNegotiations.headingApprove" />
+                </Table.Heading>
+
+                <Table.Heading>
+                  <T string="contractNegotiations.headingReject" />
                 </Table.Heading>
               </Table.Row>
             </Table.Head>
@@ -127,6 +153,7 @@ export default function ContractNegotiationsListPage() {
                 limit={limit}
                 offset={offset}
                 sortOrder="DESC"
+                filterExpression={pendingFilter}
               >
                 {({ item, index }) => (
                   <Table.Row
@@ -147,26 +174,30 @@ export default function ContractNegotiationsListPage() {
                       </span>
                     </Table.Cell>
                     <Table.Cell>
-                      {!item.contractAgreementId ? "" :
-                      <ContractAgreementView
-                        managementUrl={managementUrl}
-                        id={item.contractAgreementId}
-                      >
-                        <p className="text-xs italic mb-1 text-gray-800">
-                          <ContractAgreementView.ProviderId /> →{" "}
-                          <ContractAgreementView.ConsumerId />
-                        </p>
-                        <p className="font-semibold text-sm text-gray-800">
-                          <ContractAgreementView.Id />
-                        </p>
-                      </ContractAgreementView>
-                      }
-                    </Table.Cell>
-                    <Table.Cell>
                       <CounterPartyAddress item={item} />
                     </Table.Cell>
                     <Table.Cell>
                       <CreatedAt item={item} />
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Button
+                        startIcon={<Icon>doneOutline</Icon>}
+                        variant="contained"
+                        color="success"
+                        onClick={(event) => onApproveClick(item, event)}
+                      >
+                        <T string="contractNegotiations.headingApprove" />
+                      </Button>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Button
+                        startIcon={<Icon>close</Icon>}
+                        variant="contained"
+                        color="error"
+                        onClick={(event) => onRejectClick(item, event)}
+                      >
+                        <T string="contractNegotiations.headingReject" />
+                      </Button>
                     </Table.Cell>
                   </Table.Row>
                 )}

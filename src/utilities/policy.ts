@@ -13,7 +13,6 @@ export const defaultCreatePolicyFormData: PolicyDefinitionInput = {
 };
 
 export const fromPolicyDefinitionForm = (formData: Constraint[], id:string) : PolicyDefinitionInput => {
-  // DEBUG console.log(formData);
   const policy = new PolicyBuilder().type("Set").raw({
     permission: [
       {
@@ -25,11 +24,12 @@ export const fromPolicyDefinitionForm = (formData: Constraint[], id:string) : Po
     prohibition: []
   }).build() ;
   
-  const cleanFormDataObject = removeEmptyFields(formData);
-  
-  // DEBUG console.log(cleanFormDataObject);
-  return {
-    "@id": id,
+  const policyDefinition: PolicyDefinitionInput = {
     policy: policy
-  };
+  } 
+
+  if(id && id !== "")
+    policyDefinition["@id"] = id 
+
+  return policyDefinition;
 };

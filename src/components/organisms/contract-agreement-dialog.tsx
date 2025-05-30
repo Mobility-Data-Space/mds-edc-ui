@@ -42,7 +42,13 @@ export default function ContractAgreementDialog({ open, onClose, contractAgreeme
           <ContractAgreementDetails contractAgreement={contractAgreement} participantId={participantId} managementUrl={managementUrl} />
         </DialogContent>
         <DialogActions>
-          {/* TODO: terminate */}
+          <Button
+            data-testid="transfer-process-terminate"
+            variant="contained"
+            onClick={() => ""}
+          >
+            <T string="common.terminate"/>
+          </Button>
           <Button color="secondary" onClick={onClose}>
             <T string="common.close"/>
           </Button>

@@ -1,3 +1,4 @@
+import {Inner} from "@think-it-labs/edc-connector-client/dist/src/inner";
 import {ContractAgreement} from "@think-it-labs/edc-connector-client";
 import {FieldShowProps} from "@/components/molecules/field-show.tsx";
 import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/entities";
@@ -52,4 +53,35 @@ export const transferProcessesFieldsToShow = (transferProcesses: TransferProcess
       icon: transferProcess.type === "CONSUMER" ? "file_download" : "file_upload",
     };
   });
+}
+
+export class AgreementsRetirementController {
+  #inner: Inner;
+  #management: string;
+  protocol: String = "dataspace-protocol-http";
+
+  constructor(management: string) {
+    this.#inner = new Inner();
+    this.#management = management;
+    console.log('mdsContractNegotiationController', { thiss: this, innerrr: this.#inner, });
+  }
+
+  async retireAgreement(contractAgreementId: string) {
+    console.log('retire', contractAgreementId)
+    return this.#inner.request(this.#management, {
+      path: "/v3.1alpha/retireagreements",
+      method: "POST",
+      body: {
+        "edc:agreementId": contractAgreementId,
+        "tx:reason": "reason"
+      }
+    });
+  }
+
+  async reactivateRetired(contractAgreementId: string) {
+    return this.#inner.request(this.#management, {
+      path: `/v3.1alpha/retireagreements/${contractAgreementId}`,
+      method: "DELETE"
+    });
+  }
 }

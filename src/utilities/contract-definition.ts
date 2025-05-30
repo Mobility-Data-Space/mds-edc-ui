@@ -1,13 +1,10 @@
 import {removeEmptyFields} from "@/utilities/form";
 import { ContractDefinitionInput } from "@think-it-labs/edc-connector-client";
 
-export type MdsContractDefinitionInput = ContractDefinitionInput & { manualApproval: boolean };
+export type MdsContractDefinitionInput = ContractDefinitionInput & { privateProperties: { manualApproval: boolean } };
 
 export const fromContractDefinitionForm = (formData: MdsContractDefinitionInput): MdsContractDefinitionInput => {
-  // DEBUG console.log(formData);
   const cleanFormDataObject = removeEmptyFields(formData);
-  // DEBUG console.log(cleanFormDataObject);
-
   return cleanFormDataObject as MdsContractDefinitionInput
 };
 
@@ -16,5 +13,7 @@ export const defaultCreateContractDefinitionFormData: MdsContractDefinitionInput
   accessPolicyId: "",
   contractPolicyId: "",
   assetsSelector: [],
-  manualApproval: false,
+  privateProperties: {
+    manualApproval: false
+  }
 };

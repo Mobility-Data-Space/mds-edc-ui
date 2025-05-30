@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import {Button, Checkbox, FormControlLabel, Divider, Typography} from "@mui/material";
 import {enqueueSnackbar} from "notistack";
-import { AssetInput, ContractDefinitionInput, DataAddress, PolicyDefinitionInput } from "@think-it-labs/edc-connector-client";
+import { AssetInput, AtomicConstraint, CriterionInput, DataAddress, MultiplicityConstraint, PolicyDefinitionInput } from "@think-it-labs/edc-connector-client";
 import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
 import {T, useTranslator} from "@/i18n";
@@ -32,20 +32,21 @@ import PolicyExpression from "@/components/organisms/policy-expression";
 import SideDrawer from "@/components/organisms/side-drawer";
 import { AssetFormDataAddressStep } from "@/components/organisms/asset-form-data-address-step";
 import { defaultCreatePolicyFormData, fromPolicyDefinitionForm } from "@/utilities/policy";
-import { defaultCreateContractDefinitionFormData, fromContractDefinitionForm } from "@/utilities/contract-definition";
+import { defaultCreateContractDefinitionFormData, fromContractDefinitionForm, MdsContractDefinitionInput } from "@/utilities/contract-definition";
 import { defaultCreateAssetFormData, AssetProperties, generateId, fromAssetForm } from "@/utilities/asset"
-import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_TITLE } from "@/schema/asset";
-import {PUBLISH_MODE_PUBLISH_RESTRICTED, PUBLISH_MODE_PUBLISH_UNRESTRICTED, PUBLISH_MODES} from "@/constants/data-address-types";
+import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_TITLE } from "@/schema/asset";
+import {PUBLISH_MODE_DO_NOT_PUBLISH, PUBLISH_MODE_PUBLISH_RESTRICTED, PUBLISH_MODE_PUBLISH_UNRESTRICTED, PUBLISH_MODES} from "@/constants/data-address-types";
 import { DataAddressTypes } from "@/utilities/data-address";
+import { operatorIn } from "@/utilities/policy-constraints";
 
 interface DataOffer {
   asset: AssetInput,
   policy: PolicyDefinitionInput,
-  contract: ContractDefinitionInput
+  contract: MdsContractDefinitionInput
 }
 
 export default function CreateDataOfferPage() {
-  const { connector } = useParticipantConnectorState();
+  const { push, connector } = useParticipantConnectorState();
 
   const [showAdvancedFields, setShowAdvancedFields] = useState(false);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
@@ -57,6 +58,7 @@ export default function CreateDataOfferPage() {
     policy: defaultCreatePolicyFormData,
     contract: defaultCreateContractDefinitionFormData
   });
+  const [policyExpression, setPolicyExpression] = useState<(AtomicConstraint|MultiplicityConstraint)[]>([]);
   const [publishMode, setPublishMode] = useState("")
 
   const [errors, setErrors] = useState({ properties: {}, advancedInfo: {}, dataAddress: {} });
@@ -111,6 +113,10 @@ export default function CreateDataOfferPage() {
     return onChange({ ...formData, asset: { ...formData.asset, properties: advancedInfoFormData }});
   };
 
+  const policyExpressionFormOnChange = (policy: (AtomicConstraint | MultiplicityConstraint)[]) => {
+    return setPolicyExpression(policy)
+  }
+
   const validateGeneralInfo = (formDataToValidate: AssetProperties) => {
     console.log(formDataToValidate)
     const newErrors: { [key: string]: boolean | string } = {};
@@ -135,7 +141,7 @@ export default function CreateDataOfferPage() {
     const newErrors: { [key: string]: boolean } = {};
     const required_properties = [ASSET_ADVANCED_INFO_DATA_CATEGORY] ;
     required_properties.forEach((propertyName) => {
-      if (! formDataToValidate[propertyName]) {
+      if (! formDataToValidate[ASSET_ADVANCED_INFO_MOBILITY_THEME][propertyName]) {
         newErrors[propertyName] = true;
       }
     });
@@ -165,6 +171,16 @@ export default function CreateDataOfferPage() {
     };
   };
 
+  const idSelector = (id: string): CriterionInput[] => {
+    return [
+      {
+        operandLeft: "@id",
+        operator: operatorIn.value,
+        operandRight: id
+      }
+    ]
+  };
+  
   const onSubmit = () => {
     if (cannotSubmit()) {
       setFormErrors();
@@ -174,15 +190,40 @@ export default function CreateDataOfferPage() {
     console.log(formData)
     // create asset
     client.management.assets.create(fromAssetForm(formData.asset))
-      .then()
-      .catch(error => enqueueSnackbar(translator("common.errorOccurred")));
-    // create policy
-    client.management.policyDefinitions.create(fromPolicyDefinitionForm(formData.policy.policy.permissions, ""))
-      .then()
-      .catch(error => enqueueSnackbar(translator("common.errorOccurred")));
-    // create contract
-    client.management.contractDefinitions.create(fromContractDefinitionForm(formData.contract))
-      .then()
+      .then((result) => {
+        // get asset id for contract definition
+        console.log(result)
+        formData.contract.assetsSelector = idSelector(result["@id"]);
+
+        if(publishMode !== PUBLISH_MODE_DO_NOT_PUBLISH.value){
+          if(publishMode == PUBLISH_MODE_PUBLISH_RESTRICTED.value){
+            // create policy
+            client.management.policyDefinitions.create(fromPolicyDefinitionForm(policyExpression, ""))
+              .then((result) => {
+                formData.contract.accessPolicyId = result["@id"]
+                formData.contract.contractPolicyId = result["@id"]
+
+                // create contract
+                client.management.contractDefinitions.create(fromContractDefinitionForm(formData.contract))
+                  .then(() => {
+                    push("/data-offers")
+                  })
+                  .catch(error => enqueueSnackbar(translator("common.errorOccurred")));
+              })
+              .catch(error => enqueueSnackbar(translator("common.errorOccurred")));
+          }else{
+            formData.contract.accessPolicyId = "always-true"
+            formData.contract.contractPolicyId = "always-true"
+
+            // create contract
+            client.management.contractDefinitions.create(fromContractDefinitionForm(formData.contract))
+              .then(() => {
+                push("/data-offers")
+              })
+              .catch(error => enqueueSnackbar(translator("common.errorOccurred")));
+          }          
+        }
+      })
       .catch(error => enqueueSnackbar(translator("common.errorOccurred")));
   };
 
@@ -665,10 +706,8 @@ export default function CreateDataOfferPage() {
                     <T string="dataOffer.new.policyExpression"/>
                   </label>
                   <PolicyExpression
-                    value={formData.policy.policy.permission}
-                    onChange={(value) => {
-                      formData.policy.policy.permission = value
-                    }}
+                    value={policyExpression}
+                    onChange={(value) => { policyExpressionFormOnChange(value) }}
                   />
                 </div>
                 }
