@@ -38,6 +38,7 @@ import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME, A
 import {PUBLISH_MODE_DO_NOT_PUBLISH, PUBLISH_MODE_PUBLISH_RESTRICTED, PUBLISH_MODE_PUBLISH_UNRESTRICTED, PUBLISH_MODES} from "@/constants/data-address-types";
 import { DataAddressTypes } from "@/utilities/data-address";
 import { MultiplicityConstraint, operatorIn } from "@/utilities/policy-constraints";
+import {UNRESTRICTED_POLICY_ID} from "@/schema/policy";
 
 interface DataOffer {
   asset: AssetInput,
@@ -180,7 +181,7 @@ export default function CreateDataOfferPage() {
       }
     ]
   };
-  
+
   const onSubmit = () => {
     if (cannotSubmit()) {
       setFormErrors();
@@ -195,33 +196,35 @@ export default function CreateDataOfferPage() {
         console.log(result)
         formData.contract.assetsSelector = idSelector(result["@id"]);
 
-        if(publishMode !== PUBLISH_MODE_DO_NOT_PUBLISH.value){
-          if(publishMode == PUBLISH_MODE_PUBLISH_RESTRICTED.value){
-            // create policy
-            client.management.policyDefinitions.create(fromPolicyDefinitionForm(policyExpression, ""))
-              .then((result) => {
-                formData.contract.accessPolicyId = result["@id"]
-                formData.contract.contractPolicyId = result["@id"]
+        if(publishMode === PUBLISH_MODE_DO_NOT_PUBLISH.value) {
+          return;
+        }
 
-                // create contract
-                client.management.contractDefinitions.create(fromContractDefinitionForm(formData.contract))
-                  .then(() => {
-                    push("/data-offers")
-                  })
-                  .catch(error => enqueueSnackbar(translator("common.errorOccurred")));
-              })
-              .catch(error => enqueueSnackbar(translator("common.errorOccurred")));
-          }else{
-            formData.contract.accessPolicyId = "always-true"
-            formData.contract.contractPolicyId = "always-true"
+        if(publishMode === PUBLISH_MODE_PUBLISH_RESTRICTED.value) {
+          // create policy
+          client.management.policyDefinitions.create(fromPolicyDefinitionForm(policyExpression, ""))
+            .then((result) => {
+              formData.contract.accessPolicyId = result["@id"]
+              formData.contract.contractPolicyId = result["@id"]
 
-            // create contract
-            client.management.contractDefinitions.create(fromContractDefinitionForm(formData.contract))
-              .then(() => {
-                push("/data-offers")
-              })
-              .catch(error => enqueueSnackbar(translator("common.errorOccurred")));
-          }          
+              // create contract
+              client.management.contractDefinitions.create(fromContractDefinitionForm(formData.contract))
+                .then(() => {
+                  push("/data-offers")
+                })
+                .catch(error => enqueueSnackbar(translator("common.errorOccurred")));
+            })
+            .catch(error => enqueueSnackbar(translator("common.errorOccurred")));
+        } else {
+          formData.contract.accessPolicyId = UNRESTRICTED_POLICY_ID;
+          formData.contract.contractPolicyId = UNRESTRICTED_POLICY_ID;
+
+          // create contract
+          client.management.contractDefinitions.create(fromContractDefinitionForm(formData.contract))
+            .then(() => {
+              push("/data-offers")
+            })
+            .catch(error => enqueueSnackbar(translator("common.errorOccurred")));
         }
       })
       .catch(error => enqueueSnackbar(translator("common.errorOccurred")));
@@ -275,9 +278,7 @@ export default function CreateDataOfferPage() {
 
             <div className="grid sm:grid-cols-3 gap-2 sm:gap-6">
               <div className="sm:col-span-1">
-                <label
-                  className="inline-block text-sm text-black mt-2.5"
-                >
+                <label className="inline-block text-sm text-black mt-2.5">
                   <Typography variant="h6">
                     <T string="dataOffer.new.dataOfferGeneralInfoTitle"/>
                   </Typography>

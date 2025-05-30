@@ -304,6 +304,8 @@ export const en = {
     },
     contractAgreements: {
       title: "List all contract agreements",
+      titleProviding: "Providing",
+      titleConsuming: "Consuming",
       description:
         "List of contract agreements that owned connectors can consume. Listed agreements are the successful outcome of contract negotiations between two EDC connectors.",
       headingId: "ID",
