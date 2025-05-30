@@ -19,7 +19,7 @@ export function ConsumerParticipantIdConstraint({value, onChange, onRemove}: Con
       <Typography variant="body2">
         <T string="dataOffer.new.policyExpressionConsumerParticipantId"/>
       </Typography>
-      <MuiSelect options={consumerParticipantIdOperators} value={value.operator}
+      <MuiSelect label="participant-id" options={consumerParticipantIdOperators} value={value.operator}
                  onChange={(event) => onChange({...value, operator: event.target.value})}/>
       <Input value={value.rightOperand} onChange={(event) => onChange({...value, rightOperand: event.target.value})}/>
       <IconButton

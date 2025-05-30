@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import {Button, Checkbox, FormControlLabel, Divider, Typography} from "@mui/material";
 import {enqueueSnackbar} from "notistack";
-import { AssetInput, AtomicConstraint, CriterionInput, DataAddress, MultiplicityConstraint, PolicyDefinitionInput } from "@think-it-labs/edc-connector-client";
+import { AssetInput, AtomicConstraint, CriterionInput, DataAddress, PolicyDefinitionInput } from "@think-it-labs/edc-connector-client";
 import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
 import {T, useTranslator} from "@/i18n";
@@ -37,7 +37,7 @@ import { defaultCreateAssetFormData, AssetProperties, generateId, fromAssetForm 
 import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_TITLE } from "@/schema/asset";
 import {PUBLISH_MODE_DO_NOT_PUBLISH, PUBLISH_MODE_PUBLISH_RESTRICTED, PUBLISH_MODE_PUBLISH_UNRESTRICTED, PUBLISH_MODES} from "@/constants/data-address-types";
 import { DataAddressTypes } from "@/utilities/data-address";
-import { operatorIn } from "@/utilities/policy-constraints";
+import { MultiplicityConstraint, operatorIn } from "@/utilities/policy-constraints";
 
 interface DataOffer {
   asset: AssetInput,

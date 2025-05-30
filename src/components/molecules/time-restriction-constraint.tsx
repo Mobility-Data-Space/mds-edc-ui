@@ -18,7 +18,7 @@ export function TimeRestrictionConstraint({value, onChange, onRemove}: Constrain
       <Typography variant="body2">
         <T string="dataOffer.new.policyExpressionTimeSpanRestriction"/>
       </Typography>
-      <MuiSelect options={timeRestrictionOperators} value={value.operator}
+      <MuiSelect label="time-restriction" options={timeRestrictionOperators} value={value.operator}
                  onChange={(event) => onChange({...value, operator: event.target.value})}/>
       <DatePicker
         onChange={(dateValue) => onChange({...value, rightOperand: dateValue})}
