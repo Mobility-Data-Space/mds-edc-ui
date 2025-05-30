@@ -50,7 +50,11 @@ export default function ContractAgreementsListPage() {
         translator={translator}
       />
       <ContractAgreementsList managementUrl={managementUrl}>
-        <div className="flex gap-x-5">
+        <div className="flex justify-between gap-x-5">
+          <Typography variant="h4" >
+            <T string="contractAgreements.titleConsuming" />
+          </Typography>
+
           <div className="flex justify-end items-center">
             <div className="inline-flex float-right gap-x-2">
               <IconButton
@@ -67,7 +71,7 @@ export default function ContractAgreementsListPage() {
             </div>
           </div>
         </div>
-        <p>Consuming</p>
+
         <div className="flex flex-wrap gap-2.5 py-4">
           <ContractAgreementsList.Items
             limit={limit}
@@ -89,7 +93,7 @@ export default function ContractAgreementsListPage() {
           </ContractAgreementsList.Items>
         </div>
         <ContractAgreementsList.Loading>
-          <div className="max-w-20 mx-auto mt-4 flex flex-col bg-white border shadow-sm rounded-xl p-4 md:p-5">
+          <div className="max-w-20 mx-auto my-4 flex flex-col bg-white border shadow-sm rounded-xl p-4 md:p-5">
             <span
               className="animate-spin mx-auto inline-block size-8 border-[3px] border-current border-t-transparent text-blue-600 rounded-full"
               role="status"
@@ -100,11 +104,15 @@ export default function ContractAgreementsListPage() {
           </div>
         </ContractAgreementsList.Loading>
       </ContractAgreementsList>
-      
-      <Divider></Divider>
-      <p>Providing</p>
+
+      <Divider className="!mb-3" />
+
       <ContractAgreementsList managementUrl={managementUrl}>
-        <div className="flex gap-x-5">
+        <div className="flex justify-between gap-x-5">
+          <Typography variant="h4">
+            <T string="contractAgreements.titleProviding" />
+          </Typography>
+
           <div className="flex justify-end items-center">
             <div className="inline-flex float-right gap-x-2">
               <IconButton
@@ -121,27 +129,29 @@ export default function ContractAgreementsListPage() {
             </div>
           </div>
         </div>
-        <ContractAgreementsList.Items
-          limit={limit}
-          offset={offset}
-          sortOrder="DESC"
-          filterExpression={[{
-            operandLeft: "providerId",
-            operator: "=",
-            operandRight: connector.id
-          }]}
-        >
-          {({item, index}) =>
-            <ContractAgreementCard
-              key={index}
-              contractAgreement={item}
-              onClick={() => openDetailsModal(item)}
-            />
-          }
-        </ContractAgreementsList.Items>
 
+        <div className="flex flex-wrap gap-2.5 py-4">
+          <ContractAgreementsList.Items
+            limit={limit}
+            offset={offset}
+            sortOrder="DESC"
+            filterExpression={[{
+              operandLeft: "providerId",
+              operator: "=",
+              operandRight: connector.id
+            }]}
+          >
+            {({item, index}) =>
+              <ContractAgreementCard
+                key={index}
+                contractAgreement={item}
+                onClick={() => openDetailsModal(item)}
+              />
+            }
+          </ContractAgreementsList.Items>
+        </div>
         <ContractAgreementsList.Loading>
-          <div className="max-w-20 mx-auto mt-4 flex flex-col bg-white border shadow-sm rounded-xl p-4 md:p-5">
+          <div className="max-w-20 mx-auto my-4 flex flex-col bg-white border shadow-sm rounded-xl p-4 md:p-5">
             <span
               className="animate-spin mx-auto inline-block size-8 border-[3px] border-current border-t-transparent text-blue-600 rounded-full"
               role="status"
