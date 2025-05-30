@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Button, Icon, Tooltip} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import {enqueueSnackbar} from "notistack";
-import {compact, Policy} from "@think-it-labs/edc-connector-client";
+import {compact, Policy, PolicyBuilder} from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 import {TitleWithIcon} from "@/components/atoms/TitleWithIcon.tsx";
 
@@ -17,11 +17,12 @@ import {PolicyConstraintShow} from "@/components/molecules/policy-constraint-sho
 interface DataOfferDetailsProps {
   offers?: Policy[];
   assetId: string;
+  participantId: string;
   counterPartyAddress: string ;
   assetIsOwned: boolean;
 }
 
-export default function DataOfferDetails({ offers, assetId, counterPartyAddress, assetIsOwned = false }: DataOfferDetailsProps) {
+export default function DataOfferDetails({ offers, assetId, counterPartyAddress, participantId, assetIsOwned = false }: DataOfferDetailsProps) {
   const { connector } = useParticipantConnectorState() ;
   const { translator } = useTranslator();
 
@@ -38,14 +39,15 @@ export default function DataOfferDetails({ offers, assetId, counterPartyAddress,
     compactConstraints();
   }, []);
 
-  const [negotiateContractIsOpen, setNegotiateContractIsOpen] = useState(false);
+  const [negotiateContractIsOpen, setNegotiateContractIsOpen] = useState<Record<string, boolean>>({});
 
   const edcClient = useEdcConnectorClient({management: connector.managementUrl});
 
   const onNegotiateConfirm = (offer: Policy) => {
-    const negotiation = createNegotiationRequest(offer, counterPartyAddress, connector.id, assetId) ;
+    console.log("Negotiate: ", offer)
+    const negotiation = createNegotiationRequest(offer, counterPartyAddress, participantId, assetId) ;
     edcClient.management.contractNegotiations.initiate(negotiation)
-      .then(() => setNegotiateContractIsOpen(false))
+      .then(() => setNegotiateContractIsOpen(prev => ({ ...prev, [offer["@id"]]: false })))
       .catch(error => enqueueSnackbar(translator("common.errorOccurred")))
   }
 
@@ -84,20 +86,20 @@ export default function DataOfferDetails({ offers, assetId, counterPartyAddress,
                 disableFocusListener={!assetIsOwned}
               >
                 <span className="float-right">
-                  <Button disabled={assetIsOwned} color="secondary" variant="contained" onClick={() => setNegotiateContractIsOpen(true)}>
+                  <Button disabled={assetIsOwned} color="secondary" variant="contained" onClick={() => setNegotiateContractIsOpen(prev => ({ ...prev, [offer["@id"]]: true }))}>
                     <T string="common.negotiate"/>
                   </Button>
                 </span>
               </Tooltip>
             </div>
 
-            <ConfirmDialog
-              open={negotiateContractIsOpen}
-              onClose={() => setNegotiateContractIsOpen(false)}
-              onConfirm={() => onNegotiateConfirm(offer)}
-              title="contractNegotiations.negotiateConfirmTitle"
-              content="contractNegotiations.negotiateConfirmContent"
-            />
+    <ConfirmDialog
+      open={negotiateContractIsOpen[offer["@id"]] || false}
+      onClose={() => setNegotiateContractIsOpen(prev => ({ ...prev, [offer["@id"]]: false }))}
+      onConfirm={() => onNegotiateConfirm(offer)}
+      title="contractNegotiations.negotiateConfirmTitle"
+      content="contractNegotiations.negotiateConfirmContent"
+    />
           </div>
         ))}
       </div>

@@ -97,7 +97,7 @@ export default function DataOfferDialog({ open, onClose, dataset, onEditClick, d
           </div>
           <div className="flex flex-col gap-y-2.5">
             <span /> <span />
-            <DataOfferDetails assetId={dataset["@id"]} counterPartyAddress={counterPartyAddress} offers={dataset[HAS_POLICY]} assetIsOwned={assetIsOwned} />
+            <DataOfferDetails assetId={dataset["@id"]} participantId={participantId} counterPartyAddress={counterPartyAddress} offers={dataset[HAS_POLICY]} assetIsOwned={assetIsOwned} />
           </div>
         </DialogContent>
         <DialogActions>

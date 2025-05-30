@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import { enqueueSnackbar } from "notistack";
 import {Button} from "@mui/material";
-import {CriterionInput} from "@think-it-labs/edc-connector-client";
+import {CriterionInput, EDC_CONTEXT, EDC_NAMESPACE} from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 import { ContractDefinitionFormWrapper } from "@think-it-labs/edc-connector-ui/contract-definition-form-wrapper";
 import { useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
@@ -65,8 +65,8 @@ export default function CreateContractDefinitionPage() {
   const idSelector = (id: string): CriterionInput[] => {
     return [
       {
-        operandLeft: "@id",
-        operator: operatorIn.value,
+        operandLeft: EDC_CONTEXT + "id",
+        operator: "=",
         operandRight: id
       }
     ]
@@ -132,15 +132,14 @@ export default function CreateContractDefinitionPage() {
 
           <Checkbox
             label={translator("contractDefinitions.new.manualApproval")}
-            value={formData.manualApproval}
+            value={formData.privateProperties.manualApproval}
             onChange={(event) => {
               console.log("checkbox : ", {
-                target: event.target,
-                value: event.target.value,
-                manualApproval: formData.manualApproval,
+                value: event.target.checked,
+                manualApproval: formData.privateProperties.manualApproval,
                 formData
               })
-              onChange({ ...formData, manualApproval: event.target.checked })
+              onChange({ ...formData, privateProperties: { manualApproval: event.target.checked }})
             }}
           />
 
