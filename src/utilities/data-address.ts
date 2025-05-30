@@ -14,7 +14,7 @@ export interface OnRequestDataAddress extends BaseDataAddress {
   preferred_email_subject?: string
 }
 
-export interface S3DataAddress extends BaseDataAddress{
+export interface S3DataAddress extends BaseDataAddress {
   type: DataAddressTypes.AmazonS3,
   bucketName: string,
   region: string,
@@ -23,7 +23,7 @@ export interface S3DataAddress extends BaseDataAddress{
   objectPrefix?: string
 }
 
-export interface AzureBlobDataAddress extends BaseDataAddress{
+export interface AzureBlobDataAddress extends BaseDataAddress {
   type: DataAddressTypes.AzureBlob,
   bucketName: string,
   region: string,
@@ -35,8 +35,8 @@ export interface AzureBlobDataAddress extends BaseDataAddress{
 export const defaultHttpDataAddress: HttpDataAddress = {
   type: DataAddressTypes.HttpData,
   method: "GET"
-} ;
+};
 
 export const defaultOnRequestDataAddress: OnRequestDataAddress = {
   type: DataAddressTypes.MDSOnRequestOffer
-} ;
+};

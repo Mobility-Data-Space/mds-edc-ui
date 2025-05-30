@@ -1,8 +1,4 @@
 import React, {ReactNode} from "react";
-import {TextField, Tooltip, IconButton, Icon} from "@mui/material";
-import { TextFieldProps } from "@mui/material/TextField";
-import { InfoOutlined } from "@mui/icons-material";
-import {AssetIcon} from "@/components/atoms/asset-icon.tsx";
 import Typography from "@mui/material/Typography";
 
 export interface TitleWithIconProps {

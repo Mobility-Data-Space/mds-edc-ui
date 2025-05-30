@@ -6,9 +6,9 @@ import { useParticipantConnectorState } from "@/hooks/use-participant-connector-
 import { usePagination } from "@/hooks/use-pagination";
 import { T } from "@/i18n";
 import SideDrawer from "@/components/organisms/side-drawer";
-import ContractDefinitionCard from "@/components/organisms/contract-definition-card.tsx";
-import {JsonLdDialog} from "@/components/molecules/JsonLdDialog.tsx";
-import {TitleWithIcon} from "@/components/atoms/TitleWithIcon.tsx";
+import ContractDefinitionCard from "@/components/organisms/contract-definition-card";
+import {JsonLdDialog} from "@/components/molecules/JsonLdDialog";
+import {TitleWithIcon} from "@/components/atoms/TitleWithIcon";
 import {ContractDefinition} from "@think-it-labs/edc-connector-client";
 
 export default function AssetListPage() {

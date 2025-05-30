@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import { enqueueSnackbar } from "notistack";
 import {Button} from "@mui/material";
-import {CriterionInput, EDC_CONTEXT, EDC_NAMESPACE} from "@think-it-labs/edc-connector-client";
+import {CriterionInput, EDC_CONTEXT} from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 import { ContractDefinitionFormWrapper } from "@think-it-labs/edc-connector-ui/contract-definition-form-wrapper";
 import { useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
@@ -10,9 +10,8 @@ import SideDrawer from "@/components/organisms/side-drawer";
 import { fromContractDefinitionForm, MdsContractDefinitionInput } from "@/utilities/contract-definition";
 import { defaultCreateContractDefinitionFormData } from "@/utilities/contract-definition";
 import {MuiSelect} from "@/components/atoms/mui-select";
-import {operatorIn} from "@/utilities/policy-constraints";
 import { Input } from "@/components/atoms/input";
-import {Checkbox} from "@/components/atoms/checkbox.tsx";
+import {Checkbox} from "@/components/atoms/checkbox";
 
 const optionsGenerator = (data: { "@id": string }[]) => {
   return data.map(entry => ({

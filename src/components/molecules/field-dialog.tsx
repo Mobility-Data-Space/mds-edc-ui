@@ -1,10 +1,8 @@
 import React from "react";
-
 import {Button, Icon} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from '@mui/material';
-
-import {FieldShowProps} from "@/components/molecules/field-show.tsx";
+import {FieldShowProps} from "@/components/molecules/field-show";
 import {T} from "@/i18n";
 
 export function FieldDialog({ icon, label, subLabel, value, valueTitle, isOpen, onClose }: FieldShowProps & { isOpen: boolean, onClose: () => void }): JSX.Element {

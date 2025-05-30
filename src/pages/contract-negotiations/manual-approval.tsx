@@ -10,9 +10,9 @@ import { T, useTranslator } from "@/i18n";
 import SideDrawer from "@/components/organisms/side-drawer";
 import {ContractNegotiation, CriterionInput} from "@think-it-labs/edc-connector-client";
 import { Table } from "@/components/atoms/table";
-import ContractNegotiationDialog from "@/components/organisms/contract-negotiation-dialog.tsx";
+import ContractNegotiationDialog from "@/components/organisms/contract-negotiation-dialog";
 import {enqueueSnackbar} from "notistack";
-import { MDSManualApprovalController } from "@/utilities/contract-negotiations.ts";
+import { MDSManualApprovalController } from "@/utilities/contract-negotiations";
 
 const CreatedAt = ({ item }: { item: ContractNegotiation }) => {
   const createdAt = item && item["https://w3id.org/edc/v0.0.1/ns/createdAt"];

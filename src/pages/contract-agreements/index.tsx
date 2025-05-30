@@ -7,9 +7,10 @@ import { usePagination } from "@/hooks/use-pagination";
 import { T, useTranslator } from "@/i18n";
 import SideDrawer from "@/components/organisms/side-drawer";
 import ContractAgreementCard from "@/components/organisms/contract-agreement-card";
-import ContractAgreementDialog from "@/components/organisms/contract-agreement-dialog.tsx";
+import ContractAgreementDialog from "@/components/organisms/contract-agreement-dialog";
 import { ContractAgreement } from "@think-it-labs/edc-connector-client";
 import { AgreementsRetirementController } from "@/utilities/contract-agreement";
+import Typography from "@mui/material/Typography";
 
 export default function ContractAgreementsListPage() {
   const { connector } = useParticipantConnectorState();
@@ -21,7 +22,7 @@ export default function ContractAgreementsListPage() {
     usePagination();
 
   const agreementsRetirementController = useMemo(() => new AgreementsRetirementController(connector.managementUrl), [connector.managementUrl]);
-  
+
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
   const [openContractAgreementData, setOpenContractAgreementData] = useState({

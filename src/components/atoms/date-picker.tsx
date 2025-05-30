@@ -5,7 +5,7 @@ import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 
 import {DATE_FORMAT, dateToString} from "@/utilities/date";
-import {DatePickerDaySlot} from "@/components/atoms/date-picker-day-slot.tsx";
+import {DatePickerDaySlot} from "@/components/atoms/date-picker-day-slot";
 
 export type DatePickerPros = Partial<MuiDatePickerProps<any>> & {
   name?: string,

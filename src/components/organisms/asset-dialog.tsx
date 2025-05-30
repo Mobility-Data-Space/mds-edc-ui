@@ -10,7 +10,7 @@ import AssetDetails from "@/components/organisms/asset-details";
 import {DeleteDialog} from "@/components/molecules/delete-dialog";
 import { T } from "@/i18n";
 import {ASSET_TITLE} from "@/schema/asset";
-import {TitleWithIcon} from "@/components/atoms/TitleWithIcon.tsx";
+import {TitleWithIcon} from "@/components/atoms/TitleWithIcon";
 
 interface AssetDialogProps {
   asset: Asset;
