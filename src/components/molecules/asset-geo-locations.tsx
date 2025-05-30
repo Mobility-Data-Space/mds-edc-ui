@@ -1,7 +1,5 @@
 import React from "react";
-
-import {Input} from "../atoms/input.tsx";
-
+import {Input} from "../atoms/input";
 import {T} from "@/i18n";
 import {ASSET_ADVANCED_INFO_GEO_LOCATION, ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL} from "@/schema/asset";
 import {AssetProperties} from "@/utilities/asset";
@@ -27,7 +25,7 @@ export function AssetGeoLocations({ translator, formData, onChange, errors }: As
       value={formData[ASSET_ADVANCED_INFO_GEO_LOCATION][ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL]}
       error={errors[ASSET_ADVANCED_INFO_GEO_LOCATION]}
       onChange={(event) => onChange({
-        ...formData, 
+        ...formData,
         [ASSET_ADVANCED_INFO_GEO_LOCATION]: {
           ...formData[ASSET_ADVANCED_INFO_GEO_LOCATION],
           [ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL]: event.target.value

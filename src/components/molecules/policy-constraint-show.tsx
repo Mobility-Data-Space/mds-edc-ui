@@ -2,9 +2,9 @@ import React, {ReactNode, useState} from "react";
 import {Icon} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import {T} from "@/i18n";
-import {ConstraintShow} from "@/components/molecules/constraint-show.tsx";
-import {convertOdrlToJsonHtml} from "@/utilities/catalog.ts";
-import {JsonLdDialog} from "@/components/molecules/JsonLdDialog.tsx";
+import {ConstraintShow} from "@/components/molecules/constraint-show";
+import {convertOdrlToJsonHtml} from "@/utilities/catalog";
+import {JsonLdDialog} from "@/components/molecules/JsonLdDialog";
 import {Constraint} from "@think-it-labs/edc-connector-client";
 
 export interface FieldShowProps {

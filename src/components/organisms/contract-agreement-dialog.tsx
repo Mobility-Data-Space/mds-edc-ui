@@ -1,10 +1,10 @@
 import React, {useState} from "react";
 import { T } from "@/i18n";
 import {ContractAgreement} from "@think-it-labs/edc-connector-client";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton} from "@mui/material";
-import {TitleWithIcon} from "@/components/atoms/TitleWithIcon.tsx";
-import {TransferFormDialog} from "@/components/templates/transfer-form-dialog.tsx";
-import ContractAgreementDetails from "@/components/organisms/contract-agreement-details.tsx";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon} from "@mui/material";
+import {TitleWithIcon} from "@/components/atoms/TitleWithIcon";
+import {TransferFormDialog} from "@/components/templates/transfer-form-dialog";
+import ContractAgreementDetails from "@/components/organisms/contract-agreement-details";
 
 interface ContractAgreementDialogProps {
   contractAgreement: ContractAgreement;

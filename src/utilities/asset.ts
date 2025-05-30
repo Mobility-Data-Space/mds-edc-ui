@@ -1,6 +1,6 @@
-import {removeEmptyFields} from "@/utilities/form.ts";
-import {Asset, AssetInput, DataAddress} from "@think-it-labs/edc-connector-client";
-import {FieldShowProps} from "@/components/molecules/field-show.tsx";
+import {removeEmptyFields} from "@/utilities/form";
+import {Asset, AssetInput} from "@think-it-labs/edc-connector-client";
+import {FieldShowProps} from "@/components/molecules/field-show";
 import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
 import {ENGLISH_SELECT_DATA, LANGUAGES} from "@/constants/languages";
 import {DELIMITER} from "@/i18n";

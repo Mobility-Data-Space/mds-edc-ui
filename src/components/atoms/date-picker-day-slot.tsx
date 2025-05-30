@@ -1,7 +1,7 @@
 import React from "react";
 import {PickersDay, PickersDayProps} from "@mui/x-date-pickers";
 import {Dayjs} from "dayjs";
-import {theme} from "@/theme/ThemeProvider.tsx";
+import {theme} from "@/theme/ThemeProvider";
 
 export type DaySlotCustomProps = PickersDayProps<any> & {
   dayjsStartDate?: Dayjs | null,

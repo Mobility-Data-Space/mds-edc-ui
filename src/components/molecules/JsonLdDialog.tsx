@@ -1,7 +1,7 @@
 import React, {ReactNode, useEffect, useState} from "react";
 import {T} from "@/i18n";
 import {Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
-import {replaceUrlPrefixes} from "@/utilities/catalog.ts";
+import {replaceUrlPrefixes} from "@/utilities/catalog";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import {ReactJsonViewProps} from "react-json-view";
 import dynamic from "next/dynamic";

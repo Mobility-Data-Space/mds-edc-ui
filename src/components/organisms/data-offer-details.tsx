@@ -2,17 +2,17 @@ import React, {useEffect, useState} from "react";
 import {Button, Icon, Tooltip} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import {enqueueSnackbar} from "notistack";
-import {compact, Policy, PolicyBuilder} from "@think-it-labs/edc-connector-client";
+import {compact, Policy} from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
-import {TitleWithIcon} from "@/components/atoms/TitleWithIcon.tsx";
+import {TitleWithIcon} from "@/components/atoms/TitleWithIcon";
 
-import {FieldShow} from "@/components/molecules/field-show.tsx";
+import {FieldShow} from "@/components/molecules/field-show";
 import {ConfirmDialog} from "@/components/molecules/confirm-dialog";
 import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
 import {T, useTranslator} from "@/i18n";
 import { createNegotiationRequest } from "@/utilities/contract-negotiations";
 import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
-import {PolicyConstraintShow} from "@/components/molecules/policy-constraint-show.tsx";
+import {PolicyConstraintShow} from "@/components/molecules/policy-constraint-show";
 
 interface DataOfferDetailsProps {
   offers?: Policy[];

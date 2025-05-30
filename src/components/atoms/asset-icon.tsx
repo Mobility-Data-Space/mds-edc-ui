@@ -2,7 +2,7 @@ import React from "react";
 import {Icon, IconProps} from "@mui/material";
 
 import {Asset} from "@think-it-labs/edc-connector-client";
-import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
+import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
 
 import { DataAddressTypes } from "@/utilities/data-address";
 

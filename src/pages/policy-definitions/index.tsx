@@ -8,8 +8,8 @@ import { usePagination } from "@/hooks/use-pagination";
 import { T } from "@/i18n";
 import SideDrawer from "@/components/organisms/side-drawer";
 import {PolicyDefinition} from "@think-it-labs/edc-connector-client";
-import {JsonLdDialog} from "@/components/molecules/JsonLdDialog.tsx";
-import {TitleWithIcon} from "@/components/atoms/TitleWithIcon.tsx";
+import {JsonLdDialog} from "@/components/molecules/JsonLdDialog";
+import {TitleWithIcon} from "@/components/atoms/TitleWithIcon";
 
 export default function PolicyDefinitionListPage() {
   const { push, connector } = useParticipantConnectorState();

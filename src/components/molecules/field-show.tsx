@@ -3,7 +3,7 @@ import React from "react";
 import {Button, Icon} from "@mui/material";
 import Typography from "@mui/material/Typography";
 
-import {FieldDialog} from "@/components/molecules/field-dialog.tsx";
+import {FieldDialog} from "@/components/molecules/field-dialog";
 
 import {MultiTranslate, T} from "@/i18n";
 

@@ -3,17 +3,17 @@ import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use
 import { T } from "@/i18n";
 import {Asset, ContractAgreement} from "@think-it-labs/edc-connector-client";
 import {Icon} from "@mui/material";
-import {TitleWithIcon} from "@/components/atoms/TitleWithIcon.tsx";
-import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog.ts";
+import {TitleWithIcon} from "@/components/atoms/TitleWithIcon";
+import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
 import Typography from "@mui/material/Typography";
-import {contractAgreementFieldsToShow, transferProcessesFieldsToShow} from "@/utilities/contract-agreement.ts";
-import FieldGrid from "@/components/molecules/field-grid.tsx";
-import {MarkdownCollapsableText} from "@/components/molecules/markdown-collapsable-text.tsx";
-import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
-import {ASSET_DESCRIPTION} from "@/schema/asset.ts";
+import {contractAgreementFieldsToShow, transferProcessesFieldsToShow} from "@/utilities/contract-agreement";
+import FieldGrid from "@/components/molecules/field-grid";
+import {MarkdownCollapsableText} from "@/components/molecules/markdown-collapsable-text";
+import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
+import {ASSET_DESCRIPTION} from "@/schema/asset";
 import Divider from "@mui/material/Divider";
-import {assetGeneralFieldsToShow} from "@/utilities/asset.ts";
-import {PolicyConstraintShow} from "@/components/molecules/policy-constraint-show.tsx";
+import {assetGeneralFieldsToShow} from "@/utilities/asset";
+import {PolicyConstraintShow} from "@/components/molecules/policy-constraint-show";
 import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/entities";
 
 interface ContractAgreementDetailsProps {

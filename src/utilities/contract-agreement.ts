@@ -1,8 +1,8 @@
 import {Inner} from "@think-it-labs/edc-connector-client/dist/src/inner";
 import {ContractAgreement} from "@think-it-labs/edc-connector-client";
-import {FieldShowProps} from "@/components/molecules/field-show.tsx";
+import {FieldShowProps} from "@/components/molecules/field-show";
 import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/entities";
-import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog.ts";
+import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
 
 export const contractAgreementFieldsToShow = (contractAgreement: ContractAgreement, participantId: string): FieldShowProps[] => {
 

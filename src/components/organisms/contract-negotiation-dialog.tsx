@@ -1,9 +1,9 @@
 import React, {useState} from "react";
 import { T } from "@/i18n";
 import {ContractNegotiation} from "@think-it-labs/edc-connector-client";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton} from "@mui/material";
-import {TitleWithIcon} from "@/components/atoms/TitleWithIcon.tsx";
-import ContractNegotiationDetails from "@/components/organisms/contract-negotiation-details.tsx";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
+import {TitleWithIcon} from "@/components/atoms/TitleWithIcon";
+import ContractNegotiationDetails from "@/components/organisms/contract-negotiation-details";
 
 interface ContractNegotiationDialogProps {
   contractNegotiation: ContractNegotiation;
