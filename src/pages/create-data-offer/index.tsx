@@ -196,11 +196,11 @@ export default function CreateDataOfferPage() {
         console.log(result)
         formData.contract.assetsSelector = idSelector(result["@id"]);
 
-        if(publishMode === PUBLISH_MODE_DO_NOT_PUBLISH.value) {
+        if (publishMode === PUBLISH_MODE_DO_NOT_PUBLISH.value) {
           return;
         }
 
-        if(publishMode === PUBLISH_MODE_PUBLISH_RESTRICTED.value) {
+        if (publishMode === PUBLISH_MODE_PUBLISH_RESTRICTED.value) {
           // create policy
           client.management.policyDefinitions.create(fromPolicyDefinitionForm(policyExpression, ""))
             .then((result) => {
