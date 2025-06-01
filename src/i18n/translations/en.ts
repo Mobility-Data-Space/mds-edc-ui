@@ -147,6 +147,12 @@ export const en = {
         fieldDataAddressHttpProxyPathTrue: "Disable Proxy Path",
         fieldDataAddressHttpProxyPathFalse: "Enable Proxy Path",
 
+        fieldBucketName: "Bucket Name",
+        fieldRegion: "Region",
+        fieldKeyname: "Keyname",
+        fieldObjectName: "Object Name",
+        fieldObjectPrefix: "Object Prefix",
+
         participantId: "Participant ID",
         creatorOrganizationName: "Organization",
         connectorEndpoint: "Connector Endpoint",

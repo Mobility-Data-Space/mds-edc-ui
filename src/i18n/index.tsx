@@ -6,7 +6,6 @@ import React, {
   PropsWithChildren,
   useContext,
   useEffect,
-  useMemo,
 } from "react";
 import { I18nextProvider, initReactI18next } from "react-i18next";
 import { cn } from "./translations/cn";
@@ -70,7 +69,7 @@ export function MultiTranslate(
   if(typeof string != "string"){
     string = JSON.stringify(string)
   }
-  
+
   const stringArray = string.split(delimiter);
   return stringArray.length === 1 ?
     t(string) :
