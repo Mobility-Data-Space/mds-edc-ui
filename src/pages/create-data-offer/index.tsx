@@ -33,12 +33,13 @@ import SideDrawer from "@/components/organisms/side-drawer";
 import { AssetFormDataAddressStep } from "@/components/organisms/asset-form-data-address-step";
 import { defaultCreatePolicyFormData, fromPolicyDefinitionForm } from "@/utilities/policy";
 import { defaultCreateContractDefinitionFormData, fromContractDefinitionForm, MdsContractDefinitionInput } from "@/utilities/contract-definition";
-import { defaultCreateAssetFormData, AssetProperties, generateId, fromAssetForm } from "@/utilities/asset"
-import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_TITLE } from "@/schema/asset";
-import {PUBLISH_MODE_DO_NOT_PUBLISH, PUBLISH_MODE_PUBLISH_RESTRICTED, PUBLISH_MODE_PUBLISH_UNRESTRICTED, PUBLISH_MODES} from "@/constants/data-address-types";
-import { DataAddressTypes } from "@/utilities/data-address";
+import {PUBLISH_MODE_DO_NOT_PUBLISH, PUBLISH_MODES} from "@/constants/data-address-types";
 import { MultiplicityConstraint, operatorIn } from "@/utilities/policy-constraints";
 import {UNRESTRICTED_POLICY_ID} from "@/schema/policy";
+import { defaultCreateAssetFormData, AssetProperties, generateId, fromAssetForm } from "@/utilities/asset"
+import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_TITLE} from "@/schema/asset";
+import {PUBLISH_MODE_PUBLISH_RESTRICTED, PUBLISH_MODE_PUBLISH_UNRESTRICTED} from "@/constants/data-address-types";
+import { DataAddressTypes } from "@/utilities/data-address";
 
 interface DataOffer {
   asset: AssetInput,
@@ -153,11 +154,15 @@ export default function CreateDataOfferPage() {
   const validateDataAddress = (formDataToValidate: DataAddress) => {
     const newErrors: { [key: string]: boolean | string } = {};
 
-    if (formDataToValidate.type === DataAddressTypes.CustomJson && formDataToValidate.description !== "") {
-      try {
-        JSON.parse(formDataToValidate.description as string);
-      } catch (e) {
-        newErrors["ASSET_DATA_ADDRESS_DESCRIPTION"] = translator("assets.new.mustBeValidJson");
+    if (formDataToValidate.type === DataAddressTypes.CustomJson) {
+      if (! formDataToValidate.description) {
+        newErrors.description = true;
+      } else {
+        try {
+          JSON.parse(formDataToValidate.description as string);
+        } catch (e) {
+          newErrors.description = translator("assets.new.mustBeValidJson");
+        }
       }
     }
 
@@ -229,12 +234,6 @@ export default function CreateDataOfferPage() {
       })
       .catch(error => enqueueSnackbar(translator("common.errorOccurred")));
   };
-
-  const onFormSubmitFail = (error: Error) => {
-    enqueueSnackbar(translator("assets.new.saveFail"));
-  }
-
-  const dataOfferTypeIsDataSource = formData.asset.dataAddress.type !== DataAddressTypes.MDSOnRequestOffer;
 
   if (!connector) {
     return "No connector";
@@ -452,7 +451,6 @@ export default function CreateDataOfferPage() {
             </div>
 
             {!showAdvancedFields ? "" : <>
-
               <Divider/>
 
               <div className="grid sm:grid-cols-3 gap-2 sm:gap-6">
