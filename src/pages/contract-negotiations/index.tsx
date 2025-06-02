@@ -1,25 +1,61 @@
-import { Button } from "@/components/atoms/button";
-import { Table } from "@/components/atoms/table";
-import { ContractAgreementView } from "@think-it-labs/edc-connector-ui/contract-agreement-view";
+import React, {useState} from "react";
+import { ChevronLeft, ChevronRight, Search } from "lucide-react";
+import {Button, IconButton, Icon} from "@mui/material";
+import {ContractAgreementView} from "@think-it-labs/edc-connector-ui/contract-agreement-view";
 import { ContractNegotiationsList } from "@think-it-labs/edc-connector-ui/contract-negotiations-list";
 import { Timestamp } from "@think-it-labs/edc-connector-ui/timestamp";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { usePagination } from "@/hooks/use-pagination";
 import { T, useTranslator } from "@/i18n";
-import { ChevronLeft, ChevronRight, Search } from "lucide-react";
-import React from "react";
-import SideDrawer from "@/components/organisms/side-drawer.tsx";
-import {IconButton} from "@mui/material";
+import SideDrawer from "@/components/organisms/side-drawer";
+import {ContractNegotiation} from "@think-it-labs/edc-connector-client";
+import { Table } from "@/components/atoms/table";
+import ContractNegotiationDialog from "@/components/organisms/contract-negotiation-dialog";
+
+const CreatedAt = ({ item }: { item: ContractNegotiation }) => {
+  const createdAt = item && item["https://w3id.org/edc/v0.0.1/ns/createdAt"];
+  const createdAtValue = createdAt && createdAt[0] && createdAt[0]["@value"];
+  return <Timestamp milliseconds={createdAtValue} />
+}
+
+const CounterPartyId = ({ item }: { item: ContractNegotiation }) => {
+  const counterPartyId = item["https://w3id.org/edc/v0.0.1/ns/counterPartyId"];
+  const counterPartyIdValue = counterPartyId && counterPartyId[0] && counterPartyId[0]["@value"];
+  return <>{counterPartyIdValue}</>
+}
+
+const CounterPartyAddress = ({ item }: { item: ContractNegotiation }) => {
+  const counterPartyAddress = item["https://w3id.org/edc/v0.0.1/ns/counterPartyAddress"];
+  const counterPartyAddressValue = counterPartyAddress && counterPartyAddress[0] && counterPartyAddress[0]["@value"];
+  return <>{counterPartyAddressValue}</>
+}
 
 export default function ContractNegotiationsListPage() {
-  const { push, connector } = useParticipantConnectorState();
+  const { connector } = useParticipantConnectorState();
   const managementUrl = connector?.managementUrl as string;
-  const { globalTranslator } = useTranslator();
-  const { decrementPage, incrementPage, offset, limit, hasPrev, page } =
-    usePagination();
+  const { globalTranslator, translator } = useTranslator();
+  const { decrementPage, incrementPage, offset, limit, hasPrev, page } = usePagination();
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+
+  const [openContractNegotiationData, setOpenContractNegotiationData] = useState({
+    contractNegotiation: {} as ContractNegotiation,
+  });
+
+  const openDetailsModal = (contractNegotiation: ContractNegotiation) => {
+    setIsDetailsModalOpen(true);
+    setOpenContractNegotiationData({ contractNegotiation });
+  };
 
   return (
     <SideDrawer title={<T string="contractNegotiations.title" />}>
+      <ContractNegotiationDialog
+        open={isDetailsModalOpen}
+        contractNegotiation={openContractNegotiationData.contractNegotiation}
+        onClose={() => setIsDetailsModalOpen(false)}
+        participantId={connector.id}
+        contentStyle={{ maxWidth: "90vw", width: "1000px" }}
+        translator={translator}
+      />
       <ContractNegotiationsList managementUrl={managementUrl}>
         <div className="flex gap-x-5">
           <div className="flex-grow">
@@ -94,7 +130,8 @@ export default function ContractNegotiationsListPage() {
               >
                 {({ item, index }) => (
                   <Table.Row
-                    onClick={() => push(`/contract-negotiations/${item.id}`)}
+                    key={index}
+                    onClick={() => openDetailsModal(item)}
                   >
                     <Table.Cell>
                       <button
@@ -110,6 +147,7 @@ export default function ContractNegotiationsListPage() {
                       </span>
                     </Table.Cell>
                     <Table.Cell>
+                      {!item.contractAgreementId ? "" :
                       <ContractAgreementView
                         managementUrl={managementUrl}
                         id={item.contractAgreementId}
@@ -122,12 +160,13 @@ export default function ContractNegotiationsListPage() {
                           <ContractAgreementView.Id />
                         </p>
                       </ContractAgreementView>
+                      }
                     </Table.Cell>
                     <Table.Cell>
-                      {item.counterPartyAddress || "n.a."}
+                      <CounterPartyAddress item={item} />
                     </Table.Cell>
                     <Table.Cell>
-                      <Timestamp milliseconds={item.createdAt} />
+                      <CreatedAt item={item} />
                     </Table.Cell>
                   </Table.Row>
                 )}

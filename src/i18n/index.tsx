@@ -1,12 +1,11 @@
 import { createInstance } from "i18next";
 import { useTranslation } from "react-i18next";
-import { useRouter } from "next/router";
+import { useRouter } from "next/router.js";
 import React, {
   createContext,
   PropsWithChildren,
   useContext,
-  useEffect,
-  useMemo,
+  useEffect
 } from "react";
 import { I18nextProvider, initReactI18next } from "react-i18next";
 import { cn } from "./translations/cn";

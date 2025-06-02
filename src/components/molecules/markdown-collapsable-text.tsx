@@ -1,9 +1,10 @@
 import React, {useState, useRef, useEffect} from "react";
-import {T} from "@/i18n";
-import {MarkdownText} from "@/components/atoms/markdown-text.tsx";
 import {Button} from "@mui/material";
 import KeyboardDoubleArrowDown from '@mui/icons-material/KeyboardDoubleArrowDown';
 import KeyboardDoubleArrowUp from '@mui/icons-material/KeyboardDoubleArrowUp';
+
+import {MarkdownText} from "@/components/atoms/markdown-text";
+import {T} from "@/i18n";
 
 const COLLAPSABLE_HEIGHT_DEFAULT = 280;
 interface MarkdowCollapsableTextProps {
@@ -18,7 +19,7 @@ export function MarkdownCollapsableText({ data, collapsableHeight = COLLAPSABLE_
 
   useEffect(() => {
     setTextHeight((markdownTextRef?.current?.offsetHeight || 0));
-  }, [markdownTextRef?.current]);
+  }, []);
 
   return (
     <>

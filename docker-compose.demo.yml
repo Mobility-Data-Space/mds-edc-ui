@@ -1,0 +1,87 @@
+services:
+  edc-ui-1:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_EDC_PUBLIC_URL: "http://edc-1:8185/public"
+        NEXT_PUBLIC_EDC_ID: "participant_1"
+        NEXT_PUBLIC_EDC_NAME: "participant_1_edc_name"
+        NEXT_PUBLIC_EDC_MANAGEMENT_URL: "http://edc-1:8182/api/management"
+        NEXT_PUBLIC_EDC_DEFAULT_URL: "http://edc-1:8181/api"
+        NEXT_PUBLIC_EDC_PROTOCOL_URL: "http://edc-1:8183/api/dsp"
+    ports:
+      - "3000:3000"
+
+  edc-1:
+    image: ghcr.io/mobility-data-space/next-mds-edc/connector-inmemory:latest
+    environment:
+      EDC_PARTICIPANT_ID: "participant_1"
+      EDC_COMPONENT_ID: "participant_1_MDS_COMPONENT"
+      EDC_HOSTNAME: "edc-participant-1"
+      WEB_HTTP_PATH: "/api"
+      WEB_HTTP_PORT: "8181"
+      WEB_HTTP_CONTROL_PATH: "/api/control"
+      WEB_HTTP_CONTROL_PORT: "8186"
+      WEB_HTTP_MANAGEMENT_PATH: "/api/management"
+      WEB_HTTP_MANAGEMENT_PORT: "8182"
+      WEB_HTTP_PROTOCOL_PATH: "/api/dsp"
+      WEB_HTTP_PROTOCOL_PORT: "8183"
+      WEB_HTTP_VERSION_PATH: "/api/version"
+      WEB_HTTP_VERSION_PORT: "8184"
+      WEB_HTTP_PUBLIC_PATH: "/public"
+      WEB_HTTP_PUBLIC_PORT: "8185"
+
+      # Transfer Proxy Configuration
+      EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: "transfer-proxy-token-signer-public-key"
+      EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: "transfer-proxy-token-signer-private-key"
+    ports:
+      - "8181:8181"  # API
+      - "8186:8186"  # Control
+      - "8182:8182"  # Management
+      - "8183:8183"  # Protocol
+      - "8184:8184"  # Version
+      - "8185:8185"  # Public
+
+  edc-ui-2:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        GITHUB_TOKEN: ${GITHUB_TOKEN}
+        NEXT_PUBLIC_EDC_PUBLIC_URL: "http://edc-2:8185/public"
+        NEXT_PUBLIC_EDC_ID: "participant_2"
+        NEXT_PUBLIC_EDC_NAME: "participant_2_edc_name"
+        NEXT_PUBLIC_EDC_MANAGEMENT_URL: "http://edc-2:8182/management"
+        NEXT_PUBLIC_EDC_DEFAULT_URL: "http://edc-2:8181/api"
+        NEXT_PUBLIC_EDC_PROTOCOL_URL: "http://edc-2:8183/protocol"
+    ports:
+      - "3001:3000"
+
+  edc-2:
+    image: ghcr.io/mobility-data-space/next-mds-edc/connector-inmemory:latest
+    environment:
+      EDC_PARTICIPANT_ID: "participant_2"
+      EDC_COMPONENT_ID: "participant_2_MDS_COMPONENT"
+      EDC_HOSTNAME: "edc-participant-2"
+      WEB_HTTP_PATH: "/api"
+      WEB_HTTP_PORT: "8181"
+      WEB_HTTP_CONTROL_PATH: "/api/control"
+      WEB_HTTP_CONTROL_PORT: "8186"
+      WEB_HTTP_MANAGEMENT_PATH: "/api/management"
+      WEB_HTTP_MANAGEMENT_PORT: "8182"
+      WEB_HTTP_PROTOCOL_PATH: "/api/dsp"
+      WEB_HTTP_PROTOCOL_PORT: "8183"
+      WEB_HTTP_VERSION_PATH: "/api/version"
+      WEB_HTTP_VERSION_PORT: "8184"
+      WEB_HTTP_PUBLIC_PATH: "/public"
+      WEB_HTTP_PUBLIC_PORT: "8185"
+      EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: "transfer-proxy-token-signer-public-key"
+      EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: "transfer-proxy-token-signer-private-key"
+    ports:
+      - "9181:8181"  # API
+      - "9186:8186"  # Control
+      - "9182:8182"  # Management
+      - "9183:8183"  # Protocol
+      - "9184:8184"  # Version
+      - "9185:8185"  # Public

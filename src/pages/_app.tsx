@@ -2,7 +2,7 @@ import "@/styles/globals.css";
 import { TranslatorProvider } from "@/i18n";
 import type { AppProps } from "next/app";
 import { JsonLdContextProvider } from "@think-it-labs/edc-connector-ui/json-ld-context-provider";
-import ThemeProvider from "@/theme/ThemeProvider.tsx";
+import ThemeProvider from "@/theme/ThemeProvider";
 import { SnackbarProvider } from 'notistack';
 
 export default function App({ Component, pageProps }: AppProps) {

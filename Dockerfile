@@ -6,15 +6,9 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat git
 WORKDIR /app
 
-# Login to Github Package Registry
-ARG GITHUB_TOKEN
-
-RUN npm set @think-it-labs:registry=https://npm.pkg.github.com/ && npm set //npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
-
 # Install dependencies based on the preferred package manager
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 RUN yarn --frozen-lockfile
-
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -24,8 +18,7 @@ COPY . .
 
 ARG NEXT_PUBLIC_EDC_ID=$NEXT_PUBLIC_EDC_ID
 ARG NEXT_PUBLIC_EDC_NAME=$NEXT_PUBLIC_EDC_NAME
-ARG NEXT_PUBLIC_EDC_URL=$NEXT_PUBLIC_EDC_URL
-ARG NEXT_PUBLIC_EDC_MANAGEMENT_URL=$NEXT_PUBLIC_EDC_MANAGEMENT_URL
+ARG NEXT_PUBLIC_EDC_PUBLIC_URL=$NEXT_PUBLIC_EDC_PUBLIC_URL
 ARG NEXT_PUBLIC_EDC_MANAGEMENT_URL=$NEXT_PUBLIC_EDC_MANAGEMENT_URL
 ARG NEXT_PUBLIC_EDC_DEFAULT_URL=$NEXT_PUBLIC_EDC_DEFAULT_URL
 ARG NEXT_PUBLIC_EDC_PROTOCOL_URL=$NEXT_PUBLIC_EDC_PROTOCOL_URL

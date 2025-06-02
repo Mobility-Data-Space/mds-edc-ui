@@ -1,17 +1,17 @@
-import {
-  andLeft,
+import * as React from "react";
 
+import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
+
+import {ConsumerParticipantIdConstraint} from "@/components/molecules/consumer-participant-id-constraint";
+import {TimeRestrictionConstraint} from "@/components/molecules/time-restriction-constraint";
+import {RestrictionConstraint} from "@/components/molecules/restriction-constraint";
+
+import {
   consumerParticipantIdLeft,
   MultiplicityConstraint,
-  orLeft,
-  timeRestrictionLeft,
-  xOneLeft
-} from "@/utilities/constraints";
-import * as React from "react";
-import {ConsumerParticipantIdConstraint} from "@/components/molecules/consumer-participant-id-constraint.tsx";
-import {TimeRestrictionConstraint} from "@/components/molecules/time-restriction-constraint.tsx";
-import {RestrictionConstraint} from "@/components/molecules/restriction-constraint.tsx";
-import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
+  timeRestrictionLeft
+} from "@/utilities/policy-constraints";
+
 
 export interface ConstraintProps {
   value: AtomicConstraint|MultiplicityConstraint,

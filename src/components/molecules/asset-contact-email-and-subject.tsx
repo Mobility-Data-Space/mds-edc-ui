@@ -1,10 +1,7 @@
 import React from "react";
-import {T} from "@/i18n";
-import {Input} from "../atoms/input.tsx";
 import { DataAddress } from "@think-it-labs/edc-connector-client";
-
-export const DATA_OFFER_CONTACT_EMAIL = "" 
-export const DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT = ""
+import {Input} from "@/components/atoms/input";
+import {T} from "@/i18n";
 
 export interface ContactEmailAndSubjectProps {
   translator: (key: string) => string;
@@ -32,7 +29,7 @@ export function AssetContactEmailAndSubject({ translator, formData, onChange, er
           type="email"
           tooltip={translator("dataOffer.new.contactEmailTooltip")}
           value={formData.email}
-          error={errors[DATA_OFFER_CONTACT_EMAIL]}
+          error={errors["DATA_OFFER_CONTACT_EMAIL"]}
           onChange={(event) => onChange({...formData, email: event.target.value})}
         />
       </div>
@@ -50,7 +47,7 @@ export function AssetContactEmailAndSubject({ translator, formData, onChange, er
           placeholder={translator("dataOffer.new.dataOfferContactPreferredEmailSubject")}
           tooltip={translator("dataOffer.new.dataOfferContactPreferredEmailSubjectTooltip")}
           value={formData.preferred_email_subject}
-          error={errors[DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT]}
+          error={errors["DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT"]}
           onChange={(event) => onChange({
             ...formData,
             preferred_email_subject: event.target.value

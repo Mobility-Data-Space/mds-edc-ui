@@ -1,16 +1,17 @@
-import { useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
-import { enqueueSnackbar } from "notistack";
-import { T, useTranslator } from "@/i18n";
 import React, {useEffect, useRef, useState} from "react";
-import SideDrawer from "@/components/organisms/side-drawer.tsx";
-import { ContractDefinitionFormWrapper } from "@think-it-labs/edc-connector-ui/contract-definition-form-wrapper";
-import { fromContractDefinitionForm } from "@/utilities/contract_definition";
-import {ContractDefinitionInput, CriterionInput} from "@think-it-labs/edc-connector-client";
-import { defaultCreateContractDefinitionFormData } from "@/utilities/contract_definition";
-import {MuiSelect} from "@/components/atoms/mui-select.tsx";
-import {operatorIn} from "@/utilities/constraints";
+import { enqueueSnackbar } from "notistack";
 import {Button} from "@mui/material";
+import {CriterionInput, EDC_CONTEXT} from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
+import { ContractDefinitionFormWrapper } from "@think-it-labs/edc-connector-ui/contract-definition-form-wrapper";
+import { useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
+import { T, useTranslator } from "@/i18n";
+import SideDrawer from "@/components/organisms/side-drawer";
+import { fromContractDefinitionForm, MdsContractDefinitionInput } from "@/utilities/contract-definition";
+import { defaultCreateContractDefinitionFormData } from "@/utilities/contract-definition";
+import {MuiSelect} from "@/components/atoms/mui-select";
+import { Input } from "@/components/atoms/input";
+import {Checkbox} from "@/components/atoms/checkbox";
 
 const optionsGenerator = (data: { "@id": string }[]) => {
   return data.map(entry => ({
@@ -27,7 +28,7 @@ export default function CreateContractDefinitionPage() {
   const [policyIds, setPolicyIds] = useState<{ value: string }[]>([]);
 
   const edcClient = useEdcConnectorClient({management: connector.managementUrl});
-  
+
   useEffect(() => {
     edcClient.management.assets.queryAll({ offset: 0 })
       .then(result => setAssetIds(optionsGenerator(result)))
@@ -36,14 +37,14 @@ export default function CreateContractDefinitionPage() {
     edcClient.management.policyDefinitions.queryAll({ offset: 0 })
       .then(result => setPolicyIds(optionsGenerator(result)))
       .catch(error => setPolicyIds([]));
-  }, []);
+  }, [edcClient]);
 
-  const [formData, setFormData] = useState<ContractDefinitionInput>(defaultCreateContractDefinitionFormData);
+  const [formData, setFormData] = useState<MdsContractDefinitionInput>(defaultCreateContractDefinitionFormData);
   const validateForm = () => true ;
 
   const { translator } = useTranslator();
 
-  const onChange = (newFormData: ContractDefinitionInput) => {
+  const onChange = (newFormData: MdsContractDefinitionInput) => {
     setFormData({ ...newFormData });
   }
   const onSubmit = () => {
@@ -63,8 +64,8 @@ export default function CreateContractDefinitionPage() {
   const idSelector = (id: string): CriterionInput[] => {
     return [
       {
-        operandLeft: "@id",
-        operator: operatorIn.value,
+        operandLeft: EDC_CONTEXT + "id",
+        operator: "=",
         operandRight: id
       }
     ]
@@ -75,7 +76,7 @@ export default function CreateContractDefinitionPage() {
   }
 
   return (
-    <SideDrawer title={<T string="contractDefinitions.new.title" />}>
+    <SideDrawer title={<T string="contractDefinitions.new.publishNewDataOffer" />}>
       <ContractDefinitionFormWrapper
         managementUrl={managementUrl}
         formData={() => fromContractDefinitionForm(formData)}
@@ -83,38 +84,57 @@ export default function CreateContractDefinitionPage() {
         onFailure={onFormSubmitFail}
       >
         <div className="flex flex-col gap-y-5">
+          <div>
+            <Input
+              required
+              name="contract-definition-id"
+              id="contract-definition-id"
+              data-testid="contract-definition-id"
+              label={translator("contractDefinitions.new.id")}
+              value={formData["@id"]}
+              onChange={(event) => onChange({...formData, ["@id"]: event.target.value})}
+            />
+          </div>
           <MuiSelect
             multiple
+            required
             name="assets-selector"
             id="asset-id"
             data-testid="asset-id"
-            type="text"
-            placeholder="asset id"
+            label={translator("contractDefinitions.new.assets")}
             options={assetIds}
             value={idReader(formData.assetsSelector)}
             onChange={(event) => onChange({ ...formData, assetsSelector: idSelector(event.target.value)})}
           />
 
           <MuiSelect
+            required
             name="contract-policy-id"
             id="contract-policy-id"
             data-testid="contract-policy-id"
-            type="text"
-            placeholder="contract-policy-id"
+            label={translator("contractDefinitions.new.contractPolicy")}
             options={policyIds}
             value={formData.contractPolicyId}
             onChange={(event) => onChange({ ...formData, contractPolicyId: event.target.value })}
           />
 
           <MuiSelect
+            required
             name="access-policy-id"
             id="access-policy-id"
             data-testid="access-policy-id"
-            type="text"
-            placeholder="access-policy-id"
+            label={translator("contractDefinitions.new.accessPolicy")}
             options={policyIds}
             value={formData.accessPolicyId}
             onChange={(event) => onChange({ ...formData, accessPolicyId: event.target.value })}
+          />
+
+          <Checkbox
+            label={translator("contractDefinitions.new.manualApproval")}
+            value={formData.privateProperties.manualApproval}
+            onChange={(event) => {
+              onChange({ ...formData, privateProperties: { manualApproval: event.target.checked }})
+            }}
           />
 
           <div className="flex flex-row self-end gap-x-5">

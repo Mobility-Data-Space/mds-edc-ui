@@ -2,7 +2,7 @@ import React from "react";
 
 import {Dialog, DialogContent} from "@mui/material";
 
-import AssetForm from "../organisms/asset-form";
+import AssetForm from "@/components/organisms/asset-form";
 
 interface AssetFormDialogProps {
   open: boolean;

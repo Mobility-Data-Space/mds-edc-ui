@@ -1,7 +1,9 @@
 import React from "react";
-import {T} from "@/i18n";
+
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
 import Typography from "@mui/material/Typography";
+
+import {T} from "@/i18n";
 
 interface ConfirmDialogProps {
   title?: string;

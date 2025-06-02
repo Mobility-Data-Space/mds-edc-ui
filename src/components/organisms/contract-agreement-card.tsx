@@ -2,11 +2,12 @@ import React from "react";
 import Typography from "@mui/material/Typography";
 import {Card, CardContent, Icon} from "@mui/material";
 import {ContractAgreement} from "@think-it-labs/edc-connector-client";
-import {ContractAgreementView} from "@think-it-labs/edc-connector-ui/contract-agreement-view.tsx";
-import {ContractAgreementsList} from "@think-it-labs/edc-connector-ui/contract-agreements-list.tsx";
+import {ContractAgreementView} from "@think-it-labs/edc-connector-ui/contract-agreement-view";
+import {ContractAgreementsList} from "@think-it-labs/edc-connector-ui/contract-agreements-list";
+import {Timestamp} from "@think-it-labs/edc-connector-ui/timestamp";
+
 import {T} from "@/i18n";
-import {Timestamp} from "@think-it-labs/edc-connector-ui/timestamp.tsx";
-import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state.ts";
+import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
 
 export interface ContractAgreementCard {
   contractAgreement: ContractAgreement;

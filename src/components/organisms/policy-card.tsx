@@ -2,14 +2,15 @@ import React from "react";
 import Typography from "@mui/material/Typography";
 import {Card, CardContent, Icon} from "@mui/material";
 import {PolicyDefinition} from "@think-it-labs/edc-connector-client";
-import {ContractAgreementView} from "@think-it-labs/edc-connector-ui/contract-agreement-view.tsx";
+import {Timestamp} from "@think-it-labs/edc-connector-ui/timestamp";
+import {ContractAgreementView} from "@think-it-labs/edc-connector-ui/contract-agreement-view";
+
+import {ConstraintShow} from "@/components/molecules/constraint-show";
+
 import {T} from "@/i18n";
-import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state.ts";
-import {PolicyDefinitionsList} from "@think-it-labs/edc-connector-ui/policy-definitions-list.tsx";
-import {ContractDefinitionsList} from "@think-it-labs/edc-connector-ui/contract-definitions-list.tsx";
-import {convertOdrlToJsonHtml, removeJsonLdSchemaFromProperties} from "@/utilities/catalog.ts";
-import {Timestamp} from "@think-it-labs/edc-connector-ui/timestamp.tsx";
-import {ConstraintShow} from "@/components/molecules/constraint-show.tsx";
+import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
+import {convertOdrlToJsonHtml, removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
+
 
 interface Constraint {
   operandLeft?: { "@value": string }[],

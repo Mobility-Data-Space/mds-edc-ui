@@ -1,4 +1,5 @@
-import { Asset, ContractDefinition, Dataset } from "@think-it-labs/edc-connector-client";
+import {Asset, ContractDefinition, Dataset, JsonLdObject} from "@think-it-labs/edc-connector-client";
+import {contextPrefixes} from "@/schema/context";
 
 export const HAS_POLICY = "http://www.w3.org/ns/odrl/2/hasPolicy";
 
@@ -52,8 +53,9 @@ export const convertOdrlToJsonHtml = (processedJson: any, valueDelimiter = " "):
     return processedJson;
   }
 
-  if (!! processedJson["action"]) {
-    const value = processedJson["action"] && processedJson["action"][0] && processedJson["action"][0]["@id"];
+  if (!! processedJson.action) {
+    const action = processedJson.action[0] || processedJson.action;
+    const value = action["@id"];
     return `Action${valueDelimiter}:${valueDelimiter}${value}`;
   }
 
@@ -96,4 +98,38 @@ function extractValue(value: any) {
   }
   return result;
 
+}
+
+export function replaceUrlPrefixes(jsonObject: JsonLdObject) {
+  const transformKey = (key: string) => {
+    for (const url in contextPrefixes) {
+      if (key.startsWith(url)) {
+        return key.replace(url, contextPrefixes[url]);
+      }
+    }
+    return key;
+  };
+
+  const transformValue = (value: any) => {
+    if (Array.isArray(value)) {
+      return value.map(item => typeof item === 'object' && item !== null ? replaceUrlPrefixes(item) : item);
+    }
+
+    if (typeof value === 'object' && value !== null) {
+      const newObj: { [key: string]: any } = {};
+      for (const k in value) {
+        newObj[transformKey(k)] = transformValue(value[k]);
+      }
+      return newObj;
+    }
+    return value;
+  };
+
+  const newObject: { [key: string]: any } = {};
+  for (const key in jsonObject) {
+    const newKey = transformKey(key);
+    newObject[newKey] = transformValue(jsonObject[key]);
+  }
+
+  return newObject;
 }

@@ -3,9 +3,9 @@ import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {DatePicker} from '@mui/x-date-pickers/DatePicker';
 import dayjs from "dayjs";
-import {DATE_FORMAT, dateToString, DateType} from "@/utilities/date.ts";
-import {DateRangePickerTextFieldSlot, DateRangePickerTextFieldSlotProps} from "@/components/molecules/date-range-picker-text-field.tsx";
-import {DatePickerDaySlot, DaySlotCustomProps} from "@/components/atoms/date-picker-day-slot.tsx";
+import {DATE_FORMAT, dateToString, DateType} from "@/utilities/date";
+import {DateRangePickerTextFieldSlot, DateRangePickerTextFieldSlotProps} from "@/components/molecules/date-range-picker-text-field";
+import {DatePickerDaySlot, DaySlotCustomProps} from "@/components/atoms/date-picker-day-slot";
 
 type SlotProps = { textField: Partial<DateRangePickerTextFieldSlotProps>, day: Partial<DaySlotCustomProps> };
 

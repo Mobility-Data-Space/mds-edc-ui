@@ -29,7 +29,7 @@ yarn-error.log*
 .env*.local
 .envrc
 .npmrc
-
+__ENV*
 # vercel
 .vercel
 

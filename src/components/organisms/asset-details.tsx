@@ -1,16 +1,17 @@
 import React, {useEffect, useMemo, useState} from "react";
-import {T} from "@/i18n";
-import {Asset} from "@think-it-labs/edc-connector-client";
-import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
-import {ASSET_KEYWORDS, ASSET_DESCRIPTION} from "@/schema/asset.ts";
-import {Chip} from "@mui/material";
-import {MarkdownCollapsableText} from "@/components/molecules/markdown-collapsable-text.tsx";
-import Divider from "@mui/material/Divider";
-import AssetFieldGrid from "@/components/molecules/asset-field-grid.tsx";
-import {assetCustomFieldsToShow, assetFieldsToShow, assetPrivateFieldsToShow} from "@/utilities/asset.ts";
 import dynamic from "next/dynamic";
 import {ReactJsonViewProps} from "react-json-view";
-import { convertOdrlToJsonHtml } from "@/utilities/catalog";
+import {Chip} from "@mui/material";
+import Divider from "@mui/material/Divider";
+
+import {Asset} from "@think-it-labs/edc-connector-client";
+import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
+
+import {MarkdownCollapsableText} from "@/components/molecules/markdown-collapsable-text";
+import FieldGrid from "@/components/molecules/field-grid";
+import {T} from "@/i18n";
+import {ASSET_KEYWORDS, ASSET_DESCRIPTION} from "@/schema/asset";
+import { assetFieldsToShow, assetPrivateFieldsToShow} from "@/utilities/asset";
 
 interface AssetDetailsProps {
   asset: Asset;
@@ -23,11 +24,10 @@ export default function AssetDetails({ asset, participantId, connectorEndpoint }
   const keywords = asset.properties[ASSET_KEYWORDS] || [];
   const description = readValue(asset.properties, ASSET_DESCRIPTION);
 
-  const [shownFields, privateFields, customFields] = useMemo(() => [
+  const [shownFields, privateFields] = useMemo(() => [
     assetFieldsToShow(asset, participantId, connectorEndpoint),
-    assetPrivateFieldsToShow(asset),
-    assetCustomFieldsToShow(asset),
-  ], [asset]);
+    assetPrivateFieldsToShow(asset)
+  ], [asset, participantId, connectorEndpoint]);
 
   const [ReactJson, setReactJson] = useState<React.ComponentType<ReactJsonViewProps>>();
 
@@ -53,9 +53,8 @@ export default function AssetDetails({ asset, participantId, connectorEndpoint }
       </div>
 
       <div className="flex flex-col gap-y-9">
-        <AssetFieldGrid fields={shownFields}/>
-        <AssetFieldGrid fields={customFields} label="assets.new.customProperties"/>
-        <AssetFieldGrid fields={privateFields} label="assets.new.privateProperties"/>
+        <FieldGrid fields={shownFields}/>
+        <FieldGrid fields={privateFields} label="assets.new.privateProperties"/>
       </div>
     </div>
   );
