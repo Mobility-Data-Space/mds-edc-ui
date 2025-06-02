@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import { enqueueSnackbar } from "notistack";
 import {Button} from "@mui/material";
-import {CriterionInput, EDC_CONTEXT} from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 import { ContractDefinitionFormWrapper } from "@think-it-labs/edc-connector-ui/contract-definition-form-wrapper";
 import { useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
@@ -12,6 +11,7 @@ import { defaultCreateContractDefinitionFormData } from "@/utilities/contract-de
 import {MuiSelect} from "@/components/atoms/mui-select";
 import { Input } from "@/components/atoms/input";
 import {Checkbox} from "@/components/atoms/checkbox";
+import {idReader, idSelector} from "@/utilities/data-offer";
 
 const optionsGenerator = (data: { "@id": string }[]) => {
   return data.map(entry => ({
@@ -61,22 +61,8 @@ export default function CreateContractDefinitionPage() {
     enqueueSnackbar(translator("policyDefinition.new.saveFail"));
   };
 
-  const idSelector = (id: string): CriterionInput[] => {
-    return [
-      {
-        operandLeft: EDC_CONTEXT + "id",
-        operator: "=",
-        operandRight: id
-      }
-    ]
-  };
-
-  const idReader = (criteria: CriterionInput[]) => {
-    return criteria[0]?.operandRight || "";
-  }
-
   return (
-    <SideDrawer title={<T string="contractDefinitions.new.publishNewDataOffer" />}>
+    <SideDrawer title={<T string="contractDefinitions.new.publishNewDataOffer" />} >
       <ContractDefinitionFormWrapper
         managementUrl={managementUrl}
         formData={() => fromContractDefinitionForm(formData)}

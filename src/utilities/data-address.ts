@@ -8,6 +8,11 @@ export enum DataAddressTypes {
   CustomJson = "CustomJson"
 }
 
+export const remoteTypes = [
+  DataAddressTypes.AzureBlob,
+  DataAddressTypes.AmazonS3
+];
+
 export interface OnRequestDataAddress extends BaseDataAddress {
   type: DataAddressTypes.MDSOnRequestOffer,
   email?: string,

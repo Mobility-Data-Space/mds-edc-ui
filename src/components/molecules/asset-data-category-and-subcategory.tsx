@@ -40,6 +40,7 @@ export function AssetDataCategoryAndSubcategory({ translator, formData, onChange
             [ASSET_ADVANCED_INFO_MOBILITY_THEME]: {
               ...formData[ASSET_ADVANCED_INFO_MOBILITY_THEME],
               [ASSET_ADVANCED_INFO_DATA_CATEGORY]: event.target.value,
+              [ASSET_ADVANCED_INFO_DATA_SUBCATEGORY]: "",
             }
           })}
         />
