@@ -9,7 +9,6 @@ import {ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE, ASSET_ADVANCED_INFO_DATA_CATEGOR
 import { defaultHttpDataAddress } from "./data-address";
 
 const temporalCoverageValue = ([start, end]: [string, string]) => {
-  console.log(start, end)
   if (!start && !end) {
     return "";
   }
@@ -26,15 +25,10 @@ const temporalCoverageValue = ([start, end]: [string, string]) => {
 }
 
 export const fromAssetForm = (formData: AssetInput) => {
-  console.log("Pre Clean")
-  console.log(formData)
-
   formData["@id"] = formData.properties["@id"];
   formData.properties["@id"] = "" ;
 
   const cleanFormDataObject = removeEmptyFields(formData);
-  console.log("Post Clean")
-  console.log(cleanFormDataObject)
 
   return {
     "@type": "https://w3id.org/edc/v0.0.1/ns/Asset",
@@ -260,7 +254,6 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
   }
   const temporalCoverage = readValue(asset.properties, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE);
   if (temporalCoverage) {
-    console.log(typeof temporalCoverage)
     advancedFields.push({
       icon: 'today',
       label: 'assets.new.fieldAdvancedInfoTemporalCoverage',

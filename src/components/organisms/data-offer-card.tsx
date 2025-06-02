@@ -27,7 +27,6 @@ export default function DataOfferCard({ dataset, participantId, onClick = () => 
   const description = truncate(readValue(dataset, ASSET_DESCRIPTION), 200);
   const version = readValue(dataset, ASSET_VERSION);
 
-  console.log(dataset)
   return (
     <Card className="w-[300px]" onClick={onClick}>
       <CardContent className="flex flex-col gap-y-3">

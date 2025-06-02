@@ -29,12 +29,12 @@ export const contractAgreementFieldsToShow = (contractAgreement: ContractAgreeme
     },
     {
       label: "contractAgreements.counterPartyConnectorEndpoint",
-      value: "", // TODO: implement
+      value: "",
       icon: "link"
     },
     {
       label: "contractAgreements.status",
-      value: "", // TODO: implement
+      value: "",
       icon: "sync"
     },
   ];
@@ -63,11 +63,9 @@ export class AgreementsRetirementController {
   constructor(management: string) {
     this.#inner = new Inner();
     this.#management = management;
-    console.log('mdsContractNegotiationController', { thiss: this, innerrr: this.#inner, });
   }
 
   async retireAgreement(contractAgreementId: string) {
-    console.log('retire', contractAgreementId)
     return this.#inner.request(this.#management, {
       path: "/v3.1alpha/retireagreements",
       method: "POST",

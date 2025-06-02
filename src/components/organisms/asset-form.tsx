@@ -39,7 +39,7 @@ export default function AssetForm() {
   useEffect(() => {
     client.management.assets.queryAll({ offset: 0 })
     .then(assets => setExistingIds(assets.map(asset => asset["@id"])));
-  }, []);
+  }, [client]);
 
   const generalInfoIsNotValid = () => {
     return 0 < Object.entries(validateGeneralInfo(formData.properties)).length
