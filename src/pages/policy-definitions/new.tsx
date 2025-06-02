@@ -23,7 +23,6 @@ export default function CreatePolicyDefinitionPage() {
 
   const validateForm = () => true ;
   const onChange = (newFormData: (AtomicConstraint|MultiplicityConstraint)[], policyId:string) => {
-    console.log(newFormData)
     setFormData([ ...newFormData ]);
     setPolicyExpression([ ...newFormData ]);
     setPolicyId(policyId);

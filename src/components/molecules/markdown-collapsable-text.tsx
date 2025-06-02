@@ -19,7 +19,7 @@ export function MarkdownCollapsableText({ data, collapsableHeight = COLLAPSABLE_
 
   useEffect(() => {
     setTextHeight((markdownTextRef?.current?.offsetHeight || 0));
-  }, [markdownTextRef?.current]);
+  }, []);
 
   return (
     <>

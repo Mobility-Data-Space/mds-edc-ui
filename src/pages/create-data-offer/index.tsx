@@ -69,7 +69,7 @@ export default function CreateDataOfferPage() {
   useEffect(() => {
     client.management.assets.queryAll({ offset: 0 })
     .then(assets => setExistingIds(assets.map(asset => asset["@id"])));
-  }, []);
+  }, [client]);
 
   const generalInfoIsNotValid = () => {
     return 0 < Object.entries(validateGeneralInfo(formData.asset.properties)).length
@@ -119,7 +119,6 @@ export default function CreateDataOfferPage() {
   }
 
   const validateGeneralInfo = (formDataToValidate: AssetProperties) => {
-    console.log(formDataToValidate)
     const newErrors: { [key: string]: boolean | string } = {};
     const required_properties = [ASSET_TITLE, "@id"] ;
     required_properties.forEach((propertyName) => {
@@ -134,7 +133,6 @@ export default function CreateDataOfferPage() {
     } else if (idAlreadyExist) {
       newErrors["@id"] = translator('assets.new.fieldIdAlreadyExists');
     }
-    console.log(newErrors)
     return newErrors;
   };
 
@@ -188,12 +186,10 @@ export default function CreateDataOfferPage() {
       return;
     }
 
-    console.log(formData)
     // create asset
     client.management.assets.create(fromAssetForm(formData.asset))
       .then((result) => {
         // get asset id for contract definition
-        console.log(result)
         formData.contract.assetsSelector = idSelector(result["@id"]);
 
         if (publishMode === PUBLISH_MODE_DO_NOT_PUBLISH.value) {

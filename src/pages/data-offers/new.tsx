@@ -37,7 +37,7 @@ export default function CreateContractDefinitionPage() {
     edcClient.management.policyDefinitions.queryAll({ offset: 0 })
       .then(result => setPolicyIds(optionsGenerator(result)))
       .catch(error => setPolicyIds([]));
-  }, []);
+  }, [edcClient]);
 
   const [formData, setFormData] = useState<MdsContractDefinitionInput>(defaultCreateContractDefinitionFormData);
   const validateForm = () => true ;
@@ -133,11 +133,6 @@ export default function CreateContractDefinitionPage() {
             label={translator("contractDefinitions.new.manualApproval")}
             value={formData.privateProperties.manualApproval}
             onChange={(event) => {
-              console.log("checkbox : ", {
-                value: event.target.checked,
-                manualApproval: formData.privateProperties.manualApproval,
-                formData
-              })
               onChange({ ...formData, privateProperties: { manualApproval: event.target.checked }})
             }}
           />
