@@ -7,7 +7,7 @@ export interface ContactEmailAndSubjectProps {
   translator: (key: string) => string;
   formData: DataAddress;
   onChange: (formData: any) => void;
-  errors: { [key: string]: boolean };
+  errors: { [key: string]: boolean | string };
   required?: boolean;
 }
 
@@ -29,8 +29,8 @@ export function AssetContactEmailAndSubject({ translator, formData, onChange, er
           type="email"
           tooltip={translator("dataOffer.new.contactEmailTooltip")}
           value={formData.email}
-          error={errors["DATA_OFFER_CONTACT_EMAIL"]}
-          onChange={(event) => onChange({...formData, email: event.target.value})}
+          error={errors.email}
+          onChange={(event) => onChange({ ...formData, email: event.target.value })}
         />
       </div>
       <div>
@@ -47,11 +47,8 @@ export function AssetContactEmailAndSubject({ translator, formData, onChange, er
           placeholder={translator("dataOffer.new.dataOfferContactPreferredEmailSubject")}
           tooltip={translator("dataOffer.new.dataOfferContactPreferredEmailSubjectTooltip")}
           value={formData.preferred_email_subject}
-          error={errors["DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT"]}
-          onChange={(event) => onChange({
-            ...formData,
-            preferred_email_subject: event.target.value
-          })}
+          error={errors.preferred_email_subject}
+          onChange={(event) => onChange({ ...formData, preferred_email_subject: event.target.value })}
         />
       </div>
     </>

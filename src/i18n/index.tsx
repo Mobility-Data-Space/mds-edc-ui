@@ -1,12 +1,7 @@
+import React, {createContext, PropsWithChildren, useContext, useEffect} from "react";
 import { createInstance } from "i18next";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router.js";
-import React, {
-  createContext,
-  PropsWithChildren,
-  useContext,
-  useEffect
-} from "react";
 import { I18nextProvider, initReactI18next } from "react-i18next";
 import { cn } from "./translations/cn";
 import { de } from "./translations/de";
@@ -69,7 +64,7 @@ export function MultiTranslate(
   if(typeof string != "string"){
     string = JSON.stringify(string)
   }
-  
+
   const stringArray = string.split(delimiter);
   return stringArray.length === 1 ?
     t(string) :

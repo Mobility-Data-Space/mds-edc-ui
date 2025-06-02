@@ -127,7 +127,7 @@ export default function AssetForm() {
 
   const validateAdvancedInfo = (formDataToValidate: AssetProperties) => {
     const newErrors: { [key: string]: boolean } = {};
-    const required_properties = [ASSET_ADVANCED_INFO_DATA_CATEGORY] ;
+    const required_properties = [ASSET_ADVANCED_INFO_DATA_CATEGORY];
     required_properties.forEach((propertyName) => {
       if (! formDataToValidate[ASSET_ADVANCED_INFO_MOBILITY_THEME][propertyName]) {
         newErrors[propertyName] = true;
@@ -140,11 +140,15 @@ export default function AssetForm() {
   const validateDataAddress = (formDataToValidate: DataAddress) => {
     const newErrors: { [key: string]: boolean | string } = {};
 
-    if (formDataToValidate.type === DataAddressTypes.CustomJson && formDataToValidate.description !== "") {
-      try {
-        JSON.parse(formDataToValidate.description as string);
-      } catch (e) {
-        newErrors.description = translator("assets.new.mustBeValidJson");
+    if (formDataToValidate.type === DataAddressTypes.CustomJson) {
+      if (! formDataToValidate.description) {
+        newErrors.description = true;
+      } else {
+        try {
+          JSON.parse(formDataToValidate.description as string);
+        } catch (e) {
+          newErrors.description = translator("assets.new.mustBeValidJson");
+        }
       }
     }
 

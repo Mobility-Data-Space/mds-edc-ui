@@ -1,14 +1,12 @@
-import {removeEmptyFields} from "@/utilities/form";
 import { Constraint, PolicyBuilder, PolicyDefinitionInput } from "@think-it-labs/edc-connector-client";
 
 const defaultPolicy = new PolicyBuilder().type("Set").raw({
-    permission: [],
-    obligation: [],
-    prohibition: []
-  }).build() ;
+  permission: [],
+  obligation: [],
+  prohibition: []
+}).build() ;
 
 export const defaultCreatePolicyFormData: PolicyDefinitionInput = {
-  "@id": "",
   policy: defaultPolicy
 };
 
@@ -23,13 +21,13 @@ export const fromPolicyDefinitionForm = (formData: Constraint[], id:string) : Po
     obligation: [],
     prohibition: []
   }).build() ;
-  
+
   const policyDefinition: PolicyDefinitionInput = {
     policy: policy
-  } 
+  };
 
   if(id && id !== "")
-    policyDefinition["@id"] = id 
+    policyDefinition["@id"] = id
 
   return policyDefinition;
 };
