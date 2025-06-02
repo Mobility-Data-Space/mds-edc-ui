@@ -16,7 +16,7 @@
     "incremental": true,
     "paths": {
       "@/*": ["./src/*"],
-      "@think-it-labs/edc-connector-ui/*": ["./vendor/think-it-labs/edc-connector-ui/src/*"]
+      "@think-it-labs/edc-connector-ui/*": ["./vendors/think-it-labs/edc-connector-ui/src/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

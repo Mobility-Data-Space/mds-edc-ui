@@ -1,9 +1,10 @@
 import React from "react";
+
+import {Input} from "@/components/atoms/input";
+
 import {T} from "@/i18n";
-import {Input} from "../atoms/input.tsx";
-import {theme} from "@/theme/ThemeProvider.tsx";
-import {AssetProperties} from "@/utilities/asset.ts";
-import { AssetInput } from "@think-it-labs/edc-connector-client";
+import {theme} from "@/theme/ThemeProvider";
+import {AssetProperties} from "@/utilities/asset";
 
 export interface AssetIdProps {
   translator: (key: string) => string;

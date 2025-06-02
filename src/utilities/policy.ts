@@ -1,30 +1,35 @@
-import {removeEmptyFields} from "@/utilities/form.ts";
-import { Constraint, Permission, PolicyBuilder, PolicyDefinitionInput } from "@think-it-labs/edc-connector-client";
+import {removeEmptyFields} from "@/utilities/form";
+import { Constraint, PolicyBuilder, PolicyDefinitionInput } from "@think-it-labs/edc-connector-client";
 
-export const fromPolicyDefinitionForm = (formData: Constraint[]) : PolicyDefinitionInput => {
-  console.log(formData);
+const defaultPolicy = new PolicyBuilder().type("Set").raw({
+    permission: [],
+    obligation: [],
+    prohibition: []
+  }).build() ;
+
+export const defaultCreatePolicyFormData: PolicyDefinitionInput = {
+  "@id": "",
+  policy: defaultPolicy
+};
+
+export const fromPolicyDefinitionForm = (formData: Constraint[], id:string) : PolicyDefinitionInput => {
   const policy = new PolicyBuilder().type("Set").raw({
     permission: [
       {
         action: "use",
         constraint: formData
       }
-    ]
+    ],
+    obligation: [],
+    prohibition: []
   }).build() ;
   
-  const cleanFormDataObject = removeEmptyFields(formData);
-  console.log(cleanFormDataObject);
-  return {
-    "@id": cleanFormDataObject.id,
+  const policyDefinition: PolicyDefinitionInput = {
     policy: policy
-  };
-};
+  } 
 
-const policy = new PolicyBuilder().type("Set").raw({
-    permission: []
-  }).build() ;
+  if(id && id !== "")
+    policyDefinition["@id"] = id 
 
-export const defaultCreatePolicyFormData: PolicyDefinitionInput = {
-  "@id": "",
-  policy: policy
+  return policyDefinition;
 };

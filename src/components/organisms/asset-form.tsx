@@ -1,20 +1,21 @@
 import React, {useEffect, useRef, useState} from "react";
+import {Button, Step, StepContent, StepIconProps, StepLabel, Stepper} from "@mui/material";
+import { enqueueSnackbar } from 'notistack';
+import { AssetInput, DataAddress } from "@think-it-labs/edc-connector-client";
+import { AssetFormWrapper } from "@think-it-labs/edc-connector-ui/asset-form-wrapper";
+import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
+
+import {StepIcon} from "@/components/atoms/step-icon";
+import { AssetFormGeneralInfoStepContent } from "@/components/organisms/asset-form-general-info-step-content";
+import { AssetFormAdvancedInfoStepContent } from "@/components/organisms/asset-form-advanced-step-content";
+import { AssetFormDataAddressStep } from "@/components/organisms/asset-form-data-address-step";
+
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
-import {Button, Step, StepContent, StepIconProps, StepLabel, Stepper} from "@mui/material";
-
-import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_TITLE, ASSET_VERSION} from "@/schema/asset.ts";
-
-import {fromAssetForm, computeRequiredDataAddressProperties, generateId, defaultCreateAssetFormData, AssetProperties} from "@/utilities/asset.ts";
-import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
-import { enqueueSnackbar } from 'notistack';
-import {DATA_ADDRESS_TYPE_CUSTOM} from "@/constants/data-address-types.ts";
-import {StepIcon} from "@/components/atoms/step-icon.tsx";
-import { AssetFormWrapper } from "@think-it-labs/edc-connector-ui/asset-form-wrapper";
-import { AssetInput, DataAddress } from "@think-it-labs/edc-connector-client";
-import { AssetFormGeneralInfoStepContent } from "./asset-form-general-info-step-content";
-import { AssetFormAdvancedInfoStepContent } from "./asset-form-advanced-step-content";
-import { AssetFormDataAddressStep } from "./asset-form-data-address-step";
+import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_TITLE, ASSET_VERSION} from "@/schema/asset";
+import {fromAssetForm, generateId, defaultCreateAssetFormData, AssetProperties} from "@/utilities/asset";
+import {DATA_ADDRESS_TYPE_CUSTOM_JSON} from "@/constants/data-address-types";
+import { DataAddressTypes } from "@/utilities/data-address";
 
 const stepLabelSharedProps = {
   className: "w-full justify-start p-4",
@@ -29,14 +30,16 @@ export default function AssetForm() {
 
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState<AssetInput>(defaultCreateAssetFormData);
-  const [errors, setErrors] = useState({ properties: {}, dataAddress: {} });
+
   const [existingIds, setExistingIds] = useState<string[]>([]);
+  const [errors, setErrors] = useState({ properties: {}, dataAddress: {} });
 
   const client = useEdcConnectorClient({ management: connector.managementUrl });
+
   useEffect(() => {
     client.management.assets.queryAll({ offset: 0 })
     .then(assets => setExistingIds(assets.map(asset => asset["@id"])));
-  }, []);
+  }, [client]);
 
   const generalInfoIsNotValid = () => {
     return 0 < Object.entries(validateGeneralInfo(formData.properties)).length
@@ -126,7 +129,7 @@ export default function AssetForm() {
     const newErrors: { [key: string]: boolean } = {};
     const required_properties = [ASSET_ADVANCED_INFO_DATA_CATEGORY] ;
     required_properties.forEach((propertyName) => {
-      if (! formDataToValidate[propertyName]) {
+      if (! formDataToValidate[ASSET_ADVANCED_INFO_MOBILITY_THEME][propertyName]) {
         newErrors[propertyName] = true;
       }
     });
@@ -136,14 +139,8 @@ export default function AssetForm() {
 
   const validateDataAddress = (formDataToValidate: DataAddress) => {
     const newErrors: { [key: string]: boolean | string } = {};
-    const required = computeRequiredDataAddressProperties(formDataToValidate);
-    required.forEach((propertyName) => {
-      if (! formDataToValidate[propertyName]) {
-        newErrors[propertyName] = true;
-      }
-    });
 
-    if (formDataToValidate.type === DATA_ADDRESS_TYPE_CUSTOM.value && formDataToValidate.description !== "") {
+    if (formDataToValidate.type === DataAddressTypes.CustomJson && formDataToValidate.description !== "") {
       try {
         JSON.parse(formDataToValidate.description as string);
       } catch (e) {

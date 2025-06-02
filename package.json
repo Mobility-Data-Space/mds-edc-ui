@@ -1,5 +1,5 @@
 {
-  "name": "edc-connector-ui-app",
+  "name": "edc-connector-ui-mds",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -20,7 +20,6 @@
     "@mui/x-date-pickers": "^7.28.3",
     "@tailwindcss/typography": "^0.5.16",
     "@think-it-labs/edc-connector-client": "^0.8.0",
-    "@think-it-labs/edc-connector-ui": "^0.1.4",
     "clsx": "^2.1.0",
     "date-fns": "2.0.0",
     "dayjs": "^1.11.13",
@@ -42,7 +41,7 @@
     "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
-    "@playwright/test": "^1.51.1",
+    "@playwright/test": "^1.52.0",
     "@tailwindcss/forms": "^0.5.7",
     "@tailwindcss/postcss": "^4.0.14",
     "@types/json-schema": "^7.0.15",

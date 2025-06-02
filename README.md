@@ -1,8 +1,6 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
 ## Getting Started
 
-First, set up your GITHUB TOKEN:
+First, set up your GITHUB TOKEN with a Github PAT that allows you to retrieve the Docker images from the MDS Github CR:
 
 - Create a personal access token on GitHub with the necessary permissions (repo, read:packages).
 - Set the GITHUB_TOKEN environment variable:
@@ -28,14 +26,14 @@ This setup runs the connector only, with the frontend running locally.
 
 Before you begin, make sure you have your **.envrc** file filled like the example provided in **.envrc.example**. You can find example values exported as **DATASPACE** from **src/constants/dataspace.ts**.
 
-**package.json** has private repositories listed as dependencies and will require the presence of an **.npmrc** file. Follow the example in **.npmrc.example**.
-
 1. Start the connector:
    ```bash
    docker compose -f docker-compose.connector.yml up -d
    ```
 
-2. Run the frontend locally:
+2. Provide the connector URLs as environment variables. An example exists in `.envrc.example`.
+
+3. Run the frontend locally:
    ```bash
    yarn seed
    yarn dev
@@ -60,5 +58,5 @@ This setup simulates 2 participants. Provide configuration as environment variab
 
 2. Build and run the services:
    ```bash
-   docker-compose up -d
+   docker-compose -f docker-compose.demo.yml up -d
    ```

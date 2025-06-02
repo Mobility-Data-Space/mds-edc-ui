@@ -2,15 +2,15 @@ import React from "react";
 import Typography from "@mui/material/Typography";
 import {Card, CardContent, Chip} from "@mui/material";
 import {Asset} from "@think-it-labs/edc-connector-client";
-import {AssetIcon} from "@/components/atoms/asset-icon.tsx";
+import {AssetIcon} from "@/components/atoms/asset-icon";
 import {
   ASSET_DESCRIPTION,
   ASSET_KEYWORDS,
   ASSET_TITLE,
   ASSET_VERSION,
-} from "@/schema/asset.ts";
-import {JsonLdValue, readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
-import {truncate} from "@/utilities/utilities.ts";
+} from "@/schema/asset";
+import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
+import {truncate} from "@/utilities/utilities";
 
 export interface AssetCardProps {
   asset: Asset,

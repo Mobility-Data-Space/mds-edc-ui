@@ -1,5 +1,5 @@
 import { test, expect, } from '@playwright/test';
-import {TRAFFIC_INFORMATION} from "@/constants/data-category.ts";
+import {TRAFFIC_INFORMATION} from "@/constants/data-category";
 
 test("data offer creates asset", async ({ page }) => {
   await page.goto("http://localhost:3000/create-asset");
@@ -20,7 +20,7 @@ test("data offer creates asset", async ({ page }) => {
 
   // id takes the new value of title only if they are similar
   const idField = page.getByTestId("properties-id").locator("input").first();
-  await expect(idField).toHaveValue('Test data offer 1');
+  await expect(idField).toHaveValue('test-data-offer-1');
   await idField.fill('Test data offer 2');
   await titleField.fill(uniqueAssetTitle);
   await expect(idField).toHaveValue('Test data offer 2');

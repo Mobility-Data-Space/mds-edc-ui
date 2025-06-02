@@ -6,10 +6,6 @@ type ParticipantConnectorState = {
   push: (href: string) => void;
 };
 
-function appendProxyPrefix(url: string = "") {
-  return `${process.env.NEXT_PUBLIC_EDC_URL || ""}/api?path=${url}`;
-}
-
 export function useParticipantConnectorState(): ParticipantConnectorState {
   const router = useRouter();
 
@@ -17,8 +13,8 @@ export function useParticipantConnectorState(): ParticipantConnectorState {
     id: process.env.NEXT_PUBLIC_EDC_ID || "",
     name: process.env.NEXT_PUBLIC_EDC_NAME || "",
     edcUrl: process.env.NEXT_PUBLIC_EDC_URL || "",
-    managementUrl: appendProxyPrefix(process.env.NEXT_PUBLIC_EDC_MANAGEMENT_URL),
-    defaultUrl: appendProxyPrefix(process.env.NEXT_PUBLIC_EDC_DEFAULT_URL),
+    managementUrl: process.env.NEXT_PUBLIC_EDC_MANAGEMENT_URL || "",
+    defaultUrl: process.env.NEXT_PUBLIC_EDC_DEFAULT_URL || "",
     protocolUrl: process.env.NEXT_PUBLIC_EDC_PROTOCOL_URL || "",
   };
 

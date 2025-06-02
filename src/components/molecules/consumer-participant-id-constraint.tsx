@@ -1,14 +1,15 @@
-import Typography from "@mui/material/Typography";
-import {T} from "@/i18n";
-import {MuiSelect} from "@/components/atoms/mui-select.tsx";
-import {consumerParticipantIdOperators} from "@/utilities/constraints";
-import {Input} from "@/components/atoms/input.tsx";
-import {IconButton} from "@mui/material";
-import {Minus} from "lucide-react";
 import * as React from "react";
-
-import {ConstraintProps} from "@/components/molecules/constraint.tsx";
+import {Minus} from "lucide-react";
+import Typography from "@mui/material/Typography";
+import {IconButton} from "@mui/material";
 import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
+
+import {MuiSelect} from "@/components/atoms/mui-select";
+import {Input} from "@/components/atoms/input";
+import {ConstraintProps} from "@/components/molecules/constraint";
+
+import {T} from "@/i18n";
+import {consumerParticipantIdOperators} from "@/utilities/policy-constraints";
 
 export function ConsumerParticipantIdConstraint({value, onChange, onRemove}: ConstraintProps) {
   value = value as AtomicConstraint ;
@@ -18,7 +19,7 @@ export function ConsumerParticipantIdConstraint({value, onChange, onRemove}: Con
       <Typography variant="body2">
         <T string="dataOffer.new.policyExpressionConsumerParticipantId"/>
       </Typography>
-      <MuiSelect options={consumerParticipantIdOperators} value={value.operator}
+      <MuiSelect label="participant-id" options={consumerParticipantIdOperators} value={value.operator}
                  onChange={(event) => onChange({...value, operator: event.target.value})}/>
       <Input value={value.rightOperand} onChange={(event) => onChange({...value, rightOperand: event.target.value})}/>
       <IconButton

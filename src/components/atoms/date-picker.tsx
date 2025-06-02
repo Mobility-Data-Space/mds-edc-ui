@@ -1,11 +1,11 @@
 import React from 'react';
 import {DatePicker as MuiDatePicker, DatePickerProps as MuiDatePickerProps} from '@mui/x-date-pickers/DatePicker';
-
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import {DATE_FORMAT, dateToString} from "@/utilities/date.ts";
-import {DatePickerDaySlot} from "@/components/atoms/date-picker-day-slot.tsx";
+
+import {DATE_FORMAT, dateToString} from "@/utilities/date";
+import {DatePickerDaySlot} from "@/components/atoms/date-picker-day-slot";
 
 export type DatePickerPros = Partial<MuiDatePickerProps<any>> & {
   name?: string,
@@ -15,7 +15,6 @@ export type DatePickerPros = Partial<MuiDatePickerProps<any>> & {
   value: string,
   error?: boolean,
 };
-
 
 export function DatePicker({ name = "", id = "", label = "", onChange, value, error = false }: DatePickerPros): JSX.Element {
   const [isOpen, setIsOpen] = React.useState(false);

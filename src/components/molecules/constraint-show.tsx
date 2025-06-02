@@ -1,12 +1,15 @@
 import React, {ReactNode} from "react";
-import {ShowTreeLeaf} from "../atoms/show-tree-leaf.tsx";
-import {ShowTreeBranch} from "../atoms/show-tree-branch.tsx";
+
 import Typography from "@mui/material/Typography";
 import {Tooltip} from "@mui/material";
+
+import {ShowTreeLeaf} from "@/components/atoms/show-tree-leaf";
+import {ShowTreeBranch} from "@/components/atoms/show-tree-branch";
+
 import {useTranslator} from "@/i18n";
-import {dateToString} from "@/utilities/date.ts";
-import {operators} from "@/utilities/constraints.ts";
-import {tryTranslatingWithTooltip} from "@/utilities/utilities.ts";
+import {dateToString} from "@/utilities/date";
+import {operators} from "@/utilities/policy-constraints";
+import {tryTranslatingWithTooltip} from "@/utilities/utilities";
 
 interface ConstraintShowProps {
   data: any;

@@ -1,8 +1,10 @@
 import React from "react";
+
+import {Input} from "@/components/atoms/input";
+
 import {T} from "@/i18n";
-import {Input} from "../atoms/input.tsx";
-import {ASSET_TITLE} from "@/schema/asset.ts";
-import {AssetProperties} from "@/utilities/asset.ts";
+import {ASSET_TITLE} from "@/schema/asset";
+import {AssetProperties} from "@/utilities/asset";
 
 export interface AssetTitleProps {
   translator: (key: string) => string;

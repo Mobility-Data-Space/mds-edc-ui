@@ -4,7 +4,6 @@ export const removeEmptyFields = (object: { [key: string]: any }) => {
   const newFormData: { [key: string]: any } = {};
   for (const key in object) {
     if(key == ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE){
-      console.log(key)
       continue; 
     }
     
