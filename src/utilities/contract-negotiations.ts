@@ -10,7 +10,6 @@ export const createNegotiationRequest = (offer: Policy, counterPartyAddress:stri
             target: assetId
         }).build()
     };
-    console.log(negotiation)
     return negotiation ;
 }
 
@@ -22,11 +21,9 @@ export class MDSManualApprovalController {
   constructor(management: string) {
     this.#inner = new Inner();
     this.#management = management;
-    console.log('mdsContractNegotiationController', { thiss: this, innerrr: this.#inner, });
   }
 
   async approve(contractNegotiationId: string): Promise<void> {
-    console.log('approve', contractNegotiationId)
     return this.#inner.request(this.#management, {
       path: `/v3/contractnegotiations/${contractNegotiationId}/approve`,
       method: "POST",

@@ -33,7 +33,7 @@ test("assets modal creates asset", async ({ page }) => {
 
   // id takes the new value of title only if they are similar
   const idField = page.getByTestId("properties-id").locator("input").first();
-  await expect(idField).toHaveValue('Test asset 1');
+  await expect(idField).toHaveValue('test-asset-1');
   await idField.fill('Test asset 2');
   await titleField.fill(uniqueAssetTitle);
   await expect(idField).toHaveValue('Test asset 2');
@@ -63,4 +63,3 @@ test("assets modal creates asset", async ({ page }) => {
   await expect(page.getByText(uniqueAssetTitle)).toBeVisible();
   await expect(page.getByText(uniqueAssetUrl)).toBeVisible();
 });
-

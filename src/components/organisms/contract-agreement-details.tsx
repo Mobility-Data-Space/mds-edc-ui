@@ -36,7 +36,7 @@ export default function ContractAgreementDetails({ contractAgreement, participan
 
   useEffect(() => {
     edcClient.management.assets.get(contractAgreement.assetId).then(setAsset);
-  }, [contractAgreement.assetId]);
+  }, [edcClient, contractAgreement.assetId]);
 
   useEffect(() => {
     edcClient.management.transferProcesses.queryAll({
@@ -46,7 +46,7 @@ export default function ContractAgreementDetails({ contractAgreement, participan
         "operandRight": contractAgreement.id
       }]
     }).then(setTransferProcesses);
-  }, [contractAgreement.id]);
+  }, [edcClient, contractAgreement.id]);
 
   return (
     <>

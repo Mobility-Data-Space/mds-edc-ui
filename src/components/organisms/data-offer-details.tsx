@@ -37,14 +37,13 @@ export default function DataOfferDetails({ offers, assetId, counterPartyAddress,
     }
 
     compactConstraints();
-  }, []);
+  }, [offers]);
 
   const [negotiateContractIsOpen, setNegotiateContractIsOpen] = useState<Record<string, boolean>>({});
 
   const edcClient = useEdcConnectorClient({management: connector.managementUrl});
 
   const onNegotiateConfirm = (offer: Policy) => {
-    console.log("Negotiate: ", offer)
     const negotiation = createNegotiationRequest(offer, counterPartyAddress, participantId, assetId) ;
     edcClient.management.contractNegotiations.initiate(negotiation)
       .then(() => setNegotiateContractIsOpen(prev => ({ ...prev, [offer["@id"]]: false })))
