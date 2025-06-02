@@ -27,7 +27,7 @@ export default function AssetDetails({ asset, participantId, connectorEndpoint }
   const [shownFields, privateFields] = useMemo(() => [
     assetFieldsToShow(asset, participantId, connectorEndpoint),
     assetPrivateFieldsToShow(asset)
-  ], [asset]);
+  ], [asset, participantId, connectorEndpoint]);
 
   const [ReactJson, setReactJson] = useState<React.ComponentType<ReactJsonViewProps>>();
 

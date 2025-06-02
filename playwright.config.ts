@@ -8,6 +8,8 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
+    // Base URL to use in actions like `await page.goto('/')`.
+    baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
   },
 
@@ -34,4 +36,11 @@ export default defineConfig({
       use: { ...devices['iPhone 12'] },
     },
   ],
+
+  // Run your local dev server before starting the tests.
+  webServer: {
+    command: 'yarn dev',
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI,
+  },
 });
