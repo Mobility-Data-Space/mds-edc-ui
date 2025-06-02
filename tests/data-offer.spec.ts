@@ -20,7 +20,7 @@ test("data offer creates asset", async ({ page }) => {
 
   // id takes the new value of title only if they are similar
   const idField = page.getByTestId("properties-id").locator("input").first();
-  await expect(idField).toHaveValue('Test data offer 1');
+  await expect(idField).toHaveValue('test-data-offer-1');
   await idField.fill('Test data offer 2');
   await titleField.fill(uniqueAssetTitle);
   await expect(idField).toHaveValue('Test data offer 2');
