@@ -19,34 +19,17 @@ import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/enti
 interface ContractAgreementDetailsProps {
   contractAgreement: ContractAgreement;
   participantId: string;
-  managementUrl: string;
+  asset: Asset;
+  transferProcesses: TransferProcess[];
 }
 
-export default function ContractAgreementDetails({ contractAgreement, participantId, managementUrl }: ContractAgreementDetailsProps) {
-  const [asset, setAsset] = useState({} as Asset);
-  const [transferProcesses, setTransferProcesses] = useState<TransferProcess[]>([]);
+export default function ContractAgreementDetails({ contractAgreement, participantId, asset, transferProcesses }: ContractAgreementDetailsProps) {
   const description = readValue(asset.properties, ASSET_DESCRIPTION);
-
   const [transferProcessesFields, contractAgreementFields, assetFields] = [
     transferProcessesFieldsToShow(transferProcesses),
     contractAgreementFieldsToShow(contractAgreement, participantId),
     assetGeneralFieldsToShow(asset, participantId, ""), // TODO: connector endpoint
   ];
-  const edcClient = useEdcConnectorClient({management: managementUrl});
-
-  useEffect(() => {
-    edcClient.management.assets.get(contractAgreement.assetId).then(setAsset);
-  }, [edcClient, contractAgreement.assetId]);
-
-  useEffect(() => {
-    edcClient.management.transferProcesses.queryAll({
-      filterExpression: [{
-        "operandLeft": "contractId",
-        "operator": "=",
-        "operandRight": contractAgreement.id
-      }]
-    }).then(setTransferProcesses);
-  }, [edcClient, contractAgreement.id]);
 
   return (
     <>
