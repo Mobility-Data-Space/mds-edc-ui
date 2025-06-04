@@ -1,8 +1,8 @@
 import {ContractAgreement, DataAddress, TransferProcessInput} from "@think-it-labs/edc-connector-client";
 import { DataAddressTypes } from "./data-address";
 
-export const TRANSFER_TYPE_PULL = "_PULL" ;
-export const TRANSFER_TYPE_PUSH = "_PUSH" ;
+export const TRANSFER_TYPE_PULL = "-PULL" ;
+export const TRANSFER_TYPE_PUSH = "-PUSH" ;
 
 export const createTransferProcessRequest = (agreement: ContractAgreement, transferType: DataAddressTypes, destinationAddress: DataAddress, counterPartyAddress: string) : TransferProcessInput => {
     const transfer: TransferProcessInput = {
