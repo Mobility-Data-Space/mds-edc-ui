@@ -3,6 +3,7 @@ import {ContractAgreement} from "@think-it-labs/edc-connector-client";
 import {FieldShowProps} from "@/components/molecules/field-show";
 import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/entities";
 import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
+import {AGREEMENT_RETIREMENT_DATE, AGREEMENT_RETIREMENT_REASON} from "@/schema/contract-agreement.ts";
 
 export const contractAgreementFieldsToShow = (contractAgreement: ContractAgreement, participantId: string): FieldShowProps[] => {
 
@@ -57,8 +58,8 @@ export const transferProcessesFieldsToShow = (transferProcesses: TransferProcess
 
 export interface RetiredContractAgreement {
   agreementId: string;
-  "https://w3id.org/tractusx/v0.0.1/ns/agreementRetirementDate": number;
-  "https://w3id.org/tractusx/v0.0.1/ns/reason": string;
+  [AGREEMENT_RETIREMENT_DATE]: number;
+  [AGREEMENT_RETIREMENT_REASON]: string;
 }
 
 export class AgreementsRetirementController {
