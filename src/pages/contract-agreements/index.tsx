@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, {useEffect, useState} from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import {Divider, IconButton} from "@mui/material";
 import { ContractAgreementsList } from "@think-it-labs/edc-connector-ui/contract-agreements-list";
@@ -10,6 +10,17 @@ import ContractAgreementCard from "@/components/organisms/contract-agreement-car
 import ContractAgreementDialog from "@/components/organisms/contract-agreement-dialog";
 import { ContractAgreement } from "@think-it-labs/edc-connector-client";
 import Typography from "@mui/material/Typography";
+import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
+import {STATE_TERMINATED, STATE_RUNNING} from "@/schema/transfer-process.ts";
+import {AgreementsRetirementController} from "@/utilities/contract-agreement.ts";
+
+interface ContractAgreementInfo {
+  [key: string]: {
+    isTerminated: boolean,
+    isRunning: boolean,
+    transfersCount: number,
+  }
+}
 
 export default function ContractAgreementsListPage() {
   const { connector } = useParticipantConnectorState();
@@ -31,6 +42,48 @@ export default function ContractAgreementsListPage() {
     setOpenContractAgreementData({ contractAgreement });
   };
 
+  const edcClient = useEdcConnectorClient({management: managementUrl});
+
+  const [contractAgreementInfo, setContractAgreementInfo] = useState<ContractAgreementInfo>({});
+  const [retiredContractAgreements, setretiredContractAgreements] = useState<{ [key: string]: string }>({});
+
+  useEffect(() => {
+    edcClient.management.transferProcesses.queryAll({ offset: 0 }).then((transferProcesses) => {
+      const contractAgreement: ContractAgreementInfo = {};
+
+      transferProcesses.forEach(transferProcess => {
+        const contractAgreementId = transferProcess.contractId;
+        if (contractAgreement[contractAgreementId]) {
+          contractAgreement[contractAgreementId].transfersCount++;
+          if (contractAgreement[contractAgreementId].isTerminated !== true) {
+            contractAgreement[contractAgreementId].isTerminated = transferProcess.state === STATE_TERMINATED;
+          } else if (contractAgreement[contractAgreementId].isRunning !== true) {
+            contractAgreement[contractAgreementId].isRunning = transferProcess.state === STATE_RUNNING;
+          }
+        } else {
+          contractAgreement[contractAgreementId] = {
+            isTerminated: transferProcess.state === STATE_TERMINATED,
+            isRunning: transferProcess.state !== STATE_TERMINATED && transferProcess.state === STATE_RUNNING,
+            transfersCount: 1,
+          };
+        }
+      });
+      setContractAgreementInfo(contractAgreement);
+    });
+  }, [edcClient]);
+
+
+  useEffect(() => {
+    const controller = new AgreementsRetirementController(managementUrl)
+    controller.retiredAgreementsRequest().then(retiredAgreements => {
+      const contractAgreementsReasons: { [key: string]: string } = {};
+      retiredAgreements.forEach(retiredContractAgreement => {
+        contractAgreementsReasons[retiredContractAgreement.agreementId] = retiredContractAgreement["https://w3id.org/tractusx/v0.0.1/ns/reason"];
+      });
+      setretiredContractAgreements(contractAgreementsReasons);
+    });
+  }, []);
+
   if (!connector) {
     return "No connector";
   }
@@ -40,6 +93,7 @@ export default function ContractAgreementsListPage() {
       <ContractAgreementDialog
         open={isDetailsModalOpen}
         contractAgreement={openContractAgreementData.contractAgreement}
+        retirementReason={retiredContractAgreements[openContractAgreementData.contractAgreement.id]}
         onClose={() => setIsDetailsModalOpen(false)}
         participantId={connector.id}
         managementUrl={connector.managementUrl}
@@ -69,7 +123,7 @@ export default function ContractAgreementsListPage() {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2.5 py-4">
+        <div className="flex flex-wrap gap-4 py-4">
           <ContractAgreementsList.Items
             limit={limit}
             offset={offset}
@@ -84,6 +138,8 @@ export default function ContractAgreementsListPage() {
               <ContractAgreementCard
                 key={index}
                 contractAgreement={item}
+                isTerminated={contractAgreementInfo[item.id]?.isTerminated}
+                transferCount={contractAgreementInfo[item.id]?.transfersCount}
                 onClick={() => openDetailsModal(item)}
               />
             }
@@ -127,7 +183,7 @@ export default function ContractAgreementsListPage() {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2.5 py-4">
+        <div className="flex flex-wrap gap-4 py-4">
           <ContractAgreementsList.Items
             limit={limit}
             offset={offset}
@@ -142,6 +198,8 @@ export default function ContractAgreementsListPage() {
               <ContractAgreementCard
                 key={index}
                 contractAgreement={item}
+                isTerminated={contractAgreementInfo[item.id]?.isTerminated}
+                transferCount={contractAgreementInfo[item.id]?.transfersCount}
                 onClick={() => openDetailsModal(item)}
               />
             }
