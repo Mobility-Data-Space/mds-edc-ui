@@ -55,9 +55,16 @@ export const transferProcessesFieldsToShow = (transferProcesses: TransferProcess
   });
 }
 
+export interface RetiredContractAgreement {
+  agreementId: string;
+  "https://w3id.org/tractusx/v0.0.1/ns/agreementRetirementDate": number;
+  "https://w3id.org/tractusx/v0.0.1/ns/reason": string;
+}
+
 export class AgreementsRetirementController {
   #inner: Inner;
   #management: string;
+  #pathPrefix = "/v3.1alpha/retireagreements";
   protocol: String = "dataspace-protocol-http";
 
   constructor(management: string) {
@@ -65,20 +72,31 @@ export class AgreementsRetirementController {
     this.#management = management;
   }
 
-  async retireAgreement(contractAgreementId: string) {
+  async retiredAgreementsRequest(): Promise<RetiredContractAgreement[]> {
     return this.#inner.request(this.#management, {
-      path: "/v3.1alpha/retireagreements",
+      path: `${this.#pathPrefix}/request`,
+      method: "POST",
+    });
+  }
+
+  async retireAgreement(contractAgreementId: string, reason: string) {
+    return this.#inner.request(this.#management, {
+      path: `${this.#pathPrefix}`,
       method: "POST",
       body: {
+        "@context": {
+          "tx": "https://w3id.org/tractusx/v0.0.1/ns/",
+          "edc": "https://w3id.org/edc/v0.0.1/ns/"
+        },
         "edc:agreementId": contractAgreementId,
-        "tx:reason": "reason"
+        "tx:reason": reason
       }
     });
   }
 
   async reactivateRetired(contractAgreementId: string) {
     return this.#inner.request(this.#management, {
-      path: `/v3.1alpha/retireagreements/${contractAgreementId}`,
+      path: `${this.#pathPrefix}/${contractAgreementId}`,
       method: "DELETE"
     });
   }
