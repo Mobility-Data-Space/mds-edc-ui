@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import { T } from "@/i18n";
-import {Asset, ContractAgreement} from "@think-it-labs/edc-connector-client";
+import {Asset, ContractAgreement, TransferProcessStates} from "@think-it-labs/edc-connector-client";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, LinearProgress} from "@mui/material";
 import {TitleWithIcon} from "@/components/atoms/TitleWithIcon";
 import {TransferFormDialog} from "@/components/templates/transfer-form-dialog";
@@ -8,7 +8,7 @@ import ContractAgreementDetails from "@/components/organisms/contract-agreement-
 import ContractAgreementTerminateDialog from "@/components/organisms/contract-agreement-terminate-dialog";
 import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 import {enqueueSnackbar} from "notistack";
-import {STATE_RUNNING, STATE_TERMINATED} from "@/constants/transfer-process.ts";
+import {STATE_RUNNING} from "@/constants/transfer-process.ts";
 import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/entities";
 import {TERMINATION_REASON_BY_USER} from "@/constants/contract-agreement.ts";
 import Typography from "@mui/material/Typography";
@@ -66,7 +66,7 @@ export default function ContractAgreementDialog({ open, onClose, contractAgreeme
       let contractIsTerminated = false;
       let contractIsTerminatedAt = 0;
       transferProcesses.forEach(transferProcess => {
-        if (transferProcess.state === STATE_TERMINATED) {
+        if (transferProcess.state === TransferProcessStates.TERMINATED) {
           contractIsTerminated = true;
           contractIsTerminatedAt = readValue(removeJsonLdSchemaFromProperties(transferProcess), "stateTimestamp");
         } else if (transferProcess.state === STATE_RUNNING) {
