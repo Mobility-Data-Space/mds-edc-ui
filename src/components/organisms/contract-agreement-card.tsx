@@ -1,6 +1,6 @@
 import React from "react";
 import Typography from "@mui/material/Typography";
-import {Card, CardContent, Icon} from "@mui/material";
+import {Card, CardContent, Icon, LinearProgress} from "@mui/material";
 import {ContractAgreement} from "@think-it-labs/edc-connector-client";
 import {ContractAgreementView} from "@think-it-labs/edc-connector-ui/contract-agreement-view";
 import {ContractAgreementsList} from "@think-it-labs/edc-connector-ui/contract-agreements-list";
@@ -11,10 +11,13 @@ import {useParticipantConnectorState} from "@/hooks/use-participant-connector-st
 
 export interface ContractAgreementCard {
   contractAgreement: ContractAgreement;
+  isTerminated?: boolean;
+  isInProgress?: boolean;
+  transferCount?: number;
   onClick: () => void;
 }
 
-export default function ContractAgreementCard({ contractAgreement, onClick }: ContractAgreementCard) {
+export default function ContractAgreementCard({ contractAgreement, onClick, isTerminated = false, isInProgress = false, transferCount = 0 }: ContractAgreementCard) {
   const { connector } = useParticipantConnectorState();
 
   return (
@@ -24,25 +27,27 @@ export default function ContractAgreementCard({ contractAgreement, onClick }: Co
           <div>
             <div className="flex gap-x-4">
               <div className="flex items-center">
-                <Icon fontSize="large">{contractAgreement["https://w3id.org/edc/v0.0.1/ns/providerId"] === connector.id ? "file_upload" : "file_download"}</Icon>
+                <Icon fontSize="large" color={isTerminated ? "error" : "inherit"}>
+                  {
+                    (contractAgreement.consumerId === connector.id ? "file_download" : "file_upload") +
+                    (isTerminated ? "_off" : "")
+                  }
+                </Icon>
               </div>
               <div>
-                <ContractAgreementsList.Asset
-                  id={contractAgreement.assetId}
-                  managementUrl={connector!.managementUrl}
-                >
-                  <Typography variant="h4" className="!leading-none hover:underline cursor-pointer">
-                    <ContractAgreementsList.Asset.Id />
-                  </Typography>
-                </ContractAgreementsList.Asset>
+                <Typography variant="h4" className="!leading-none hover:underline cursor-pointer">
+                  <ContractAgreementView.AssetId />
+                </Typography>
                 <Typography variant="body1" color="textSecondary">
                   <ContractAgreementView.ProviderId />
                 </Typography>
               </div>
+
+              {isInProgress && <LinearProgress className="my-3" />}
             </div>
 
             <div className="grid grid-cols-2 gap-y-4 py-4">
-              <div className="even:text-right">
+              <div className="col-span-2">
                 <Typography variant="body2" color="textDisabled">
                   <T string="contractAgreements.headingId"/>
                 </Typography>
@@ -50,49 +55,40 @@ export default function ContractAgreementCard({ contractAgreement, onClick }: Co
                   <ContractAgreementView.Id/>
                 </Typography>
               </div>
-              <div className="even:text-right">
+              <div>
                 <Typography variant="body2" color="textDisabled">
                   <T string="contractAgreements.signed"/>
                 </Typography>
                 <Typography variant="body2">
-                  <Timestamp milliseconds={contractAgreement.contractSigningDate}/>
+                  <Timestamp milliseconds={contractAgreement.contractSigningDate} year="numeric" month="2-digit" day="2-digit" hour="numeric" minute="numeric" />
                 </Typography>
               </div>
 
-{/*
-              <div className="even:text-right">
+              <div className="text-right">
                 <Typography variant="body2" color="textDisabled">
                   <T string="contractAgreements.transfers"/>
                 </Typography>
                 <Typography variant="body2">
-                  {/*TODO: transfers*/}{/*
+                  {transferCount}
                 </Typography>
               </div>
 
-              <div className="even:text-right">
+              <div className="">
                 <Typography variant="body2" color="textDisabled">
-                  <T string="contractAgreements.otherConnector"/>
-                </Typography>
-                <Typography variant="body2">
-                  {/*TODO: otherConnector*/}{/*
-                </Typography>
-              </div>
-              <div className="even:text-right">
-                <Typography variant="body2" color="textDisabled">
-                  <T string="contractAgreements.status"/>
-                </Typography>
-                <Typography variant="body2">
-                  {/*TODO: status*/}{/*
-                </Typography>
-              </div>
-*/}
-
-              <div className="col-span-2">
-                <Typography variant="body2" color="textDisabled">
-                  <T string="contractAgreements.headingConsumer" /> →{" "} <T string="contractAgreements.headingProvider" />
+                  <T string="contractAgreements.headingConsumer"/> →{" "} <T
+                  string="contractAgreements.headingProvider"/>
                 </Typography>
                 <Typography variant="body2">
                   <ContractAgreementView.ConsumerId/> →{" "} <ContractAgreementView.ProviderId/>
+                </Typography>
+              </div>
+
+              <div className="text-right">
+                <Typography variant="body2" color="textDisabled">
+                  <T string="contractAgreements.status"/>
+                </Typography>
+                <Typography variant="body2" color={isTerminated ? "error" : "inherit"}>
+                  <T string={`contractAgreements.[id].status${isTerminated ? 'Terminated' : "Active"}`} />
                 </Typography>
               </div>
             </div>
