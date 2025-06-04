@@ -8,9 +8,9 @@ import ContractAgreementDetails from "@/components/organisms/contract-agreement-
 import ContractAgreementTerminateDialog from "@/components/organisms/contract-agreement-terminate-dialog";
 import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 import {enqueueSnackbar} from "notistack";
-import {STATE_RUNNING, STATE_TERMINATED} from "@/schema/transfer-process";
+import {STATE_RUNNING, STATE_TERMINATED} from "@/constants/transfer-process.ts";
 import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/entities";
-import {TERMINATION_REASON_BY_USER} from "@/schema/contract-agreement";
+import {TERMINATION_REASON_BY_USER} from "@/constants/contract-agreement.ts";
 import Typography from "@mui/material/Typography";
 import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
 import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
@@ -29,6 +29,7 @@ interface ContractAgreementDialogProps {
 
 export default function ContractAgreementDialog({ open, onClose, contractAgreement, participantId, managementUrl, contentStyle = {}, translator, retirementReason = "" }: ContractAgreementDialogProps) {
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
+  const [isTerminateModalOpen, setIsTerminateModalOpen] = useState(false);
 
   const [asset, setAsset] = useState({} as Asset);
   const [transferProcesses, setTransferProcesses] = useState<TransferProcess[]>([]);
@@ -85,6 +86,12 @@ export default function ContractAgreementDialog({ open, onClose, contractAgreeme
         contractAgreementLd={contractAgreement}
         open={isTransferModalOpen}
         onClose={() => setIsTransferModalOpen(false)}
+        translator={translator}
+      />
+      <ContractAgreementTerminateDialog
+        contractAgreement={contractAgreement}
+        open={isTerminateModalOpen}
+        onClose={() => setIsTerminateModalOpen(false)}
         translator={translator}
       />
       <Dialog

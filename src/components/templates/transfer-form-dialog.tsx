@@ -16,13 +16,13 @@ import { DataAddressTypes, defaultHttpDataAddress } from "@/utilities/data-addre
 import {createTransferProcessRequest} from "@/utilities/transfer-process";
 
 export interface TransferFormDialogProps {
-  isOpen: boolean,
+  open: boolean,
   onClose: () => void,
   translator: (key: string) => string,
   contractAgreementLd: ContractAgreement,
 }
 
-export function TransferFormDialog({ contractAgreementLd, isOpen, onClose, translator }: TransferFormDialogProps): JSX.Element {
+export function TransferFormDialog({ contractAgreementLd, open, onClose, translator }: TransferFormDialogProps): JSX.Element {
   const [formData, setFormData] = useState<DataAddress>(defaultHttpDataAddress);
 
   const [errors, setErrors] = useState<DataAddress>({} as DataAddress);
@@ -45,7 +45,7 @@ export function TransferFormDialog({ contractAgreementLd, isOpen, onClose, trans
 
   return (
     <Dialog
-      open={isOpen}
+      open={open}
       maxWidth="lg"
       className="my-7"
       onClose={onClose}
