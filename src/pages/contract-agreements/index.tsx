@@ -8,10 +8,10 @@ import { T, useTranslator } from "@/i18n";
 import SideDrawer from "@/components/organisms/side-drawer";
 import ContractAgreementCard from "@/components/organisms/contract-agreement-card";
 import ContractAgreementDialog from "@/components/organisms/contract-agreement-dialog";
-import { ContractAgreement } from "@think-it-labs/edc-connector-client";
+import {ContractAgreement, TransferProcessStates} from "@think-it-labs/edc-connector-client";
 import Typography from "@mui/material/Typography";
 import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
-import {STATE_TERMINATED, STATE_RUNNING} from "@/constants/transfer-process";
+import {STATE_RUNNING} from "@/constants/transfer-process";
 import {AgreementsRetirementController} from "@/utilities/contract-agreement";
 
 interface ContractAgreementInfo {
@@ -56,14 +56,14 @@ export default function ContractAgreementsListPage() {
         if (contractAgreement[contractAgreementId]) {
           contractAgreement[contractAgreementId].transfersCount++;
           if (contractAgreement[contractAgreementId].isTerminated !== true) {
-            contractAgreement[contractAgreementId].isTerminated = transferProcess.state === STATE_TERMINATED;
+            contractAgreement[contractAgreementId].isTerminated = transferProcess.state === TransferProcessStates.TERMINATED;
           } else if (contractAgreement[contractAgreementId].isRunning !== true) {
             contractAgreement[contractAgreementId].isRunning = transferProcess.state === STATE_RUNNING;
           }
         } else {
           contractAgreement[contractAgreementId] = {
-            isTerminated: transferProcess.state === STATE_TERMINATED,
-            isRunning: transferProcess.state !== STATE_TERMINATED && transferProcess.state === STATE_RUNNING,
+            isTerminated: transferProcess.state === TransferProcessStates.TERMINATED,
+            isRunning: transferProcess.state !== TransferProcessStates.TERMINATED && transferProcess.state === STATE_RUNNING,
             transfersCount: 1,
           };
         }
