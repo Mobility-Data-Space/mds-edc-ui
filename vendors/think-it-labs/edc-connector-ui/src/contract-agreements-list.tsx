@@ -35,7 +35,7 @@ export function ContractAgreementsList({
   return (
     <List<ContractAgreement>
       queryAll={queryAll}
-      getId={(contractAgreement: ContractAgreement) => contractAgreement.id}
+      getId={(contractAgreement: ContractAgreement) => String(contractAgreement.id)}
       managementUrl={managementUrl}
     >
       {children}

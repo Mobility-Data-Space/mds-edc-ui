@@ -10,9 +10,9 @@ import ContractAgreementCard from "@/components/organisms/contract-agreement-car
 import ContractAgreementDialog from "@/components/organisms/contract-agreement-dialog";
 import { ContractAgreement } from "@think-it-labs/edc-connector-client";
 import Typography from "@mui/material/Typography";
-import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
-import {STATE_TERMINATED, STATE_RUNNING} from "@/schema/transfer-process.ts";
-import {AgreementsRetirementController} from "@/utilities/contract-agreement.ts";
+import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
+import {STATE_TERMINATED, STATE_RUNNING} from "@/constants/transfer-process";
+import {AgreementsRetirementController} from "@/utilities/contract-agreement";
 
 interface ContractAgreementInfo {
   [key: string]: {
