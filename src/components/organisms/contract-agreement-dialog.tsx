@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import { T } from "@/i18n";
-import {Asset, ContractAgreement, TransferProcessStates} from "@think-it-labs/edc-connector-client";
+import {Asset, ContractAgreement, Dataset, TransferProcessStates} from "@think-it-labs/edc-connector-client";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, LinearProgress} from "@mui/material";
 import {TitleWithIcon} from "@/components/atoms/TitleWithIcon";
 import {TransferFormDialog} from "@/components/templates/transfer-form-dialog";
@@ -8,11 +8,10 @@ import ContractAgreementDetails from "@/components/organisms/contract-agreement-
 import ContractAgreementTerminateDialog from "@/components/organisms/contract-agreement-terminate-dialog";
 import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 import {enqueueSnackbar} from "notistack";
-import {STATE_RUNNING} from "@/constants/transfer-process.ts";
 import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/entities";
 import {TERMINATION_REASON_BY_USER} from "@/constants/contract-agreement.ts";
 import Typography from "@mui/material/Typography";
-import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
+import {datasetToAsset, removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
 import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
 import {Timestamp} from "@think-it-labs/edc-connector-ui/timestamp";
 
@@ -25,26 +24,44 @@ interface ContractAgreementDialogProps {
   contentStyle?: { [key: string]: string };
   translator: (key: string) => string;
   retirementReason?: string;
+  isTerminated?: boolean;
+  isRunning?: boolean;
+  isTerminatedAt?: number;
 }
 
-export default function ContractAgreementDialog({ open, onClose, contractAgreement, participantId, managementUrl, contentStyle = {}, translator, retirementReason = "" }: ContractAgreementDialogProps) {
+export default function ContractAgreementDialog({ open, onClose, contractAgreement, participantId, managementUrl, contentStyle = {}, translator, retirementReason = "", isTerminated = false, isRunning = false, isTerminatedAt = 0 }: ContractAgreementDialogProps) {
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [isTerminateModalOpen, setIsTerminateModalOpen] = useState(false);
 
   const [asset, setAsset] = useState({} as Asset);
   const [transferProcesses, setTransferProcesses] = useState<TransferProcess[]>([]);
-  const [isTerminated, setIsTerminated] = useState(false);
-  const [isTerminatedAt, setIsTerminatedAt] = useState<number>(0);
-  const [isInProgress, setIsInProgress] = useState(false);
 
   const edcClient = useEdcConnectorClient({ management: managementUrl });
   useEffect(() => {
     if (! contractAgreement.assetId) {
       return;
     }
-    edcClient.management.assets.get(contractAgreement.assetId)
-    .then(setAsset)
-    .catch(error => enqueueSnackbar(translator('assets.[id].fetchError')))
+
+    if (contractAgreement.providerId === participantId) {
+      edcClient.management.assets.get(contractAgreement.assetId)
+      .then((fetchedAsset) => {
+        setAsset(fetchedAsset);
+      })
+      .catch(error => enqueueSnackbar(translator('assets.[id].fetchError')))
+    } else {
+      edcClient.management.contractAgreements.getNegotiation(contractAgreement.id)
+        .then(negotiation => {
+          const providerCounterPartyAddress = readValue(removeJsonLdSchemaFromProperties(negotiation), "counterPartyAddress");
+          edcClient.management.catalog.request({ counterPartyAddress: providerCounterPartyAddress })
+            .then(catalog => setAsset(
+              datasetToAsset(
+                catalog.datasets.find(
+                  dataset => dataset.id === contractAgreement.assetId
+                ) || {} as Dataset
+              )
+            ));
+        });
+    }
   }, [edcClient, contractAgreement.assetId]);
 
   useEffect(() => {
@@ -57,27 +74,7 @@ export default function ContractAgreementDialog({ open, onClose, contractAgreeme
         "operator": "=",
         "operandRight": contractAgreement.id
       }]
-    }).then((transferProcesses) => {
-      setTransferProcesses(transferProcesses);
-      setIsTerminated(false);
-      setIsInProgress(false);
-
-      let contractIsInProgress = false;
-      let contractIsTerminated = false;
-      let contractIsTerminatedAt = 0;
-      transferProcesses.forEach(transferProcess => {
-        if (transferProcess.state === TransferProcessStates.TERMINATED) {
-          contractIsTerminated = true;
-          contractIsTerminatedAt = readValue(removeJsonLdSchemaFromProperties(transferProcess), "stateTimestamp");
-        } else if (transferProcess.state === STATE_RUNNING) {
-          contractIsInProgress = true;
-        }
-      });
-
-      setIsInProgress(! contractIsTerminated && contractIsInProgress);
-      setIsTerminated(contractIsTerminated);
-      setIsTerminatedAt(contractIsTerminatedAt);
-    });
+    }).then(setTransferProcesses);
   }, [edcClient, contractAgreement.id]);
 
   return (
@@ -114,7 +111,7 @@ export default function ContractAgreementDialog({ open, onClose, contractAgreeme
         </DialogTitle>
         <DialogContent style={contentStyle}>
           <div className="flex flex-col gapy-y-3">
-            {isInProgress && <LinearProgress className="my-3" />}
+            {isRunning && <LinearProgress className="my-3" />}
 
             {isTerminated &&
               <div className="flex gap-x-3 p-4 mb-3 rounded bg-red-50">

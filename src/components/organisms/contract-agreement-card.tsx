@@ -12,12 +12,12 @@ import {useParticipantConnectorState} from "@/hooks/use-participant-connector-st
 export interface ContractAgreementCard {
   contractAgreement: ContractAgreement;
   isTerminated?: boolean;
-  isInProgress?: boolean;
+  isRunning?: boolean;
   transferCount?: number;
   onClick: () => void;
 }
 
-export default function ContractAgreementCard({ contractAgreement, onClick, isTerminated = false, isInProgress = false, transferCount = 0 }: ContractAgreementCard) {
+export default function ContractAgreementCard({ contractAgreement, onClick, isTerminated = false, isRunning = false, transferCount = 0 }: ContractAgreementCard) {
   const { connector } = useParticipantConnectorState();
 
   return (
@@ -43,7 +43,7 @@ export default function ContractAgreementCard({ contractAgreement, onClick, isTe
                 </Typography>
               </div>
 
-              {isInProgress && <LinearProgress className="my-3" />}
+              {isRunning && <LinearProgress className="my-3" />}
             </div>
 
             <div className="grid grid-cols-2 gap-y-4 py-4">
