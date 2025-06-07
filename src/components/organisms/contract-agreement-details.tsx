@@ -21,14 +21,15 @@ interface ContractAgreementDetailsProps {
   participantId: string;
   asset: Asset;
   transferProcesses: TransferProcess[];
+  counterPartyAddress: string;
 }
 
-export default function ContractAgreementDetails({ contractAgreement, participantId, asset, transferProcesses }: ContractAgreementDetailsProps) {
+export default function ContractAgreementDetails({ contractAgreement, participantId, asset, transferProcesses, counterPartyAddress }: ContractAgreementDetailsProps) {
   const description = readValue(asset.properties, ASSET_DESCRIPTION);
   const [transferProcessesFields, contractAgreementFields, assetFields] = [
     transferProcessesFieldsToShow(transferProcesses),
-    contractAgreementFieldsToShow(contractAgreement, participantId),
-    assetGeneralFieldsToShow(asset, participantId, ""), // TODO: connector endpoint
+    contractAgreementFieldsToShow(contractAgreement, participantId, counterPartyAddress),
+    assetGeneralFieldsToShow(asset, participantId, counterPartyAddress),
   ];
 
   return (

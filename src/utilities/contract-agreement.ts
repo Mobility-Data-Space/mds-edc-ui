@@ -5,8 +5,7 @@ import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/enti
 import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
 import {CONTEXT_EDC, TRACTUS_X_CONTEXT} from "@/schema/context.ts";
 
-export const contractAgreementFieldsToShow = (contractAgreement: ContractAgreement, participantId: string): FieldShowProps[] => {
-
+export const contractAgreementFieldsToShow = (contractAgreement: ContractAgreement, participantId: string, counterPartyAddress: string): FieldShowProps[] => {
   return [
     {
       label: "contractAgreements.signed",
@@ -30,7 +29,7 @@ export const contractAgreementFieldsToShow = (contractAgreement: ContractAgreeme
     },
     {
       label: "contractAgreements.counterPartyConnectorEndpoint",
-      value: "",
+      value: counterPartyAddress,
       icon: "link"
     },
     {

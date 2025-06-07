@@ -21,6 +21,7 @@ interface ContractAgreementDialogProps {
   onClose: () => void;
   participantId: string;
   managementUrl: string;
+  connectorEndpoint: string;
   contentStyle?: { [key: string]: string };
   translator: (key: string) => string;
   retirementReason?: string;
@@ -29,12 +30,13 @@ interface ContractAgreementDialogProps {
   isTerminatedAt?: number;
 }
 
-export default function ContractAgreementDialog({ open, onClose, contractAgreement, participantId, managementUrl, contentStyle = {}, translator, retirementReason = "", isTerminated = false, isRunning = false, isTerminatedAt = 0 }: ContractAgreementDialogProps) {
+export default function ContractAgreementDialog({ open, onClose, contractAgreement, participantId, managementUrl, connectorEndpoint, contentStyle = {}, translator, retirementReason = "", isTerminated = false, isRunning = false, isTerminatedAt = 0 }: ContractAgreementDialogProps) {
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [isTerminateModalOpen, setIsTerminateModalOpen] = useState(false);
 
   const [asset, setAsset] = useState({} as Asset);
   const [transferProcesses, setTransferProcesses] = useState<TransferProcess[]>([]);
+  const [counterPartyAddress, setCounterPartyAddress] = useState(connectorEndpoint);
 
   const edcClient = useEdcConnectorClient({ management: managementUrl });
   useEffect(() => {
@@ -46,12 +48,14 @@ export default function ContractAgreementDialog({ open, onClose, contractAgreeme
       edcClient.management.assets.get(contractAgreement.assetId)
       .then((fetchedAsset) => {
         setAsset(fetchedAsset);
+        setCounterPartyAddress(connectorEndpoint);
       })
       .catch(error => enqueueSnackbar(translator('assets.[id].fetchError')))
     } else {
       edcClient.management.contractAgreements.getNegotiation(contractAgreement.id)
         .then(negotiation => {
           const providerCounterPartyAddress = readValue(removeJsonLdSchemaFromProperties(negotiation), "counterPartyAddress");
+          setCounterPartyAddress(providerCounterPartyAddress);
           edcClient.management.catalog.request({ counterPartyAddress: providerCounterPartyAddress })
             .then(catalog => setAsset(
               datasetToAsset(
@@ -137,6 +141,7 @@ export default function ContractAgreementDialog({ open, onClose, contractAgreeme
               participantId={participantId}
               asset={asset}
               transferProcesses={transferProcesses}
+              counterPartyAddress={counterPartyAddress}
             />
           </div>
         </DialogContent>

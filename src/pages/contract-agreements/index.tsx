@@ -100,6 +100,7 @@ export default function ContractAgreementsListPage() {
         isRunning={openContractAgreementInfo?.isRunning}
         onClose={() => setIsDetailsModalOpen(false)}
         participantId={connector.id}
+        connectorEndpoint={connector.protocolUrl}
         managementUrl={connector.managementUrl}
         contentStyle={{ maxWidth: "90vw", width: "1000px" }}
         translator={translator}
