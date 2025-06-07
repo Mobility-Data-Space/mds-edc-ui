@@ -11,6 +11,18 @@ export const idSelector = (id: string): CriterionInput[] => {
   ]
 };
 
+export const idMultipleSelector = (ids: string[]): CriterionInput[] => {
+  return ids.map(id => ({
+    operandLeft: "@id",
+    operator: operatorIn.value,
+    operandRight: id
+  }));
+};
+
 export const idReader = (criteria: CriterionInput[]) => {
   return criteria[0]?.operandRight || "";
+}
+
+export const idMultipleReader = (criteria: CriterionInput[]) => {
+  return criteria.map(value => value?.operandRight || "");
 }
