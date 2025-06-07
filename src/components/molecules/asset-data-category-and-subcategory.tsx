@@ -30,7 +30,6 @@ export function AssetDataCategoryAndSubcategory({ translator, formData, onChange
         <MuiSelect
           name={ASSET_ADVANCED_INFO_DATA_CATEGORY}
           id="advanced-info-data-category"
-          label={translator("assets.new.fieldAdvancedInfoDataCategoryPlaceholder")}
           placeholder={translator("assets.new.fieldAdvancedInfoDataCategoryPlaceholder")}
           options={DATA_CATEGORY_SELECT_DATA}
           value={formData[ASSET_ADVANCED_INFO_MOBILITY_THEME][ASSET_ADVANCED_INFO_DATA_CATEGORY]}
@@ -56,7 +55,6 @@ export function AssetDataCategoryAndSubcategory({ translator, formData, onChange
         <MuiSelect
           name={ASSET_ADVANCED_INFO_DATA_SUBCATEGORY}
           id="advanced-info-data-subcategory"
-          label={translator("assets.new.fieldAdvancedInfoDataSubcategoryPlaceholder")}
           placeholder={translator("assets.new.fieldAdvancedInfoDataSubcategoryPlaceholder")}
           options={DATA_SUBCATEGORIES_DATA[formData[ASSET_ADVANCED_INFO_MOBILITY_THEME][ASSET_ADVANCED_INFO_DATA_CATEGORY] as TYPE_DATA_CATEGORY] || []}
           value={formData[ASSET_ADVANCED_INFO_MOBILITY_THEME][ASSET_ADVANCED_INFO_DATA_SUBCATEGORY]}

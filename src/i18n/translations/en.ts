@@ -168,6 +168,7 @@ export const en = {
         showConditionsForUse: "Show Conditions for Use",
         customProperties: "Custom Properties",
         privateProperties: "Private Properties",
+        httpDataSourceParameterization: "HTTP Data Source Parameterization",
 
         buttonCancel: "Cancel",
         buttonSave: "Add asset",
