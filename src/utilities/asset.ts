@@ -7,6 +7,7 @@ import {DELIMITER} from "@/i18n";
 import {extractArrayValues} from "@/utilities/utilities";
 import {ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE, ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_MODEL_ID, ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA, ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY, ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY, ASSET_ADVANCED_INFO_GEO_LOCATION, ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL, ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS, ASSET_ADVANCED_INFO_GEO_REFERENCE_METHOD, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION, ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START, ASSET_ADVANCED_INFO_TRANSPORT_MODE, ASSET_CONTENT_TYPE, ASSET_DESCRIPTION, ASSET_ENDPOINT_DOCUMENTATION, ASSET_KEYWORDS, ASSET_LANGUAGE, ASSET_ORGANIZATION, ASSET_PUBLISHER, ASSET_STANDARD_LICENSE, ASSET_TITLE, ASSET_VERSION} from "@/schema/asset";
 import { defaultHttpDataAddress } from "./data-address";
+import {CONTEXT_DCAT} from "@/schema/context.ts";
 
 const temporalCoverageValue = ([start, end]: [string, string]) => {
   if (!start && !end) {
@@ -257,7 +258,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
     advancedFields.push({
       icon: 'today',
       label: 'assets.new.fieldAdvancedInfoTemporalCoverage',
-      value: temporalCoverageValue([temporalCoverage, temporalCoverage]),
+      value: temporalCoverageValue([readValue(temporalCoverage[0], `${CONTEXT_DCAT.value}startDate`), readValue(temporalCoverage[0], `${CONTEXT_DCAT.value}endDate`)]),
     });
   }
 
