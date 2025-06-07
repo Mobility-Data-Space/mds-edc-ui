@@ -18,6 +18,7 @@ export interface FieldShowProps {
 
 export function FieldShow({ icon, label, value, valueTitle, subLabel, openModalText}: FieldShowProps): JSX.Element {
   const nonNullValue = value || "";
+  const shouldNotTranslateValue = 0 === nonNullValue.indexOf('http') || nonNullValue.match(/^\d/);
   const [dialogIsOpen, setDialogIsOpen] = React.useState(false);
 
   return (
@@ -30,7 +31,7 @@ export function FieldShow({ icon, label, value, valueTitle, subLabel, openModalT
             {0 === label.indexOf('http') ? label : <T string={label}/>}
           </Typography>
           <Typography>
-            {0 === nonNullValue.indexOf('http') ? nonNullValue : <MultiTranslate string={nonNullValue}/>}
+            {shouldNotTranslateValue ? nonNullValue : <MultiTranslate string={nonNullValue}/>}
           </Typography>
         </div> :
         <>
