@@ -3,7 +3,7 @@ import {ContractAgreement} from "@think-it-labs/edc-connector-client";
 import {FieldShowProps} from "@/components/molecules/field-show";
 import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/entities";
 import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
-import {AGREEMENT_RETIREMENT_DATE, AGREEMENT_RETIREMENT_REASON} from "@/schema/contract-agreement.ts";
+import {CONTEXT_EDC, TRACTUS_X_CONTEXT} from "@/schema/context.ts";
 
 export const contractAgreementFieldsToShow = (contractAgreement: ContractAgreement, participantId: string): FieldShowProps[] => {
 
@@ -56,6 +56,9 @@ export const transferProcessesFieldsToShow = (transferProcesses: TransferProcess
   });
 }
 
+export const AGREEMENT_RETIREMENT_DATE = `${TRACTUS_X_CONTEXT.value}agreementRetirementDate`;
+export const AGREEMENT_RETIREMENT_REASON = `${TRACTUS_X_CONTEXT.value}reason`;
+
 export interface RetiredContractAgreement {
   agreementId: string;
   [AGREEMENT_RETIREMENT_DATE]: number;
@@ -86,8 +89,8 @@ export class AgreementsRetirementController {
       method: "POST",
       body: {
         "@context": {
-          "tx": "https://w3id.org/tractusx/v0.0.1/ns/",
-          "edc": "https://w3id.org/edc/v0.0.1/ns/"
+          "tx": TRACTUS_X_CONTEXT.value,
+          "edc": CONTEXT_EDC.value
         },
         "edc:agreementId": contractAgreementId,
         "tx:reason": reason
