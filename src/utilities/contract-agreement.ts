@@ -4,12 +4,13 @@ import {FieldShowProps} from "@/components/molecules/field-show";
 import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/entities";
 import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
 import {CONTEXT_EDC, TRACTUS_X_CONTEXT} from "@/schema/context.ts";
+import {formatDate} from "@/utilities/utilities.ts";
 
 export const contractAgreementFieldsToShow = (contractAgreement: ContractAgreement, participantId: string, counterPartyAddress: string): FieldShowProps[] => {
   return [
     {
       label: "contractAgreements.signed",
-      value: new Date(contractAgreement.contractSigningDate * 1000).toString(),
+      value: formatDate(contractAgreement.contractSigningDate * 1000),
       icon: "category"
     },
     {
@@ -45,7 +46,7 @@ export const transferProcessesFieldsToShow = (transferProcesses: TransferProcess
   return transferProcesses.map((transferProcess: TransferProcess) => {
     const object = removeJsonLdSchemaFromProperties(transferProcess);
     const stateTimestamp = object.stateTimestamp && object.stateTimestamp[0] && object.stateTimestamp[0]["@value"];
-    const date = new Date(stateTimestamp).toString();
+    const date = formatDate(stateTimestamp);
 
     return {
       label: `${date} - ${transferProcess.state}`,
