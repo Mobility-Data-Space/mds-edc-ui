@@ -11,12 +11,14 @@ import ContractAgreementDialog from "@/components/organisms/contract-agreement-d
 import {ContractAgreement, TransferProcessStates} from "@think-it-labs/edc-connector-client";
 import Typography from "@mui/material/Typography";
 import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
-import {STATE_RUNNING} from "@/constants/transfer-process";
-import {AgreementsRetirementController} from "@/utilities/contract-agreement";
+import {AGREEMENT_RETIREMENT_DATE, AGREEMENT_RETIREMENT_REASON, AgreementsRetirementController, RetiredContractAgreement} from "@/utilities/contract-agreement";
+import {STATE_RUNNING} from "@/constants/transfer-process.ts";
 
 interface ContractAgreementInfo {
   [key: string]: {
     isTerminated: boolean,
+    isTerminatedAt: number,
+    retirementReason: string,
     isRunning: boolean,
     transfersCount: number,
   }
@@ -45,55 +47,57 @@ export default function ContractAgreementsListPage() {
   const edcClient = useEdcConnectorClient({management: managementUrl});
 
   const [contractAgreementInfo, setContractAgreementInfo] = useState<ContractAgreementInfo>({});
-  const [retiredContractAgreements, setretiredContractAgreements] = useState<{ [key: string]: string }>({});
-
-  useEffect(() => {
-    edcClient.management.transferProcesses.queryAll({ offset: 0 }).then((transferProcesses) => {
-      const contractAgreement: ContractAgreementInfo = {};
-
-      transferProcesses.forEach(transferProcess => {
-        const contractAgreementId = transferProcess.contractId;
-        if (contractAgreement[contractAgreementId]) {
-          contractAgreement[contractAgreementId].transfersCount++;
-          if (contractAgreement[contractAgreementId].isTerminated !== true) {
-            contractAgreement[contractAgreementId].isTerminated = transferProcess.state === TransferProcessStates.TERMINATED;
-          } else if (contractAgreement[contractAgreementId].isRunning !== true) {
-            contractAgreement[contractAgreementId].isRunning = transferProcess.state === STATE_RUNNING;
-          }
-        } else {
-          contractAgreement[contractAgreementId] = {
-            isTerminated: transferProcess.state === TransferProcessStates.TERMINATED,
-            isRunning: transferProcess.state !== TransferProcessStates.TERMINATED && transferProcess.state === STATE_RUNNING,
-            transfersCount: 1,
-          };
-        }
-      });
-      setContractAgreementInfo(contractAgreement);
-    });
-  }, [edcClient]);
-
 
   useEffect(() => {
     const controller = new AgreementsRetirementController(managementUrl)
     controller.retiredAgreementsRequest().then(retiredAgreements => {
-      const contractAgreementsReasons: { [key: string]: string } = {};
+      const retiredContractAgreementsToSave: { [key: string]: RetiredContractAgreement } = {};
       retiredAgreements.forEach(retiredContractAgreement => {
-        contractAgreementsReasons[retiredContractAgreement.agreementId] = retiredContractAgreement["https://w3id.org/tractusx/v0.0.1/ns/reason"];
+        retiredContractAgreementsToSave[retiredContractAgreement.agreementId] = retiredContractAgreement;
       });
-      setretiredContractAgreements(contractAgreementsReasons);
+
+      edcClient.management.transferProcesses.queryAll({ offset: 0 }).then((transferProcesses) => {
+        const contractAgreementInfoToSave: ContractAgreementInfo = {};
+        const retiredAgreementsList = Object.keys(retiredContractAgreementsToSave);
+        transferProcesses.forEach(transferProcess => {
+          const contractAgreementId = transferProcess.contractId;
+          if (contractAgreementInfoToSave[contractAgreementId]) {
+            contractAgreementInfoToSave[contractAgreementId].transfersCount++;
+            if (contractAgreementInfoToSave[contractAgreementId].isRunning !== true) {
+              contractAgreementInfoToSave[contractAgreementId].isRunning = transferProcess.state === STATE_RUNNING;
+            }
+          } else {
+            const retiredContractAgreement = retiredContractAgreementsToSave[contractAgreementId] || {};
+            contractAgreementInfoToSave[contractAgreementId] = {
+              isTerminated: retiredAgreementsList.includes(contractAgreementId),
+              isRunning: transferProcess.state !== TransferProcessStates.TERMINATED && transferProcess.state === STATE_RUNNING,
+              isTerminatedAt: retiredContractAgreement[AGREEMENT_RETIREMENT_DATE] as number,
+              retirementReason: retiredContractAgreement[AGREEMENT_RETIREMENT_REASON] as string,
+              transfersCount: 1,
+            };
+          }
+        });
+        setContractAgreementInfo(contractAgreementInfoToSave);
+      });
     });
-  }, []);
+  }, [edcClient]);
 
   if (!connector) {
     return "No connector";
   }
 
+  const openContractAgreementInfo = contractAgreementInfo[openContractAgreementData.contractAgreement.id];
+
   return (
     <SideDrawer title={<T string="contractAgreements.title" />}>
       <ContractAgreementDialog
+        key={openContractAgreementData.contractAgreement.id}
         open={isDetailsModalOpen}
         contractAgreement={openContractAgreementData.contractAgreement}
-        retirementReason={retiredContractAgreements[openContractAgreementData.contractAgreement.id]}
+        retirementReason={openContractAgreementInfo?.retirementReason}
+        isTerminated={openContractAgreementInfo?.isTerminated}
+        isTerminatedAt={openContractAgreementInfo?.isTerminatedAt}
+        isRunning={openContractAgreementInfo?.isRunning}
         onClose={() => setIsDetailsModalOpen(false)}
         participantId={connector.id}
         managementUrl={connector.managementUrl}
@@ -139,6 +143,7 @@ export default function ContractAgreementsListPage() {
                 key={index}
                 contractAgreement={item}
                 isTerminated={contractAgreementInfo[item.id]?.isTerminated}
+                isRunning={contractAgreementInfo[item.id]?.isRunning}
                 transferCount={contractAgreementInfo[item.id]?.transfersCount}
                 onClick={() => openDetailsModal(item)}
               />
@@ -199,6 +204,7 @@ export default function ContractAgreementsListPage() {
                 key={index}
                 contractAgreement={item}
                 isTerminated={contractAgreementInfo[item.id]?.isTerminated}
+                isRunning={contractAgreementInfo[item.id]?.isRunning}
                 transferCount={contractAgreementInfo[item.id]?.transfersCount}
                 onClick={() => openDetailsModal(item)}
               />
