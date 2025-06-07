@@ -41,3 +41,16 @@ export const tryTranslatingWithTooltip = (value: string, prefix: string, transla
 
   return [tooltipTitle, computedValue];
 }
+
+export const formatDate = (melliSecondsTimestamp: number) => {
+  const formatter = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/Berlin",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "numeric",
+    minute: "numeric",
+  });
+
+  return formatter.format(melliSecondsTimestamp);
+}
