@@ -114,6 +114,12 @@ const routes: ReactNode[] = [
     title="Contract negotiations"
     icon={<ReceiptText className="size-6" />}
   />,
+  <RouteNode
+    key="negotiation-manual-approval"
+    href="/negotiation-manual-approval"
+    title="Manual Approvals"
+    icon={<ReceiptText className="size-6" />}
+  />,
 ];
 
 export default function SideDrawer(props: Props) {
