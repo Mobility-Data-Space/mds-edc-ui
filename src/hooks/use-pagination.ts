@@ -9,6 +9,7 @@ export function usePagination() {
   const [page, setPage] = useState(
     parseInt(query.page as string) || FIRST_PAGE,
   );
+  const [hasNext, setHasNext] = useState(true)
   const incrementPage = useCallback(
     () => {
       const newPage = page + 1;
@@ -54,6 +55,8 @@ export function usePagination() {
   return {
     page,
     hasPrev: page !== FIRST_PAGE,
+    hasNext: hasNext,
+    setHasNext: setHasNext,
     incrementPage,
     decrementPage,
     limit: ITEMS,
