@@ -55,6 +55,7 @@ export interface ListItemProps<T> {
   item: T; // fix: type this
   deleteItem: () => Promise<void>;
   index: number;
+  items: T[]
 }
 
 export interface ListItemsProps<T> {
@@ -100,19 +101,20 @@ List.Items = function ListItems<T,>({
 
   return (
     <>
-      {!isLoading && items.map((item, index) => (
+      {!isLoading && items.map((item, index, allItems) => (
         <Item
           key={getId(item)}
           item={item}
           deleteItem={async () => deleteItem(getId(item))}
           index={index}
+          items={allItems}
         />
       ))}
     </>
   );
 };
 
-export interface ListLoadingProps {}
+export interface ListLoadingProps { }
 
 List.Loading = function ListLoading(
   { children = <div>Loading...</div> }: PropsWithChildren<
