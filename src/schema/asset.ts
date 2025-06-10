@@ -14,17 +14,17 @@ export const ASSET_ENDPOINT_DOCUMENTATION = `${CONTEXT_DCAT.value}landingPage`;
 
 export const ASSET_VERSION = `${CONTEXT_OWL.value}versionInfo`;
 
-export const ASSET_ADVANCED_INFO_MOBILITY_THEME = `${CONTEXT_MOBILITYDCAT_AP.prefix}mobilityTheme`;
-export const ASSET_ADVANCED_INFO_DATA_CATEGORY = `${CONTEXT_MOBILITYDCAT_AP_THEME.prefix}data-content-category`;
-export const ASSET_ADVANCED_INFO_DATA_SUBCATEGORY = `${CONTEXT_MOBILITYDCAT_AP_THEME.prefix}data-content-sub-category`;
+export const ASSET_ADVANCED_INFO_MOBILITY_THEME = `${CONTEXT_MOBILITYDCAT_AP.value}mobilityTheme`;
+export const ASSET_ADVANCED_INFO_DATA_CATEGORY = `${CONTEXT_MOBILITYDCAT_AP_THEME.value}data-content-category`;
+export const ASSET_ADVANCED_INFO_DATA_SUBCATEGORY = `${CONTEXT_MOBILITYDCAT_AP_THEME.value}data-content-sub-category`;
 
-export const ASSET_ADVANCED_INFO_TRANSPORT_MODE = `${CONTEXT_MOBILITYDCAT_AP.prefix}transportMode`;
-export const ASSET_ADVANCED_INFO_GEO_REFERENCE_METHOD = `${CONTEXT_MOBILITYDCAT_AP.prefix}geoReferenceMethod`;
-export const ASSET_ADVANCED_INFO_DATA_MODEL = `${CONTEXT_MOBILITYDCAT_AP.prefix}mobilityDataStandard`;
+export const ASSET_ADVANCED_INFO_TRANSPORT_MODE = `${CONTEXT_MOBILITYDCAT_AP.value}transportMode`;
+export const ASSET_ADVANCED_INFO_GEO_REFERENCE_METHOD = `${CONTEXT_MOBILITYDCAT_AP.value}geoReferenceMethod`;
+export const ASSET_ADVANCED_INFO_DATA_MODEL = `${CONTEXT_MOBILITYDCAT_AP.value}mobilityDataStandard`;
 export const ASSET_ADVANCED_INFO_DATA_MODEL_ID = `@id`;
-export const ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA = `${CONTEXT_MOBILITYDCAT_AP.prefix}schema`;
+export const ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA = `${CONTEXT_MOBILITYDCAT_AP.value}schema`;
 export const ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS = `${CONTEXT_DCAT.value}downloadURL`;
-export const ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION = `${CONTEXT_RDFS.prefix}Literal`;
+export const ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION = `${CONTEXT_RDFS.value}Literal`;
 
 export const ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY = `${CONTEXT_DCT.value}accrualPeriodicity`;
 export const ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE = `${CONTEXT_DCT.value}accessRights`;
