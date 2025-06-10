@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import {Divider, IconButton} from "@mui/material";
+import { Divider, IconButton } from "@mui/material";
 import { ContractAgreementsList } from "@think-it-labs/edc-connector-ui/contract-agreements-list";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { usePagination } from "@/hooks/use-pagination";
@@ -8,11 +8,11 @@ import { T, useTranslator } from "@/i18n";
 import SideDrawer from "@/components/organisms/side-drawer";
 import ContractAgreementCard from "@/components/organisms/contract-agreement-card";
 import ContractAgreementDialog from "@/components/organisms/contract-agreement-dialog";
-import {ContractAgreement, TransferProcessStates} from "@think-it-labs/edc-connector-client";
+import { ContractAgreement, TransferProcessStates } from "@think-it-labs/edc-connector-client";
 import Typography from "@mui/material/Typography";
-import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
-import {AGREEMENT_RETIREMENT_DATE, AGREEMENT_RETIREMENT_REASON, AgreementsRetirementController, RetiredContractAgreement} from "@/utilities/contract-agreement";
-import {STATE_RUNNING} from "@/constants/transfer-process.ts";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
+import { AGREEMENT_RETIREMENT_DATE, AGREEMENT_RETIREMENT_REASON, AgreementsRetirementController, RetiredContractAgreement } from "@/utilities/contract-agreement";
+import { STATE_RUNNING } from "@/constants/transfer-process.ts";
 
 interface ContractAgreementInfo {
   [key: string]: {
@@ -30,8 +30,9 @@ export default function ContractAgreementsListPage() {
 
   const { translator } = useTranslator();
 
-  const { decrementPage, incrementPage, offset, limit, hasPrev, page } =
+  const { decrementPage, incrementPage, offset, limit, hasPrev, page, setHasNext, hasNext } =
     usePagination();
+
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
@@ -44,7 +45,7 @@ export default function ContractAgreementsListPage() {
     setOpenContractAgreementData({ contractAgreement });
   };
 
-  const edcClient = useEdcConnectorClient({management: managementUrl});
+  const edcClient = useEdcConnectorClient({ management: managementUrl });
 
   const [contractAgreementInfo, setContractAgreementInfo] = useState<ContractAgreementInfo>({});
 
@@ -117,12 +118,13 @@ export default function ContractAgreementsListPage() {
                 onClick={decrementPage}
                 disabled={!hasPrev}
               >
-                <ChevronLeft className="size-6"/>
+                <ChevronLeft className="size-6" />
               </IconButton>
               <IconButton
                 onClick={incrementPage}
+                disabled={!hasNext}
               >
-                <ChevronRight className="size-6"/>
+                <ChevronRight className="size-6" />
               </IconButton>
             </div>
           </div>
@@ -130,7 +132,7 @@ export default function ContractAgreementsListPage() {
 
         <div className="flex flex-wrap gap-4 py-4">
           <ContractAgreementsList.Items
-            limit={limit}
+            limit={limit + 1}
             offset={offset}
             sortOrder="DESC"
             filterExpression={[{
@@ -139,18 +141,25 @@ export default function ContractAgreementsListPage() {
               operandRight: connector.id
             }]}
           >
-            {({item, index}) =>
-              <ContractAgreementCard
-                key={index}
-                contractAgreement={item}
-                isTerminated={contractAgreementInfo[item.id]?.isTerminated}
-                isRunning={contractAgreementInfo[item.id]?.isRunning}
-                transferCount={contractAgreementInfo[item.id]?.transfersCount}
-                onClick={() => openDetailsModal(item)}
-              />
-            }
-          </ContractAgreementsList.Items>
-        </div>
+            {({ item, index, items }) => {
+              if (items?.length <= limit) {
+                setHasNext(false)
+              } else {
+                setHasNext(true)
+              }
+              return index < limit ? (
+                <ContractAgreementCard
+                  key={index}
+                  contractAgreement={item}
+                  isTerminated={contractAgreementInfo[item.id]?.isTerminated}
+                  isRunning={contractAgreementInfo[item.id]?.isRunning}
+                  transferCount={contractAgreementInfo[item.id]?.transfersCount}
+                  onClick={() => openDetailsModal(item)}
+                />
+              ) : <></>;
+            }}
+          </ContractAgreementsList.Items >
+        </div >
         <ContractAgreementsList.Loading>
           <div className="max-w-20 mx-auto my-4 flex flex-col bg-white border shadow-sm rounded-xl p-4 md:p-5">
             <span
@@ -162,7 +171,7 @@ export default function ContractAgreementsListPage() {
             </span>
           </div>
         </ContractAgreementsList.Loading>
-      </ContractAgreementsList>
+      </ContractAgreementsList >
 
       <Divider className="!mb-3" />
 
@@ -178,12 +187,12 @@ export default function ContractAgreementsListPage() {
                 onClick={decrementPage}
                 disabled={!hasPrev}
               >
-                <ChevronLeft className="size-6"/>
+                <ChevronLeft className="size-6" />
               </IconButton>
               <IconButton
                 onClick={incrementPage}
               >
-                <ChevronRight className="size-6"/>
+                <ChevronRight className="size-6" />
               </IconButton>
             </div>
           </div>
@@ -200,7 +209,7 @@ export default function ContractAgreementsListPage() {
               operandRight: connector.id
             }]}
           >
-            {({item, index}) =>
+            {({ item, index }) =>
               <ContractAgreementCard
                 key={index}
                 contractAgreement={item}
@@ -224,6 +233,6 @@ export default function ContractAgreementsListPage() {
           </div>
         </ContractAgreementsList.Loading>
       </ContractAgreementsList>
-    </SideDrawer>
+    </SideDrawer >
   );
 }
