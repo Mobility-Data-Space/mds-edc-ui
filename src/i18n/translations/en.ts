@@ -390,6 +390,7 @@ export const en = {
       },
     },
     transferProcesses: {
+      noItems: "No transfer processes started yet.",
       history: "Transfer History",
       title: "List all transfer processes",
       description: "List all outgoing and incoming transfer processes.",
