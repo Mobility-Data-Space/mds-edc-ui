@@ -18,7 +18,7 @@ services:
       - "3000:3000"
       
   edc:
-    image: ghcr.io/mobility-data-space/next-mds-edc/connector-inmemory:latest
+    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
     environment:
       # Participant Configuration
       EDC_PARTICIPANT_ID: "participant_1"

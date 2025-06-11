@@ -1,18 +1,4 @@
 services:
-  edc-ui-1:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-      args:
-        NEXT_PUBLIC_EDC_PUBLIC_URL: "http://edc-1:8185/public"
-        NEXT_PUBLIC_EDC_ID: "participant_1"
-        NEXT_PUBLIC_EDC_NAME: "participant_1_edc_name"
-        NEXT_PUBLIC_EDC_MANAGEMENT_URL: "http://edc-1:8182/api/management"
-        NEXT_PUBLIC_EDC_DEFAULT_URL: "http://edc-1:8181/api"
-        NEXT_PUBLIC_EDC_PROTOCOL_URL: "http://edc-1:8183/api/dsp"
-    ports:
-      - "3000:3000"
-
   edc-1:
     image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
     environment:
@@ -43,21 +29,6 @@ services:
       - "8184:8184"  # Version
       - "8185:8185"  # Public
 
-  edc-ui-2:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-      args:
-        GITHUB_TOKEN: ${GITHUB_TOKEN}
-        NEXT_PUBLIC_EDC_PUBLIC_URL: "http://edc-2:8185/public"
-        NEXT_PUBLIC_EDC_ID: "participant_2"
-        NEXT_PUBLIC_EDC_NAME: "participant_2_edc_name"
-        NEXT_PUBLIC_EDC_MANAGEMENT_URL: "http://edc-2:8182/management"
-        NEXT_PUBLIC_EDC_DEFAULT_URL: "http://edc-2:8181/api"
-        NEXT_PUBLIC_EDC_PROTOCOL_URL: "http://edc-2:8183/protocol"
-    ports:
-      - "3001:3000"
-
   edc-2:
     image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
     environment:
@@ -85,3 +56,10 @@ services:
       - "9183:8183"  # Protocol
       - "9184:8184"  # Version
       - "9185:8185"  # Public
+  
+  seed_dataspace:
+    image: ghcr.io/mobility-data-space/next-mds-catalog/seed-dataspace-dev:latest
+    command: ["python3", "/seed_dataspace.py", "http://edc1:8182/api/management", "http://edc2:8182/api/management"]
+    depends_on:
+      - edc-1
+      - edc-2
