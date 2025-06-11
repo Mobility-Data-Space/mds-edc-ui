@@ -1,25 +1,20 @@
 import { Participant } from "@/constants/dataspace";
 import { useRouter } from "next/router";
+import {useEffect, useState} from "react";
+import {readEnvironment} from "@/utilities/env.ts";
 
 type ParticipantConnectorState = {
   connector: Participant;
   push: (href: string) => void;
 };
 
+const connectorConfig = await readEnvironment();
+
 export function useParticipantConnectorState(): ParticipantConnectorState {
   const router = useRouter();
 
-  const connector: Participant = {
-    id: process.env.NEXT_PUBLIC_EDC_ID || "",
-    name: process.env.NEXT_PUBLIC_EDC_NAME || "",
-    edcUrl: process.env.NEXT_PUBLIC_EDC_URL || "",
-    managementUrl: process.env.NEXT_PUBLIC_EDC_MANAGEMENT_URL || "",
-    defaultUrl: process.env.NEXT_PUBLIC_EDC_DEFAULT_URL || "",
-    protocolUrl: process.env.NEXT_PUBLIC_EDC_PROTOCOL_URL || "",
-  };
-
   return {
-    connector,
+    connector: connectorConfig,
     push: (href: string) => router.push(`${href}`),
   } as any;
 }
