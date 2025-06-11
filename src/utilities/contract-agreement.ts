@@ -1,15 +1,14 @@
 import {Inner} from "@think-it-labs/edc-connector-client/dist/src/inner";
 import {ContractAgreement} from "@think-it-labs/edc-connector-client";
 import {FieldShowProps} from "@/components/molecules/field-show";
-import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
 import {CONTEXT_EDC, TRACTUS_X_CONTEXT} from "@/schema/context.ts";
-import {formatDate} from "@/utilities/utilities.ts";
+import {formatDateTime} from "@/utilities/utilities.ts";
 
 export const contractAgreementFieldsToShow = (contractAgreement: ContractAgreement, participantId: string, counterPartyAddress: string): FieldShowProps[] => {
   return [
     {
       label: "contractAgreements.signed",
-      value: formatDate(contractAgreement.contractSigningDate * 1000),
+      value: formatDateTime(contractAgreement.contractSigningDate * 1000),
       icon: "category"
     },
     {

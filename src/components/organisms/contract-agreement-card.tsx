@@ -3,11 +3,9 @@ import Typography from "@mui/material/Typography";
 import {Card, CardContent, Icon, LinearProgress} from "@mui/material";
 import {ContractAgreement} from "@think-it-labs/edc-connector-client";
 import {ContractAgreementView} from "@think-it-labs/edc-connector-ui/contract-agreement-view";
-import {ContractAgreementsList} from "@think-it-labs/edc-connector-ui/contract-agreements-list";
-import {Timestamp} from "@think-it-labs/edc-connector-ui/timestamp";
-
 import {T} from "@/i18n";
 import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
+import {formatDateTimeAgo} from "@/utilities/utilities.ts";
 
 export interface ContractAgreementCard {
   contractAgreement: ContractAgreement;
@@ -60,7 +58,7 @@ export default function ContractAgreementCard({ contractAgreement, onClick, isTe
                   <T string="contractAgreements.signed"/>
                 </Typography>
                 <Typography variant="body2">
-                  <Timestamp milliseconds={contractAgreement.contractSigningDate} year="numeric" month="2-digit" day="2-digit" hour="numeric" minute="numeric" />
+                  {formatDateTimeAgo(contractAgreement.contractSigningDate * 1000)}
                 </Typography>
               </div>
 
