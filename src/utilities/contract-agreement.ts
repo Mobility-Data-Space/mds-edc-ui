@@ -1,7 +1,6 @@
 import {Inner} from "@think-it-labs/edc-connector-client/dist/src/inner";
 import {ContractAgreement} from "@think-it-labs/edc-connector-client";
 import {FieldShowProps} from "@/components/molecules/field-show";
-import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/entities";
 import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
 import {CONTEXT_EDC, TRACTUS_X_CONTEXT} from "@/schema/context.ts";
 import {formatDate} from "@/utilities/utilities.ts";
@@ -40,21 +39,6 @@ export const contractAgreementFieldsToShow = (contractAgreement: ContractAgreeme
     },
   ];
 };
-
-export const transferProcessesFieldsToShow = (transferProcesses: TransferProcess[]) => {
-
-  return transferProcesses.map((transferProcess: TransferProcess) => {
-    const object = removeJsonLdSchemaFromProperties(transferProcess);
-    const stateTimestamp = object.stateTimestamp && object.stateTimestamp[0] && object.stateTimestamp[0]["@value"];
-    const date = formatDate(stateTimestamp);
-
-    return {
-      label: `${date} - ${transferProcess.state}`,
-      value: transferProcess.id,
-      icon: transferProcess.type === "CONSUMER" ? "file_download" : "file_upload",
-    };
-  });
-}
 
 export const AGREEMENT_RETIREMENT_DATE = `${TRACTUS_X_CONTEXT.value}agreementRetirementDate`;
 export const AGREEMENT_RETIREMENT_REASON = `${TRACTUS_X_CONTEXT.value}reason`;
