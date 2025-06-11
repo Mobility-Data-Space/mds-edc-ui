@@ -11,22 +11,21 @@ import SideDrawer from "@/components/organisms/side-drawer";
 import {ContractNegotiation} from "@think-it-labs/edc-connector-client";
 import { Table } from "@/components/atoms/table";
 import ContractNegotiationDialog from "@/components/organisms/contract-negotiation-dialog";
+import {formatDateTime, formatDateTimeAgo} from "@/utilities/utilities.ts";
+import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
 
 const CreatedAt = ({ item }: { item: ContractNegotiation }) => {
-  const createdAt = item && item["https://w3id.org/edc/v0.0.1/ns/createdAt"];
-  const createdAtValue = createdAt && createdAt[0] && createdAt[0]["@value"];
-  return <Timestamp milliseconds={createdAtValue} />
+  const createdAtValue = readValue(item, "https://w3id.org/edc/v0.0.1/ns/createdAt");
+  return formatDateTime(createdAtValue, { showSeconds: true });
 }
 
 const CounterPartyId = ({ item }: { item: ContractNegotiation }) => {
-  const counterPartyId = item["https://w3id.org/edc/v0.0.1/ns/counterPartyId"];
-  const counterPartyIdValue = counterPartyId && counterPartyId[0] && counterPartyId[0]["@value"];
+  const counterPartyIdValue = readValue(item, "https://w3id.org/edc/v0.0.1/ns/counterPartyId");
   return <>{counterPartyIdValue}</>
 }
 
 const CounterPartyAddress = ({ item }: { item: ContractNegotiation }) => {
-  const counterPartyAddress = item["https://w3id.org/edc/v0.0.1/ns/counterPartyAddress"];
-  const counterPartyAddressValue = counterPartyAddress && counterPartyAddress[0] && counterPartyAddress[0]["@value"];
+  const counterPartyAddressValue = readValue(item, "https://w3id.org/edc/v0.0.1/ns/counterPartyAddress");
   return <>{counterPartyAddressValue}</>
 }
 
