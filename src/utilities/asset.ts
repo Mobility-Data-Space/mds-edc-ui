@@ -156,7 +156,10 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
       value: transportMode,
     });
   }
-  const dataCategory = readValue(asset.properties, ASSET_ADVANCED_INFO_DATA_CATEGORY)
+
+  const mobilityThemeArray = readValue(asset.properties, ASSET_ADVANCED_INFO_MOBILITY_THEME);
+  const mobilityTheme = mobilityThemeArray && mobilityThemeArray[0];
+  const dataCategory = readValue(mobilityTheme, ASSET_ADVANCED_INFO_DATA_CATEGORY)
   if (dataCategory) {
     advancedFields.push({
       icon: 'commute',
@@ -164,7 +167,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
       value: dataCategory,
     });
   }
-  const dataSubcategory = readValue(asset.properties, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY)
+  const dataSubcategory = readValue(mobilityTheme, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY)
   if (dataSubcategory) {
     advancedFields.push({
       icon: 'commute',
