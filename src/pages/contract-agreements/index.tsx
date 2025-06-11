@@ -1,18 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Divider, IconButton } from "@mui/material";
-import { ContractAgreementsList } from "@think-it-labs/edc-connector-ui/contract-agreements-list";
-import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
-import { usePagination } from "@/hooks/use-pagination";
-import { T, useTranslator } from "@/i18n";
-import SideDrawer from "@/components/organisms/side-drawer";
 import ContractAgreementCard from "@/components/organisms/contract-agreement-card";
 import ContractAgreementDialog from "@/components/organisms/contract-agreement-dialog";
-import { ContractAgreement, TransferProcessStates } from "@think-it-labs/edc-connector-client";
-import Typography from "@mui/material/Typography";
-import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
-import { AGREEMENT_RETIREMENT_DATE, AGREEMENT_RETIREMENT_REASON, AgreementsRetirementController, RetiredContractAgreement } from "@/utilities/contract-agreement";
+import SideDrawer from "@/components/organisms/side-drawer";
 import { STATE_RUNNING } from "@/constants/transfer-process.ts";
+import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
+import { T, useTranslator } from "@/i18n";
+import { AGREEMENT_RETIREMENT_DATE, AGREEMENT_RETIREMENT_REASON, AgreementsRetirementController, RetiredContractAgreement } from "@/utilities/contract-agreement";
+import { Divider, IconButton } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import { ContractAgreement, TransferProcessStates } from "@think-it-labs/edc-connector-client";
+import { ContractAgreementsList } from "@think-it-labs/edc-connector-ui/contract-agreements-list";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
+import { List } from "@think-it-labs/edc-connector-ui/list";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useRouter } from "next/router";
+import { useCallback, useEffect, useState } from "react";
+
+const MAX_ITEMS = 25
 
 interface ContractAgreementInfo {
   [key: string]: {
@@ -30,9 +33,20 @@ export default function ContractAgreementsListPage() {
 
   const { translator } = useTranslator();
 
-  const { decrementPage, incrementPage, offset, limit, hasPrev, page, setHasNext, hasNext } =
-    usePagination();
+  const { push, query } = useRouter()
 
+  const navigate = useCallback((newPage: number) => {
+    push(
+      {
+        href: window.location.href,
+        query: {
+          ...query,
+          page: newPage,
+        },
+      },
+    );
+
+  }, [])
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
@@ -106,34 +120,36 @@ export default function ContractAgreementsListPage() {
         contentStyle={{ maxWidth: "90vw", width: "1000px" }}
         translator={translator}
       />
-      <ContractAgreementsList managementUrl={managementUrl}>
+      <ContractAgreementsList managementUrl={managementUrl} usePagination navigate={navigate} currentPage={parseInt(query.page as string) || 0} firstPage={0}>
         <div className="flex justify-between gap-x-5">
           <Typography variant="h4" >
             <T string="contractAgreements.titleConsuming" />
           </Typography>
-
-          <div className="flex justify-end items-center">
-            <div className="inline-flex float-right gap-x-2">
-              <IconButton
-                onClick={decrementPage}
-                disabled={!hasPrev}
-              >
-                <ChevronLeft className="size-6" />
-              </IconButton>
-              <IconButton
-                onClick={incrementPage}
-                disabled={!hasNext}
-              >
-                <ChevronRight className="size-6" />
-              </IconButton>
-            </div>
-          </div>
+          <List.Pagination>
+            {({ decrementPage, hasPrev, hasNext, incrementPage }) =>
+              <div className="flex justify-end items-center">
+                <div className="inline-flex float-right gap-x-2">
+                  <IconButton
+                    onClick={decrementPage}
+                    disabled={!hasPrev}
+                  >
+                    <ChevronLeft className="size-6" />
+                  </IconButton>
+                  <IconButton
+                    onClick={incrementPage}
+                    disabled={!hasNext}
+                  >
+                    <ChevronRight className="size-6" />
+                  </IconButton>
+                </div>
+              </div>
+            }
+          </List.Pagination>
         </div>
 
         <div className="flex flex-wrap gap-4 py-4">
           <ContractAgreementsList.Items
-            limit={limit + 1}
-            offset={offset}
+            limit={MAX_ITEMS}
             sortOrder="DESC"
             filterExpression={[{
               operandLeft: "consumerId",
@@ -141,13 +157,10 @@ export default function ContractAgreementsListPage() {
               operandRight: connector.id
             }]}
           >
-            {({ item, index, items }) => {
-              if (items?.length <= limit) {
-                setHasNext(false)
-              } else {
-                setHasNext(true)
-              }
-              return index < limit ? (
+            {
+              ({ item, index }) =>
+              (
+
                 <ContractAgreementCard
                   key={index}
                   contractAgreement={item}
@@ -156,8 +169,8 @@ export default function ContractAgreementsListPage() {
                   transferCount={contractAgreementInfo[item.id]?.transfersCount}
                   onClick={() => openDetailsModal(item)}
                 />
-              ) : <></>;
-            }}
+              )
+            }
           </ContractAgreementsList.Items >
         </div >
         <ContractAgreementsList.Loading>
@@ -175,33 +188,35 @@ export default function ContractAgreementsListPage() {
 
       <Divider className="!mb-3" />
 
-      <ContractAgreementsList managementUrl={managementUrl}>
+      <ContractAgreementsList managementUrl={managementUrl} usePagination navigate={navigate} currentPage={parseInt(query.page as string) || 0} firstPage={0}>
         <div className="flex justify-between gap-x-5">
           <Typography variant="h4">
             <T string="contractAgreements.titleProviding" />
           </Typography>
-
-          <div className="flex justify-end items-center">
-            <div className="inline-flex float-right gap-x-2">
-              <IconButton
-                onClick={decrementPage}
-                disabled={!hasPrev}
-              >
-                <ChevronLeft className="size-6" />
-              </IconButton>
-              <IconButton
-                onClick={incrementPage}
-              >
-                <ChevronRight className="size-6" />
-              </IconButton>
-            </div>
-          </div>
+          <List.Pagination>
+            {({ decrementPage, hasPrev, hasNext, incrementPage }) =>
+              <div className="flex justify-end items-center">
+                <div className="inline-flex float-right gap-x-2">
+                  <IconButton
+                    onClick={decrementPage}
+                    disabled={!hasPrev}
+                  >
+                    <ChevronLeft className="size-6" />
+                  </IconButton>
+                  <IconButton
+                    onClick={incrementPage}
+                    disabled={!hasNext}
+                  >
+                    <ChevronRight className="size-6" />
+                  </IconButton>
+                </div>
+              </div>}
+          </List.Pagination>
         </div>
 
         <div className="flex flex-wrap gap-4 py-4">
           <ContractAgreementsList.Items
-            limit={limit}
-            offset={offset}
+            limit={MAX_ITEMS}
             sortOrder="DESC"
             filterExpression={[{
               operandLeft: "providerId",
@@ -232,7 +247,7 @@ export default function ContractAgreementsListPage() {
             </span>
           </div>
         </ContractAgreementsList.Loading>
-      </ContractAgreementsList>
+      </ContractAgreementsList >
     </SideDrawer >
   );
 }

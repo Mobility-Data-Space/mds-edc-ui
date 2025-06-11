@@ -5,7 +5,7 @@ const FIRST_PAGE = 0;
 const ITEMS = 25;
 
 export function usePagination() {
-  const { query, route, push } = useRouter();
+  const { query, push } = useRouter();
   const [page, setPage] = useState(
     parseInt(query.page as string) || FIRST_PAGE,
   );
