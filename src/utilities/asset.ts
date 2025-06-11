@@ -1,12 +1,12 @@
 import {removeEmptyFields} from "@/utilities/form";
-import {Asset, AssetInput} from "@think-it-labs/edc-connector-client";
+import {Asset, AssetInput, DataAddress} from "@think-it-labs/edc-connector-client";
 import {FieldShowProps} from "@/components/molecules/field-show";
 import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
 import {ENGLISH_SELECT_DATA, LANGUAGES} from "@/constants/languages";
 import {DELIMITER} from "@/i18n";
-import {extractArrayValues} from "@/utilities/utilities";
-import {ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE, ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_MODEL_ID, ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA, ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY, ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY, ASSET_ADVANCED_INFO_GEO_LOCATION, ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL, ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS, ASSET_ADVANCED_INFO_GEO_REFERENCE_METHOD, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION, ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START, ASSET_ADVANCED_INFO_TRANSPORT_MODE, ASSET_CONTENT_TYPE, ASSET_DESCRIPTION, ASSET_ENDPOINT_DOCUMENTATION, ASSET_KEYWORDS, ASSET_LANGUAGE, ASSET_ORGANIZATION, ASSET_PUBLISHER, ASSET_STANDARD_LICENSE, ASSET_TITLE, ASSET_VERSION} from "@/schema/asset";
-import { defaultHttpDataAddress } from "./data-address";
+import {extractArrayValues, isEmail, isUrl} from "@/utilities/utilities";
+import {ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE, ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_MODEL_ID, ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA, ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY, ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY, ASSET_ADVANCED_INFO_GEO_LOCATION, ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL, ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS, ASSET_ADVANCED_INFO_GEO_REFERENCE_METHOD, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION, ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START, ASSET_ADVANCED_INFO_TRANSPORT_MODE, ASSET_CONTENT_TYPE, ASSET_DESCRIPTION, ASSET_ENDPOINT_DOCUMENTATION, ASSET_KEYWORDS, ASSET_LANGUAGE, ASSET_ORGANIZATION, ASSET_PUBLISHER, ASSET_STANDARD_LICENSE, ASSET_TITLE, ASSET_VERSION, DATA_ADDRESS_BASE_URL, DATA_OFFER_CONTACT_EMAIL, DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT} from "@/schema/asset";
+import {DataAddressTypes, defaultHttpDataAddress} from "./data-address";
 import {CONTEXT_DCAT} from "@/schema/context.ts";
 
 const temporalCoverageValue = ([start, end]: [string, string]) => {
@@ -269,34 +269,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
 };
 
 const assetDataAddressFieldsToShow = (asset: Asset): FieldShowProps[] => {
-  const dataAddressFieldsToMerge = [
-    {
-      label: "assets.new.httpProxyMethod",
-      value: readValue(asset.dataAddress, "proxyMethod"),
-    },
-    {
-      label: "assets.new.httpProxyPath",
-      value: readValue(asset.dataAddress, "proxyPath"),
-    },
-    {
-      label: "assets.new.fieldDataAddressQueryParams",
-      value: readValue(asset.dataAddress, "proxyQueryParams"),
-    }
-  ];
-
-  const dataSourceText = !dataAddressFieldsToMerge.some((field) => field.value) ? 'Disabled' :
-    dataAddressFieldsToMerge
-    .filter((field) => field.value)
-    .map((field) => field.label)
-    .join(DELIMITER);
-
-  const dataSourceFields = [
-    {
-      label: "assets.new.httpDataSourceParameterization",
-      value: dataSourceText,
-      icon: 'api',
-    },
-  ];
+  const dataSourceFields = [];
 
   const contentType = readValue(asset.properties, ASSET_CONTENT_TYPE);
   if (contentType) {
@@ -343,3 +316,56 @@ export const transformForId = (str?: string) => {
     .replaceAll(' ', '-')
     .toLowerCase();
 };
+
+export const validateDataAddress = (formDataToValidate: DataAddress, translator: (str: string) => string) => {
+  const newErrors: { [key: string]: boolean | string } = {};
+
+  if (formDataToValidate.type === DataAddressTypes.CustomJson) {
+    if (! formDataToValidate.description) {
+      newErrors.description = true;
+    } else {
+      try {
+        JSON.parse(formDataToValidate.description as string);
+      } catch (e) {
+        newErrors.description = translator("assets.new.mustBeValidJson");
+      }
+    }
+  }
+
+
+  if (formDataToValidate.type === DataAddressTypes.HttpData) {
+    if (! formDataToValidate[DATA_ADDRESS_BASE_URL]) {
+      newErrors[DATA_ADDRESS_BASE_URL] = true;
+    } else if (! isUrl(formDataToValidate[DATA_ADDRESS_BASE_URL])) {
+      newErrors[DATA_ADDRESS_BASE_URL] = translator("assets.new.mustBeValidUrl");
+    }
+  }
+
+  if (formDataToValidate.type === DataAddressTypes.MDSOnRequestOffer) {
+    if (! formDataToValidate[DATA_OFFER_CONTACT_EMAIL]) {
+      newErrors[DATA_OFFER_CONTACT_EMAIL] = true;
+    } else if (! isEmail(formDataToValidate[DATA_OFFER_CONTACT_EMAIL])) {
+      newErrors[DATA_OFFER_CONTACT_EMAIL] = translator("assets.new.mustBeValidEmail");
+    }
+
+    if (! formDataToValidate[DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT]) {
+      newErrors[DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT] = true;
+    }
+  }
+
+  const requiredProperties = [];
+  if (
+    formDataToValidate.type === DataAddressTypes.AmazonS3 ||
+    formDataToValidate.type === DataAddressTypes.AzureBlob
+  ) {
+    requiredProperties.push(...["bucketName", "region", "keyname", "objectName", "objectPrefix"]);
+
+    requiredProperties.forEach((propertyName) => {
+      if (! formDataToValidate[propertyName]) {
+        newErrors[propertyName] = true;
+      }
+    });
+  }
+
+  return newErrors;
+}

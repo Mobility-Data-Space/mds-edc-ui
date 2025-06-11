@@ -38,6 +38,10 @@ export const ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END = `${CONTEXT_DCAT.value}e
 
 export const ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS = `${CONTEXT_ADMS.value}sample`;
 
+export const DATA_ADDRESS_BASE_URL = "baseUrl";
+export const DATA_OFFER_CONTACT_EMAIL = "email"
+export const DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT = "preferred_email_subject"
+
 // Replaced by DCAT Organization
 const ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME = `${CONTEXT_DCT.value}rightsHolder`;
 

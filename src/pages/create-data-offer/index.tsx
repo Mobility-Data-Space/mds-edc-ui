@@ -36,10 +36,9 @@ import { defaultCreateContractDefinitionFormData, fromContractDefinitionForm, Md
 import {PUBLISH_MODE_DO_NOT_PUBLISH, PUBLISH_MODES} from "@/constants/data-address-types";
 import { MultiplicityConstraint, operatorIn } from "@/utilities/policy-constraints";
 import {UNRESTRICTED_POLICY_ID} from "@/schema/policy";
-import { defaultCreateAssetFormData, AssetProperties, generateId, fromAssetForm } from "@/utilities/asset"
+import {defaultCreateAssetFormData, AssetProperties, generateId, fromAssetForm, validateDataAddress} from "@/utilities/asset"
 import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_TITLE} from "@/schema/asset";
 import {PUBLISH_MODE_PUBLISH_RESTRICTED, PUBLISH_MODE_PUBLISH_UNRESTRICTED} from "@/constants/data-address-types";
-import { DataAddressTypes } from "@/utilities/data-address";
 
 interface DataOffer {
   asset: AssetInput,
@@ -81,7 +80,7 @@ export default function CreateDataOfferPage() {
   }
 
   const dataAddressIsNotValid = () => {
-    return 0 < Object.entries(validateDataAddress(formData.asset.dataAddress)).length
+    return 0 < Object.entries(validateDataAddress(formData.asset.dataAddress, translator)).length
   }
 
   const cannotSubmit = () => {
@@ -104,7 +103,7 @@ export default function CreateDataOfferPage() {
   };
 
   const dataAddressFormOnChange = (dataAddressFormData: DataAddress) => {
-    setErrors((oldErrors) => ({ ...oldErrors, dataAddress: validateDataAddress(dataAddressFormData) }));
+    setErrors((oldErrors) => ({ ...oldErrors, dataAddress: validateDataAddress(dataAddressFormData, translator) }));
 
     return onChange({ ...formData, asset: {...formData.asset, dataAddress: dataAddressFormData }});
   };
@@ -149,29 +148,11 @@ export default function CreateDataOfferPage() {
     return newErrors;
   };
 
-  const validateDataAddress = (formDataToValidate: DataAddress) => {
-    const newErrors: { [key: string]: boolean | string } = {};
-
-    if (formDataToValidate.type === DataAddressTypes.CustomJson) {
-      if (! formDataToValidate.description) {
-        newErrors.description = true;
-      } else {
-        try {
-          JSON.parse(formDataToValidate.description as string);
-        } catch (e) {
-          newErrors.description = translator("assets.new.mustBeValidJson");
-        }
-      }
-    }
-
-    return newErrors;
-  }
-
   const setFormErrors = () => {
     return {
       properties: validateGeneralInfo(formData.asset.properties),
       advancedInfo: validateAdvancedInfo(formData.asset.properties),
-      dataAddress: validateDataAddress(formData.asset.dataAddress),
+      dataAddress: validateDataAddress(formData.asset.dataAddress, translator),
     };
   };
 

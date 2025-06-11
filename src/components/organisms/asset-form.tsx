@@ -13,9 +13,7 @@ import { AssetFormDataAddressStep } from "@/components/organisms/asset-form-data
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
 import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_TITLE, ASSET_VERSION} from "@/schema/asset";
-import {fromAssetForm, generateId, defaultCreateAssetFormData, AssetProperties} from "@/utilities/asset";
-import {DATA_ADDRESS_TYPE_CUSTOM_JSON} from "@/constants/data-address-types";
-import { DataAddressTypes } from "@/utilities/data-address";
+import {fromAssetForm, generateId, defaultCreateAssetFormData, AssetProperties, validateDataAddress} from "@/utilities/asset";
 
 const stepLabelSharedProps = {
   className: "w-full justify-start p-4",
@@ -50,7 +48,7 @@ export default function AssetForm() {
   }
 
   const dataAddressIsNotValid = () => {
-    return 0 < Object.entries(validateDataAddress(formData.dataAddress)).length
+    return 0 < Object.entries(validateDataAddress(formData.dataAddress, translator)).length
   }
 
   const cannotSubmit = () => {
@@ -95,7 +93,7 @@ export default function AssetForm() {
   };
 
   const dataAddressFormOnChange = (dataAddressFormData: DataAddress) => {
-    setErrors((oldErrors) => ({ ...oldErrors, dataAddress: validateDataAddress(dataAddressFormData) }));
+    setErrors((oldErrors) => ({ ...oldErrors, dataAddress: validateDataAddress(dataAddressFormData, translator) }));
 
     return onChange({ ...formData, dataAddress: dataAddressFormData });
   };
@@ -137,28 +135,10 @@ export default function AssetForm() {
     return newErrors;
   };
 
-  const validateDataAddress = (formDataToValidate: DataAddress) => {
-    const newErrors: { [key: string]: boolean | string } = {};
-
-    if (formDataToValidate.type === DataAddressTypes.CustomJson) {
-      if (! formDataToValidate.description) {
-        newErrors.description = true;
-      } else {
-        try {
-          JSON.parse(formDataToValidate.description as string);
-        } catch (e) {
-          newErrors.description = translator("assets.new.mustBeValidJson");
-        }
-      }
-    }
-
-    return newErrors;
-  }
-
   const setFormErrors = () => {
     return {
       properties: validateAdvancedInfo(validateGeneralInfo(formData.properties)),
-      dataAddress: validateDataAddress(formData.dataAddress),
+      dataAddress: validateDataAddress(formData.dataAddress, translator),
     }
   };
 

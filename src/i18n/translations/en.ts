@@ -168,7 +168,6 @@ export const en = {
         showConditionsForUse: "Show Conditions for Use",
         customProperties: "Custom Properties",
         privateProperties: "Private Properties",
-        httpDataSourceParameterization: "HTTP Data Source Parameterization",
 
         buttonCancel: "Cancel",
         buttonSave: "Add asset",
@@ -176,6 +175,8 @@ export const en = {
         saveFail: "Failed saving asset!",
         invalidWhitespacesOrColons: "Must not contain whitespaces or colons.",
         mustBeValidJson: "Must be valid JSON",
+        mustBeValidUrl: "Must be valid Url",
+        mustBeValidEmail: "Must be valid Email",
       },
     },
     dataOffer: {
@@ -422,6 +423,7 @@ export const en = {
         initiateTransfer: "Initiate Transfer",
         customRequestBodyContentType: "Custom Request Body Content Type",
         customRequestBody: "Custom Request Body",
+        success: "Contract Agreement transferred successfully",
       },
     },
   },
