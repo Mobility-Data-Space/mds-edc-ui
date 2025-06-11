@@ -22,11 +22,12 @@ import {validateDataAddress} from "@/utilities/asset.ts";
 export interface TransferFormDialogProps {
   open: boolean,
   onClose: () => void,
+  onSuccess?: () => void,
   translator: (key: string) => string,
   contractAgreementLd: ContractAgreement,
 }
 
-export function TransferFormDialog({ contractAgreementLd, open, onClose, translator }: TransferFormDialogProps): JSX.Element {
+export function TransferFormDialog({ contractAgreementLd, open, onClose, onSuccess = () => {}, translator }: TransferFormDialogProps): JSX.Element {
   const [formData, setFormData] = useState<DataAddress>(defaultHttpDataAddress);
 
   const [errors, setErrors] = useState({});
@@ -44,7 +45,11 @@ export function TransferFormDialog({ contractAgreementLd, open, onClose, transla
     };
     const transfer = createTransferProcessRequest(agreement as ContractAgreement, DataAddressTypes.HttpData, formData, connector.protocolUrl);
     edcClient.management.transferProcesses.initiate(transfer)
-      .then(onClose)
+      .then(() => {
+        enqueueSnackbar(translator("transferProcesses.new.success"));
+        onSuccess();
+        onClose();
+      })
       .catch(error => {
         const match = /"message":"(.*?)"/.exec(error.message)
         enqueueSnackbar((match && match[1]) || translator("common.errorOccurred"));

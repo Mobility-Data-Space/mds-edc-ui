@@ -335,6 +335,7 @@ export const en = {
       status: "Status",
       transfers: "Transfers",
       otherConnector: "Other Connector",
+      retiredFetchError: "Error while fetching retired contract agreements",
       "[id]": {
         title: "View contract agreement",
         description: "A single contract agreement",
