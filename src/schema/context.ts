@@ -16,6 +16,13 @@ export const TRACTUS_X_CONTEXT = {prefix: "tx:", value: "https://w3id.org/tractu
 
 export const contextsList = [CONTEXT_DCT, CONTEXT_DCAT, CONTEXT_MOBILITYDCAT_AP, CONTEXT_MOBILITYDCAT_AP_THEME, CONTEXT_ADMS, CONTEXT_OWL, CONTEXT_SKOS, CONTEXT_RDFS, CONTEXT_XSD, CONTEXT_ODRL, CONTEXT_EDC];
 
+export const contextToCompact: { [key: string]: string } = {};
+
+contextsList.forEach(context => {
+  contextToCompact[context.prefix.replace(":", "")] = context.value;
+});
+
+
 export const contextPrefixes: { [key: string]: string } = {};
 
 contextsList.forEach(context => {
