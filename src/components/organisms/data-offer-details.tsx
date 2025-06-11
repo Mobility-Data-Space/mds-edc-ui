@@ -27,16 +27,13 @@ export default function DataOfferDetails({ offers, assetId, counterPartyAddress,
   const { translator } = useTranslator();
 
 
-  const [compactContractDefinitions, setCompactContractDefinitions] = useState([]);
+  const [compactContractDefinitions, setCompactContractDefinitions] = useState<Policy[]>([]);
   useEffect(() => {
-    async function compactConstraints() {
-      setCompactContractDefinitions(! offers ?
-        [] :
-        await compact(offers)
-      );
+    if (! offers) {
+      setCompactContractDefinitions([]);
+    } else {
+      compact(offers).then(compacted => setCompactContractDefinitions(compacted as unknown as Policy[]));
     }
-
-    compactConstraints();
   }, [offers]);
 
   const [negotiateContractIsOpen, setNegotiateContractIsOpen] = useState<Record<string, boolean>>({});
@@ -65,7 +62,7 @@ export default function DataOfferDetails({ offers, assetId, counterPartyAddress,
 
             <PolicyConstraintShow
               constraints={removeJsonLdSchemaFromProperties(compactContractDefinitions)?.permission}
-              jsonLdObject={compactContractDefinitions}
+              jsonLdObject={offer}
               jsonLdDialogTitle={<TitleWithIcon
                 icon={<Icon className="mt-1.5" fontSize="large" >policy</Icon>}
                 title={<div className="flex gap-x-1">
@@ -92,13 +89,13 @@ export default function DataOfferDetails({ offers, assetId, counterPartyAddress,
               </Tooltip>
             </div>
 
-    <ConfirmDialog
-      open={negotiateContractIsOpen[offer["@id"]] || false}
-      onClose={() => setNegotiateContractIsOpen(prev => ({ ...prev, [offer["@id"]]: false }))}
-      onConfirm={() => onNegotiateConfirm(offer)}
-      title="contractNegotiations.negotiateConfirmTitle"
-      content="contractNegotiations.negotiateConfirmContent"
-    />
+            <ConfirmDialog
+              open={negotiateContractIsOpen[offer["@id"]] || false}
+              onClose={() => setNegotiateContractIsOpen(prev => ({ ...prev, [offer["@id"]]: false }))}
+              onConfirm={() => onNegotiateConfirm(offer)}
+              title="contractNegotiations.negotiateConfirmTitle"
+              content="contractNegotiations.negotiateConfirmContent"
+            />
           </div>
         ))}
       </div>

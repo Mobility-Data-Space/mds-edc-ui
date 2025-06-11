@@ -8,7 +8,7 @@ export const useContractNegotiationContext = () => {
   const { item } = useViewContext<ContractNegotiation>();
   const [compactedItem, setCompactedItem] = useState(item);
   useEffect(() => {
-    compact(item).then(setCompactedItem);
+    compact(item).then(compacted => setCompactedItem(compacted as ContractNegotiation));
   }, [item]);
 
   return {
