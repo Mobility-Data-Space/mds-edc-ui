@@ -1,10 +1,10 @@
 import React, {ReactNode, useEffect, useState} from "react";
 import {T} from "@/i18n";
 import {Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
-import {replaceUrlPrefixes} from "@/utilities/catalog";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import {ReactJsonViewProps} from "react-json-view";
 import dynamic from "next/dynamic";
+import {compact} from "@think-it-labs/edc-connector-client";
 
 export interface JsonLdDialogProps {
   title?: string | ReactNode;
@@ -16,6 +16,11 @@ export interface JsonLdDialogProps {
 export function JsonLdDialog({ isOpen, onClose, title, jsonLdObject }: JsonLdDialogProps): JSX.Element {
   const [ReactJson, setReactJson] = useState<React.ComponentType<ReactJsonViewProps>>();
   const [jsonIsCleaned, setJsonIsCleaned] = useState(false);
+  const [cleanJson, setCleanJson] = useState({});
+
+  useEffect(() => {
+    compact(jsonLdObject).then(setCleanJson);
+  }, [jsonLdObject]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -35,7 +40,7 @@ export function JsonLdDialog({ isOpen, onClose, title, jsonLdObject }: JsonLdDia
       </DialogTitle>
       <DialogContent style={{ maxWidth: "80vw", width: "800px" }}>
         {ReactJson && <ReactJson
-          src={jsonIsCleaned ? replaceUrlPrefixes(jsonLdObject) : jsonLdObject}
+          src={jsonIsCleaned ? cleanJson : jsonLdObject}
           displayObjectSize={false}
           displayDataTypes={false}
           enableClipboard={false}

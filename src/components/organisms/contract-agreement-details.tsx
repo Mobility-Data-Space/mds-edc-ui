@@ -1,12 +1,11 @@
-import React, {useState, useEffect} from "react";
-import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
+import React from "react";
 import { T } from "@/i18n";
 import {Asset, ContractAgreement} from "@think-it-labs/edc-connector-client";
 import {Icon} from "@mui/material";
 import {TitleWithIcon} from "@/components/atoms/TitleWithIcon";
 import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
 import Typography from "@mui/material/Typography";
-import {contractAgreementFieldsToShow, transferProcessesFieldsToShow} from "@/utilities/contract-agreement";
+import {contractAgreementFieldsToShow} from "@/utilities/contract-agreement";
 import FieldGrid from "@/components/molecules/field-grid";
 import {MarkdownCollapsableText} from "@/components/molecules/markdown-collapsable-text";
 import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
@@ -15,20 +14,21 @@ import Divider from "@mui/material/Divider";
 import {assetGeneralFieldsToShow} from "@/utilities/asset";
 import {PolicyConstraintShow} from "@/components/molecules/policy-constraint-show";
 import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/entities";
+import TransferProcessList from "@/components/molecules/transfer-process-list.tsx";
 
 interface ContractAgreementDetailsProps {
   contractAgreement: ContractAgreement;
   participantId: string;
   asset: Asset;
   transferProcesses: TransferProcess[];
+  counterPartyAddress: string;
 }
 
-export default function ContractAgreementDetails({ contractAgreement, participantId, asset, transferProcesses }: ContractAgreementDetailsProps) {
+export default function ContractAgreementDetails({ contractAgreement, participantId, asset, transferProcesses, counterPartyAddress }: ContractAgreementDetailsProps) {
   const description = readValue(asset.properties, ASSET_DESCRIPTION);
-  const [transferProcessesFields, contractAgreementFields, assetFields] = [
-    transferProcessesFieldsToShow(transferProcesses),
-    contractAgreementFieldsToShow(contractAgreement, participantId),
-    assetGeneralFieldsToShow(asset, participantId, ""), // TODO: connector endpoint
+  const [contractAgreementFields, assetFields] = [
+    contractAgreementFieldsToShow(contractAgreement, participantId, counterPartyAddress),
+    assetGeneralFieldsToShow(asset, participantId, counterPartyAddress),
   ];
 
   return (
@@ -42,7 +42,7 @@ export default function ContractAgreementDetails({ contractAgreement, participan
           <Divider/>
         </div>
 
-        <FieldGrid fields={transferProcessesFields} label="transferProcesses.history"/>
+        <TransferProcessList transferProcesses={transferProcesses} />
 
         <FieldGrid fields={contractAgreementFields} label="contractAgreements.contractAgreement"/>
 

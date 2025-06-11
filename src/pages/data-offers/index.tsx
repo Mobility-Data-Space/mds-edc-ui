@@ -4,20 +4,23 @@ import {Button as MuiButton, IconButton, Icon} from "@mui/material";
 import { ContractDefinitionsList } from "@think-it-labs/edc-connector-ui/contract-definitions-list";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { usePagination } from "@/hooks/use-pagination";
-import { T } from "@/i18n";
+import {T, useTranslator} from "@/i18n";
 import SideDrawer from "@/components/organisms/side-drawer";
 import ContractDefinitionCard from "@/components/organisms/contract-definition-card";
 import {JsonLdDialog} from "@/components/molecules/JsonLdDialog";
 import {TitleWithIcon} from "@/components/atoms/TitleWithIcon";
 import {ContractDefinition} from "@think-it-labs/edc-connector-client";
+import DataOfferCreateDialog from "@/components/organisms/data-offer-create-dialog.tsx";
 
 export default function AssetListPage() {
   const { push, connector } = useParticipantConnectorState();
+  const { translator } = useTranslator();
   const managementUrl = connector?.managementUrl as string;
   const { decrementPage, incrementPage, offset, limit, hasPrev, page } =
     usePagination();
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const [openDataOfferData, setOpenDataOfferData] = useState({
     contractDefinition: {} as ContractDefinition,
@@ -30,6 +33,15 @@ export default function AssetListPage() {
 
   return (
     <SideDrawer title={<T string="contractDefinitions.title" />}>
+      <DataOfferCreateDialog
+        key={`DataOfferCreateDialog${isCreateModalOpen}`}
+        open={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        participantId={connector.id}
+        connectorEndpoint={connector.protocolUrl}
+        managementUrl={managementUrl}
+        translator={translator}
+      />
       <JsonLdDialog
         isOpen={isDetailsModalOpen}
         jsonLdObject={openDataOfferData.contractDefinition}
@@ -44,7 +56,7 @@ export default function AssetListPage() {
         <div className="flex gap-x-5">
           <div className="flex items-center">
             <div>
-              <MuiButton onClick={() => push("/data-offers/new")} variant="contained">
+              <MuiButton onClick={() => setIsCreateModalOpen(true)} variant="contained">
                 <CirclePlus fontSize="large" className="mr-2"/>
                 <T string="contractDefinitions.publishDataOffer"/>
               </MuiButton>

@@ -27,7 +27,7 @@ export function ContractDefinitionsList({
       }
 
       return Promise.resolve([new ContractDefinition()]) ;
-    }, 
+    },
     [client],
   );
 
@@ -40,7 +40,7 @@ export function ContractDefinitionsList({
     <List<ContractDefinition>
       queryAll={queryAll}
       delete={del}
-      getId={(policyDefinition: ContractDefinition) => policyDefinition.id}
+      getId={(contractDefinition: ContractDefinition) => String(contractDefinition.id)}
       managementUrl={managementUrl}
     >
       {children}
