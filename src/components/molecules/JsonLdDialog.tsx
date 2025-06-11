@@ -4,7 +4,8 @@ import {Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle} fro
 import FormControlLabel from "@mui/material/FormControlLabel";
 import {ReactJsonViewProps} from "react-json-view";
 import dynamic from "next/dynamic";
-import {compact} from "@think-it-labs/edc-connector-client";
+import jsonld from "jsonld";
+import {contextToCompact} from "@/schema/context.ts";
 
 export interface JsonLdDialogProps {
   title?: string | ReactNode;
@@ -19,7 +20,10 @@ export function JsonLdDialog({ isOpen, onClose, title, jsonLdObject }: JsonLdDia
   const [cleanJson, setCleanJson] = useState({});
 
   useEffect(() => {
-    compact(jsonLdObject).then(setCleanJson);
+    jsonld.compact(jsonLdObject, contextToCompact).then((compacted: any) => {
+      const { "@context": context, ...newValue } = compacted;
+      setCleanJson(newValue);
+    });
   }, [jsonLdObject]);
 
   useEffect(() => {
