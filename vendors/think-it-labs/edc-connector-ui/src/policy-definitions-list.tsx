@@ -39,7 +39,7 @@ export function PolicyDefinitionsList({
     <List<PolicyDefinition>
       queryAll={queryAll}
       delete={del}
-      getId={(policyDefinition: PolicyDefinition) => policyDefinition.id}
+      getId={(policyDefinition: PolicyDefinition) => String(policyDefinition.id)}
       managementUrl={managementUrl}
     >
       {children}
