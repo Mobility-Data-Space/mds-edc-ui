@@ -1,7 +1,7 @@
 import React from "react";
 import {Checkbox as MuiCheckbox, CheckboxProps, FormControlLabel, FormControlLabelProps} from '@mui/material';
 
-export function Checkbox({ label, onChange, value }: Omit<FormControlLabelProps, "control" | "onChange"> & CheckboxProps & { value: boolean }): JSX.Element {
+export function Checkbox({ label, onChange, value, onClick }: Omit<FormControlLabelProps, "control" | "onChange"> & CheckboxProps & { value: boolean }): JSX.Element {
 
   return (
     <FormControlLabel
@@ -10,6 +10,7 @@ export function Checkbox({ label, onChange, value }: Omit<FormControlLabelProps,
         checked={value}
         onChange={onChange}
       />}
+      onClick={onClick}
       label={label}
     />
   );

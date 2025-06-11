@@ -9,6 +9,7 @@ import { useParticipantConnectorState } from "@/hooks/use-participant-connector-
 import { usePagination } from "@/hooks/use-pagination";
 import { T } from "@/i18n";
 import SideDrawer from "@/components/organisms/side-drawer";
+import {TransferProcessStateIcon} from "@/components/atoms/transfer-process-state-icon.tsx";
 
 export default function TransferProcessesListPage() {
   const { push, connector } = useParticipantConnectorState();
@@ -83,7 +84,10 @@ export default function TransferProcessesListPage() {
                       </button>
                     </Table.Cell>
                     <Table.Cell>
-                      {item.state}
+                      <div className="flex gap-x-1 items-center">
+                        <span>{item.state}</span>
+                        <TransferProcessStateIcon transferProcess={item} />
+                      </div>
                     </Table.Cell>
                     <Table.Cell>
                       <ContractAgreementView

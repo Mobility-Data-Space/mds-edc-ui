@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    tags:
+      - "*"
 
 jobs:
   push_to_registry:
@@ -25,12 +27,28 @@ jobs:
         with:
           string: ${{ github.repository }}
         
-      - name: Build and push inmemory image
+      - name: Generate Docker metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ghcr.io/${{ steps.lowercase_gh_repo.outputs.lowercase }}/mds-connector-ui
+          labels: |
+            org.opencontainers.image.title=MDS EDC UI
+            org.opencontainers.image.description=MDS EDC UI for MDS EDC Connector.
+          tags: |
+            type=semver,pattern={{version}},enable=${{ startsWith(github.ref, 'refs/tags/') }}
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push Docker image with metadata
         uses: docker/build-push-action@v6
         with:
           context: ./
           file: Dockerfile
           push: true
-          tags: ghcr.io/${{ steps.lowercase_gh_repo.outputs.lowercase }}/mds-connector-ui:latest
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.tags }}
           build-args: |
             GITHUB_TOKEN=${{ secrets.THINKIT_TOKEN }}

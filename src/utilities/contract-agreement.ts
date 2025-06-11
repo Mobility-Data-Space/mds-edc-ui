@@ -1,16 +1,14 @@
 import {Inner} from "@think-it-labs/edc-connector-client/dist/src/inner";
 import {ContractAgreement} from "@think-it-labs/edc-connector-client";
 import {FieldShowProps} from "@/components/molecules/field-show";
-import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/entities";
-import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
-import {AGREEMENT_RETIREMENT_DATE, AGREEMENT_RETIREMENT_REASON} from "@/schema/contract-agreement.ts";
+import {CONTEXT_EDC, TRACTUS_X_CONTEXT} from "@/schema/context.ts";
+import {formatDateTime} from "@/utilities/utilities.ts";
 
-export const contractAgreementFieldsToShow = (contractAgreement: ContractAgreement, participantId: string): FieldShowProps[] => {
-
+export const contractAgreementFieldsToShow = (contractAgreement: ContractAgreement, participantId: string, counterPartyAddress: string): FieldShowProps[] => {
   return [
     {
       label: "contractAgreements.signed",
-      value: new Date(contractAgreement.contractSigningDate * 1000).toString(),
+      value: formatDateTime(contractAgreement.contractSigningDate * 1000),
       icon: "category"
     },
     {
@@ -30,7 +28,7 @@ export const contractAgreementFieldsToShow = (contractAgreement: ContractAgreeme
     },
     {
       label: "contractAgreements.counterPartyConnectorEndpoint",
-      value: "",
+      value: counterPartyAddress,
       icon: "link"
     },
     {
@@ -41,20 +39,8 @@ export const contractAgreementFieldsToShow = (contractAgreement: ContractAgreeme
   ];
 };
 
-export const transferProcessesFieldsToShow = (transferProcesses: TransferProcess[]) => {
-
-  return transferProcesses.map((transferProcess: TransferProcess) => {
-    const object = removeJsonLdSchemaFromProperties(transferProcess);
-    const stateTimestamp = object.stateTimestamp && object.stateTimestamp[0] && object.stateTimestamp[0]["@value"];
-    const date = new Date(stateTimestamp).toString();
-
-    return {
-      label: `${date} - ${transferProcess.state}`,
-      value: transferProcess.id,
-      icon: transferProcess.type === "CONSUMER" ? "file_download" : "file_upload",
-    };
-  });
-}
+export const AGREEMENT_RETIREMENT_DATE = `${TRACTUS_X_CONTEXT.value}agreementRetirementDate`;
+export const AGREEMENT_RETIREMENT_REASON = `${TRACTUS_X_CONTEXT.value}reason`;
 
 export interface RetiredContractAgreement {
   agreementId: string;
@@ -65,7 +51,7 @@ export interface RetiredContractAgreement {
 export class AgreementsRetirementController {
   #inner: Inner;
   #management: string;
-  #pathPrefix = "/v3.1alpha/retireagreements";
+  #pathPrefix = "/v3/contractagreements/retirements";
   protocol: String = "dataspace-protocol-http";
 
   constructor(management: string) {
@@ -86,8 +72,8 @@ export class AgreementsRetirementController {
       method: "POST",
       body: {
         "@context": {
-          "tx": "https://w3id.org/tractusx/v0.0.1/ns/",
-          "edc": "https://w3id.org/edc/v0.0.1/ns/"
+          "tx": TRACTUS_X_CONTEXT.value,
+          "edc": CONTEXT_EDC.value
         },
         "edc:agreementId": contractAgreementId,
         "tx:reason": reason
