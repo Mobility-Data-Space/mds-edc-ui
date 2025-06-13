@@ -11,7 +11,6 @@ export interface AssetFormDataAddressRemoteProps {
   errors: { [key: string]: boolean | string },
 }
 
-
 export function AssetFormDataAddressAmazonS3({ formData, errors, onChange, translator}: AssetFormDataAddressRemoteProps): JSX.Element {
   return (
     <>
@@ -48,7 +47,7 @@ export function AssetFormDataAddressAmazonS3({ formData, errors, onChange, trans
           id="data-region-description"
           key="data-region-description"
           label={translator("assets.new.fieldRegion")}
-          placeholder={translator("asser.new.fieldRegion")}
+          placeholder={translator("assets.new.fieldRegion")}
           required
           helperText={typeof errors.region === "string" ? errors.region : ""}
           classes={{ textField: { '& p':{ color: theme.palette.error.main } }} as any}
@@ -69,7 +68,7 @@ export function AssetFormDataAddressAmazonS3({ formData, errors, onChange, trans
           id="data-keyname-description"
           key="data-keyname-description"
           label={translator("assets.new.fieldKeyname")}
-          placeholder={translator("asset.new.fieldKeyname")}
+          placeholder={translator("assets.new.fieldKeyname")}
           required
           helperText={typeof errors.keyname === "string" ? errors.keyname : ""}
           classes={{ textField: { '& p':{ color: theme.palette.error.main } }} as any}

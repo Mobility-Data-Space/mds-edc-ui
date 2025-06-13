@@ -1,19 +1,21 @@
+import React, {useCallback, useEffect, useState} from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import {Divider, IconButton} from "@mui/material";
+import { ContractAgreementsList } from "@think-it-labs/edc-connector-ui/contract-agreements-list";
+import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
+import { usePagination } from "@/hooks/use-pagination";
+import { T, useTranslator } from "@/i18n";
+import SideDrawer from "@/components/organisms/side-drawer";
 import ContractAgreementCard from "@/components/organisms/contract-agreement-card";
 import ContractAgreementDialog from "@/components/organisms/contract-agreement-dialog";
-import SideDrawer from "@/components/organisms/side-drawer";
-import { STATE_RUNNING } from "@/constants/transfer-process.ts";
-import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
-import { T, useTranslator } from "@/i18n";
-import { AGREEMENT_RETIREMENT_DATE, AGREEMENT_RETIREMENT_REASON, AgreementsRetirementController, RetiredContractAgreement } from "@/utilities/contract-agreement";
-import { Divider, IconButton } from "@mui/material";
+import {ContractAgreement, TransferProcessStates} from "@think-it-labs/edc-connector-client";
 import Typography from "@mui/material/Typography";
-import { ContractAgreement, TransferProcessStates } from "@think-it-labs/edc-connector-client";
-import { ContractAgreementsList } from "@think-it-labs/edc-connector-ui/contract-agreements-list";
-import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
+import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
+import {AGREEMENT_RETIREMENT_DATE, AGREEMENT_RETIREMENT_REASON, AgreementsRetirementController, RetiredContractAgreement} from "@/utilities/contract-agreement";
+import {STATE_RUNNING} from "@/constants/transfer-process.ts";
+import {enqueueSnackbar} from "notistack";
 import { List } from "@think-it-labs/edc-connector-ui/list";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useState } from "react";
 
 const MAX_ITEMS = 25
 
@@ -63,7 +65,7 @@ export default function ContractAgreementsListPage() {
 
   const [contractAgreementInfo, setContractAgreementInfo] = useState<ContractAgreementInfo>({});
 
-  useEffect(() => {
+  const populateRetired = () => {
     const controller = new AgreementsRetirementController(managementUrl)
     controller.retiredAgreementsRequest().then(retiredAgreements => {
       const retiredContractAgreementsToSave: { [key: string]: RetiredContractAgreement } = {};
@@ -94,7 +96,11 @@ export default function ContractAgreementsListPage() {
         });
         setContractAgreementInfo(contractAgreementInfoToSave);
       });
-    });
+    }).catch(error => enqueueSnackbar("contractAgreements.retiredFetchError"));
+  };
+
+  useEffect(() => {
+    populateRetired();
   }, [edcClient]);
 
   if (!connector) {
@@ -114,6 +120,7 @@ export default function ContractAgreementsListPage() {
         isTerminatedAt={openContractAgreementInfo?.isTerminatedAt}
         isRunning={openContractAgreementInfo?.isRunning}
         onClose={() => setIsDetailsModalOpen(false)}
+        onTerminateSuccess={populateRetired}
         participantId={connector.id}
         connectorEndpoint={connector.protocolUrl}
         managementUrl={connector.managementUrl}

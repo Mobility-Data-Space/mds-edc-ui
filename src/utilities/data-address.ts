@@ -1,5 +1,9 @@
 import { BaseDataAddress, HttpDataAddress } from "@think-it-labs/edc-connector-client";
 
+export type DataAddressErrors<T> = {
+  [K in keyof Partial<T>]: boolean | string;
+};
+
 export enum DataAddressTypes {
   MDSOnRequestOffer = "MDSOnRequestOffer",
   AmazonS3 = "AmazonS3",

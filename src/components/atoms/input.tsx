@@ -12,6 +12,7 @@ export function Input({ tooltip = "", onChange, value, error, ...rest }: Omit<Te
       label={rest.label}
       variant="outlined"
       placeholder={rest.placeholder}
+      helperText={typeof error === "string" ? error : ""}
       {...rest}
       error={!! error}
       slotProps={{
