@@ -175,6 +175,8 @@ export const en = {
         saveFail: "Failed saving asset!",
         invalidWhitespacesOrColons: "Must not contain whitespaces or colons.",
         mustBeValidJson: "Must be valid JSON",
+        mustBeValidUrl: "Must be valid Url",
+        mustBeValidEmail: "Must be valid Email",
       },
     },
     dataOffer: {
@@ -333,6 +335,7 @@ export const en = {
       status: "Status",
       transfers: "Transfers",
       otherConnector: "Other Connector",
+      retiredFetchError: "Error while fetching retired contract agreements",
       "[id]": {
         title: "View contract agreement",
         description: "A single contract agreement",
@@ -421,6 +424,7 @@ export const en = {
         initiateTransfer: "Initiate Transfer",
         customRequestBodyContentType: "Custom Request Body Content Type",
         customRequestBody: "Custom Request Body",
+        success: "Contract Agreement transferred successfully",
       },
     },
   },

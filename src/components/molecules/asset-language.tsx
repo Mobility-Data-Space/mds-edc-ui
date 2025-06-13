@@ -17,7 +17,6 @@ export function AssetLanguage({ formData, onChange, errors }: AssetLanguageProps
   return (
     <MuiSelect
       name={ASSET_LANGUAGE}
-      label="language"
       id="properties-language"
       key="properties-language"
       options={LANGUAGE_SELECT_DATA}

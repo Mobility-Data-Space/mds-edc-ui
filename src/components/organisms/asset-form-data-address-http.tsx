@@ -14,7 +14,6 @@ export interface AssetFormDataAddressHttpProps {
   methodAlwaysShowing?: boolean,
 }
 
-
 export function AssetFormDataAddressHttp({ formData, errors, onChange, translator, methodAlwaysShowing = false}: AssetFormDataAddressHttpProps): JSX.Element {
   return (
     <>
@@ -68,7 +67,11 @@ export function AssetFormDataAddressHttp({ formData, errors, onChange, translato
         >
           <T string="assets.new.fieldDataAddressUrl"/>
         </label>
-        {formData.baseUrl && <FormHelperText>{translator("assets.new.fieldDataAddressHttpProxyPathHelper")}</FormHelperText>}
+        {formData.baseUrl &&
+          <FormHelperText>
+            {translator("assets.new.fieldDataAddressHttpProxyPathHelper")}
+          </FormHelperText>
+        }
 
         <Input
           name="data-address-base-url"
@@ -78,7 +81,7 @@ export function AssetFormDataAddressHttp({ formData, errors, onChange, translato
           required
           placeholder={"https://"}
           label={translator("assets.new.fieldDataAddressUrl")}
-          error={errors["ASSET_DATA_ADDRESS_BASE_URL"]}
+          error={errors.baseUrl}
           value={formData.baseUrl}
           onChange={(event) => onChange({ ...formData, baseUrl: event.target.value })}
         />
