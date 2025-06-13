@@ -9,13 +9,29 @@ import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
 import { List } from "./list";
 import { Local } from "./local";
 
-interface ContractAgreementsListProps {
+interface ContractAgreementsListPropsBase {
   managementUrl: string;
 }
+
+interface ContractAgreementsListPropsWithoutPagination extends ContractAgreementsListPropsBase {
+  usePagination: false;
+}
+
+interface ContractAgreementsListPropsWithPagination extends ContractAgreementsListPropsBase {
+  usePagination: true;
+  currentPage: number;
+  firstPage?: number;
+  navigate: (newPage: number) => void;
+}
+
+type ContractAgreementsListProps =
+  | ContractAgreementsListPropsWithoutPagination
+  | ContractAgreementsListPropsWithPagination;
 
 export function ContractAgreementsList({
   children,
   managementUrl,
+  ...props
 }: PropsWithChildren<ContractAgreementsListProps>) {
   const client = useEdcConnectorClient({
     management: managementUrl,
@@ -27,20 +43,34 @@ export function ContractAgreementsList({
         return client.management.contractAgreements.queryAll(querySpec);
       }
 
-      return Promise.resolve([new ContractAgreement()]) ;
+      return Promise.resolve([new ContractAgreement()]);
     },
     [client],
   );
 
-  return (
-    <List<ContractAgreement>
-      queryAll={queryAll}
-      getId={(contractAgreement: ContractAgreement) => String(contractAgreement.id)}
-      managementUrl={managementUrl}
-    >
-      {children}
-    </List>
-  );
+  if (props.usePagination) {
+    return (
+      <List<ContractAgreement>
+        queryAll={queryAll}
+        getId={(contractAgreement: ContractAgreement) => String(contractAgreement.id)}
+        managementUrl={managementUrl}
+        navigate={props.navigate}
+        page={props.currentPage}
+        usePagination={props.usePagination}
+        firstPage={props.firstPage}
+      >
+        {children}
+      </List>)
+  }
+
+  return (<List<ContractAgreement>
+    queryAll={queryAll}
+    getId={(contractAgreement: ContractAgreement) => String(contractAgreement.id)}
+    managementUrl={managementUrl}
+  >
+    {children}
+  </List>)
+
 }
 
 interface ContractAgreementsListAssetProps {

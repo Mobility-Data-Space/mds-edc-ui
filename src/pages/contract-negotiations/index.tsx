@@ -1,9 +1,8 @@
 import React, {useState} from "react";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
-import {Button, IconButton, Icon} from "@mui/material";
+import {IconButton, Tooltip} from "@mui/material";
 import {ContractAgreementView} from "@think-it-labs/edc-connector-ui/contract-agreement-view";
 import { ContractNegotiationsList } from "@think-it-labs/edc-connector-ui/contract-negotiations-list";
-import { Timestamp } from "@think-it-labs/edc-connector-ui/timestamp";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { usePagination } from "@/hooks/use-pagination";
 import { T, useTranslator } from "@/i18n";
@@ -16,7 +15,11 @@ import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
 
 const CreatedAt = ({ item }: { item: ContractNegotiation }) => {
   const createdAtValue = readValue(item, "https://w3id.org/edc/v0.0.1/ns/createdAt");
-  return formatDateTime(createdAtValue, { showSeconds: true });
+  return <Tooltip title={formatDateTime(createdAtValue, { showSeconds: true, showDayOfWeek: true })}>
+    <span>
+      {formatDateTimeAgo(createdAtValue)}
+    </span>
+  </Tooltip>;
 }
 
 const CounterPartyId = ({ item }: { item: ContractNegotiation }) => {
@@ -56,43 +59,19 @@ export default function ContractNegotiationsListPage() {
         translator={translator}
       />
       <ContractNegotiationsList managementUrl={managementUrl}>
-        <div className="flex gap-x-5">
-          <div className="flex-grow">
-            <label
-              htmlFor="hs-as-table-product-review-search"
-              className="sr-only"
+        <div className="flex justify-end items-center mb-3">
+          <div className="inline-flex float-right gap-x-2">
+            <IconButton
+              onClick={decrementPage}
+              disabled={!hasPrev}
             >
-              <T global string="search"/>
-            </label>
-            <div className="relative flex rounded-lg shadow-sm">
-              <ContractNegotiationsList.Search
-                name="hs-as-table-product-review-search"
-                className="py-3 px-4 ps-11 block w-full border-gray-200 shadow-sm rounded-s-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-                placeholder={globalTranslator("searchPlaceholder")}
-              />
-              <div className="absolute inset-y-0 start-0 flex items-center pointer-events-none z-20 ps-4">
-                <Search className="w-4 h-4"/>
-              </div>
-              <ContractNegotiationsList.SearchTrigger
-                className="py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-e-md border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
-                <T global string="search"/>
-              </ContractNegotiationsList.SearchTrigger>
-            </div>
-          </div>
-          <div className="flex justify-end items-center">
-            <div className="inline-flex float-right gap-x-2">
-              <IconButton
-                onClick={decrementPage}
-                disabled={!hasPrev}
-              >
-                <ChevronLeft className="size-6"/>
-              </IconButton>
-              <IconButton
-                onClick={incrementPage}
-              >
-                <ChevronRight className="size-6"/>
-              </IconButton>
-            </div>
+              <ChevronLeft className="size-6"/>
+            </IconButton>
+            <IconButton
+              onClick={incrementPage}
+            >
+              <ChevronRight className="size-6"/>
+            </IconButton>
           </div>
         </div>
         <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">

@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import {Divider, IconButton} from "@mui/material";
 import { ContractAgreementsList } from "@think-it-labs/edc-connector-ui/contract-agreements-list";
@@ -14,6 +14,10 @@ import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-e
 import {AGREEMENT_RETIREMENT_DATE, AGREEMENT_RETIREMENT_REASON, AgreementsRetirementController, RetiredContractAgreement} from "@/utilities/contract-agreement";
 import {STATE_RUNNING} from "@/constants/transfer-process.ts";
 import {enqueueSnackbar} from "notistack";
+import { List } from "@think-it-labs/edc-connector-ui/list";
+import { useRouter } from "next/router";
+
+const MAX_ITEMS = 25
 
 interface ContractAgreementInfo {
   [key: string]: {
@@ -31,8 +35,20 @@ export default function ContractAgreementsListPage() {
 
   const { translator } = useTranslator();
 
-  const { decrementPage, incrementPage, offset, limit, hasPrev, page } =
-    usePagination();
+  const { push, query } = useRouter()
+
+  const navigate = useCallback((newPage: number) => {
+    push(
+      {
+        href: window.location.href,
+        query: {
+          ...query,
+          page: newPage,
+        },
+      },
+    );
+
+  }, [])
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
@@ -45,7 +61,7 @@ export default function ContractAgreementsListPage() {
     setOpenContractAgreementData({ contractAgreement });
   };
 
-  const edcClient = useEdcConnectorClient({management: managementUrl});
+  const edcClient = useEdcConnectorClient({ management: managementUrl });
 
   const [contractAgreementInfo, setContractAgreementInfo] = useState<ContractAgreementInfo>({});
 
@@ -111,33 +127,36 @@ export default function ContractAgreementsListPage() {
         contentStyle={{ maxWidth: "90vw", width: "1000px" }}
         translator={translator}
       />
-      <ContractAgreementsList managementUrl={managementUrl}>
+      <ContractAgreementsList managementUrl={managementUrl} usePagination navigate={navigate} currentPage={parseInt(query.page as string) || 0} firstPage={0}>
         <div className="flex justify-between gap-x-5">
           <Typography variant="h4" >
             <T string="contractAgreements.titleConsuming" />
           </Typography>
-
-          <div className="flex justify-end items-center">
-            <div className="inline-flex float-right gap-x-2">
-              <IconButton
-                onClick={decrementPage}
-                disabled={!hasPrev}
-              >
-                <ChevronLeft className="size-6"/>
-              </IconButton>
-              <IconButton
-                onClick={incrementPage}
-              >
-                <ChevronRight className="size-6"/>
-              </IconButton>
-            </div>
-          </div>
+          <List.Pagination>
+            {({ decrementPage, hasPrev, hasNext, incrementPage }) =>
+              <div className="flex justify-end items-center">
+                <div className="inline-flex float-right gap-x-2">
+                  <IconButton
+                    onClick={decrementPage}
+                    disabled={!hasPrev}
+                  >
+                    <ChevronLeft className="size-6" />
+                  </IconButton>
+                  <IconButton
+                    onClick={incrementPage}
+                    disabled={!hasNext}
+                  >
+                    <ChevronRight className="size-6" />
+                  </IconButton>
+                </div>
+              </div>
+            }
+          </List.Pagination>
         </div>
 
         <div className="flex flex-wrap gap-4 py-4">
           <ContractAgreementsList.Items
-            limit={limit}
-            offset={offset}
+            limit={MAX_ITEMS}
             sortOrder="DESC"
             filterExpression={[{
               operandLeft: "consumerId",
@@ -145,18 +164,22 @@ export default function ContractAgreementsListPage() {
               operandRight: connector.id
             }]}
           >
-            {({item, index}) =>
-              <ContractAgreementCard
-                key={index}
-                contractAgreement={item}
-                isTerminated={contractAgreementInfo[item.id]?.isTerminated}
-                isRunning={contractAgreementInfo[item.id]?.isRunning}
-                transferCount={contractAgreementInfo[item.id]?.transfersCount}
-                onClick={() => openDetailsModal(item)}
-              />
+            {
+              ({ item, index }) =>
+              (
+
+                <ContractAgreementCard
+                  key={index}
+                  contractAgreement={item}
+                  isTerminated={contractAgreementInfo[item.id]?.isTerminated}
+                  isRunning={contractAgreementInfo[item.id]?.isRunning}
+                  transferCount={contractAgreementInfo[item.id]?.transfersCount}
+                  onClick={() => openDetailsModal(item)}
+                />
+              )
             }
-          </ContractAgreementsList.Items>
-        </div>
+          </ContractAgreementsList.Items >
+        </div >
         <ContractAgreementsList.Loading>
           <div className="max-w-20 mx-auto my-4 flex flex-col bg-white border shadow-sm rounded-xl p-4 md:p-5">
             <span
@@ -168,37 +191,39 @@ export default function ContractAgreementsListPage() {
             </span>
           </div>
         </ContractAgreementsList.Loading>
-      </ContractAgreementsList>
+      </ContractAgreementsList >
 
       <Divider className="!mb-3" />
 
-      <ContractAgreementsList managementUrl={managementUrl}>
+      <ContractAgreementsList managementUrl={managementUrl} usePagination navigate={navigate} currentPage={parseInt(query.page as string) || 0} firstPage={0}>
         <div className="flex justify-between gap-x-5">
           <Typography variant="h4">
             <T string="contractAgreements.titleProviding" />
           </Typography>
-
-          <div className="flex justify-end items-center">
-            <div className="inline-flex float-right gap-x-2">
-              <IconButton
-                onClick={decrementPage}
-                disabled={!hasPrev}
-              >
-                <ChevronLeft className="size-6"/>
-              </IconButton>
-              <IconButton
-                onClick={incrementPage}
-              >
-                <ChevronRight className="size-6"/>
-              </IconButton>
-            </div>
-          </div>
+          <List.Pagination>
+            {({ decrementPage, hasPrev, hasNext, incrementPage }) =>
+              <div className="flex justify-end items-center">
+                <div className="inline-flex float-right gap-x-2">
+                  <IconButton
+                    onClick={decrementPage}
+                    disabled={!hasPrev}
+                  >
+                    <ChevronLeft className="size-6" />
+                  </IconButton>
+                  <IconButton
+                    onClick={incrementPage}
+                    disabled={!hasNext}
+                  >
+                    <ChevronRight className="size-6" />
+                  </IconButton>
+                </div>
+              </div>}
+          </List.Pagination>
         </div>
 
         <div className="flex flex-wrap gap-4 py-4">
           <ContractAgreementsList.Items
-            limit={limit}
-            offset={offset}
+            limit={MAX_ITEMS}
             sortOrder="DESC"
             filterExpression={[{
               operandLeft: "providerId",
@@ -206,7 +231,7 @@ export default function ContractAgreementsListPage() {
               operandRight: connector.id
             }]}
           >
-            {({item, index}) =>
+            {({ item, index }) =>
               <ContractAgreementCard
                 key={index}
                 contractAgreement={item}
@@ -229,7 +254,7 @@ export default function ContractAgreementsListPage() {
             </span>
           </div>
         </ContractAgreementsList.Loading>
-      </ContractAgreementsList>
-    </SideDrawer>
+      </ContractAgreementsList >
+    </SideDrawer >
   );
 }
