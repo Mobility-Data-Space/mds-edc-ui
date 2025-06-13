@@ -5,7 +5,6 @@ import {T} from "@/i18n";
 import {Input} from "@/components/atoms/input";
 import {MuiSelect} from "@/components/atoms/mui-select";
 import {RadioButton} from "@/components/atoms/radio-button";
-import {DATA_ADDRESS_BASE_URL} from "@/schema/asset.ts";
 
 export interface AssetFormDataAddressHttpProps {
   translator: (key: string) => string,
@@ -14,7 +13,6 @@ export interface AssetFormDataAddressHttpProps {
   errors: { [key: string]: boolean | string },
   methodAlwaysShowing?: boolean,
 }
-
 
 export function AssetFormDataAddressHttp({ formData, errors, onChange, translator, methodAlwaysShowing = false}: AssetFormDataAddressHttpProps): JSX.Element {
   return (
@@ -69,7 +67,11 @@ export function AssetFormDataAddressHttp({ formData, errors, onChange, translato
         >
           <T string="assets.new.fieldDataAddressUrl"/>
         </label>
-        {formData.baseUrl && <FormHelperText>{translator("assets.new.fieldDataAddressHttpProxyPathHelper")}</FormHelperText>}
+        {formData.baseUrl &&
+          <FormHelperText>
+            {translator("assets.new.fieldDataAddressHttpProxyPathHelper")}
+          </FormHelperText>
+        }
 
         <Input
           name="data-address-base-url"
@@ -79,9 +81,9 @@ export function AssetFormDataAddressHttp({ formData, errors, onChange, translato
           required
           placeholder={"https://"}
           label={translator("assets.new.fieldDataAddressUrl")}
-          error={errors[DATA_ADDRESS_BASE_URL]}
-          value={formData[DATA_ADDRESS_BASE_URL]}
-          onChange={(event) => onChange({ ...formData, [DATA_ADDRESS_BASE_URL]: event.target.value })}
+          error={errors.baseUrl}
+          value={formData.baseUrl}
+          onChange={(event) => onChange({ ...formData, baseUrl: event.target.value })}
         />
         <RadioButton
           labelTrue={translator("assets.new.fieldDataAddressHttpProxyPathTrue")}

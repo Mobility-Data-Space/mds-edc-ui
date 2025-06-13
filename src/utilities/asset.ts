@@ -5,9 +5,10 @@ import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
 import {ENGLISH_SELECT_DATA, LANGUAGES} from "@/constants/languages";
 import {DELIMITER} from "@/i18n";
 import {extractArrayValues, isEmail, isUrl} from "@/utilities/utilities";
-import {ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE, ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_MODEL_ID, ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA, ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY, ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY, ASSET_ADVANCED_INFO_GEO_LOCATION, ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL, ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS, ASSET_ADVANCED_INFO_GEO_REFERENCE_METHOD, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION, ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START, ASSET_ADVANCED_INFO_TRANSPORT_MODE, ASSET_CONTENT_TYPE, ASSET_DESCRIPTION, ASSET_ENDPOINT_DOCUMENTATION, ASSET_KEYWORDS, ASSET_LANGUAGE, ASSET_ORGANIZATION, ASSET_PUBLISHER, ASSET_STANDARD_LICENSE, ASSET_TITLE, ASSET_VERSION, DATA_ADDRESS_BASE_URL, DATA_OFFER_CONTACT_EMAIL, DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT} from "@/schema/asset";
-import {DataAddressTypes, defaultHttpDataAddress} from "./data-address";
+import {ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE, ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_MODEL_ID, ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA, ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY, ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY, ASSET_ADVANCED_INFO_GEO_LOCATION, ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL, ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS, ASSET_ADVANCED_INFO_GEO_REFERENCE_METHOD, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION, ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START, ASSET_ADVANCED_INFO_TRANSPORT_MODE, ASSET_CONTENT_TYPE, ASSET_DESCRIPTION, ASSET_ENDPOINT_DOCUMENTATION, ASSET_KEYWORDS, ASSET_LANGUAGE, ASSET_ORGANIZATION, ASSET_PUBLISHER, ASSET_STANDARD_LICENSE, ASSET_TITLE, ASSET_VERSION} from "@/schema/asset";
+import {AzureBlobDataAddress, DataAddressErrors, DataAddressTypes, defaultHttpDataAddress, OnRequestDataAddress, S3DataAddress} from "./data-address";
 import {CONTEXT_DCAT} from "@/schema/context.ts";
+import {HttpDataAddress} from "@think-it-labs/edc-connector-client/dist/src/entities/data-address";
 
 const temporalCoverageValue = ([start, end]: [string, string]) => {
   if (!start && !end) {
@@ -318,54 +319,69 @@ export const transformForId = (str?: string) => {
 };
 
 export const validateDataAddress = (formDataToValidate: DataAddress, translator: (str: string) => string) => {
-  const newErrors: { [key: string]: boolean | string } = {};
-
   if (formDataToValidate.type === DataAddressTypes.CustomJson) {
     if (! formDataToValidate.description) {
-      newErrors.description = true;
-    } else {
-      try {
-        JSON.parse(formDataToValidate.description as string);
-      } catch (e) {
-        newErrors.description = translator("assets.new.mustBeValidJson");
-      }
+      return { description: true };
+    }
+
+    try {
+      JSON.parse(formDataToValidate.description as string);
+    } catch (e) {
+      return { description: translator("assets.new.mustBeValidJson") };
     }
   }
 
-
   if (formDataToValidate.type === DataAddressTypes.HttpData) {
-    if (! formDataToValidate[DATA_ADDRESS_BASE_URL]) {
-      newErrors[DATA_ADDRESS_BASE_URL] = true;
-    } else if (! isUrl(formDataToValidate[DATA_ADDRESS_BASE_URL])) {
-      newErrors[DATA_ADDRESS_BASE_URL] = translator("assets.new.mustBeValidUrl");
+    const errors: DataAddressErrors<HttpDataAddress> = {};
+
+    if (! formDataToValidate.baseUrl) {
+      errors.baseUrl = true;
+    } else if (! isUrl(formDataToValidate.baseUrl)) {
+      errors.baseUrl = translator("assets.new.mustBeValidUrl");
     }
+
+    return errors;
   }
 
   if (formDataToValidate.type === DataAddressTypes.MDSOnRequestOffer) {
-    if (! formDataToValidate[DATA_OFFER_CONTACT_EMAIL]) {
-      newErrors[DATA_OFFER_CONTACT_EMAIL] = true;
-    } else if (! isEmail(formDataToValidate[DATA_OFFER_CONTACT_EMAIL])) {
-      newErrors[DATA_OFFER_CONTACT_EMAIL] = translator("assets.new.mustBeValidEmail");
+    const errors: DataAddressErrors<OnRequestDataAddress> = {};
+
+    if (! formDataToValidate.email) {
+      errors.email = true;
+    } else if (! isEmail(formDataToValidate.email)) {
+      errors.email = translator("assets.new.mustBeValidEmail");
     }
 
-    if (! formDataToValidate[DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT]) {
-      newErrors[DATA_OFFER_CONTACT_PREFERRED_EMAIL_SUBJECT] = true;
+    if (! formDataToValidate.preferred_email_subject) {
+      errors.preferred_email_subject = true;
     }
+
+    return errors;
   }
 
-  const requiredProperties = [];
-  if (
-    formDataToValidate.type === DataAddressTypes.AmazonS3 ||
-    formDataToValidate.type === DataAddressTypes.AzureBlob
-  ) {
-    requiredProperties.push(...["bucketName", "region", "keyname", "objectName", "objectPrefix"]);
-
+  if (formDataToValidate.type === DataAddressTypes.AmazonS3) {
+    const requiredProperties = ["bucketName", "region", "keyname", "objectName", "objectPrefix"];
+    const errors : DataAddressErrors<S3DataAddress> = {}
     requiredProperties.forEach((propertyName) => {
       if (! formDataToValidate[propertyName]) {
-        newErrors[propertyName] = true;
+        errors[propertyName] = true;
       }
     });
+
+    return errors;
   }
 
-  return newErrors;
+  if (formDataToValidate.type === DataAddressTypes.AzureBlob) {
+    const requiredProperties = ["bucketName", "region", "keyname", "objectName", "objectPrefix"];
+    const errors : DataAddressErrors<AzureBlobDataAddress> = {}
+    requiredProperties.forEach((propertyName) => {
+      if (! formDataToValidate[propertyName]) {
+        errors[propertyName] = true;
+      }
+    });
+
+    return errors;
+  }
+
+  return {};
 }
