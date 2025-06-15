@@ -316,6 +316,9 @@ export const en = {
       title: "List all contract agreements",
       titleProviding: "Providing",
       titleConsuming: "Consuming",
+      allContracts: "All Contracts",
+      activeContracts: "Active Contracts",
+      terminatedContracts: "Terminated Contracts",
       description:
         "List of contract agreements that owned connectors can consume. Listed agreements are the successful outcome of contract negotiations between two EDC connectors.",
       headingId: "ID",
