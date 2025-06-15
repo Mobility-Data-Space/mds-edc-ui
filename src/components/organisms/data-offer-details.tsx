@@ -5,7 +5,6 @@ import {enqueueSnackbar} from "notistack";
 import {compact, Policy} from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 import {TitleWithIcon} from "@/components/atoms/TitleWithIcon";
-
 import {FieldShow} from "@/components/molecules/field-show";
 import {ConfirmDialog} from "@/components/molecules/confirm-dialog";
 import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
@@ -20,9 +19,10 @@ interface DataOfferDetailsProps {
   participantId: string;
   counterPartyAddress: string ;
   assetIsOwned: boolean;
+  onNegotiateSuccess?: () => void;
 }
 
-export default function DataOfferDetails({ offers, assetId, counterPartyAddress, participantId, assetIsOwned = false }: DataOfferDetailsProps) {
+export default function DataOfferDetails({ offers, assetId, counterPartyAddress, participantId, assetIsOwned = false, onNegotiateSuccess = () => {} }: DataOfferDetailsProps) {
   const { connector } = useParticipantConnectorState() ;
   const { translator } = useTranslator();
 
@@ -43,8 +43,15 @@ export default function DataOfferDetails({ offers, assetId, counterPartyAddress,
   const onNegotiateConfirm = (offer: Policy) => {
     const negotiation = createNegotiationRequest(offer, counterPartyAddress, participantId, assetId) ;
     edcClient.management.contractNegotiations.initiate(negotiation)
-      .then(() => setNegotiateContractIsOpen(prev => ({ ...prev, [offer["@id"]]: false })))
-      .catch(error => enqueueSnackbar(translator("common.errorOccurred")))
+    .then(() => {
+      onNegotiateSuccess();
+      setNegotiateContractIsOpen(prev => ({ ...prev, [offer["@id"]]: false }));
+      enqueueSnackbar(translator("contractNegotiations.negotiationSuccess"))
+    })
+    .catch(error => {
+      const match = /"message":"(.*?)"/.exec(error.message)
+      enqueueSnackbar((match && match[1]) || translator("dataOffer.negotiateError"));
+    });
   }
 
   return (

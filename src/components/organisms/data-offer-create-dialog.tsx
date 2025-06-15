@@ -21,6 +21,7 @@ interface DataOfferCreateDialogProps {
   connectorEndpoint: string;
   participantId: string;
   translator: (key: string) => string;
+  onSuccess?: () => void;
 }
 
 const optionsGenerator = (data: { "@id": string }[]) => {
@@ -41,7 +42,7 @@ const validateId = (id: string | undefined, translator: (str: string) => string)
   return false;
 }
 
-export default function DataOfferCreateDialog({ open, onClose, managementUrl, connectorEndpoint, participantId, translator }: DataOfferCreateDialogProps) {
+export default function DataOfferCreateDialog({ open, onClose, managementUrl, connectorEndpoint, participantId, translator, onSuccess = () => {} }: DataOfferCreateDialogProps) {
   const submitButtonRef = useRef<HTMLButtonElement>(null);
 
   const [assetDialogIsOpen, setAssetDialogIsOpen] = useState(false);
@@ -114,7 +115,10 @@ export default function DataOfferCreateDialog({ open, onClose, managementUrl, co
         <ContractDefinitionFormWrapper
           managementUrl={managementUrl}
           formData={() => fromContractDefinitionForm(formData)}
-          onSuccess={onClose}
+          onSuccess={() => {
+            onSuccess();
+            onClose();
+          }}
           onFailure={onFormSubmitFail}
         >
           <DialogTitle>

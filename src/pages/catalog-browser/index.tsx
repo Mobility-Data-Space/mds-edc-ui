@@ -21,6 +21,7 @@ export default function CatalogPage() {
   const { decrementPage, incrementPage, offset, limit, hasPrev } = usePagination();
   const { translator } = useTranslator();
 
+  const [listKey, setListKey] = useState(1);
   const [isDataOfferDialogOpen, setIsDataOfferDialogOpen] = useState(false);
   const [isCounterPartyAddressDialogOpen, setIsCounterPartyAddressDialogOpen] = useState(false);
 
@@ -33,7 +34,7 @@ export default function CatalogPage() {
 
   const [catalogParticipantId, setCatalogParticipantId] = useState("") ;
   const [datasetToNegotiate, setDatasetToNegotiate] = useState<Dataset>({} as Dataset);
-  
+
   const client = useEdcConnectorClient({ management: connector.managementUrl }) ;
   const fetchCatalogParticipantId = (counterPartyAddress: string) => {
     client.management.catalog.request({
@@ -61,6 +62,7 @@ export default function CatalogPage() {
         assetIsOwned={counterPartyAddress === connector.protocolUrl}
         onClose={() => setIsDataOfferDialogOpen(false)}
         contentStyle={{ maxWidth: "90vw", width: "1000px" }}
+        onNegotiateSuccess={() => setListKey(key => key + 1)}
       />
 
       <CounterPartyAddressDialog
@@ -113,12 +115,13 @@ export default function CatalogPage() {
             </div>
           </div>
         </div>
-        <ContractOffersList 
-          managementUrl={connector.managementUrl} 
+        <ContractOffersList
+          managementUrl={connector.managementUrl}
           counterPartyAddress={counterPartyAddressToSearch}>
-          
+
           <div className="flex flex-wrap gap-2.5">
             <ContractOffersList.Items
+              key={listKey}
               limit={limit}
               offset={offset}
               sortOrder="DESC"
@@ -148,5 +151,5 @@ export default function CatalogPage() {
         </ContractOffersList>
       </SideDrawer>
     </>
-);
+  );
 }
