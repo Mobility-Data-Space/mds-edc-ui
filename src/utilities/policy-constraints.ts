@@ -1,7 +1,7 @@
 import { AtomicConstraint, Constraint } from "@think-it-labs/edc-connector-client";
 
 export const operatorEquals = {
-  value: 'odrl:eq',
+  value: '=',
   text: '=',
   tooltip: 'Equal to',
 }
@@ -101,7 +101,7 @@ export const createTimeRestrictionConstraint = (rightOperand = "", operator = op
 // Multi
 export const createTimespanAndConstraint = ([startDate, endDate]: [string, string]): AndConstraint => ({
   and: [
-    createTimeRestrictionConstraint(startDate, operatorGreaterThanOrEqual.value), 
+    createTimeRestrictionConstraint(startDate, operatorGreaterThanOrEqual.value),
     createTimeRestrictionConstraint(endDate, operatorLessThanOrEqual.value)
   ],
 });
