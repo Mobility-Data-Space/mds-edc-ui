@@ -290,6 +290,39 @@ export const assetFieldsToShow = (asset: Asset, participantId: string, connector
   ]
 };
 
+export const assetDataAddressFieldsTitle = (asset: Asset) => {
+  const dataAddress = removeJsonLdSchemaFromProperties(asset.dataAddress);
+  const type = readValue(dataAddress, "type");
+  if (type === DataAddressTypes.MDSOnRequestOffer) {
+    return "dataOffer.contactInformation";
+  }
+
+  return "";
+}
+
+export const assetDataAddressFieldsToShow = (asset: Asset): FieldShowProps[] => {
+  const dataAddress = removeJsonLdSchemaFromProperties(asset.dataAddress);
+  const type = readValue(dataAddress, "type");
+  if (type === DataAddressTypes.MDSOnRequestOffer) {
+    return [
+      {
+        label: "dataOffer.contactEmailAddress",
+        value: readValue(dataAddress, "email"),
+        icon: 'mail',
+        copyTextIcon: true,
+      },
+      {
+        label: "dataOffer.new.dataOfferContactPreferredEmailSubject",
+        value: readValue(dataAddress, "preferred_email_subject"),
+        icon: 'subject',
+        copyTextIcon: true,
+      },
+    ];
+  }
+
+  return [];
+};
+
 export const assetPrivateFieldsToShow = (asset: Asset): FieldShowProps[] => {
   const objectEntries = Object.entries(asset.privateProperties);
   if (objectEntries.length === 0) {

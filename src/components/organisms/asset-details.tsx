@@ -1,3 +1,4 @@
+import React, {useMemo} from "react";
 import {Chip} from "@mui/material";
 import Divider from "@mui/material/Divider";
 import {Asset} from "@think-it-labs/edc-connector-client";
@@ -6,7 +7,7 @@ import {MarkdownCollapsableText} from "@/components/molecules/markdown-collapsab
 import FieldGrid from "@/components/molecules/field-grid";
 import {T} from "@/i18n";
 import {ASSET_KEYWORDS, ASSET_DESCRIPTION} from "@/schema/asset";
-import { assetFieldsToShow, assetPrivateFieldsToShow} from "@/utilities/asset";
+import {assetDataAddressFieldsTitle, assetDataAddressFieldsToShow, assetFieldsToShow, assetPrivateFieldsToShow} from "@/utilities/asset";
 
 interface AssetDetailsProps {
   asset: Asset;
@@ -17,9 +18,11 @@ interface AssetDetailsProps {
 export default function AssetDetails({ asset, participantId, connectorEndpoint }: AssetDetailsProps) {
   const keywords = asset.properties[ASSET_KEYWORDS] || [];
   const description = readValue(asset.properties, ASSET_DESCRIPTION);
+  const dataAddressTitle = assetDataAddressFieldsTitle(asset);
 
-  const [shownFields, privateFields] = useMemo(() => [
+  const [shownFields, dataAddress, privateFields] = useMemo(() => [
     assetFieldsToShow(asset, participantId, connectorEndpoint),
+    assetDataAddressFieldsToShow(asset),
     assetPrivateFieldsToShow(asset)
   ], [asset, participantId, connectorEndpoint]);
 
@@ -40,6 +43,7 @@ export default function AssetDetails({ asset, participantId, connectorEndpoint }
 
       <div className="flex flex-col gap-y-9">
         <FieldGrid fields={shownFields}/>
+        <FieldGrid fields={dataAddress} label={dataAddressTitle} />
         <FieldGrid fields={privateFields} label="assets.new.privateProperties"/>
       </div>
     </div>
