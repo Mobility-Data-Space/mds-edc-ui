@@ -180,6 +180,12 @@ export const en = {
       },
     },
     dataOffer: {
+      negotiateError: "Failed negotiating contract.",
+      contactInformation: "Contact information",
+      contactEmailAddress: "Contact E-mail Address",
+      onRequestDataOfferTitle: "On Request Data Offer",
+      onRequestDataOfferDescription1: "This data offer is not available for immediate consumption. However, the creator left an email address to contact them if interested.",
+      onRequestDataOfferDescription2: "Click <strong>Contact</strong> to email the data offer provider. Alternatively, you can also copy the contact email address from the Contact Information section above.",
       new: {
         title: "Create Data Offer",
         dataOfferTypeTitle: "Data offer type",
@@ -371,6 +377,7 @@ export const en = {
       headingCreatedAt: "Created at",
       headingApprove: "Approve",
       headingReject: "Reject",
+      negotiationSuccess: "Contract Negotiation complete!",
       approveSuccess: "Contract Agreement Approved",
       approveError: "Contract Agreement Approval Failed",
       rejectSuccess: "Contract Agreement Rejected",
