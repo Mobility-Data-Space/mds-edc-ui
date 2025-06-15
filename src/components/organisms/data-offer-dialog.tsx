@@ -13,6 +13,7 @@ import {DeleteDialog} from "@/components/molecules/delete-dialog";
 import { T } from "@/i18n";
 import {ASSET_TITLE} from "@/schema/asset";
 import { datasetToAsset } from "@/utilities/catalog";
+import {OnRequestDataOfferDescription} from "@/components/atoms/on-request-data-offer-description.tsx";
 
 const HAS_POLICY = "http://www.w3.org/ns/odrl/2/hasPolicy";
 
@@ -94,6 +95,9 @@ export default function DataOfferDialog({ open, onClose, dataset, onEditClick, d
         <DialogContent style={contentStyle}>
           <div className="flex flex-col gap-y-2.5">
             <AssetDetails asset={datasetToAsset(dataset)} participantId={participantId} connectorEndpoint={counterPartyAddress} />
+          </div>
+          <div>
+            <OnRequestDataOfferDescription asset={datasetToAsset(dataset)} />
           </div>
           <div className="flex flex-col gap-y-2.5">
             <span /> <span />
