@@ -1,6 +1,6 @@
 import React from "react";
 
-import {Button, Icon} from "@mui/material";
+import {Button, Icon, IconButton} from "@mui/material";
 import Typography from "@mui/material/Typography";
 
 import {FieldDialog} from "@/components/molecules/field-dialog";
@@ -14,9 +14,10 @@ export interface FieldShowProps {
   openModalText?: string;
   subLabel?: string;
   valueTitle?: string;
+  copyTextIcon?: boolean
 }
 
-export function FieldShow({ icon, label, value, valueTitle, subLabel, openModalText}: FieldShowProps): JSX.Element {
+export function FieldShow({ icon, label, value, valueTitle, subLabel, openModalText, copyTextIcon = false}: FieldShowProps): JSX.Element {
   const nonNullValue = value || "";
   const shouldNotTranslateValue = 0 === nonNullValue.indexOf('http') || nonNullValue.match(/^\d/);
   const [dialogIsOpen, setDialogIsOpen] = React.useState(false);
@@ -56,6 +57,9 @@ export function FieldShow({ icon, label, value, valueTitle, subLabel, openModalT
           </div>
         </>
       }
+      {copyTextIcon && <IconButton color="secondary" onClick={() => navigator.clipboard.writeText(nonNullValue)}>
+        <Icon>content_copy</Icon>
+      </IconButton>}
     </div>
   );
 }

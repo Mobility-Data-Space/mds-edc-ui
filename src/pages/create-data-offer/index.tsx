@@ -39,6 +39,7 @@ import {UNRESTRICTED_POLICY_ID} from "@/schema/policy";
 import {defaultCreateAssetFormData, AssetProperties, generateId, fromAssetForm, validateDataAddress} from "@/utilities/asset"
 import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_TITLE} from "@/schema/asset";
 import {PUBLISH_MODE_PUBLISH_RESTRICTED, PUBLISH_MODE_PUBLISH_UNRESTRICTED} from "@/constants/data-address-types";
+import {idSelector} from "@/utilities/data-offer.ts";
 
 interface DataOffer {
   asset: AssetInput,
@@ -154,16 +155,6 @@ export default function CreateDataOfferPage() {
       advancedInfo: validateAdvancedInfo(formData.asset.properties),
       dataAddress: validateDataAddress(formData.asset.dataAddress, translator),
     };
-  };
-
-  const idSelector = (id: string): CriterionInput[] => {
-    return [
-      {
-        operandLeft: "@id",
-        operator: operatorIn.value,
-        operandRight: id
-      }
-    ]
   };
 
   const onSubmit = () => {
