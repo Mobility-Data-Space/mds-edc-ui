@@ -1,12 +1,7 @@
-import React, {useEffect, useMemo, useState} from "react";
-import dynamic from "next/dynamic";
-import {ReactJsonViewProps} from "react-json-view";
 import {Chip} from "@mui/material";
 import Divider from "@mui/material/Divider";
-
 import {Asset} from "@think-it-labs/edc-connector-client";
 import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
-
 import {MarkdownCollapsableText} from "@/components/molecules/markdown-collapsable-text";
 import FieldGrid from "@/components/molecules/field-grid";
 import {T} from "@/i18n";
@@ -20,7 +15,6 @@ interface AssetDetailsProps {
 }
 
 export default function AssetDetails({ asset, participantId, connectorEndpoint }: AssetDetailsProps) {
-
   const keywords = asset.properties[ASSET_KEYWORDS] || [];
   const description = readValue(asset.properties, ASSET_DESCRIPTION);
 
@@ -28,14 +22,6 @@ export default function AssetDetails({ asset, participantId, connectorEndpoint }
     assetFieldsToShow(asset, participantId, connectorEndpoint),
     assetPrivateFieldsToShow(asset)
   ], [asset, participantId, connectorEndpoint]);
-
-  const [ReactJson, setReactJson] = useState<React.ComponentType<ReactJsonViewProps>>();
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setReactJson(dynamic(import("react-json-view"), { ssr: false }));
-    }
-  }, [])
 
   return (
     <div className="flex flex-col gap-y-2.5">
