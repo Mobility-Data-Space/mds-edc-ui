@@ -29,9 +29,10 @@ interface DataOfferDialogProps {
   deleteItem?: () => Promise<void>;
   onDeleteSuccess?: () => void;
   contentStyle?: { [key: string]: string }
+  onNegotiateSuccess?: () => void;
 }
 
-export default function DataOfferDialog({ open, onClose, dataset, onEditClick, deleteEnabled = false, participantId, counterPartyAddress, assetIsOwned = true, deleteItem, onDeleteSuccess, contentStyle = {} }: DataOfferDialogProps) {
+export default function DataOfferDialog({ open, onClose, dataset, onEditClick, deleteEnabled = false, participantId, counterPartyAddress, assetIsOwned = true, deleteItem, onDeleteSuccess, contentStyle = {}, onNegotiateSuccess }: DataOfferDialogProps) {
   const id = dataset["@id"];
   const title = readValue(dataset.properties, ASSET_TITLE) || "";
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -101,7 +102,14 @@ export default function DataOfferDialog({ open, onClose, dataset, onEditClick, d
           </div>
           <div className="flex flex-col gap-y-2.5">
             <span /> <span />
-            <DataOfferDetails assetId={dataset["@id"]} participantId={participantId} counterPartyAddress={counterPartyAddress} offers={dataset[HAS_POLICY]} assetIsOwned={assetIsOwned} />
+            <DataOfferDetails
+              assetId={dataset["@id"]}
+              participantId={participantId}
+              counterPartyAddress={counterPartyAddress}
+              offers={dataset[HAS_POLICY]}
+              assetIsOwned={assetIsOwned}
+              onNegotiateSuccess={onNegotiateSuccess}
+            />
           </div>
         </DialogContent>
         <DialogActions>
