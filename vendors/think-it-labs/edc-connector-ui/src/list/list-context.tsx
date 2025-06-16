@@ -1,5 +1,5 @@
 import { QuerySpec } from "@think-it-labs/edc-connector-client";
-import { Context, createContext, useContext } from "react";
+import {Context, createContext, ReactNode, useContext} from "react";
 import { usePagination } from "../hooks/use-pagination";
 
 export type ListContext<T> = Context<ListContextType<T>>;
@@ -14,7 +14,13 @@ export type ListContextType<T> = {
   deleteItem: (itemId: string) => void;
   getId: (item: T) => string;
   managementUrl: string;
-  pagination?: ReturnType<typeof usePagination>
+  pagination?: ReturnType<typeof usePagination>;
+  sections?: {
+    key: string;
+    title: ReactNode;
+    condition: (item: T) => boolean;
+    containerClassName?: string;
+  }[];
 };
 
 function createListContext<T>(): ListContext<T> {

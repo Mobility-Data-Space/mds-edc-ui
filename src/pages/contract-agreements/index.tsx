@@ -16,6 +16,8 @@ import {enqueueSnackbar} from "notistack";
 import { List } from "@think-it-labs/edc-connector-ui/list";
 import { useRouter } from "next/router";
 import {operatorEquals, operatorIn} from "@/utilities/policy-constraints.ts";
+import {theme} from "@/theme/ThemeProvider.tsx";
+import {LineTitle} from "@/components/atoms/line-title.tsx";
 
 const MAX_ITEMS = 25
 
@@ -72,10 +74,7 @@ export default function ContractAgreementsListPage() {
     }],
   }), [contractAgreementInfo]);
 
-  const filterExpression = [
-    ...typeFilterExpression[selectedTypeFilter],
-    ...statusFilterExpression[selectedStatusFilter]
-  ];
+  const filterExpression = statusFilterExpression[selectedStatusFilter];
 
   const { push, query } = useRouter()
 
@@ -169,7 +168,27 @@ export default function ContractAgreementsListPage() {
         translator={translator}
       />
 
-      <ContractAgreementsList managementUrl={managementUrl} usePagination navigate={navigate} currentPage={parseInt(query.page as string) || 0} firstPage={0}>
+      <ContractAgreementsList
+        managementUrl={managementUrl}
+        usePagination={true}
+        navigate={navigate}
+        currentPage={parseInt(query.page as string) || 0}
+        firstPage={0}
+        sections={[
+          {
+            key: "consuming",
+            title: <LineTitle title="contractAgreements.titleConsuming" />,
+            containerClassName: "flex flex-wrap gap-4 py-4",
+            condition: (item) => item.consumerId === connector.id
+          },
+          {
+            key: "providing",
+            title: <LineTitle title="contractAgreements.titleProviding" />,
+            containerClassName: "flex flex-wrap gap-4 py-4",
+            condition: (item) => item.consumerId !== connector.id
+          },
+        ]}
+      >
         <div className="flex justify-between gap-x-5">
           <div className="flex gap-x-4">
             <ButtonGroup color="info" >
@@ -239,11 +258,11 @@ export default function ContractAgreementsListPage() {
           </List.Pagination>
         </div>
 
-        <div className="flex flex-wrap gap-4 py-4">
+        <div className="flex flex-col flex-wrap gap-4 py-4">
           <ContractAgreementsList.Items
             limit={MAX_ITEMS}
             sortOrder="DESC"
-            filterExpression={filterExpression}
+            filterExpression={statusFilterExpression[selectedStatusFilter]}
           >
             {({item, index}) => {
               if (selectedStatusFilter === StatusFilter.Active && retiredContractAgreementIds.includes(item.id)) {
