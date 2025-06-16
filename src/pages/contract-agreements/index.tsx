@@ -191,49 +191,22 @@ export default function ContractAgreementsListPage() {
       >
         <div className="flex justify-between gap-x-5">
           <div className="flex gap-x-4">
-            <ButtonGroup color="info" >
-              <Button
-                variant={selectedTypeFilter === TypeFilter.Consuming ? "contained" : "outlined"}
-                onClick={() => setSelectedTypeFilter(TypeFilter.Consuming)}
-              >
-                <Typography color="textPrimary" variant="body2" >
-                  <T string="contractAgreements.titleConsuming" />
-                </Typography>
-              </Button>
-              <Button
-                variant={selectedTypeFilter === TypeFilter.Providing ? "contained" : "outlined"}
-                onClick={() => setSelectedTypeFilter(TypeFilter.Providing)}
-              >
-                <Typography color="textPrimary" variant="body2">
-                  <T string="contractAgreements.titleProviding"/>
-                </Typography>
-              </Button>
-            </ButtonGroup>
-            <ButtonGroup color="info" >
-              <Button
-                variant={selectedStatusFilter === StatusFilter.All ? "contained" : "outlined"}
-                onClick={() => setSelectedStatusFilter(StatusFilter.All)}
-              >
-                <Typography color="textPrimary" variant="body2">
-                  <T string="contractAgreements.allContracts"/>
-                </Typography>
-              </Button>
-              <Button
-                variant={selectedStatusFilter === StatusFilter.Active ? "contained" : "outlined"}
-                onClick={() => setSelectedStatusFilter(StatusFilter.Active)}
-              >
-                <Typography color="textPrimary" variant="body2">
-                  <T string="contractAgreements.activeContracts"/>
-                </Typography>
-              </Button>
-              <Button
-                variant={selectedStatusFilter === StatusFilter.Terminated ? "contained" : "outlined"}
-                onClick={() => setSelectedStatusFilter(StatusFilter.Terminated)}
-              >
-                <Typography color="textPrimary" variant="body2">
-                  <T string="contractAgreements.terminatedContracts"/>
-                </Typography>
-              </Button>
+            <ButtonGroup color="info" variant="outlined" sx={{
+              ".MuiButtonGroup-grouped": {
+                borderColor: theme.palette.info.main,
+              }
+            }}>
+              {Object.keys(StatusFilter).map((filter) => (
+                <Button
+                  key={filter}
+                  variant={selectedStatusFilter === filter ? "contained" : "outlined"}
+                  onClick={() => setSelectedStatusFilter(filter as StatusFilter)}
+                >
+                  <Typography color="textPrimary" variant="body2" className="font-bold">
+                    <T string={`contractAgreements.${filter.toLowerCase()}Contracts`} />
+                  </Typography>
+                </Button>
+              ))}
             </ButtonGroup>
           </div>
           <List.Pagination>

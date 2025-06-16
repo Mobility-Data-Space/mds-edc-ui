@@ -50,9 +50,9 @@ export const theme = createTheme({
       A700: "#000000",
     },
     info: {
-      50: "#fafafa",
-      100: "#f5f5f5",
-      200: "#eeeeee",
+      50: "#e0e0e0",
+      100: "#e0e0e0",
+      200: "#e0e0e0",
       300: "#e0e0e0",
       400: "#e0e0e0",
       500: "#e0e0e0",
