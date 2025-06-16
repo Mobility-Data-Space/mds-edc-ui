@@ -21,6 +21,7 @@ export default function AssetListPage() {
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [listKey, setListKey] = useState(1);
 
   const [openDataOfferData, setOpenDataOfferData] = useState({
     contractDefinition: {} as ContractDefinition,
@@ -41,6 +42,7 @@ export default function AssetListPage() {
         connectorEndpoint={connector.protocolUrl}
         managementUrl={managementUrl}
         translator={translator}
+        onSuccess={() => setListKey(key => key + 1)}
       />
       <JsonLdDialog
         isOpen={isDetailsModalOpen}
@@ -81,6 +83,7 @@ export default function AssetListPage() {
 
         <div className="flex flex-wrap gap-4 py-4">
           <ContractDefinitionsList.Items
+            key={listKey}
             limit={limit}
             offset={offset}
             sortOrder="DESC"

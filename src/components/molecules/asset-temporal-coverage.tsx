@@ -24,11 +24,14 @@ export function AssetTemporalCoverage({ translator, formData, onChange, errors }
       helperText={translator('assets.new.fieldAdvancedInfoTemporalCoverageHelper')}
       onChange={(value) => onChange({
         ...formData,
-        [ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE]: value
+        [ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE]: {
+          [ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START]: value[0],
+          [ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END]: value[1],
+        }
       })}
       error={errors[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE]}
       value={[
-        formData[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE][ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START] as string, 
+        formData[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE][ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START] as string,
         formData[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE][ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END] as string
       ]}
     />

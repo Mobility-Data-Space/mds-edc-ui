@@ -9,6 +9,8 @@ import {ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE, ASSET_ADVANCED_INFO_DATA_CATEGOR
 import {AzureBlobDataAddress, DataAddressErrors, DataAddressTypes, defaultHttpDataAddress, OnRequestDataAddress, S3DataAddress} from "./data-address";
 import {CONTEXT_DCAT} from "@/schema/context.ts";
 import {HttpDataAddress} from "@think-it-labs/edc-connector-client/dist/src/entities/data-address";
+import {dataCategoryValueToText, dataSubCategoryValueToText} from "@/utilities/data-category.ts";
+import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog.ts";
 
 const temporalCoverageValue = ([start, end]: [string, string]) => {
   if (!start && !end) {
@@ -95,8 +97,9 @@ export type AssetProperties = typeof defaultCreateAssetFormData.properties;
 
 export const assetGeneralFieldsToShow = (asset: Asset, participantId: string, connectorEndpoint: string): FieldShowProps[] => {
   const assetLanguage = readValue(asset.properties, ASSET_LANGUAGE);
+  const emptyValue = "-";
 
-  return [
+  const result = [
     {
       label: "assets.new.fieldId",
       value: asset["@id"],
@@ -104,45 +107,56 @@ export const assetGeneralFieldsToShow = (asset: Asset, participantId: string, co
     },
     {
       label: "assets.new.fieldVersion",
-      value: readValue(asset.properties, ASSET_VERSION),
+      value: readValue(asset.properties, ASSET_VERSION) || emptyValue,
       icon: "file_copy"
     },
     {
       label: "assets.new.fieldLanguage",
-      value: LANGUAGES.find((language) => language.id === assetLanguage)?.label,
+      value: LANGUAGES.find((language) => language.id === assetLanguage)?.label || emptyValue,
       icon: "language"
     },
     {
       label: "assets.new.fieldPublisher",
-      value: readValue(asset.properties, ASSET_PUBLISHER),
+      value: readValue(asset.properties, ASSET_PUBLISHER) || emptyValue,
       icon: "apartment"
     },
     {
       label: "assets.new.fieldEndpointDocumentation",
-      value: readValue(asset.properties, ASSET_ENDPOINT_DOCUMENTATION),
+      value: readValue(asset.properties, ASSET_ENDPOINT_DOCUMENTATION) || emptyValue,
       icon: "bookmarks"
     },
     {
       label: "assets.new.fieldStandardLicense",
-      value: readValue(asset.properties, ASSET_STANDARD_LICENSE),
+      value: readValue(asset.properties, ASSET_STANDARD_LICENSE) || emptyValue,
       icon: "gavel"
     },
     {
       label: "assets.new.participantId",
-      value: participantId,
+      value: participantId || emptyValue,
       icon: "category"
     },
     {
       label: "assets.new.creatorOrganizationName",
-      value: readValue(asset.properties, ASSET_ORGANIZATION),
+      value: readValue(asset.properties, ASSET_ORGANIZATION) || emptyValue,
       icon: "account_circle"
     },
     {
       label: "assets.new.connectorEndpoint",
-      value: connectorEndpoint,
+      value: connectorEndpoint || emptyValue,
       icon: "link"
     },
   ];
+
+  const contentType = readValue(asset.properties, ASSET_CONTENT_TYPE);
+  if (contentType) {
+    result.push({
+      label: "assets.new.fieldContentType",
+      value: readValue(asset.properties, ASSET_CONTENT_TYPE),
+      icon: 'category',
+    });
+  }
+
+  return result;
 };
 
 const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
@@ -165,7 +179,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
     advancedFields.push({
       icon: 'commute',
       label: 'assets.new.fieldAdvancedInfoDataCategory',
-      value: dataCategory,
+      value: dataCategoryValueToText(dataCategory),
     });
   }
   const dataSubcategory = readValue(mobilityTheme, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY)
@@ -173,7 +187,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
     advancedFields.push({
       icon: 'commute',
       label: 'assets.new.fieldAdvancedInfoDataSubcategory',
-      value: dataSubcategory,
+      value: dataSubCategoryValueToText(dataCategory, dataSubcategory),
     });
   }
   const dataModel = readValue(asset.properties, ASSET_ADVANCED_INFO_DATA_MODEL_ID)
@@ -269,27 +283,44 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
   return advancedFields;
 };
 
-const assetDataAddressFieldsToShow = (asset: Asset): FieldShowProps[] => {
-  const dataSourceFields = [];
-
-  const contentType = readValue(asset.properties, ASSET_CONTENT_TYPE);
-  if (contentType) {
-    dataSourceFields.push({
-      label: "assets.new.fieldContentType",
-      value: contentType,
-      icon: 'category',
-    });
-  }
-
-  return dataSourceFields;
-};
-
 export const assetFieldsToShow = (asset: Asset, participantId: string, connectorEndpoint: string): FieldShowProps[] => {
   return [
     ...assetGeneralFieldsToShow(asset, participantId, connectorEndpoint),
-    ...assetDataAddressFieldsToShow(asset),
     ...assetAdvancedFieldsToShow(asset),
   ]
+};
+
+export const assetDataAddressFieldsTitle = (asset: Asset) => {
+  const dataAddress = removeJsonLdSchemaFromProperties(asset.dataAddress);
+  const type = readValue(dataAddress, "type");
+  if (type === DataAddressTypes.MDSOnRequestOffer) {
+    return "dataOffer.contactInformation";
+  }
+
+  return "";
+}
+
+export const assetDataAddressFieldsToShow = (asset: Asset): FieldShowProps[] => {
+  const dataAddress = removeJsonLdSchemaFromProperties(asset.dataAddress);
+  const type = readValue(dataAddress, "type");
+  if (type === DataAddressTypes.MDSOnRequestOffer) {
+    return [
+      {
+        label: "dataOffer.contactEmailAddress",
+        value: readValue(dataAddress, "email"),
+        icon: 'mail',
+        copyTextIcon: true,
+      },
+      {
+        label: "dataOffer.new.dataOfferContactPreferredEmailSubject",
+        value: readValue(dataAddress, "preferred_email_subject"),
+        icon: 'subject',
+        copyTextIcon: true,
+      },
+    ];
+  }
+
+  return [];
 };
 
 export const assetPrivateFieldsToShow = (asset: Asset): FieldShowProps[] => {
