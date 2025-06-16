@@ -320,8 +320,8 @@ export const en = {
     },
     contractAgreements: {
       title: "List all contract agreements",
-      titleProviding: "Providing",
-      titleConsuming: "Consuming",
+      titleProviding: "Providing Contract Agreements",
+      titleConsuming: "Consuming Contract Agreements",
       allContracts: "All Contracts",
       activeContracts: "Active Contracts",
       terminatedContracts: "Terminated Contracts",

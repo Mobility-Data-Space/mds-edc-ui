@@ -3,7 +3,7 @@ import {
   PolicyDefinition,
   QuerySpec,
 } from "@think-it-labs/edc-connector-client";
-import React, { PropsWithChildren, useCallback } from "react";
+import React, {PropsWithChildren, ReactNode, useCallback} from "react";
 import { AssetView } from "./asset-view";
 import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
 import { List } from "./list";
@@ -11,6 +11,12 @@ import { Local } from "./local";
 
 interface ContractAgreementsListPropsBase {
   managementUrl: string;
+  sections?: {
+    key: string;
+    title: ReactNode;
+    condition: (item: ContractAgreement) => boolean;
+    containerClassName?: string;
+  }[];
 }
 
 interface ContractAgreementsListPropsWithoutPagination extends ContractAgreementsListPropsBase {
@@ -58,6 +64,7 @@ export function ContractAgreementsList({
         page={props.currentPage}
         usePagination={props.usePagination}
         firstPage={props.firstPage}
+        sections={props.sections}
       >
         {children}
       </List>)
@@ -67,6 +74,7 @@ export function ContractAgreementsList({
     queryAll={queryAll}
     getId={(contractAgreement: ContractAgreement) => String(contractAgreement.id)}
     managementUrl={managementUrl}
+    sections={props.sections}
   >
     {children}
   </List>)

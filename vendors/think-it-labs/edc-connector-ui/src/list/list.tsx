@@ -1,5 +1,5 @@
 import { CriterionInput, QuerySpec } from "@think-it-labs/edc-connector-client";
-import React, { PropsWithChildren, useEffect, useMemo } from "react";
+import React, {PropsWithChildren, ReactNode, useEffect, useMemo} from "react";
 import { ListContext, useListContext } from "./list-context";
 import { useList } from "./use-list";
 import { usePagination } from "../hooks/use-pagination";
@@ -12,7 +12,13 @@ export type ListProps<T> = {
   usePagination?: boolean
   page?: number
   navigate?: (newPage: number) => void
-  firstPage?: number
+  firstPage?: number,
+  sections?: {
+    key: string;
+    title: ReactNode;
+    condition: (item: T) => boolean;
+    containerClassName?: string;
+  }[]
 }
 
 export interface ListProviderProps {
@@ -34,7 +40,8 @@ export function List<T>({
   usePagination: _usePagination = false,
   page,
   navigate,
-  firstPage
+  firstPage,
+  sections,
 }: PropsWithChildren<ListProps<T>>) {
   const {
     items,
@@ -63,7 +70,8 @@ export function List<T>({
         triggerSearch: () => triggerSearch(),
         getId,
         managementUrl,
-        pagination: _usePagination ? pagination : null
+        pagination: _usePagination ? pagination : null,
+        sections
       } as any}
     >
       {children}
@@ -100,7 +108,8 @@ List.Items = function ListItems<T,>({
     isLoading,
     deleteItem,
     getId,
-    pagination
+    pagination,
+    sections
   } = useListContext<T>();
 
   if (pagination && limit) {
@@ -132,6 +141,27 @@ List.Items = function ListItems<T,>({
       return <>{children(props)}</>;
     };
   }, [children]);
+
+  if (!isLoading && sections && sections.length) {
+    const result: ReactNode[] = [];
+    sections.forEach(section => {
+      result.push(<div key={section.key} >
+        {section.title}
+        <div className={section.containerClassName || ""}>
+          {items.filter(section.condition).map((item, index) => (
+            <Item
+              key={getId(item)}
+              item={item}
+              deleteItem={async () => deleteItem(getId(item))}
+              index={index}
+            />
+          ))}
+        </div>
+      </div>);
+    });
+
+    return result;
+  }
 
   return (
     <>
@@ -220,7 +250,7 @@ export interface PaginationControlsProps {
   incrementPage: () => void
 }
 
-List.Pagination = function ({
+List.Pagination = function Pagination ({
   children,
 }: PaginationProps) {
   const { pagination } = useListContext()
@@ -230,7 +260,7 @@ List.Pagination = function ({
   }
 
   const PaginationControls = useMemo(() => {
-    return function (props: PaginationControlsProps) {
+    return function PaginationControls (props: PaginationControlsProps) {
       return <>{children(props)}</>;
     };
   }, [children]);
