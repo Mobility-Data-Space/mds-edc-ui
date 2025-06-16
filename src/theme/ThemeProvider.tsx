@@ -2,6 +2,8 @@ import * as React from 'react';
 import { createTheme, ThemeProvider as MuiThemeProvider, ThemeOptions } from '@mui/material/styles';
 import {PropsWithChildren} from "react";
 
+export const backgroundColor = "#fafafa";
+
 export const theme = createTheme({
   typography: {
     fontFamily: [
