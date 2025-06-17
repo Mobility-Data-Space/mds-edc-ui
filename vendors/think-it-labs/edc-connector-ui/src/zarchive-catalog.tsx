@@ -1,7 +1,7 @@
-import {Asset, Catalog as CatalogResult, CriterionInput, Dataset, QuerySpec} from "@think-it-labs/edc-connector-client";
-import React, {PropsWithChildren, ReactNode, useCallback, useEffect, useMemo} from "react";
+import { Asset, Catalog as CatalogResult, CriterionInput, Dataset, QuerySpec } from "@think-it-labs/edc-connector-client";
+import React, { PropsWithChildren, ReactNode, useCallback, useEffect, useMemo } from "react";
 import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
-import {List, useListContext} from "./list";
+import { List, useListContext } from "./list";
 import { Local } from "./local";
 
 export const CATALOG_DATASET = "http://www.w3.org/ns/dcat#dataset";
@@ -119,7 +119,7 @@ Catalog.Items = function ListItems({ children, limit, offset, filterExpression, 
     console.log(item)
     console.log(index)
   })
-  
+
   return (
     <>
       {!isLoading && items["http://www.w3.org/ns/dcat#dataset" as any] && items["http://www.w3.org/ns/dcat#dataset" as any]?.map((item: any, index: number) => (

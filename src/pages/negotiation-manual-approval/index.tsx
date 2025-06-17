@@ -1,18 +1,20 @@
-import React, {useState, MouseEvent, useMemo} from "react";
+import React, { useState, MouseEvent, useMemo, useCallback } from "react";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
-import {Button, IconButton, Icon} from "@mui/material";
-import {ContractAgreementView} from "@think-it-labs/edc-connector-ui/contract-agreement-view";
+import { Button, IconButton, Icon } from "@mui/material";
 import { ContractNegotiationsList } from "@think-it-labs/edc-connector-ui/contract-negotiations-list";
 import { Timestamp } from "@think-it-labs/edc-connector-ui/timestamp";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
-import { usePagination } from "@/hooks/use-pagination";
 import { T, useTranslator } from "@/i18n";
 import SideDrawer from "@/components/organisms/side-drawer";
-import {ContractNegotiation, CriterionInput} from "@think-it-labs/edc-connector-client";
+import { ContractNegotiation, CriterionInput } from "@think-it-labs/edc-connector-client";
 import { Table } from "@/components/atoms/table";
 import ContractNegotiationDialog from "@/components/organisms/contract-negotiation-dialog";
-import {enqueueSnackbar} from "notistack";
+import { enqueueSnackbar } from "notistack";
 import { MDSManualApprovalController } from "@/utilities/contract-negotiations";
+import { useRouter } from "next/router";
+import { List } from "@think-it-labs/edc-connector-ui/list";
+
+const MAX_ITEMS = 25
 
 const CreatedAt = ({ item }: { item: ContractNegotiation }) => {
   const createdAt = item && item["https://w3id.org/edc/v0.0.1/ns/createdAt"];
@@ -27,10 +29,10 @@ const CounterPartyAddress = ({ item }: { item: ContractNegotiation }) => {
 }
 
 export default function ContractNegotiationsManualApprovalListPage() {
+  const { query, push } = useRouter()
   const { connector } = useParticipantConnectorState();
   const managementUrl = connector?.managementUrl as string;
   const { globalTranslator, translator } = useTranslator();
-  const { decrementPage, incrementPage, offset, limit, hasPrev, page } = usePagination();
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
   const [openContractNegotiationData, setOpenContractNegotiationData] = useState({
@@ -68,6 +70,20 @@ export default function ContractNegotiationsManualApprovalListPage() {
     }
   ];
 
+  const currentPage = parseInt(query.page as string) || 0
+
+  const navigate = useCallback((newPage: number) => {
+    push(
+      {
+        href: window.location.href,
+        query: {
+          ...query,
+          page: newPage,
+        },
+      },
+    );
+  }, [])
+
   return (
     <SideDrawer title={<T string="contractNegotiations.title" />}>
       <ContractNegotiationDialog
@@ -78,14 +94,20 @@ export default function ContractNegotiationsManualApprovalListPage() {
         contentStyle={{ maxWidth: "90vw", width: "1000px" }}
         translator={translator}
       />
-      <ContractNegotiationsList managementUrl={managementUrl}>
+      <ContractNegotiationsList
+        managementUrl={managementUrl}
+        usePagination
+        navigate={navigate}
+        currentPage={currentPage}
+        firstPage={0}
+      >
         <div className="flex gap-x-5">
           <div className="flex-grow">
             <label
               htmlFor="hs-as-table-product-review-search"
               className="sr-only"
             >
-              <T global string="search"/>
+              <T global string="search" />
             </label>
             <div className="relative flex rounded-lg shadow-sm">
               <ContractNegotiationsList.Search
@@ -94,28 +116,33 @@ export default function ContractNegotiationsManualApprovalListPage() {
                 placeholder={globalTranslator("searchPlaceholder")}
               />
               <div className="absolute inset-y-0 start-0 flex items-center pointer-events-none z-20 ps-4">
-                <Search className="w-4 h-4"/>
+                <Search className="w-4 h-4" />
               </div>
               <ContractNegotiationsList.SearchTrigger
                 className="py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-e-md border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
-                <T global string="search"/>
+                <T global string="search" />
               </ContractNegotiationsList.SearchTrigger>
             </div>
           </div>
           <div className="flex justify-end items-center">
-            <div className="inline-flex float-right gap-x-2">
-              <IconButton
-                onClick={decrementPage}
-                disabled={!hasPrev}
-              >
-                <ChevronLeft className="size-6"/>
-              </IconButton>
-              <IconButton
-                onClick={incrementPage}
-              >
-                <ChevronRight className="size-6"/>
-              </IconButton>
-            </div>
+            <List.Pagination>
+              {({ hasNext, hasPrev, incrementPage, decrementPage }) =>
+                <div className="inline-flex float-right gap-x-2">
+                  <IconButton
+                    onClick={decrementPage}
+                    disabled={!hasPrev}
+                  >
+                    <ChevronLeft className="size-6" />
+                  </IconButton>
+                  <IconButton
+                    onClick={incrementPage}
+                    disabled={!hasNext}
+                  >
+                    <ChevronRight className="size-6" />
+                  </IconButton>
+                </div>
+              }
+            </List.Pagination>
           </div>
         </div>
         <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">
@@ -150,8 +177,7 @@ export default function ContractNegotiationsManualApprovalListPage() {
 
             <Table.Body>
               <ContractNegotiationsList.Items
-                limit={limit}
-                offset={offset}
+                limit={MAX_ITEMS}
                 sortOrder="DESC"
                 filterExpression={pendingFilter}
               >
@@ -165,7 +191,7 @@ export default function ContractNegotiationsManualApprovalListPage() {
                         type="button"
                         className="flex items-center gap-x-2 text-gray-800"
                       >
-                        {(page * 10) + (index + 1)}
+                        {(currentPage * 10) + (index + 1)}
                       </button>
                     </Table.Cell>
                     <Table.Cell>

@@ -4,14 +4,16 @@ import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
 import { List, useListContext } from "./list";
 import { Local, useLocalContext } from "./local";
 import { JsonLdValue, ValueProps } from "./json-ld";
+import { ListProps } from "./types";
 
-interface AssetsListProps {
+export type AssetsListProps = ListProps & {
   managementUrl: string;
 }
 
 export function AssetsList({
   children,
   managementUrl,
+  ...props
 }: PropsWithChildren<AssetsListProps>) {
   const client = useEdcConnectorClient({
     management: managementUrl,
@@ -23,7 +25,7 @@ export function AssetsList({
         return client.management.assets.queryAll(querySpec);
       }
 
-      return Promise.resolve([new Asset()]) ;
+      return Promise.resolve([new Asset()]);
     },
     [client],
   );
@@ -32,6 +34,22 @@ export function AssetsList({
     (id: string) => client.management.assets.delete(id),
     [client],
   );
+
+  if (props.usePagination) {
+    return (
+      <List<Asset>
+        queryAll={queryAll}
+        delete={del}
+        getId={(asset: Asset) => String(asset["@id"])}
+        managementUrl={managementUrl}
+        navigate={props.navigate}
+        page={props.currentPage}
+        usePagination={props.usePagination}
+        firstPage={props.firstPage}
+      >
+        {children}
+      </List>)
+  }
 
   return (
     <List<Asset>

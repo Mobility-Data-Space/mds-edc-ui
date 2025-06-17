@@ -3,14 +3,15 @@ import {
   PolicyDefinition,
   QuerySpec,
 } from "@think-it-labs/edc-connector-client";
-import React, {PropsWithChildren, ReactNode, useCallback} from "react";
+import React, { PropsWithChildren, ReactNode, useCallback } from "react";
 import { AssetView } from "./asset-view";
 import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
 import { List } from "./list";
 import { Local } from "./local";
+import { ListProps } from "./types";
 
-interface ContractAgreementsListPropsBase {
-  managementUrl: string;
+type ContractAgreementsListProps = ListProps & {
+  managementUrl: string
   sections?: {
     key: string;
     title: ReactNode;
@@ -18,21 +19,6 @@ interface ContractAgreementsListPropsBase {
     containerClassName?: string;
   }[];
 }
-
-interface ContractAgreementsListPropsWithoutPagination extends ContractAgreementsListPropsBase {
-  usePagination: false;
-}
-
-interface ContractAgreementsListPropsWithPagination extends ContractAgreementsListPropsBase {
-  usePagination: true;
-  currentPage: number;
-  firstPage?: number;
-  navigate: (newPage: number) => void;
-}
-
-type ContractAgreementsListProps =
-  | ContractAgreementsListPropsWithoutPagination
-  | ContractAgreementsListPropsWithPagination;
 
 export function ContractAgreementsList({
   children,
