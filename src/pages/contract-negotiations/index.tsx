@@ -38,7 +38,7 @@ export default function ContractNegotiationsListPage() {
   const { push, query } = useRouter()
   const { connector } = useParticipantConnectorState();
   const managementUrl = connector?.managementUrl as string;
-  const { globalTranslator, translator } = useTranslator();
+  const { translator } = useTranslator();
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
   const [openContractNegotiationData, setOpenContractNegotiationData] = useState({

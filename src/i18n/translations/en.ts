@@ -29,6 +29,7 @@ export const en = {
       showLess: "Show less",
       negotiate: "Negotiate",
       showJsonLd: "Show JSON-LD",
+      showDetails: "Show Details",
       cleanedJson: "Cleaned JSON",
       errorOccurred: "An error has occurred"
     },
@@ -409,9 +410,14 @@ export const en = {
       description: "List all outgoing and incoming transfer processes.",
       headingId: "ID",
       headingState: "State",
+      headingLastUpdated: "Last updated",
       headingContractAgreement: "Contract agreement",
+      headingCounterpartyParticipantId: "Counterparty Participant ID",
+      headingCounterpartyConnectorEndpoint: "Counterparty Connector Endpoint",
+      headingContractDetails: "Contract Details",
       headingAsset: "Asset",
       headingCorrelationId: "Correlation ID",
+      direction: "Direction",
       "[id]": {
         title: "View transfer process",
         description: "A single transfer process",
