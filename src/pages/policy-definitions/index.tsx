@@ -11,8 +11,7 @@ import { JsonLdDialog } from "@/components/molecules/JsonLdDialog";
 import { TitleWithIcon } from "@/components/atoms/TitleWithIcon";
 import { useRouter } from "next/router";
 import { List } from "@think-it-labs/edc-connector-ui/list";
-
-const MAX_ITEMS = 25
+import { MAX_ITEMS } from "../../constants/lists";
 
 export default function PolicyDefinitionListPage() {
   const router = useRouter()

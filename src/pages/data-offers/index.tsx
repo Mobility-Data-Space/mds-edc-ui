@@ -12,8 +12,7 @@ import { ContractDefinition } from "@think-it-labs/edc-connector-client";
 import DataOfferCreateDialog from "@/components/organisms/data-offer-create-dialog.tsx";
 import { useRouter } from "next/router";
 import { List } from "@think-it-labs/edc-connector-ui/list";
-
-const MAX_ITEMS = 25
+import { MAX_ITEMS } from "../../constants/lists";
 
 export default function AssetListPage() {
   const { push, query } = useRouter()

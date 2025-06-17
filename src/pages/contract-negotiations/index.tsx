@@ -13,8 +13,7 @@ import { formatDateTime, formatDateTimeAgo } from "@/utilities/utilities.ts";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld.tsx";
 import { useRouter } from "next/router";
 import { List } from "@think-it-labs/edc-connector-ui/list";
-
-const MAX_ITEMS = 25
+import { MAX_ITEMS } from "../../constants/lists";
 
 const CreatedAt = ({ item }: { item: ContractNegotiation }) => {
   const createdAtValue = readValue(item, "https://w3id.org/edc/v0.0.1/ns/createdAt");
