@@ -1,8 +1,8 @@
-import {Inner} from "@think-it-labs/edc-connector-client/dist/src/inner";
-import {ContractAgreement} from "@think-it-labs/edc-connector-client";
-import {FieldShowProps} from "@/components/molecules/field-show";
-import {CONTEXT_EDC, TRACTUS_X_CONTEXT} from "@/schema/context.ts";
-import {formatDateTime} from "@/utilities/utilities.ts";
+import { FieldShowProps } from "@/components/molecules/field-show";
+import { CONTEXT_EDC, TRACTUS_X_CONTEXT } from "@/schema/context.ts";
+import { formatDateTime } from "@/utilities/utilities.ts";
+import { ContractAgreement } from "@think-it-labs/edc-connector-client";
+import { Inner } from "@think-it-labs/edc-connector-client/dist/src/inner";
 
 export const contractAgreementFieldsToShow = (contractAgreement: ContractAgreement, participantId: string, counterPartyAddress: string): FieldShowProps[] => {
   return [
@@ -51,7 +51,7 @@ export interface RetiredContractAgreement {
 export class AgreementsRetirementController {
   #inner: Inner;
   #management: string;
-  #pathPrefix = "/v3/contractagreements/retirements";
+  #pathPrefix = "/v3.1alpha/retireagreements";
   protocol: String = "dataspace-protocol-http";
 
   constructor(management: string) {

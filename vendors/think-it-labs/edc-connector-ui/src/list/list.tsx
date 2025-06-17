@@ -1,10 +1,10 @@
 import { CriterionInput, QuerySpec } from "@think-it-labs/edc-connector-client";
-import React, {PropsWithChildren, ReactNode, useEffect, useMemo} from "react";
+import React, { PropsWithChildren, ReactNode, useEffect, useMemo } from "react";
+import { usePagination } from "../hooks/use-pagination";
 import { ListContext, useListContext } from "./list-context";
 import { useList } from "./use-list";
-import { usePagination } from "../hooks/use-pagination";
 
-export type ListProps<T> = {
+type ListProps<T> = {
   queryAll: (querySpec: QuerySpec) => Promise<T[]>;
   delete?: (id: string) => Promise<void>;
   getId: (item: T) => string;
@@ -250,7 +250,7 @@ export interface PaginationControlsProps {
   incrementPage: () => void
 }
 
-List.Pagination = function Pagination ({
+List.Pagination = function Pagination({
   children,
 }: PaginationProps) {
   const { pagination } = useListContext()
@@ -260,7 +260,7 @@ List.Pagination = function Pagination ({
   }
 
   const PaginationControls = useMemo(() => {
-    return function PaginationControls (props: PaginationControlsProps) {
+    return function PaginationControls(props: PaginationControlsProps) {
       return <>{children(props)}</>;
     };
   }, [children]);

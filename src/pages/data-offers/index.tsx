@@ -1,23 +1,25 @@
-import React, {useState} from "react";
-import {ChevronLeft, ChevronRight, CirclePlus} from "lucide-react";
-import {Button as MuiButton, IconButton, Icon} from "@mui/material";
+import React, { useCallback, useState } from "react";
+import { ChevronLeft, ChevronRight, CirclePlus } from "lucide-react";
+import { Button as MuiButton, IconButton, Icon } from "@mui/material";
 import { ContractDefinitionsList } from "@think-it-labs/edc-connector-ui/contract-definitions-list";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
-import { usePagination } from "@/hooks/use-pagination";
-import {T, useTranslator} from "@/i18n";
+import { T, useTranslator } from "@/i18n";
 import SideDrawer from "@/components/organisms/side-drawer";
 import ContractDefinitionCard from "@/components/organisms/contract-definition-card";
-import {JsonLdDialog} from "@/components/molecules/JsonLdDialog";
-import {TitleWithIcon} from "@/components/atoms/TitleWithIcon";
-import {ContractDefinition} from "@think-it-labs/edc-connector-client";
+import { JsonLdDialog } from "@/components/molecules/JsonLdDialog";
+import { TitleWithIcon } from "@/components/atoms/TitleWithIcon";
+import { ContractDefinition } from "@think-it-labs/edc-connector-client";
 import DataOfferCreateDialog from "@/components/organisms/data-offer-create-dialog.tsx";
+import { useRouter } from "next/router";
+import { List } from "@think-it-labs/edc-connector-ui/list";
+
+const MAX_ITEMS = 25
 
 export default function AssetListPage() {
-  const { push, connector } = useParticipantConnectorState();
+  const { push, query } = useRouter()
+  const { connector } = useParticipantConnectorState();
   const { translator } = useTranslator();
   const managementUrl = connector?.managementUrl as string;
-  const { decrementPage, incrementPage, offset, limit, hasPrev, page } =
-    usePagination();
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -31,6 +33,18 @@ export default function AssetListPage() {
     setIsDetailsModalOpen(true);
     setOpenDataOfferData({ contractDefinition });
   };
+
+  const navigate = useCallback((newPage: number) => {
+    push(
+      {
+        href: window.location.href,
+        query: {
+          ...query,
+          page: newPage,
+        },
+      },
+    );
+  }, [])
 
   return (
     <SideDrawer title={<T string="contractDefinitions.title" />}>
@@ -54,41 +68,51 @@ export default function AssetListPage() {
           icon={<Icon fontSize="large">policy</Icon>}
         />}
       />
-      <ContractDefinitionsList managementUrl={managementUrl}>
+      <ContractDefinitionsList
+        managementUrl={managementUrl}
+        usePagination
+        navigate={navigate}
+        currentPage={parseInt(query.page as string) || 0}
+        firstPage={0}
+
+      >
         <div className="flex gap-x-5">
           <div className="flex items-center">
             <div>
               <MuiButton onClick={() => setIsCreateModalOpen(true)} variant="contained">
-                <CirclePlus fontSize="large" className="mr-2"/>
-                <T string="contractDefinitions.publishDataOffer"/>
+                <CirclePlus fontSize="large" className="mr-2" />
+                <T string="contractDefinitions.publishDataOffer" />
               </MuiButton>
             </div>
           </div>
           <div className="flex justify-end items-center flex-grow">
-            <div className="inline-flex float-right gap-x-2">
-              <IconButton
-                onClick={decrementPage}
-                disabled={!hasPrev}
-              >
-                <ChevronLeft className="size-6"/>
-              </IconButton>
-              <IconButton
-                onClick={incrementPage}
-              >
-                <ChevronRight className="size-6"/>
-              </IconButton>
-            </div>
+            <List.Pagination>
+              {({ decrementPage, hasNext, hasPrev, incrementPage }) =>
+                <div className="inline-flex float-right gap-x-2">
+                  <IconButton
+                    onClick={decrementPage}
+                    disabled={!hasPrev}
+                  >
+                    <ChevronLeft className="size-6" />
+                  </IconButton>
+                  <IconButton
+                    onClick={incrementPage}
+                    disabled={!hasNext}
+                  >
+                    <ChevronRight className="size-6" />
+                  </IconButton>
+                </div>}
+            </List.Pagination>
           </div>
         </div>
 
         <div className="flex flex-wrap gap-4 py-4">
           <ContractDefinitionsList.Items
             key={listKey}
-            limit={limit}
-            offset={offset}
+            limit={MAX_ITEMS}
             sortOrder="DESC"
           >
-            {({item, index}) => (
+            {({ item, index }) => (
               <ContractDefinitionCard
                 key={index}
                 contractDefinition={item}
