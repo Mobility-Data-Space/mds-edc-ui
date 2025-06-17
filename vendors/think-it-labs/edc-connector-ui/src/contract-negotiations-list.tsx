@@ -5,14 +5,16 @@ import {
 import React, { PropsWithChildren, useCallback } from "react";
 import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
 import { List } from "./list";
+import { ListProps } from "./types";
 
-interface ContractNegotiationsListProps {
+export type ContractNegotiationsListProps = ListProps & {
   managementUrl: string;
 }
 
 export function ContractNegotiationsList({
   children,
   managementUrl,
+  ...props
 }: PropsWithChildren<ContractNegotiationsListProps>) {
   const client = useEdcConnectorClient({
     management: managementUrl,
@@ -24,10 +26,26 @@ export function ContractNegotiationsList({
         return client.management.contractNegotiations.queryAll(querySpec);
       }
 
-      return Promise.resolve([new ContractNegotiation()]) ;
+      return Promise.resolve([new ContractNegotiation()]);
     },
     [client],
   );
+
+  if (props.usePagination) {
+    return (
+      <List<ContractNegotiation>
+        queryAll={queryAll}
+        getId={(contractNegotiation: ContractNegotiation) =>
+          contractNegotiation.id}
+        managementUrl={managementUrl}
+        navigate={props.navigate}
+        page={props.currentPage}
+        usePagination={props.usePagination}
+        firstPage={props.firstPage}
+      >
+        {children}
+      </List>)
+  }
 
   return (
     <List<ContractNegotiation>

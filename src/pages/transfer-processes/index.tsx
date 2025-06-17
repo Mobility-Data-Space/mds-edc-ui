@@ -1,45 +1,71 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import React from "react";
+import React, { useCallback } from "react";
 import { AssetView } from "@think-it-labs/edc-connector-ui/asset-view";
 import { ContractAgreementView } from "@think-it-labs/edc-connector-ui/contract-agreement-view";
 import { TransferProcessesList } from "@think-it-labs/edc-connector-ui/transfer-processes-list";
 import { Button } from "@/components/atoms/button";
 import { Table } from "@/components/atoms/table";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
-import { usePagination } from "@/hooks/use-pagination";
 import { T } from "@/i18n";
 import SideDrawer from "@/components/organisms/side-drawer";
-import {TransferProcessStateIcon} from "@/components/atoms/transfer-process-state-icon.tsx";
+import { TransferProcessStateIcon } from "@/components/atoms/transfer-process-state-icon.tsx";
+import { useRouter } from "next/router";
+import { List } from "@think-it-labs/edc-connector-ui/list";
+import { MAX_ITEMS } from "../../constants/lists";
 
 export default function TransferProcessesListPage() {
+  const router = useRouter();
   const { push, connector } = useParticipantConnectorState();
   const managementUrl = connector?.managementUrl as string;
 
-  const { decrementPage, incrementPage, offset, limit, hasPrev, page } =
-    usePagination();
+
+  const currentPage = parseInt(router.query.page as string) || 0
+
+  const navigate = useCallback((newPage: number) => {
+    router.push(
+      {
+        href: window.location.href,
+        query: {
+          ...router.query,
+          page: newPage,
+        },
+      },
+    );
+  }, [])
 
   return (
     <SideDrawer title={<T string="transferProcesses.title" />}>
-      <TransferProcessesList managementUrl={managementUrl}>
+      <TransferProcessesList
+        managementUrl={managementUrl}
+        usePagination
+        navigate={navigate}
+        currentPage={currentPage}
+        firstPage={0}
+      >
         <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-gray-200">
-          <div className="inline-flex gap-x-2">
-            <Button
-              variant="secondary"
-              onClick={decrementPage}
-              disabled={!hasPrev}
-            >
-              <ChevronLeft className="w-4 h-4" />
-              Prev
-            </Button>
+          <List.Pagination>
+            {({ decrementPage, incrementPage, hasNext, hasPrev }) =>
+              <div className="inline-flex gap-x-2">
+                <Button
+                  variant="secondary"
+                  onClick={decrementPage}
+                  disabled={!hasPrev}
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  Prev
+                </Button>
 
-            <Button
-              variant="secondary"
-              onClick={incrementPage}
-            >
-              Next
-              <ChevronRight className="w-4 h-4" />
-            </Button>
-          </div>
+                <Button
+                  variant="secondary"
+                  onClick={incrementPage}
+                  disabled={!hasNext}
+                >
+                  Next
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              </div>
+            }
+          </List.Pagination>
         </div>
 
         <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">
@@ -66,8 +92,7 @@ export default function TransferProcessesListPage() {
 
             <Table.Body>
               <TransferProcessesList.Items
-                limit={limit}
-                offset={offset}
+                limit={MAX_ITEMS}
                 sortOrder="DESC"
               >
                 {({ item, index }) => (
@@ -80,7 +105,7 @@ export default function TransferProcessesListPage() {
                         type="button"
                         className="flex items-center gap-x-2 text-gray-800"
                       >
-                        {(page * 10) + (index + 1)}
+                        {(currentPage * 10) + (index + 1)}
                       </button>
                     </Table.Cell>
                     <Table.Cell>

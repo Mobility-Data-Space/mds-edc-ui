@@ -1,17 +1,19 @@
-import React, {useState} from "react";
-import { ChevronLeft, ChevronRight, Search } from "lucide-react";
-import {IconButton, Tooltip} from "@mui/material";
-import {ContractAgreementView} from "@think-it-labs/edc-connector-ui/contract-agreement-view";
+import React, { useCallback, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { IconButton, Tooltip } from "@mui/material";
+import { ContractAgreementView } from "@think-it-labs/edc-connector-ui/contract-agreement-view";
 import { ContractNegotiationsList } from "@think-it-labs/edc-connector-ui/contract-negotiations-list";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
-import { usePagination } from "@/hooks/use-pagination";
 import { T, useTranslator } from "@/i18n";
 import SideDrawer from "@/components/organisms/side-drawer";
-import {ContractNegotiation} from "@think-it-labs/edc-connector-client";
+import { ContractNegotiation } from "@think-it-labs/edc-connector-client";
 import { Table } from "@/components/atoms/table";
 import ContractNegotiationDialog from "@/components/organisms/contract-negotiation-dialog";
-import {formatDateTime, formatDateTimeAgo} from "@/utilities/utilities.ts";
-import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
+import { formatDateTime, formatDateTimeAgo } from "@/utilities/utilities.ts";
+import { readValue } from "@think-it-labs/edc-connector-ui/json-ld.tsx";
+import { useRouter } from "next/router";
+import { List } from "@think-it-labs/edc-connector-ui/list";
+import { MAX_ITEMS } from "../../constants/lists";
 
 const CreatedAt = ({ item }: { item: ContractNegotiation }) => {
   const createdAtValue = readValue(item, "https://w3id.org/edc/v0.0.1/ns/createdAt");
@@ -33,10 +35,10 @@ const CounterPartyAddress = ({ item }: { item: ContractNegotiation }) => {
 }
 
 export default function ContractNegotiationsListPage() {
+  const { push, query } = useRouter()
   const { connector } = useParticipantConnectorState();
   const managementUrl = connector?.managementUrl as string;
   const { globalTranslator, translator } = useTranslator();
-  const { decrementPage, incrementPage, offset, limit, hasPrev, page } = usePagination();
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
   const [openContractNegotiationData, setOpenContractNegotiationData] = useState({
@@ -48,6 +50,20 @@ export default function ContractNegotiationsListPage() {
     setOpenContractNegotiationData({ contractNegotiation });
   };
 
+  const currentPage = parseInt(query.page as string) || 0
+
+  const navigate = useCallback((newPage: number) => {
+    push(
+      {
+        href: window.location.href,
+        query: {
+          ...query,
+          page: newPage,
+        },
+      },
+    );
+  }, [])
+
   return (
     <SideDrawer title={<T string="contractNegotiations.title" />}>
       <ContractNegotiationDialog
@@ -58,21 +74,31 @@ export default function ContractNegotiationsListPage() {
         contentStyle={{ maxWidth: "90vw", width: "1000px" }}
         translator={translator}
       />
-      <ContractNegotiationsList managementUrl={managementUrl}>
+      <ContractNegotiationsList
+        managementUrl={managementUrl}
+        usePagination
+        navigate={navigate}
+        currentPage={currentPage}
+        firstPage={0}
+      >
         <div className="flex justify-end items-center mb-3">
-          <div className="inline-flex float-right gap-x-2">
-            <IconButton
-              onClick={decrementPage}
-              disabled={!hasPrev}
-            >
-              <ChevronLeft className="size-6"/>
-            </IconButton>
-            <IconButton
-              onClick={incrementPage}
-            >
-              <ChevronRight className="size-6"/>
-            </IconButton>
-          </div>
+          <List.Pagination>
+            {({ decrementPage, hasPrev, hasNext, incrementPage }) =>
+              <div className="inline-flex float-right gap-x-2">
+                <IconButton
+                  onClick={decrementPage}
+                  disabled={!hasPrev}
+                >
+                  <ChevronLeft className="size-6" />
+                </IconButton>
+                <IconButton
+                  onClick={incrementPage}
+                  disabled={!hasNext}
+                >
+                  <ChevronRight className="size-6" />
+                </IconButton>
+              </div>}
+          </List.Pagination>
         </div>
         <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">
           <Table>
@@ -102,8 +128,7 @@ export default function ContractNegotiationsListPage() {
 
             <Table.Body>
               <ContractNegotiationsList.Items
-                limit={limit}
-                offset={offset}
+                limit={MAX_ITEMS}
                 sortOrder="DESC"
               >
                 {({ item, index }) => (
@@ -116,7 +141,7 @@ export default function ContractNegotiationsListPage() {
                         type="button"
                         className="flex items-center gap-x-2 text-gray-800"
                       >
-                        {(page * 10) + (index + 1)}
+                        {(currentPage * 10) + (index + 1)}
                       </button>
                     </Table.Cell>
                     <Table.Cell>
@@ -126,18 +151,18 @@ export default function ContractNegotiationsListPage() {
                     </Table.Cell>
                     <Table.Cell>
                       {!item.contractAgreementId ? "" :
-                      <ContractAgreementView
-                        managementUrl={managementUrl}
-                        id={item.contractAgreementId}
-                      >
-                        <p className="text-xs italic mb-1 text-gray-800">
-                          <ContractAgreementView.ProviderId /> →{" "}
-                          <ContractAgreementView.ConsumerId />
-                        </p>
-                        <p className="font-semibold text-sm text-gray-800">
-                          <ContractAgreementView.Id />
-                        </p>
-                      </ContractAgreementView>
+                        <ContractAgreementView
+                          managementUrl={managementUrl}
+                          id={item.contractAgreementId}
+                        >
+                          <p className="text-xs italic mb-1 text-gray-800">
+                            <ContractAgreementView.ProviderId /> →{" "}
+                            <ContractAgreementView.ConsumerId />
+                          </p>
+                          <p className="font-semibold text-sm text-gray-800">
+                            <ContractAgreementView.Id />
+                          </p>
+                        </ContractAgreementView>
                       }
                     </Table.Cell>
                     <Table.Cell>
