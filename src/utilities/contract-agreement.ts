@@ -51,7 +51,7 @@ export interface RetiredContractAgreement {
 export class AgreementsRetirementController {
   #inner: Inner;
   #management: string;
-  #pathPrefix = "/v3.1alpha/retireagreements";
+  #pathPrefix = "/v3/contractagreements/retirements";
   protocol: String = "dataspace-protocol-http";
 
   constructor(management: string) {

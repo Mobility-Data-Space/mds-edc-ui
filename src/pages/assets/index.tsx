@@ -11,8 +11,7 @@ import AssetCard from "@/components/organisms/asset-card";
 import AssetDialog from "@/components/organisms/asset-dialog";
 import AssetFormDialog from "@/components/templates/asset-form-dialog";
 import { List } from "@think-it-labs/edc-connector-ui/list";
-
-const MAX_ITEMS = 25
+import { MAX_ITEMS } from "../../constants/lists";
 
 export default function AssetListPage() {
   const router = useRouter();

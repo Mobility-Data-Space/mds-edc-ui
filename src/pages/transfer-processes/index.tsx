@@ -11,8 +11,7 @@ import SideDrawer from "@/components/organisms/side-drawer";
 import { TransferProcessStateIcon } from "@/components/atoms/transfer-process-state-icon.tsx";
 import { useRouter } from "next/router";
 import { List } from "@think-it-labs/edc-connector-ui/list";
-
-const MAX_ITEMS = 25
+import { MAX_ITEMS } from "../../constants/lists";
 
 export default function TransferProcessesListPage() {
   const router = useRouter();

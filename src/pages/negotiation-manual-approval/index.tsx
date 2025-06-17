@@ -13,8 +13,7 @@ import { enqueueSnackbar } from "notistack";
 import { MDSManualApprovalController } from "@/utilities/contract-negotiations";
 import { useRouter } from "next/router";
 import { List } from "@think-it-labs/edc-connector-ui/list";
-
-const MAX_ITEMS = 25
+import { MAX_ITEMS } from "../../constants/lists";
 
 const CreatedAt = ({ item }: { item: ContractNegotiation }) => {
   const createdAt = item && item["https://w3id.org/edc/v0.0.1/ns/createdAt"];

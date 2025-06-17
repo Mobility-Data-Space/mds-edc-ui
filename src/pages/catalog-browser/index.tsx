@@ -16,8 +16,7 @@ import DataOfferCard from "@/components/organisms/data-offer-card";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 import { useRouter } from "next/router";
 import { List } from "@think-it-labs/edc-connector-ui/list";
-
-const MAX_ITEMS = 25
+import { MAX_ITEMS } from "../../constants/lists";
 
 export default function CatalogPage() {
   const { query, push } = useRouter()
