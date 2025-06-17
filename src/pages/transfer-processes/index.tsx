@@ -1,23 +1,20 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useCallback } from "react";
-import { AssetView } from "@think-it-labs/edc-connector-ui/asset-view";
-import { ContractAgreementView } from "@think-it-labs/edc-connector-ui/contract-agreement-view";
 import { TransferProcessesList } from "@think-it-labs/edc-connector-ui/transfer-processes-list";
 import { Button } from "@/components/atoms/button";
 import { Table } from "@/components/atoms/table";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T } from "@/i18n";
 import SideDrawer from "@/components/organisms/side-drawer";
-import { TransferProcessStateIcon } from "@/components/atoms/transfer-process-state-icon.tsx";
 import { useRouter } from "next/router";
 import { List } from "@think-it-labs/edc-connector-ui/list";
 import { MAX_ITEMS } from "../../constants/lists";
+import TransferProcessTableRow from "@/components/organisms/transfer-process-table-row.tsx";
 
 export default function TransferProcessesListPage() {
   const router = useRouter();
   const { push, connector } = useParticipantConnectorState();
   const managementUrl = connector?.managementUrl as string;
-
 
   const currentPage = parseInt(router.query.page as string) || 0
 
@@ -42,7 +39,7 @@ export default function TransferProcessesListPage() {
         currentPage={currentPage}
         firstPage={0}
       >
-        <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-gray-200">
+        <div className="px-6 py-4 gap-3 flex justify-end border-gray-200">
           <List.Pagination>
             {({ decrementPage, incrementPage, hasNext, hasPrev }) =>
               <div className="inline-flex gap-x-2">
@@ -52,7 +49,6 @@ export default function TransferProcessesListPage() {
                   disabled={!hasPrev}
                 >
                   <ChevronLeft className="w-4 h-4" />
-                  Prev
                 </Button>
 
                 <Button
@@ -60,7 +56,6 @@ export default function TransferProcessesListPage() {
                   onClick={incrementPage}
                   disabled={!hasNext}
                 >
-                  Next
                   <ChevronRight className="w-4 h-4" />
                 </Button>
               </div>
@@ -73,7 +68,15 @@ export default function TransferProcessesListPage() {
             <Table.Head>
               <Table.Row>
                 <Table.Heading className="w-16">
-                  #
+                  <T string="transferProcesses.direction" />
+                </Table.Heading>
+
+                <Table.Heading>
+                  <T string="transferProcesses.headingLastUpdated" />
+                </Table.Heading>
+
+                <Table.Heading>
+                  <T string="transferProcesses.headingAsset" />
                 </Table.Heading>
 
                 <Table.Heading>
@@ -81,11 +84,19 @@ export default function TransferProcessesListPage() {
                 </Table.Heading>
 
                 <Table.Heading>
-                  <T string="transferProcesses.headingContractAgreement" />
+                  <T string="transferProcesses.headingCounterpartyParticipantId" />
                 </Table.Heading>
 
                 <Table.Heading>
-                  <T string="transferProcesses.headingAsset" />
+                  <T string="transferProcesses.headingCounterpartyConnectorEndpoint" />
+                </Table.Heading>
+
+                <Table.Heading>
+                  <T string="transferProcesses.headingContractDetails" />
+                </Table.Heading>
+
+                <Table.Heading>
+                  <T string="common.showDetails" />
                 </Table.Heading>
               </Table.Row>
             </Table.Head>
@@ -95,57 +106,14 @@ export default function TransferProcessesListPage() {
                 limit={MAX_ITEMS}
                 sortOrder="DESC"
               >
-                {({ item, index }) => (
-                  <Table.Row
-                    key={index}
-                    onClick={() => push(`/transfer-processes/${item.id}`)}
-                  >
-                    <Table.Cell>
-                      <button
-                        type="button"
-                        className="flex items-center gap-x-2 text-gray-800"
-                      >
-                        {(currentPage * 10) + (index + 1)}
-                      </button>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <div className="flex gap-x-1 items-center">
-                        <span>{item.state}</span>
-                        <TransferProcessStateIcon transferProcess={item} />
-                      </div>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <ContractAgreementView
-                        id={item.contractId}
-                        managementUrl={managementUrl}
-                      >
-                        <p className="text-xs italic mb-1">
-                          <ContractAgreementView.ProviderId /> →{" "}
-                          <ContractAgreementView.ConsumerId />
-                        </p>
-                        <p className="font-semibold">
-                          <ContractAgreementView.Id />
-                        </p>
-                      </ContractAgreementView>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <AssetView
-                        id={item.assetId}
-                        managementUrl={managementUrl}
-                      >
-                        <p className="mb-1">
-                          <AssetView.Name />
-                        </p>
-                        <p className="text-xs mb-1">
-                          <AssetView.Id />
-                        </p>
-                        <p className="text-xs">
-                          <AssetView.ContentType />
-                        </p>
-                        <AssetView.Id />
-                      </AssetView>
-                    </Table.Cell>
-                  </Table.Row>
+                {({ item }) => (
+                  <TransferProcessTableRow
+                    key={item.id}
+                    transferProcess={item}
+                    managementUrl={managementUrl}
+                    connectorEndpoint={connector.protocolUrl}
+                    participantId={connector.id}
+                  />
                 )}
               </TransferProcessesList.Items>
             </Table.Body>
