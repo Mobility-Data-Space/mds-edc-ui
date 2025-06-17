@@ -1,25 +1,24 @@
-import React, {useCallback, useEffect, useMemo, useState} from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import {Button, ButtonGroup, IconButton} from "@mui/material";
-import { ContractAgreementsList } from "@think-it-labs/edc-connector-ui/contract-agreements-list";
-import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
-import { T, useTranslator } from "@/i18n";
-import SideDrawer from "@/components/organisms/side-drawer";
+import { LineTitle } from "@/components/atoms/line-title.tsx";
 import ContractAgreementCard from "@/components/organisms/contract-agreement-card";
 import ContractAgreementDialog from "@/components/organisms/contract-agreement-dialog";
-import {ContractAgreement, TransferProcessStates} from "@think-it-labs/edc-connector-client";
+import SideDrawer from "@/components/organisms/side-drawer";
+import { STATE_RUNNING } from "@/constants/transfer-process.ts";
+import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
+import { T, useTranslator } from "@/i18n";
+import { theme } from "@/theme/ThemeProvider.tsx";
+import { AGREEMENT_RETIREMENT_DATE, AGREEMENT_RETIREMENT_REASON, AgreementsRetirementController, RetiredContractAgreement } from "@/utilities/contract-agreement";
+import { operatorEquals, operatorIn } from "@/utilities/policy-constraints.ts";
+import { Button, ButtonGroup, IconButton } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
-import {AGREEMENT_RETIREMENT_DATE, AGREEMENT_RETIREMENT_REASON, AgreementsRetirementController, RetiredContractAgreement} from "@/utilities/contract-agreement";
-import {STATE_RUNNING} from "@/constants/transfer-process.ts";
-import {enqueueSnackbar} from "notistack";
+import { ContractAgreement, TransferProcessStates } from "@think-it-labs/edc-connector-client";
+import { ContractAgreementsList } from "@think-it-labs/edc-connector-ui/contract-agreements-list";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 import { List } from "@think-it-labs/edc-connector-ui/list";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useRouter } from "next/router";
-import {operatorEquals, operatorIn} from "@/utilities/policy-constraints.ts";
-import {theme} from "@/theme/ThemeProvider.tsx";
-import {LineTitle} from "@/components/atoms/line-title.tsx";
-
-const MAX_ITEMS = 25
+import { enqueueSnackbar } from "notistack";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { MAX_ITEMS } from "../../constants/lists";
 
 enum TypeFilter {
   Consuming = "Consuming",
@@ -237,7 +236,7 @@ export default function ContractAgreementsListPage() {
             sortOrder="DESC"
             filterExpression={statusFilterExpression[selectedStatusFilter]}
           >
-            {({item, index}) => {
+            {({ item, index }) => {
               if (selectedStatusFilter === StatusFilter.Active && retiredContractAgreementIds.includes(item.id)) {
                 return <></>;
               }

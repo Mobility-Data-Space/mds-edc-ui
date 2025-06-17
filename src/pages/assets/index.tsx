@@ -1,34 +1,46 @@
-import React, {useState} from "react";
-import {useRouter} from "next/router";
-import { PlusCircle } from "lucide-react";
-import {Button as MuiButton} from '@mui/material';
-import {Asset} from "@think-it-labs/edc-connector-client";
+import React, { useCallback, useState } from "react";
+import { useRouter } from "next/router";
+import { ChevronLeft, ChevronRight, PlusCircle } from "lucide-react";
+import { IconButton, Button as MuiButton, Typography } from '@mui/material';
+import { Asset } from "@think-it-labs/edc-connector-client";
 import { AssetsList } from "@think-it-labs/edc-connector-ui/assets-list";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
-import { usePagination } from "@/hooks/use-pagination";
-import {T} from "@/i18n";
+import { T } from "@/i18n";
 import SideDrawer from "@/components/organisms/side-drawer";
 import AssetCard from "@/components/organisms/asset-card";
 import AssetDialog from "@/components/organisms/asset-dialog";
 import AssetFormDialog from "@/components/templates/asset-form-dialog";
+import { List } from "@think-it-labs/edc-connector-ui/list";
+import { MAX_ITEMS } from "../../constants/lists";
 
 export default function AssetListPage() {
   const router = useRouter();
   const { connector } = useParticipantConnectorState();
-  const { offset, limit } = usePagination();
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
   const [openAssetData, setOpenAssetData] = useState({
     asset: {} as Asset,
-    deleteItem: async () => {},
+    deleteItem: async () => { },
   });
 
-  const openDetailsModal = (asset: Asset, deleteItem: () => Promise<void> = async () => {}) => {
+  const openDetailsModal = (asset: Asset, deleteItem: () => Promise<void> = async () => { }) => {
     setIsDetailsModalOpen(true);
     setOpenAssetData({ asset, deleteItem });
   };
+
+  const navigate = useCallback((newPage: number) => {
+    router.push(
+      {
+        href: window.location.href,
+        query: {
+          ...router.query,
+          page: newPage,
+        },
+      },
+    );
+  }, [])
 
   return (
     <>
@@ -50,7 +62,38 @@ export default function AssetListPage() {
       />
 
       <SideDrawer title={<T string="assets.title" />}>
-        <AssetsList managementUrl={connector.managementUrl}>
+        <AssetsList
+          managementUrl={connector.managementUrl}
+          usePagination
+          navigate={navigate}
+          currentPage={parseInt(router.query.page as string) || 0}
+          firstPage={0}
+        >
+          <div className="flex justify-between gap-x-5">
+            <Typography variant="h4" >
+              <T string="assets.title" />
+            </Typography>
+            <List.Pagination>
+              {({ decrementPage, hasPrev, hasNext, incrementPage }) =>
+                <div className="flex justify-end items-center">
+                  <div className="inline-flex float-right gap-x-2">
+                    <IconButton
+                      onClick={decrementPage}
+                      disabled={!hasPrev}
+                    >
+                      <ChevronLeft className="size-6" />
+                    </IconButton>
+                    <IconButton
+                      onClick={incrementPage}
+                      disabled={!hasNext}
+                    >
+                      <ChevronRight className="size-6" />
+                    </IconButton>
+                  </div>
+                </div>
+              }
+            </List.Pagination>
+          </div>
           <div className="flex gap-x-4 py-4">
             <MuiButton
               data-testid="create-asset-modal-opener"
@@ -65,8 +108,7 @@ export default function AssetListPage() {
 
           <div className="flex flex-wrap gap-3">
             <AssetsList.Items
-              limit={limit}
-              offset={offset}
+              limit={MAX_ITEMS}
               sortOrder="DESC"
             >
               {({ item, index, deleteItem }) => (
