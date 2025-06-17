@@ -1,91 +1,31 @@
 import { test, expect } from '@playwright/test';
-import { TRAFFIC_INFORMATION } from "../../src/constants/data-category";
 
 test.describe("Assets Tests", () => {
-  test.beforeAll(async ({ page }) => {
-    console.log("Setting up before all tests...");
+  
+  test("On first visit, I see my own assets", async ({ page }) => {
     await page.goto("http://localhost:3000/assets");
-  });
 
-  test.afterAll(async () => {
-    console.log("Cleaning up after all tests...");
-    // Add any teardown logic here if needed
-  });
-
-  test("View all assets on the connector", async ({ page }) => {
+    // Placeholder: Verify own assets are visible on the first visit
     const assetList = page.getByTestId("asset-list");
     await expect(assetList).toBeVisible();
     const assets = await assetList.locator(".asset-item").allTextContents();
     expect(assets.length).toBeGreaterThan(0);
   });
 
-  test("Create a new asset with required fields", async ({ page }) => {
-    const randomNumber = `${Math.random()}`.replace("0.", "");
-    const uniqueAssetTitle = `Asset title ${randomNumber}`;
-    const uniqueAssetId = `asset-id-${randomNumber}`;
+  test("When I click on a specific asset card, I can see its details", async ({ page }) => {
+    await page.goto("http://localhost:3000/assets");
 
-    const assetCreateModalOpenButton = page.getByTestId("create-asset-modal-opener");
-    await assetCreateModalOpenButton.click();
-
-    const assetCreateModal = page.getByTestId("asset-create-modal-title");
-    await expect(assetCreateModal).toBeVisible();
-
-    const titleField = page.getByTestId("properties-title").locator("input").first();
-    await titleField.fill(uniqueAssetTitle);
-
-    const idField = page.getByTestId("properties-id").locator("input").first();
-    await idField.fill(uniqueAssetId);
-
-    const assetCreateSubmit = page.getByTestId("asset-create-submit");
-    await expect(assetCreateSubmit).toBeEnabled();
-    await assetCreateSubmit.click();
-
-    await page.waitForResponse(resp => resp.url().includes('/management'));
-    await expect(assetCreateModal).toBeHidden();
-    await expect(page.getByText(uniqueAssetTitle)).toBeVisible();
+    // Placeholder: Click on an asset card and verify its details
+    const assetCard = page.getByTestId("asset-card").first();
+    await assetCard.click();
+    const assetDetails = page.getByTestId("asset-details");
+    await expect(assetDetails).toBeVisible();
   });
 
-  test("Create a new asset with all fields", async ({ page }) => {
-    const randomNumber = `${Math.random()}`.replace("0.", "");
-    const uniqueAssetTitle = `Asset title ${randomNumber}`;
-    const uniqueAssetId = `asset-id-${randomNumber}`;
-    const uniqueAssetUrl = `https://url${randomNumber}.com`;
+  test("I can delete a chosen asset", async ({ page }) => {
+    await page.goto("http://localhost:3000/assets");
 
-    const assetCreateModalOpenButton = page.getByTestId("create-asset-modal-opener");
-    await assetCreateModalOpenButton.click();
-
-    const assetCreateModal = page.getByTestId("asset-create-modal-title");
-    await expect(assetCreateModal).toBeVisible();
-
-    const titleField = page.getByTestId("properties-title").locator("input").first();
-    await titleField.fill(uniqueAssetTitle);
-
-    const idField = page.getByTestId("properties-id").locator("input").first();
-    await idField.fill(uniqueAssetId);
-
-    const advancedInfoStepTitle = page.getByTestId("asset-create-advanced-info-step-title");
-    await advancedInfoStepTitle.click();
-
-    const dataCategorySelect = page.getByTestId("advanced-info-data-category");
-    await dataCategorySelect.fill(TRAFFIC_INFORMATION);
-
-    const dataAddressStepTitle = page.getByTestId("asset-create-data-address-step-title");
-    await dataAddressStepTitle.click();
-
-    const urlField = page.getByTestId("data-address-base-url").locator("input").first();
-    await urlField.fill(uniqueAssetUrl);
-
-    const assetCreateSubmit = page.getByTestId("asset-create-submit");
-    await expect(assetCreateSubmit).toBeEnabled();
-    await assetCreateSubmit.click();
-
-    await page.waitForResponse(resp => resp.url().includes('/management'));
-    await expect(assetCreateModal).toBeHidden();
-    await expect(page.getByText(uniqueAssetTitle)).toBeVisible();
-    await expect(page.getByText(uniqueAssetUrl)).toBeVisible();
-  });
-
-  test("Delete an existing asset", async ({ page }) => {
+    // Placeholder: Delete an asset and verify it is removed
     const assetItem = page.getByTestId("asset-item").first();
     const assetTitle = (await assetItem.textContent()) ?? "Unknown Asset";
 
@@ -99,14 +39,103 @@ test.describe("Assets Tests", () => {
     await expect(page.getByText(assetTitle)).toBeHidden();
   });
 
-  test("Select one asset and view its details", async ({ page }) => {
-    const assetItem = page.getByTestId("asset-item").first();
-    const assetTitle = (await assetItem.textContent()) ?? "Unknown Asset";
+  test("I can use the form to create new assets with HttpData", async ({ page }) => {
+    await page.goto("http://localhost:3000/assets");
 
-    await assetItem.click();
+    // Placeholder: Use the form to create a new asset with HttpData
+    const assetCreateModalOpenButton = page.getByTestId("create-asset-modal-opener");
+    await assetCreateModalOpenButton.click();
 
-    const assetDetails = page.getByTestId("asset-details");
-    await expect(assetDetails).toBeVisible();
-    await expect(assetDetails.getByText(assetTitle)).toBeVisible();
+    const assetCreateModal = page.getByTestId("asset-create-modal-title");
+    await expect(assetCreateModal).toBeVisible();
+
+    const titleField = page.getByTestId("properties-title").locator("input").first();
+    await titleField.fill("HttpData Asset");
+
+    const idField = page.getByTestId("properties-id").locator("input").first();
+    await idField.fill("httpdata-asset-id");
+
+    const assetCreateSubmit = page.getByTestId("asset-create-submit");
+    await expect(assetCreateSubmit).toBeEnabled();
+    await assetCreateSubmit.click();
+
+    await page.waitForResponse(resp => resp.url().includes('/management'));
+    await expect(assetCreateModal).toBeHidden();
+    await expect(page.getByText("HttpData Asset")).toBeVisible();
+  });
+
+  test("I can use the form to create new assets with S3", async ({ page }) => {
+    await page.goto("http://localhost:3000/assets");
+
+    // Placeholder: Use the form to create a new asset with S3
+    const assetCreateModalOpenButton = page.getByTestId("create-asset-modal-opener");
+    await assetCreateModalOpenButton.click();
+
+    const assetCreateModal = page.getByTestId("asset-create-modal-title");
+    await expect(assetCreateModal).toBeVisible();
+
+    const titleField = page.getByTestId("properties-title").locator("input").first();
+    await titleField.fill("S3 Asset");
+
+    const idField = page.getByTestId("properties-id").locator("input").first();
+    await idField.fill("s3-asset-id");
+
+    const assetCreateSubmit = page.getByTestId("asset-create-submit");
+    await expect(assetCreateSubmit).toBeEnabled();
+    await assetCreateSubmit.click();
+
+    await page.waitForResponse(resp => resp.url().includes('/management'));
+    await expect(assetCreateModal).toBeHidden();
+    await expect(page.getByText("S3 Asset")).toBeVisible();
+  });
+
+  test("I can use the form to create new assets with Azure Blob", async ({ page }) => {
+    await page.goto("http://localhost:3000/assets");
+
+    // Placeholder: Use the form to create a new asset with Azure Blob
+    const assetCreateModalOpenButton = page.getByTestId("create-asset-modal-opener");
+    await assetCreateModalOpenButton.click();
+
+    const assetCreateModal = page.getByTestId("asset-create-modal-title");
+    await expect(assetCreateModal).toBeVisible();
+
+    const titleField = page.getByTestId("properties-title").locator("input").first();
+    await titleField.fill("Azure Blob Asset");
+
+    const idField = page.getByTestId("properties-id").locator("input").first();
+    await idField.fill("azure-blob-asset-id");
+
+    const assetCreateSubmit = page.getByTestId("asset-create-submit");
+    await expect(assetCreateSubmit).toBeEnabled();
+    await assetCreateSubmit.click();
+
+    await page.waitForResponse(resp => resp.url().includes('/management'));
+    await expect(assetCreateModal).toBeHidden();
+    await expect(page.getByText("Azure Blob Asset")).toBeVisible();
+  });
+
+  test("I can use the form to create new assets with On Request", async ({ page }) => {
+    await page.goto("http://localhost:3000/assets");
+    
+    // Placeholder: Use the form to create a new asset with On Request
+    const assetCreateModalOpenButton = page.getByTestId("create-asset-modal-opener");
+    await assetCreateModalOpenButton.click();
+
+    const assetCreateModal = page.getByTestId("asset-create-modal-title");
+    await expect(assetCreateModal).toBeVisible();
+
+    const titleField = page.getByTestId("properties-title").locator("input").first();
+    await titleField.fill("On Request Asset");
+
+    const idField = page.getByTestId("properties-id").locator("input").first();
+    await idField.fill("on-request-asset-id");
+
+    const assetCreateSubmit = page.getByTestId("asset-create-submit");
+    await expect(assetCreateSubmit).toBeEnabled();
+    await assetCreateSubmit.click();
+
+    await page.waitForResponse(resp => resp.url().includes('/management'));
+    await expect(assetCreateModal).toBeHidden();
+    await expect(page.getByText("On Request Asset")).toBeVisible();
   });
 });

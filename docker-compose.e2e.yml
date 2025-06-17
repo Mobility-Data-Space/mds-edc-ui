@@ -58,8 +58,8 @@ services:
       - "9185:8185"  # Public
   
   seed_dataspace:
-    image: ghcr.io/mobility-data-space/next-mds-catalog/seed-dataspace-dev:latest
-    command: ["python3", "/seed_dataspace.py", "http://edc1:8182/api/management", "http://edc2:8182/api/management"]
+    image: ghcr.io/mobility-data-space/mds-catalog/seed-dataspace-dev:latest
+    command: [ "/bin/sh", "-c" , "sleep 10 && python3 /seed_dataspace.py http://edc1:8182/api/management http://edc2:8182/api/management"]
     depends_on:
       - edc-1
       - edc-2
