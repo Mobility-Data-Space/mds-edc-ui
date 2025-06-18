@@ -19,7 +19,7 @@ export interface FieldShowProps {
 
 export function FieldShow({ icon, label, value, valueTitle, subLabel, openModalText, copyTextIcon = false}: FieldShowProps): JSX.Element {
   const nonNullValue = value || "";
-  const shouldNotTranslateValue = 0 === nonNullValue.indexOf('http') || nonNullValue.match(/^\d/);
+  const shouldNotTranslateValue = 0 === nonNullValue.indexOf('http') || (typeof nonNullValue === "string" && nonNullValue.match(/^\d/));
   const [dialogIsOpen, setDialogIsOpen] = React.useState(false);
 
   return (

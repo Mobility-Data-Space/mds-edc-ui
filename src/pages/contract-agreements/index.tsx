@@ -73,8 +73,6 @@ export default function ContractAgreementsListPage() {
     }],
   }), [contractAgreementInfo]);
 
-  const filterExpression = statusFilterExpression[selectedStatusFilter];
-
   const { push, query } = useRouter()
 
   const navigate = useCallback((newPage: number) => {
