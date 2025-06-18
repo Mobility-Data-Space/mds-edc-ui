@@ -10,6 +10,7 @@ services:
         NEXT_PUBLIC_EDC_MANAGEMENT_URL: "http://edc-1:8182/api/management"
         NEXT_PUBLIC_EDC_DEFAULT_URL: "http://edc-1:8181/api"
         NEXT_PUBLIC_EDC_PROTOCOL_URL: "http://edc-1:8183/api/dsp"
+        EDC_MANAGEMENT_API_KEY: "API_KEY"
     ports:
       - "3000:3000"
 
