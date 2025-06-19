@@ -1,18 +1,35 @@
-import React, {useEffect, useState} from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import {Divider, IconButton} from "@mui/material";
-import { ContractAgreementsList } from "@think-it-labs/edc-connector-ui/contract-agreements-list";
-import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
-import { usePagination } from "@/hooks/use-pagination";
-import { T, useTranslator } from "@/i18n";
-import SideDrawer from "@/components/organisms/side-drawer";
+import { LineTitle } from "@/components/atoms/line-title.tsx";
 import ContractAgreementCard from "@/components/organisms/contract-agreement-card";
 import ContractAgreementDialog from "@/components/organisms/contract-agreement-dialog";
-import {ContractAgreement, TransferProcessStates} from "@think-it-labs/edc-connector-client";
+import SideDrawer from "@/components/organisms/side-drawer";
+import { STATE_RUNNING } from "@/constants/transfer-process.ts";
+import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
+import { T, useTranslator } from "@/i18n";
+import { theme } from "@/theme/ThemeProvider.tsx";
+import { AGREEMENT_RETIREMENT_DATE, AGREEMENT_RETIREMENT_REASON, AgreementsRetirementController, RetiredContractAgreement } from "@/utilities/contract-agreement";
+import { operatorEquals, operatorIn } from "@/utilities/policy-constraints.ts";
+import { Button, ButtonGroup, IconButton } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
-import {AGREEMENT_RETIREMENT_DATE, AGREEMENT_RETIREMENT_REASON, AgreementsRetirementController, RetiredContractAgreement} from "@/utilities/contract-agreement";
-import {STATE_RUNNING} from "@/constants/transfer-process.ts";
+import { ContractAgreement, TransferProcessStates } from "@think-it-labs/edc-connector-client";
+import { ContractAgreementsList } from "@think-it-labs/edc-connector-ui/contract-agreements-list";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
+import { List } from "@think-it-labs/edc-connector-ui/list";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useRouter } from "next/router";
+import { enqueueSnackbar } from "notistack";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { MAX_ITEMS } from "../../constants/lists";
+
+enum TypeFilter {
+  Consuming = "Consuming",
+  Providing = "Providing",
+}
+
+enum StatusFilter {
+  All = "All",
+  Active = "Active",
+  Terminated = "Terminated",
+}
 
 interface ContractAgreementInfo {
   [key: string]: {
@@ -27,11 +44,51 @@ interface ContractAgreementInfo {
 export default function ContractAgreementsListPage() {
   const { connector } = useParticipantConnectorState();
   const managementUrl = connector?.managementUrl as string;
+  const [retiredContractAgreementIds, setRetiredContractAgreementIds] = useState<string[]>([]);
+  const [contractAgreementInfo, setContractAgreementInfo] = useState<ContractAgreementInfo>({});
 
   const { translator } = useTranslator();
 
-  const { decrementPage, incrementPage, offset, limit, hasPrev, page } =
-    usePagination();
+  const [selectedTypeFilter, setSelectedTypeFilter] = useState<TypeFilter>(TypeFilter.Consuming);
+  const [selectedStatusFilter, setSelectedStatusFilter] = useState<StatusFilter>(StatusFilter.All);
+  const typeFilterExpression = useMemo(() => ({
+    [TypeFilter.Consuming]: [{
+      operandLeft: "consumerId",
+      operator: operatorEquals.value,
+      operandRight: connector.id
+    }],
+    [TypeFilter.Providing]: [{
+      operandLeft: "providerId",
+      operator: operatorEquals.value,
+      operandRight: connector.id
+    }],
+  }), [connector.id]);
+  const statusFilterExpression = useMemo(() => ({
+    [StatusFilter.All]: [],
+    [StatusFilter.Active]: [],
+    [StatusFilter.Terminated]: [{
+      operandLeft: "id",
+      operator: operatorIn.value,
+      operandRight: retiredContractAgreementIds,
+    }],
+  }), [contractAgreementInfo]);
+
+  const filterExpression = statusFilterExpression[selectedStatusFilter];
+
+  const { push, query } = useRouter()
+
+  const navigate = useCallback((newPage: number) => {
+    push(
+      {
+        href: window.location.href,
+        query: {
+          ...query,
+          page: newPage,
+        },
+      },
+    );
+
+  }, [])
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
@@ -44,13 +101,12 @@ export default function ContractAgreementsListPage() {
     setOpenContractAgreementData({ contractAgreement });
   };
 
-  const edcClient = useEdcConnectorClient({management: managementUrl});
+  const edcClient = useEdcConnectorClient({ management: managementUrl });
 
-  const [contractAgreementInfo, setContractAgreementInfo] = useState<ContractAgreementInfo>({});
-
-  useEffect(() => {
+  const populateRetired = () => {
     const controller = new AgreementsRetirementController(managementUrl)
     controller.retiredAgreementsRequest().then(retiredAgreements => {
+      setRetiredContractAgreementIds(retiredAgreements.map(contractAgreement => contractAgreement.agreementId as string));
       const retiredContractAgreementsToSave: { [key: string]: RetiredContractAgreement } = {};
       retiredAgreements.forEach(retiredContractAgreement => {
         retiredContractAgreementsToSave[retiredContractAgreement.agreementId] = retiredContractAgreement;
@@ -79,7 +135,11 @@ export default function ContractAgreementsListPage() {
         });
         setContractAgreementInfo(contractAgreementInfoToSave);
       });
-    });
+    }).catch(error => enqueueSnackbar("contractAgreements.retiredFetchError"));
+  };
+
+  useEffect(() => {
+    populateRetired();
   }, [edcClient]);
 
   if (!connector) {
@@ -99,117 +159,98 @@ export default function ContractAgreementsListPage() {
         isTerminatedAt={openContractAgreementInfo?.isTerminatedAt}
         isRunning={openContractAgreementInfo?.isRunning}
         onClose={() => setIsDetailsModalOpen(false)}
+        onTerminateSuccess={populateRetired}
         participantId={connector.id}
         connectorEndpoint={connector.protocolUrl}
         managementUrl={connector.managementUrl}
         contentStyle={{ maxWidth: "90vw", width: "1000px" }}
         translator={translator}
       />
-      <ContractAgreementsList managementUrl={managementUrl}>
+
+      <ContractAgreementsList
+        managementUrl={managementUrl}
+        usePagination={true}
+        navigate={navigate}
+        currentPage={parseInt(query.page as string) || 0}
+        firstPage={0}
+        sections={[
+          {
+            key: "consuming",
+            title: <LineTitle title="contractAgreements.titleConsuming" />,
+            containerClassName: "flex flex-wrap gap-4 py-4",
+            condition: (item) => item.consumerId === connector.id
+          },
+          {
+            key: "providing",
+            title: <LineTitle title="contractAgreements.titleProviding" />,
+            containerClassName: "flex flex-wrap gap-4 py-4",
+            condition: (item) => item.consumerId !== connector.id
+          },
+        ]}
+      >
         <div className="flex justify-between gap-x-5">
-          <Typography variant="h4" >
-            <T string="contractAgreements.titleConsuming" />
-          </Typography>
-
-          <div className="flex justify-end items-center">
-            <div className="inline-flex float-right gap-x-2">
-              <IconButton
-                onClick={decrementPage}
-                disabled={!hasPrev}
-              >
-                <ChevronLeft className="size-6"/>
-              </IconButton>
-              <IconButton
-                onClick={incrementPage}
-              >
-                <ChevronRight className="size-6"/>
-              </IconButton>
-            </div>
+          <div className="flex gap-x-4">
+            <ButtonGroup color="info" variant="outlined" sx={{
+              ".MuiButtonGroup-grouped": {
+                borderColor: theme.palette.info.main,
+              }
+            }}>
+              {Object.keys(StatusFilter).map((filter) => (
+                <Button
+                  key={filter}
+                  variant={selectedStatusFilter === filter ? "contained" : "outlined"}
+                  onClick={() => setSelectedStatusFilter(filter as StatusFilter)}
+                >
+                  <Typography color="textPrimary" variant="body2" className="font-bold">
+                    <T string={`contractAgreements.${filter.toLowerCase()}Contracts`} />
+                  </Typography>
+                </Button>
+              ))}
+            </ButtonGroup>
           </div>
-        </div>
-
-        <div className="flex flex-wrap gap-4 py-4">
-          <ContractAgreementsList.Items
-            limit={limit}
-            offset={offset}
-            sortOrder="DESC"
-            filterExpression={[{
-              operandLeft: "consumerId",
-              operator: "=",
-              operandRight: connector.id
-            }]}
-          >
-            {({item, index}) =>
-              <ContractAgreementCard
-                key={index}
-                contractAgreement={item}
-                isTerminated={contractAgreementInfo[item.id]?.isTerminated}
-                isRunning={contractAgreementInfo[item.id]?.isRunning}
-                transferCount={contractAgreementInfo[item.id]?.transfersCount}
-                onClick={() => openDetailsModal(item)}
-              />
+          <List.Pagination>
+            {({ decrementPage, hasPrev, hasNext, incrementPage }) =>
+              <div className="flex justify-end items-center">
+                <div className="inline-flex float-right gap-x-2">
+                  <IconButton
+                    onClick={decrementPage}
+                    disabled={!hasPrev}
+                  >
+                    <ChevronLeft className="size-6" />
+                  </IconButton>
+                  <IconButton
+                    onClick={incrementPage}
+                    disabled={!hasNext}
+                  >
+                    <ChevronRight className="size-6" />
+                  </IconButton>
+                </div>
+              </div>
             }
-          </ContractAgreementsList.Items>
-        </div>
-        <ContractAgreementsList.Loading>
-          <div className="max-w-20 mx-auto my-4 flex flex-col bg-white border shadow-sm rounded-xl p-4 md:p-5">
-            <span
-              className="animate-spin mx-auto inline-block size-8 border-[3px] border-current border-t-transparent text-blue-600 rounded-full"
-              role="status"
-              aria-label="loading"
-            >
-              <span className="sr-only">Loading...</span>
-            </span>
-          </div>
-        </ContractAgreementsList.Loading>
-      </ContractAgreementsList>
-
-      <Divider className="!mb-3" />
-
-      <ContractAgreementsList managementUrl={managementUrl}>
-        <div className="flex justify-between gap-x-5">
-          <Typography variant="h4">
-            <T string="contractAgreements.titleProviding" />
-          </Typography>
-
-          <div className="flex justify-end items-center">
-            <div className="inline-flex float-right gap-x-2">
-              <IconButton
-                onClick={decrementPage}
-                disabled={!hasPrev}
-              >
-                <ChevronLeft className="size-6"/>
-              </IconButton>
-              <IconButton
-                onClick={incrementPage}
-              >
-                <ChevronRight className="size-6"/>
-              </IconButton>
-            </div>
-          </div>
+          </List.Pagination>
         </div>
 
-        <div className="flex flex-wrap gap-4 py-4">
+        <div className="flex flex-col flex-wrap gap-4 py-4">
           <ContractAgreementsList.Items
-            limit={limit}
-            offset={offset}
+            limit={MAX_ITEMS}
             sortOrder="DESC"
-            filterExpression={[{
-              operandLeft: "providerId",
-              operator: "=",
-              operandRight: connector.id
-            }]}
+            filterExpression={statusFilterExpression[selectedStatusFilter]}
           >
-            {({item, index}) =>
-              <ContractAgreementCard
-                key={index}
-                contractAgreement={item}
-                isTerminated={contractAgreementInfo[item.id]?.isTerminated}
-                isRunning={contractAgreementInfo[item.id]?.isRunning}
-                transferCount={contractAgreementInfo[item.id]?.transfersCount}
-                onClick={() => openDetailsModal(item)}
-              />
-            }
+            {({ item, index }) => {
+              if (selectedStatusFilter === StatusFilter.Active && retiredContractAgreementIds.includes(item.id)) {
+                return <></>;
+              }
+              return (
+                <ContractAgreementCard
+                  key={index}
+                  contractAgreement={item}
+                  isTerminated={contractAgreementInfo[item.id]?.isTerminated}
+                  isRunning={contractAgreementInfo[item.id]?.isRunning}
+                  transferCount={contractAgreementInfo[item.id]?.transfersCount}
+                  onClick={() => openDetailsModal(item)}
+                />
+              );
+            }}
           </ContractAgreementsList.Items>
         </div>
         <ContractAgreementsList.Loading>

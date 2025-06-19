@@ -14,6 +14,7 @@ interface ContractAgreementTerminateDialogProps {
   contractAgreement: ContractAgreement,
   open: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
   translator: (key: string) => string;
 }
 
@@ -29,7 +30,7 @@ function calculateDetailedReasonValidationError(detailedReason: string, translat
   return false;
 }
 
-export default function ContractAgreementTerminateDialog({ contractAgreement, open, onClose, translator }: ContractAgreementTerminateDialogProps) {
+export default function ContractAgreementTerminateDialog({ contractAgreement, open, onClose, onSuccess = () => {}, translator }: ContractAgreementTerminateDialogProps) {
   const { connector } = useParticipantConnectorState();
   const [formData, setFormData] = useState({
     reason: TERMINATION_REASON_BY_USER,
@@ -43,7 +44,10 @@ export default function ContractAgreementTerminateDialog({ contractAgreement, op
   const onClick = () => {
     const controller = new AgreementsRetirementController(connector.managementUrl)
     controller.retireAgreement(contractAgreement.id, formData.detailedReason)
-      .then(onClose)
+      .then(() => {
+        onSuccess();
+        onClose();
+      })
       .catch(error => {
         const match = /"message":"(.*?)"/.exec(error.message)
         enqueueSnackbar((match && match[1]) || translator("contractAgreements.[id].terminationError"));

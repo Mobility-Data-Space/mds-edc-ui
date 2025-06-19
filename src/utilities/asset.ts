@@ -1,13 +1,16 @@
 import {removeEmptyFields} from "@/utilities/form";
-import {Asset, AssetInput} from "@think-it-labs/edc-connector-client";
+import {Asset, AssetInput, DataAddress} from "@think-it-labs/edc-connector-client";
 import {FieldShowProps} from "@/components/molecules/field-show";
 import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
 import {ENGLISH_SELECT_DATA, LANGUAGES} from "@/constants/languages";
 import {DELIMITER} from "@/i18n";
-import {extractArrayValues} from "@/utilities/utilities";
+import {extractArrayValues, isEmail, isUrl} from "@/utilities/utilities";
 import {ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE, ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_MODEL_ID, ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA, ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY, ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY, ASSET_ADVANCED_INFO_GEO_LOCATION, ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL, ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS, ASSET_ADVANCED_INFO_GEO_REFERENCE_METHOD, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION, ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START, ASSET_ADVANCED_INFO_TRANSPORT_MODE, ASSET_CONTENT_TYPE, ASSET_DESCRIPTION, ASSET_ENDPOINT_DOCUMENTATION, ASSET_KEYWORDS, ASSET_LANGUAGE, ASSET_ORGANIZATION, ASSET_PUBLISHER, ASSET_STANDARD_LICENSE, ASSET_TITLE, ASSET_VERSION} from "@/schema/asset";
-import { defaultHttpDataAddress } from "./data-address";
+import {AzureBlobDataAddress, DataAddressErrors, DataAddressTypes, defaultHttpDataAddress, OnRequestDataAddress, S3DataAddress} from "./data-address";
 import {CONTEXT_DCAT} from "@/schema/context.ts";
+import {HttpDataAddress} from "@think-it-labs/edc-connector-client/dist/src/entities/data-address";
+import {dataCategoryValueToText, dataSubCategoryValueToText} from "@/utilities/data-category.ts";
+import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog.ts";
 
 const temporalCoverageValue = ([start, end]: [string, string]) => {
   if (!start && !end) {
@@ -94,8 +97,9 @@ export type AssetProperties = typeof defaultCreateAssetFormData.properties;
 
 export const assetGeneralFieldsToShow = (asset: Asset, participantId: string, connectorEndpoint: string): FieldShowProps[] => {
   const assetLanguage = readValue(asset.properties, ASSET_LANGUAGE);
+  const emptyValue = "-";
 
-  return [
+  const result = [
     {
       label: "assets.new.fieldId",
       value: asset["@id"],
@@ -103,45 +107,56 @@ export const assetGeneralFieldsToShow = (asset: Asset, participantId: string, co
     },
     {
       label: "assets.new.fieldVersion",
-      value: readValue(asset.properties, ASSET_VERSION),
+      value: readValue(asset.properties, ASSET_VERSION) || emptyValue,
       icon: "file_copy"
     },
     {
       label: "assets.new.fieldLanguage",
-      value: LANGUAGES.find((language) => language.id === assetLanguage)?.label,
+      value: LANGUAGES.find((language) => language.id === assetLanguage)?.label || emptyValue,
       icon: "language"
     },
     {
       label: "assets.new.fieldPublisher",
-      value: readValue(asset.properties, ASSET_PUBLISHER),
+      value: readValue(asset.properties, ASSET_PUBLISHER) || emptyValue,
       icon: "apartment"
     },
     {
       label: "assets.new.fieldEndpointDocumentation",
-      value: readValue(asset.properties, ASSET_ENDPOINT_DOCUMENTATION),
+      value: readValue(asset.properties, ASSET_ENDPOINT_DOCUMENTATION) || emptyValue,
       icon: "bookmarks"
     },
     {
       label: "assets.new.fieldStandardLicense",
-      value: readValue(asset.properties, ASSET_STANDARD_LICENSE),
+      value: readValue(asset.properties, ASSET_STANDARD_LICENSE) || emptyValue,
       icon: "gavel"
     },
     {
       label: "assets.new.participantId",
-      value: participantId,
+      value: participantId || emptyValue,
       icon: "category"
     },
     {
       label: "assets.new.creatorOrganizationName",
-      value: readValue(asset.properties, ASSET_ORGANIZATION),
+      value: readValue(asset.properties, ASSET_ORGANIZATION) || emptyValue,
       icon: "account_circle"
     },
     {
       label: "assets.new.connectorEndpoint",
-      value: connectorEndpoint,
+      value: connectorEndpoint || emptyValue,
       icon: "link"
     },
   ];
+
+  const contentType = readValue(asset.properties, ASSET_CONTENT_TYPE);
+  if (contentType) {
+    result.push({
+      label: "assets.new.fieldContentType",
+      value: readValue(asset.properties, ASSET_CONTENT_TYPE),
+      icon: 'category',
+    });
+  }
+
+  return result;
 };
 
 const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
@@ -164,7 +179,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
     advancedFields.push({
       icon: 'commute',
       label: 'assets.new.fieldAdvancedInfoDataCategory',
-      value: dataCategory,
+      value: dataCategoryValueToText(dataCategory),
     });
   }
   const dataSubcategory = readValue(mobilityTheme, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY)
@@ -172,7 +187,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
     advancedFields.push({
       icon: 'commute',
       label: 'assets.new.fieldAdvancedInfoDataSubcategory',
-      value: dataSubcategory,
+      value: dataSubCategoryValueToText(dataCategory, dataSubcategory),
     });
   }
   const dataModel = readValue(asset.properties, ASSET_ADVANCED_INFO_DATA_MODEL_ID)
@@ -268,54 +283,44 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
   return advancedFields;
 };
 
-const assetDataAddressFieldsToShow = (asset: Asset): FieldShowProps[] => {
-  const dataAddressFieldsToMerge = [
-    {
-      label: "assets.new.httpProxyMethod",
-      value: readValue(asset.dataAddress, "proxyMethod"),
-    },
-    {
-      label: "assets.new.httpProxyPath",
-      value: readValue(asset.dataAddress, "proxyPath"),
-    },
-    {
-      label: "assets.new.fieldDataAddressQueryParams",
-      value: readValue(asset.dataAddress, "proxyQueryParams"),
-    }
-  ];
-
-  const dataSourceText = !dataAddressFieldsToMerge.some((field) => field.value) ? 'Disabled' :
-    dataAddressFieldsToMerge
-    .filter((field) => field.value)
-    .map((field) => field.label)
-    .join(DELIMITER);
-
-  const dataSourceFields = [
-    {
-      label: "assets.new.httpDataSourceParameterization",
-      value: dataSourceText,
-      icon: 'api',
-    },
-  ];
-
-  const contentType = readValue(asset.properties, ASSET_CONTENT_TYPE);
-  if (contentType) {
-    dataSourceFields.push({
-      label: "assets.new.fieldContentType",
-      value: contentType,
-      icon: 'category',
-    });
-  }
-
-  return dataSourceFields;
-};
-
 export const assetFieldsToShow = (asset: Asset, participantId: string, connectorEndpoint: string): FieldShowProps[] => {
   return [
     ...assetGeneralFieldsToShow(asset, participantId, connectorEndpoint),
-    ...assetDataAddressFieldsToShow(asset),
     ...assetAdvancedFieldsToShow(asset),
   ]
+};
+
+export const assetDataAddressFieldsTitle = (asset: Asset) => {
+  const dataAddress = removeJsonLdSchemaFromProperties(asset.dataAddress);
+  const type = readValue(dataAddress, "type");
+  if (type === DataAddressTypes.MDSOnRequestOffer) {
+    return "dataOffer.contactInformation";
+  }
+
+  return "";
+}
+
+export const assetDataAddressFieldsToShow = (asset: Asset): FieldShowProps[] => {
+  const dataAddress = removeJsonLdSchemaFromProperties(asset.dataAddress);
+  const type = readValue(dataAddress, "type");
+  if (type === DataAddressTypes.MDSOnRequestOffer) {
+    return [
+      {
+        label: "dataOffer.contactEmailAddress",
+        value: readValue(dataAddress, "email"),
+        icon: 'mail',
+        copyTextIcon: true,
+      },
+      {
+        label: "dataOffer.new.dataOfferContactPreferredEmailSubject",
+        value: readValue(dataAddress, "preferred_email_subject"),
+        icon: 'subject',
+        copyTextIcon: true,
+      },
+    ];
+  }
+
+  return [];
 };
 
 export const assetPrivateFieldsToShow = (asset: Asset): FieldShowProps[] => {
@@ -343,3 +348,71 @@ export const transformForId = (str?: string) => {
     .replaceAll(' ', '-')
     .toLowerCase();
 };
+
+export const validateDataAddress = (formDataToValidate: DataAddress, translator: (str: string) => string) => {
+  if (formDataToValidate.type === DataAddressTypes.CustomJson) {
+    if (! formDataToValidate.description) {
+      return { description: true };
+    }
+
+    try {
+      JSON.parse(formDataToValidate.description as string);
+    } catch (e) {
+      return { description: translator("assets.new.mustBeValidJson") };
+    }
+  }
+
+  if (formDataToValidate.type === DataAddressTypes.HttpData) {
+    const errors: DataAddressErrors<HttpDataAddress> = {};
+
+    if (! formDataToValidate.baseUrl) {
+      errors.baseUrl = true;
+    } else if (! isUrl(formDataToValidate.baseUrl)) {
+      errors.baseUrl = translator("assets.new.mustBeValidUrl");
+    }
+
+    return errors;
+  }
+
+  if (formDataToValidate.type === DataAddressTypes.MDSOnRequestOffer) {
+    const errors: DataAddressErrors<OnRequestDataAddress> = {};
+
+    if (! formDataToValidate.email) {
+      errors.email = true;
+    } else if (! isEmail(formDataToValidate.email)) {
+      errors.email = translator("assets.new.mustBeValidEmail");
+    }
+
+    if (! formDataToValidate.preferred_email_subject) {
+      errors.preferred_email_subject = true;
+    }
+
+    return errors;
+  }
+
+  if (formDataToValidate.type === DataAddressTypes.AmazonS3) {
+    const requiredProperties = ["bucketName", "region", "keyname", "objectName", "objectPrefix"];
+    const errors : DataAddressErrors<S3DataAddress> = {}
+    requiredProperties.forEach((propertyName) => {
+      if (! formDataToValidate[propertyName]) {
+        errors[propertyName] = true;
+      }
+    });
+
+    return errors;
+  }
+
+  if (formDataToValidate.type === DataAddressTypes.AzureBlob) {
+    const requiredProperties = ["bucketName", "region", "keyname", "objectName", "objectPrefix"];
+    const errors : DataAddressErrors<AzureBlobDataAddress> = {}
+    requiredProperties.forEach((propertyName) => {
+      if (! formDataToValidate[propertyName]) {
+        errors[propertyName] = true;
+      }
+    });
+
+    return errors;
+  }
+
+  return {};
+}

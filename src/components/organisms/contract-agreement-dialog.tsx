@@ -28,9 +28,10 @@ interface ContractAgreementDialogProps {
   isTerminated?: boolean;
   isRunning?: boolean;
   isTerminatedAt?: number;
+  onTerminateSuccess?: () => void;
 }
 
-export default function ContractAgreementDialog({ open, onClose, contractAgreement, participantId, managementUrl, connectorEndpoint, contentStyle = {}, translator, retirementReason = "", isTerminated = false, isRunning = false, isTerminatedAt = 0 }: ContractAgreementDialogProps) {
+export default function ContractAgreementDialog({ open, onClose, contractAgreement, participantId, managementUrl, connectorEndpoint, contentStyle = {}, translator, retirementReason = "", isTerminated = false, isRunning = false, isTerminatedAt = 0, onTerminateSuccess = () => {} }: ContractAgreementDialogProps) {
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [isTerminateModalOpen, setIsTerminateModalOpen] = useState(false);
 
@@ -68,7 +69,7 @@ export default function ContractAgreementDialog({ open, onClose, contractAgreeme
     }
   }, [edcClient, contractAgreement.assetId]);
 
-  useEffect(() => {
+  const populateTransferProcesses = () => {
     if (! contractAgreement.id) {
       return;
     }
@@ -78,7 +79,11 @@ export default function ContractAgreementDialog({ open, onClose, contractAgreeme
         "operator": "=",
         "operandRight": contractAgreement.id
       }]
-    }).then(setTransferProcesses);
+    }).then(setTransferProcesses)
+  };
+
+  useEffect(() => {
+    populateTransferProcesses();
   }, [edcClient, contractAgreement.id]);
 
   return (
@@ -87,12 +92,17 @@ export default function ContractAgreementDialog({ open, onClose, contractAgreeme
         contractAgreementLd={contractAgreement}
         open={isTransferModalOpen}
         onClose={() => setIsTransferModalOpen(false)}
+        onSuccess={populateTransferProcesses}
         translator={translator}
       />
       <ContractAgreementTerminateDialog
         contractAgreement={contractAgreement}
         open={isTerminateModalOpen}
         onClose={() => setIsTerminateModalOpen(false)}
+        onSuccess={() => {
+          onTerminateSuccess();
+          populateTransferProcesses();
+        }}
         translator={translator}
       />
       <Dialog

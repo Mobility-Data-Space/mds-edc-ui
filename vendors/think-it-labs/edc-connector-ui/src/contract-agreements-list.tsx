@@ -3,19 +3,27 @@ import {
   PolicyDefinition,
   QuerySpec,
 } from "@think-it-labs/edc-connector-client";
-import React, { PropsWithChildren, useCallback } from "react";
+import React, { PropsWithChildren, ReactNode, useCallback } from "react";
 import { AssetView } from "./asset-view";
 import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
 import { List } from "./list";
 import { Local } from "./local";
+import { ListProps } from "./types";
 
-interface ContractAgreementsListProps {
-  managementUrl: string;
+type ContractAgreementsListProps = ListProps & {
+  managementUrl: string
+  sections?: {
+    key: string;
+    title: ReactNode;
+    condition: (item: ContractAgreement) => boolean;
+    containerClassName?: string;
+  }[];
 }
 
 export function ContractAgreementsList({
   children,
   managementUrl,
+  ...props
 }: PropsWithChildren<ContractAgreementsListProps>) {
   const client = useEdcConnectorClient({
     management: managementUrl,
@@ -27,20 +35,36 @@ export function ContractAgreementsList({
         return client.management.contractAgreements.queryAll(querySpec);
       }
 
-      return Promise.resolve([new ContractAgreement()]) ;
+      return Promise.resolve([new ContractAgreement()]);
     },
     [client],
   );
 
-  return (
-    <List<ContractAgreement>
-      queryAll={queryAll}
-      getId={(contractAgreement: ContractAgreement) => String(contractAgreement.id)}
-      managementUrl={managementUrl}
-    >
-      {children}
-    </List>
-  );
+  if (props.usePagination) {
+    return (
+      <List<ContractAgreement>
+        queryAll={queryAll}
+        getId={(contractAgreement: ContractAgreement) => String(contractAgreement.id)}
+        managementUrl={managementUrl}
+        navigate={props.navigate}
+        page={props.currentPage}
+        usePagination={props.usePagination}
+        firstPage={props.firstPage}
+        sections={props.sections}
+      >
+        {children}
+      </List>)
+  }
+
+  return (<List<ContractAgreement>
+    queryAll={queryAll}
+    getId={(contractAgreement: ContractAgreement) => String(contractAgreement.id)}
+    managementUrl={managementUrl}
+    sections={props.sections}
+  >
+    {children}
+  </List>)
+
 }
 
 interface ContractAgreementsListAssetProps {

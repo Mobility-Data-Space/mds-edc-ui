@@ -21,7 +21,6 @@ export function AssetTransportMode({ translator, formData, onChange, errors }: A
       name={ASSET_ADVANCED_INFO_TRANSPORT_MODE}
       id="advanced-info-transport-mode"
       options={GEO_REFERENCE_DATA}
-      label={translator("assets.new.fieldAdvancedInfoTransportModePlaceholder")}
       placeholder={translator("assets.new.fieldAdvancedInfoTransportModePlaceholder")}
       value={formData[ASSET_ADVANCED_INFO_TRANSPORT_MODE]}
       error={errors[ASSET_ADVANCED_INFO_TRANSPORT_MODE]}

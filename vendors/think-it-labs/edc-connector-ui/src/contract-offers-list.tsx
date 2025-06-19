@@ -11,8 +11,9 @@ import { AssetView } from "./asset-view";
 import { ContractDefinitionView } from "./contract-definition-view";
 import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
 import { List } from "./list";
+import { ListProps } from "./types";
 
-interface ContractOffersListProps {
+export type ContractOffersListProps = ListProps & {
   counterPartyAddress: string;
   managementUrl: string;
 }
@@ -21,6 +22,7 @@ export function ContractOffersList({
   children,
   managementUrl,
   counterPartyAddress,
+  ...props
 }: PropsWithChildren<ContractOffersListProps>) {
   const client = useEdcConnectorClient({
     management: managementUrl,
@@ -36,6 +38,21 @@ export function ContractOffersList({
         .then((catalog) => catalog.datasets),
     [client, counterPartyAddress],
   );
+
+  if (props.usePagination) {
+    return (
+      <List<Dataset>
+        queryAll={queryAll}
+        getId={(dataset: Dataset) => dataset.id}
+        managementUrl={managementUrl}
+        navigate={props.navigate}
+        page={props.currentPage}
+        usePagination={props.usePagination}
+        firstPage={props.firstPage}
+      >
+        {children}
+      </List>)
+  }
 
   return (
     <List<Dataset>

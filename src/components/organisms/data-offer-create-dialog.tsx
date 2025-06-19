@@ -21,6 +21,7 @@ interface DataOfferCreateDialogProps {
   connectorEndpoint: string;
   participantId: string;
   translator: (key: string) => string;
+  onSuccess?: () => void;
 }
 
 const optionsGenerator = (data: { "@id": string }[]) => {
@@ -29,7 +30,19 @@ const optionsGenerator = (data: { "@id": string }[]) => {
   }));
 };
 
-export default function DataOfferCreateDialog({ open, onClose, managementUrl, connectorEndpoint, participantId, translator }: DataOfferCreateDialogProps) {
+const validateId = (id: string | undefined, translator: (str: string) => string) => {
+  if (! id) {
+    return true;
+  }
+
+  if (! /^[^\s:]*$/.test(id)) {
+    return translator('assets.new.invalidWhitespacesOrColons');
+  }
+
+  return false;
+}
+
+export default function DataOfferCreateDialog({ open, onClose, managementUrl, connectorEndpoint, participantId, translator, onSuccess = () => {} }: DataOfferCreateDialogProps) {
   const submitButtonRef = useRef<HTMLButtonElement>(null);
 
   const [assetDialogIsOpen, setAssetDialogIsOpen] = useState(false);
@@ -37,6 +50,8 @@ export default function DataOfferCreateDialog({ open, onClose, managementUrl, co
   const [assetsById, setAssetsById] = useState<{ [key: string]: Asset }>({});
   const [assetIds, setAssetIds] = useState<{ value: string }[]>([]);
   const [policyIds, setPolicyIds] = useState<{ value: string }[]>([]);
+
+  const [idError, setIdError] = useState<string|boolean>(false);
 
   const edcClient = useEdcConnectorClient({management: managementUrl});
 
@@ -100,7 +115,10 @@ export default function DataOfferCreateDialog({ open, onClose, managementUrl, co
         <ContractDefinitionFormWrapper
           managementUrl={managementUrl}
           formData={() => fromContractDefinitionForm(formData)}
-          onSuccess={onClose}
+          onSuccess={() => {
+            onSuccess();
+            onClose();
+          }}
           onFailure={onFormSubmitFail}
         >
           <DialogTitle>
@@ -118,20 +136,13 @@ export default function DataOfferCreateDialog({ open, onClose, managementUrl, co
                   data-testid="contract-definition-id"
                   label={translator("contractDefinitions.new.id")}
                   value={formData["@id"]}
-                  onChange={(event) => onChange({...formData, ["@id"]: event.target.value})}
+                  error={idError}
+                  onChange={(event) => {
+                    setIdError(validateId(event.target.value, translator));
+                    onChange({...formData, ["@id"]: event.target.value});
+                  }}
                 />
               </div>
-              <MuiSelect
-                multiple
-                required
-                name="assets-selector"
-                id="asset-id"
-                data-testid="asset-id"
-                label={translator("contractDefinitions.new.assets")}
-                options={assetIds}
-                value={idMultipleReader(formData.assetsSelector)}
-                onChange={(event) => onChange({...formData, assetsSelector: idMultipleSelector(event.target.value)})}
-              />
 
               <MuiSelect
                 required
@@ -153,6 +164,18 @@ export default function DataOfferCreateDialog({ open, onClose, managementUrl, co
                 options={policyIds}
                 value={formData.accessPolicyId}
                 onChange={(event) => onChange({...formData, accessPolicyId: event.target.value})}
+              />
+
+              <MuiSelect
+                multiple
+                required
+                name="assets-selector"
+                id="asset-id"
+                data-testid="asset-id"
+                label={translator("contractDefinitions.new.assets")}
+                options={assetIds}
+                value={idMultipleReader(formData.assetsSelector)}
+                onChange={(event) => onChange({...formData, assetsSelector: idMultipleSelector(event.target.value)})}
               />
 
               <Checkbox

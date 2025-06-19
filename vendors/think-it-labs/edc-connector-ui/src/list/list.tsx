@@ -1,23 +1,47 @@
 import { CriterionInput, QuerySpec } from "@think-it-labs/edc-connector-client";
-import React, { PropsWithChildren, useEffect, useMemo } from "react";
+import React, { PropsWithChildren, ReactNode, useEffect, useMemo } from "react";
+import { usePagination } from "../hooks/use-pagination";
 import { ListContext, useListContext } from "./list-context";
 import { useList } from "./use-list";
 
-export interface ListProps<T> {
+type ListProps<T> = {
   queryAll: (querySpec: QuerySpec) => Promise<T[]>;
   delete?: (id: string) => Promise<void>;
   getId: (item: T) => string;
   managementUrl: string;
+  usePagination?: boolean
+  page?: number
+  navigate?: (newPage: number) => void
+  firstPage?: number,
+  sections?: {
+    key: string;
+    title: ReactNode;
+    condition: (item: T) => boolean;
+    containerClassName?: string;
+  }[]
+}
+
+export interface ListProviderProps {
+  page: number;
+  hasPrev: boolean;
+  hasNext: boolean;
+  incrementPage: () => void;
+  decrementPage: () => void;
 }
 
 export function List<T>({
   children,
   queryAll,
   delete: del = async () => {
-    console.warn("delete method not defineds");
+    console.warn("delete method not defined");
   },
   getId,
   managementUrl,
+  usePagination: _usePagination = false,
+  page,
+  navigate,
+  firstPage,
+  sections,
 }: PropsWithChildren<ListProps<T>>) {
   const {
     items,
@@ -32,6 +56,8 @@ export function List<T>({
     queryAll,
   });
 
+  const pagination = usePagination({ navigate: navigate || function () { }, page: page || 0, firstPage })
+
   return (
     <ListContext.Provider
       value={{
@@ -44,6 +70,8 @@ export function List<T>({
         triggerSearch: () => triggerSearch(),
         getId,
         managementUrl,
+        pagination: _usePagination ? pagination : null,
+        sections
       } as any}
     >
       {children}
@@ -74,13 +102,29 @@ List.Items = function ListItems<T,>({
   sortField,
   sortOrder,
 }: ListItemsProps<T>) {
-  const {
+  let {
     items,
     setQuerySpec,
     isLoading,
     deleteItem,
     getId,
+    pagination,
+    sections
   } = useListContext<T>();
+
+  if (pagination && limit) {
+    offset = pagination.page * limit;
+
+    const hasNextPage = items.length > limit;
+    pagination.setHasNext(hasNextPage);
+
+    if (hasNextPage) {
+      items = items.slice(0, limit);
+    }
+
+    limit++
+  }
+
 
   useEffect(() => {
     setQuerySpec({
@@ -98,6 +142,27 @@ List.Items = function ListItems<T,>({
     };
   }, [children]);
 
+  if (!isLoading && sections && sections.length) {
+    const result: ReactNode[] = [];
+    sections.forEach(section => {
+      result.push(<div key={section.key} >
+        {section.title}
+        <div className={section.containerClassName || ""}>
+          {items.filter(section.condition).map((item, index) => (
+            <Item
+              key={getId(item)}
+              item={item}
+              deleteItem={async () => deleteItem(getId(item))}
+              index={index}
+            />
+          ))}
+        </div>
+      </div>);
+    });
+
+    return result;
+  }
+
   return (
     <>
       {!isLoading && items.map((item, index) => (
@@ -112,7 +177,7 @@ List.Items = function ListItems<T,>({
   );
 };
 
-export interface ListLoadingProps {}
+export interface ListLoadingProps { }
 
 List.Loading = function ListLoading(
   { children = <div>Loading...</div> }: PropsWithChildren<
@@ -172,3 +237,39 @@ List.SearchTrigger = function ListSearchTrigger(
     </button>
   );
 };
+
+export interface PaginationProps {
+  children: (props: PaginationControlsProps) => JSX.Element;
+}
+
+export interface PaginationControlsProps {
+  page: number
+  hasNext: boolean
+  hasPrev: boolean
+  decrementPage: () => void
+  incrementPage: () => void
+}
+
+List.Pagination = function Pagination({
+  children,
+}: PaginationProps) {
+  const { pagination } = useListContext()
+
+  if (!pagination) {
+    throw Error("Need to use usePagination=true on provider")
+  }
+
+  const PaginationControls = useMemo(() => {
+    return function PaginationControls(props: PaginationControlsProps) {
+      return <>{children(props)}</>;
+    };
+  }, [children]);
+
+  return <PaginationControls
+    page={pagination.page}
+    hasNext={pagination.hasNext}
+    hasPrev={pagination.hasPrev}
+    decrementPage={pagination.decrementPage}
+    incrementPage={pagination.incrementPage}
+  />
+}

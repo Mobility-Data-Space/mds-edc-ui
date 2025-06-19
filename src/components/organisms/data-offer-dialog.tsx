@@ -13,6 +13,7 @@ import {DeleteDialog} from "@/components/molecules/delete-dialog";
 import { T } from "@/i18n";
 import {ASSET_TITLE} from "@/schema/asset";
 import { datasetToAsset } from "@/utilities/catalog";
+import {OnRequestDataOfferDescription} from "@/components/atoms/on-request-data-offer-description.tsx";
 
 const HAS_POLICY = "http://www.w3.org/ns/odrl/2/hasPolicy";
 
@@ -28,9 +29,10 @@ interface DataOfferDialogProps {
   deleteItem?: () => Promise<void>;
   onDeleteSuccess?: () => void;
   contentStyle?: { [key: string]: string }
+  onNegotiateSuccess?: () => void;
 }
 
-export default function DataOfferDialog({ open, onClose, dataset, onEditClick, deleteEnabled = false, participantId, counterPartyAddress, assetIsOwned = true, deleteItem, onDeleteSuccess, contentStyle = {} }: DataOfferDialogProps) {
+export default function DataOfferDialog({ open, onClose, dataset, onEditClick, deleteEnabled = false, participantId, counterPartyAddress, assetIsOwned = true, deleteItem, onDeleteSuccess, contentStyle = {}, onNegotiateSuccess }: DataOfferDialogProps) {
   const id = dataset["@id"];
   const title = readValue(dataset.properties, ASSET_TITLE) || "";
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -95,9 +97,19 @@ export default function DataOfferDialog({ open, onClose, dataset, onEditClick, d
           <div className="flex flex-col gap-y-2.5">
             <AssetDetails asset={datasetToAsset(dataset)} participantId={participantId} connectorEndpoint={counterPartyAddress} />
           </div>
+          <div>
+            <OnRequestDataOfferDescription asset={datasetToAsset(dataset)} />
+          </div>
           <div className="flex flex-col gap-y-2.5">
             <span /> <span />
-            <DataOfferDetails assetId={dataset["@id"]} participantId={participantId} counterPartyAddress={counterPartyAddress} offers={dataset[HAS_POLICY]} assetIsOwned={assetIsOwned} />
+            <DataOfferDetails
+              assetId={dataset["@id"]}
+              participantId={participantId}
+              counterPartyAddress={counterPartyAddress}
+              offers={dataset[HAS_POLICY]}
+              assetIsOwned={assetIsOwned}
+              onNegotiateSuccess={onNegotiateSuccess}
+            />
           </div>
         </DialogContent>
         <DialogActions>

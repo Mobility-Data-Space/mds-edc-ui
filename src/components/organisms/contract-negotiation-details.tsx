@@ -1,12 +1,21 @@
 import React, {useState} from "react";
 import { T } from "@/i18n";
 import {ContractNegotiation} from "@think-it-labs/edc-connector-client";
+import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
+import {formatDateTime} from "@/utilities/utilities.ts";
+import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog.ts";
 
 interface ContractNegotiationDetailsProps {
   contractNegotiation: ContractNegotiation;
-  index?: number;
 }
-export default function ContractNegotiationDetails({ contractNegotiation, index }: ContractNegotiationDetailsProps) {
+
+export default function ContractNegotiationDetails({ contractNegotiation }: ContractNegotiationDetailsProps) {
+  const cleanedContractNegotiation = removeJsonLdSchemaFromProperties(contractNegotiation);
+  const createdAt = formatDateTime(readValue(cleanedContractNegotiation, "createdAt"), { showSeconds: true, showDayOfWeek: true });
+  const counterPartyAddress = readValue(cleanedContractNegotiation, "counterPartyAddress");
+  const counterPartyId = readValue(cleanedContractNegotiation, "counterPartyId");
+  const protocol = readValue(cleanedContractNegotiation, "protocol");
+  const type = readValue(cleanedContractNegotiation, "type");
 
   return (
     <ul>
@@ -20,19 +29,19 @@ export default function ContractNegotiationDetails({ contractNegotiation, index 
       </li>
       <li className="mt-2">
         <span className="font-bold"><T
-          string="contractNegotiations.[id].fieldCounterPartyAddress"/></span>: {contractNegotiation.counterPartyAddress}
+          string="contractNegotiations.[id].fieldCounterPartyAddress"/></span>: {counterPartyAddress}
       </li>
       <li className="mt-2">
         <span className="font-bold"><T
-          string="contractNegotiations.[id].fieldCreatedAt"/></span>: {contractNegotiation.createdAt}
+          string="contractNegotiations.[id].fieldCreatedAt"/></span>: {createdAt}
       </li>
       <li className="mt-2">
         <span className="font-bold"><T
-          string="contractNegotiations.[id].fieldCounterPartyId"/></span>: {contractNegotiation.counterPartyId}
+          string="contractNegotiations.[id].fieldCounterPartyId"/></span>: {counterPartyId}
       </li>
       <li className="mt-2">
         <span className="font-bold"><T
-          string="contractNegotiations.[id].fieldProtocol"/></span>: {contractNegotiation.protocol}
+          string="contractNegotiations.[id].fieldProtocol"/></span>: {protocol}
       </li>
       <li className="mt-2">
         <span className="font-bold"><T
@@ -40,7 +49,7 @@ export default function ContractNegotiationDetails({ contractNegotiation, index 
       </li>
       <li className="mt-2">
         <span className="font-bold"><T
-          string="contractNegotiations.[id].fieldType"/></span>: {contractNegotiation.type}
+          string="contractNegotiations.[id].fieldType"/></span>: {type}
       </li>
     </ul>
   );

@@ -76,3 +76,11 @@ export const formatDateTimeAgo = (melliSecondsTimestamp: number) => {
 
   return timeAgo.format(new Date(melliSecondsTimestamp));
 }
+
+export const isUrl = (url: string) => {
+  return /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/.test(url);
+}
+
+export const isEmail = (email: string) => {
+  return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email);
+}

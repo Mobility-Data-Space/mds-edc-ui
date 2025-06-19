@@ -7,14 +7,16 @@ import React, { PropsWithChildren, useCallback } from "react";
 import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
 import { List } from "./list";
 import { Local } from "./local";
+import { ListProps } from "./types";
 
-interface TransferProcessesListProps {
+export type TransferProcessesListProps = ListProps & {
   managementUrl: string;
 }
 
 export function TransferProcessesList({
   children,
   managementUrl,
+  ...props
 }: PropsWithChildren<TransferProcessesListProps>) {
   const client = useEdcConnectorClient({
     management: managementUrl,
@@ -26,10 +28,25 @@ export function TransferProcessesList({
         return client.management.transferProcesses.queryAll(querySpec);
       }
 
-      return Promise.resolve([new TransferProcess()]) ;
+      return Promise.resolve([new TransferProcess()]);
     },
     [client],
   );
+
+  if (props.usePagination) {
+    return (
+      <List<TransferProcess>
+        queryAll={queryAll}
+        getId={(policyDefinition: TransferProcess) => policyDefinition.id}
+        managementUrl={managementUrl}
+        navigate={props.navigate}
+        page={props.currentPage}
+        usePagination={props.usePagination}
+        firstPage={props.firstPage}
+      >
+        {children}
+      </List>)
+  }
 
   return (
     <List<TransferProcess>

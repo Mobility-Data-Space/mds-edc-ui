@@ -6,14 +6,16 @@ import React, { PropsWithChildren, useCallback, useMemo } from "react";
 import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
 import { List, useListContext } from "./list";
 import { Local, useLocalContext } from "./local";
+import { ListProps } from "./types";
 
-interface PolicyDefinitionsListProps {
+export type PolicyDefinitionsListProps = ListProps & {
   managementUrl: string;
 }
 
 export function PolicyDefinitionsList({
   children,
   managementUrl,
+  ...props
 }: PropsWithChildren<PolicyDefinitionsListProps>) {
   const client = useEdcConnectorClient({
     management: managementUrl,
@@ -25,7 +27,7 @@ export function PolicyDefinitionsList({
         return client.management.policyDefinitions.queryAll(querySpec);
       }
 
-      return Promise.resolve([new PolicyDefinition()]) ;
+      return Promise.resolve([new PolicyDefinition()]);
     },
     [client],
   );
@@ -35,11 +37,27 @@ export function PolicyDefinitionsList({
     [client],
   );
 
+  if (props.usePagination) {
+    return (
+      <List<PolicyDefinition>
+        queryAll={queryAll}
+        delete={del}
+        getId={(policyDefinition: PolicyDefinition) => String(policyDefinition.id)}
+        managementUrl={managementUrl}
+        navigate={props.navigate}
+        page={props.currentPage}
+        usePagination={props.usePagination}
+        firstPage={props.firstPage}
+      >
+        {children}
+      </List>)
+  }
+
   return (
     <List<PolicyDefinition>
       queryAll={queryAll}
       delete={del}
-      getId={(policyDefinition: PolicyDefinition) => policyDefinition.id}
+      getId={(policyDefinition: PolicyDefinition) => String(policyDefinition.id)}
       managementUrl={managementUrl}
     >
       {children}

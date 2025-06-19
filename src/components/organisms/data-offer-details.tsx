@@ -5,7 +5,6 @@ import {enqueueSnackbar} from "notistack";
 import {compact, Policy} from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 import {TitleWithIcon} from "@/components/atoms/TitleWithIcon";
-
 import {FieldShow} from "@/components/molecules/field-show";
 import {ConfirmDialog} from "@/components/molecules/confirm-dialog";
 import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
@@ -20,23 +19,21 @@ interface DataOfferDetailsProps {
   participantId: string;
   counterPartyAddress: string ;
   assetIsOwned: boolean;
+  onNegotiateSuccess?: () => void;
 }
 
-export default function DataOfferDetails({ offers, assetId, counterPartyAddress, participantId, assetIsOwned = false }: DataOfferDetailsProps) {
+export default function DataOfferDetails({ offers, assetId, counterPartyAddress, participantId, assetIsOwned = false, onNegotiateSuccess = () => {} }: DataOfferDetailsProps) {
   const { connector } = useParticipantConnectorState() ;
   const { translator } = useTranslator();
 
 
-  const [compactContractDefinitions, setCompactContractDefinitions] = useState([]);
+  const [compactContractDefinitions, setCompactContractDefinitions] = useState<Policy[]>([]);
   useEffect(() => {
-    async function compactConstraints() {
-      setCompactContractDefinitions(! offers ?
-        [] :
-        await compact(offers)
-      );
+    if (! offers) {
+      setCompactContractDefinitions([]);
+    } else {
+      compact(offers).then(compacted => setCompactContractDefinitions(compacted as unknown as Policy[]));
     }
-
-    compactConstraints();
   }, [offers]);
 
   const [negotiateContractIsOpen, setNegotiateContractIsOpen] = useState<Record<string, boolean>>({});
@@ -46,8 +43,15 @@ export default function DataOfferDetails({ offers, assetId, counterPartyAddress,
   const onNegotiateConfirm = (offer: Policy) => {
     const negotiation = createNegotiationRequest(offer, counterPartyAddress, participantId, assetId) ;
     edcClient.management.contractNegotiations.initiate(negotiation)
-      .then(() => setNegotiateContractIsOpen(prev => ({ ...prev, [offer["@id"]]: false })))
-      .catch(error => enqueueSnackbar(translator("common.errorOccurred")))
+    .then(() => {
+      onNegotiateSuccess();
+      setNegotiateContractIsOpen(prev => ({ ...prev, [offer["@id"]]: false }));
+      enqueueSnackbar(translator("contractNegotiations.negotiationSuccess"))
+    })
+    .catch(error => {
+      const match = /"message":"(.*?)"/.exec(error.message)
+      enqueueSnackbar((match && match[1]) || translator("dataOffer.negotiateError"));
+    });
   }
 
   return (
@@ -65,7 +69,7 @@ export default function DataOfferDetails({ offers, assetId, counterPartyAddress,
 
             <PolicyConstraintShow
               constraints={removeJsonLdSchemaFromProperties(compactContractDefinitions)?.permission}
-              jsonLdObject={compactContractDefinitions}
+              jsonLdObject={offer}
               jsonLdDialogTitle={<TitleWithIcon
                 icon={<Icon className="mt-1.5" fontSize="large" >policy</Icon>}
                 title={<div className="flex gap-x-1">
@@ -92,13 +96,13 @@ export default function DataOfferDetails({ offers, assetId, counterPartyAddress,
               </Tooltip>
             </div>
 
-    <ConfirmDialog
-      open={negotiateContractIsOpen[offer["@id"]] || false}
-      onClose={() => setNegotiateContractIsOpen(prev => ({ ...prev, [offer["@id"]]: false }))}
-      onConfirm={() => onNegotiateConfirm(offer)}
-      title="contractNegotiations.negotiateConfirmTitle"
-      content="contractNegotiations.negotiateConfirmContent"
-    />
+            <ConfirmDialog
+              open={negotiateContractIsOpen[offer["@id"]] || false}
+              onClose={() => setNegotiateContractIsOpen(prev => ({ ...prev, [offer["@id"]]: false }))}
+              onConfirm={() => onNegotiateConfirm(offer)}
+              title="contractNegotiations.negotiateConfirmTitle"
+              content="contractNegotiations.negotiateConfirmContent"
+            />
           </div>
         ))}
       </div>

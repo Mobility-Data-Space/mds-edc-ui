@@ -7,14 +7,16 @@ import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
 import { List, useListContext } from "./list";
 import { Local } from "./local";
 import { PolicyDefinitionView } from "./policy-definition-view";
+import { ListProps } from "./types";
 
-interface ContractDefinitionsListProps {
+export type ContractDefinitionsListProps = ListProps & {
   managementUrl: string;
 }
 
 export function ContractDefinitionsList({
   children,
   managementUrl,
+  ...props
 }: PropsWithChildren<ContractDefinitionsListProps>) {
   const client = useEdcConnectorClient({
     management: managementUrl,
@@ -26,7 +28,7 @@ export function ContractDefinitionsList({
         return client.management.contractDefinitions.queryAll(querySpec);
       }
 
-      return Promise.resolve([new ContractDefinition()]) ;
+      return Promise.resolve([new ContractDefinition()]);
     },
     [client],
   );
@@ -35,6 +37,22 @@ export function ContractDefinitionsList({
     (id: string) => client.management.contractDefinitions.delete(id),
     [client],
   );
+
+  if (props.usePagination) {
+    return (
+      <List<ContractDefinition>
+        queryAll={queryAll}
+        delete={del}
+        getId={(contractDefinition: ContractDefinition) => String(contractDefinition.id)}
+        managementUrl={managementUrl}
+        navigate={props.navigate}
+        page={props.currentPage}
+        usePagination={props.usePagination}
+        firstPage={props.firstPage}
+      >
+        {children}
+      </List>)
+  }
 
   return (
     <List<ContractDefinition>
