@@ -62,19 +62,19 @@ export default function AssetListPage() {
               <T string="assets.buttonAdd" />
             </MuiButton>
           </div>
-
-          <div className="flex flex-wrap gap-3">
-            <AssetsList.Items
-              limit={limit}
-              offset={offset}
-              sortOrder="DESC"
-            >
-              {({ item, index, deleteItem }) => (
-                <AssetCard asset={item} key={index} onClick={() => openDetailsModal(item, deleteItem)} participantId={connector.id} />
-              )}
-            </AssetsList.Items>
-          </div>
-
+          <div id="asset-list">
+            <div className="flex flex-wrap gap-3">
+              <AssetsList.Items
+                limit={limit}
+                offset={offset}
+                sortOrder="DESC"
+              >
+                {({ item, index, deleteItem }) => (
+                  <AssetCard asset={item} key={index} onClick={() => openDetailsModal(item, deleteItem)} participantId={connector.id} />
+                )}
+              </AssetsList.Items>
+            </div>
+          </div>      
           <AssetsList.Loading>
             <div className="max-w-20 mx-auto mt-4 flex flex-col bg-white border shadow-sm rounded-xl p-4 md:p-5">
               <span

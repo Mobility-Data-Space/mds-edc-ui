@@ -14,7 +14,7 @@ export default function AssetFormDialog({ open, onClose }: AssetFormDialogProps)
     <Dialog
       open={open}
       maxWidth="lg"
-      className="my-7"
+      className="create-asset-form my-7"
       onClose={() => onClose}
     >
       <DialogContent style={{ maxWidth: "80vw", width: "800px" }}>
