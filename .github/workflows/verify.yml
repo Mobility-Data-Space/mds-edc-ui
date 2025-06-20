@@ -21,8 +21,6 @@ jobs:
       with:
         node-version: 18
 
-    - run: echo -e "@think-it-labs:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.THINKIT_TOKEN }}" >> ./.npmrc
-
     - name: Install dependencies
       run: yarn install --frozen-lockfile
 
@@ -36,6 +34,5 @@ jobs:
         name: playwright-report
         path: playwright-report/
         retention-days: 30
-
     - name: Build
       run: yarn build

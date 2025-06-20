@@ -23,7 +23,7 @@ async function globalSetup() {
   console.log(`Checking status of service: ${serviceName}`);
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     if (checkInitStatus(serviceName)) {
-      console.log(`Service ${serviceName} has existed.`);
+      console.log(`Service ${serviceName} completed execution.`);
       break;
     }
     console.log(`Service ${serviceName} is not ready yet. Retrying in ${interval / 1000} seconds...`);
