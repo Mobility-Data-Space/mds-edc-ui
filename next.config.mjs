@@ -15,7 +15,7 @@ const nextConfig = {
     return [
       {
         source: "/",
-        destination: "/assets", // TODO: change to dashboard after it is implemented
+        destination: "/dashboard",
         permanent: true,
       },
     ];

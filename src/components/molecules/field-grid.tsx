@@ -7,9 +7,10 @@ interface FieldGridProps {
   fields: FieldShowProps[];
   label?: string;
   className?: string;
+  contentClassName?: string;
 }
 
-export default function FieldGrid({ fields, label, className = "" }: FieldGridProps) {
+export default function FieldGrid({ fields, label, className = "", contentClassName = "" }: FieldGridProps) {
   if (fields.length === 0) {
     return "";
   }
@@ -21,7 +22,7 @@ export default function FieldGrid({ fields, label, className = "" }: FieldGridPr
           <T string={label} />
         </Typography>
       }
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+      <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 ${contentClassName}`}>
         {fields.map((field, index) =>
           <FieldShow {...field} key={index}/>
         )}
