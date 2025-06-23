@@ -15,12 +15,13 @@ services:
       EDC_DEFAULT_URL: "http://edc:8181/api"
       EDC_PROTOCOL_URL: "http://edc:8183/api/dsp"
       EDC_PUBLIC_URL: "http://edc:8185/public"
+      EDC_MANAGEMENT_API_KEY: "API_KEY"
 
     ports:
       - "3000:3000"
 
   edc:
-    image: ghcr.io/mobility-data-space/next-mds-edc/connector-inmemory:latest
+    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
     environment:
       # Participant Configuration
       EDC_PARTICIPANT_ID: "participant_1"

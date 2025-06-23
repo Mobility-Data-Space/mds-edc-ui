@@ -1,19 +1,19 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { enqueueSnackbar } from 'notistack';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import Typography from "@mui/material/Typography";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton} from "@mui/material";
-import {Dataset} from "@think-it-labs/edc-connector-client";
-import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
-import {AssetIcon} from "@/components/atoms/asset-icon";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from "@mui/material";
+import { Dataset } from "@think-it-labs/edc-connector-client";
+import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
+import { AssetIcon } from "@/components/atoms/asset-icon";
 import DataOfferDetails from "@/components/organisms/data-offer-details";
 import AssetDetails from "@/components/organisms/asset-details";
-import {DeleteDialog} from "@/components/molecules/delete-dialog";
+import { DeleteDialog } from "@/components/molecules/delete-dialog";
 import { T } from "@/i18n";
-import {ASSET_TITLE} from "@/schema/asset";
+import { ASSET_TITLE } from "@/schema/asset";
 import { datasetToAsset } from "@/utilities/catalog";
-import {OnRequestDataOfferDescription} from "@/components/atoms/on-request-data-offer-description.tsx";
+import { OnRequestDataOfferDescription } from "@/components/atoms/on-request-data-offer-description.tsx";
 
 const HAS_POLICY = "http://www.w3.org/ns/odrl/2/hasPolicy";
 
@@ -34,7 +34,7 @@ interface DataOfferDialogProps {
 
 export default function DataOfferDialog({ open, onClose, dataset, onEditClick, deleteEnabled = false, participantId, counterPartyAddress, assetIsOwned = true, deleteItem, onDeleteSuccess, contentStyle = {}, onNegotiateSuccess }: DataOfferDialogProps) {
   const id = dataset["@id"];
-  const title = readValue(dataset.properties, ASSET_TITLE) || "";
+  const title = readValue(dataset, ASSET_TITLE) || "";
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const onDeleteConfirm = async () => {
@@ -68,7 +68,7 @@ export default function DataOfferDialog({ open, onClose, dataset, onEditClick, d
         <DialogTitle>
           <div className="flex flex-row justify-between">
             <div className="flex flex-row gap-x-4 items-center">
-              <AssetIcon asset={datasetToAsset(dataset)} fontSize="large"/>
+              <AssetIcon asset={datasetToAsset(dataset)} fontSize="large" />
               <div className="flex flex-col">
                 <Typography variant="h4">
                   {title}
@@ -82,12 +82,12 @@ export default function DataOfferDialog({ open, onClose, dataset, onEditClick, d
             <div>
               {onEditClick &&
                 <IconButton onClick={onEditClick}>
-                  <EditIcon color="secondary"/>
+                  <EditIcon color="secondary" />
                 </IconButton>
               }
               {deleteEnabled &&
                 <IconButton onClick={() => setDeleteDialogOpen(true)}>
-                  <DeleteIcon color="secondary"/>
+                  <DeleteIcon color="secondary" />
                 </IconButton>
               }
             </div>
@@ -114,7 +114,7 @@ export default function DataOfferDialog({ open, onClose, dataset, onEditClick, d
         </DialogContent>
         <DialogActions>
           <Button color="secondary" onClick={onClose}>
-            <T string="common.close"/>
+            <T string="common.close" />
           </Button>
         </DialogActions>
       </Dialog>

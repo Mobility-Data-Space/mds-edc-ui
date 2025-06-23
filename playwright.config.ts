@@ -1,4 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
+import { config as UiConfig } from './tests/utils/ui-config' ;
 
 export default defineConfig({
   testDir: './tests',
@@ -11,7 +12,11 @@ export default defineConfig({
     // Base URL to use in actions like `await page.goto('/')`.
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+    video: 'on-first-retry'
   },
+  globalSetup: './tests/utils/global-setup.ts',
+  globalTeardown: './tests/utils/global-teardown.ts',
 
   projects: [
     {
@@ -34,13 +39,18 @@ export default defineConfig({
     {
       name: 'Mobile Safari',
       use: { ...devices['iPhone 12'] },
-    },
+    }
   ],
 
   // Run your local dev server before starting the tests.
-  webServer: {
-    command: 'yarn dev',
-    url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
-  },
+  webServer: [{
+      command: 'yarn dev',
+      url: 'http://localhost:3000',
+      env: UiConfig,
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: 'docker compose -f ./docker-compose.e2e.yml up -d'
+    }
+  ]
 });

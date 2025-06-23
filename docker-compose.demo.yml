@@ -10,11 +10,12 @@ services:
         NEXT_PUBLIC_EDC_MANAGEMENT_URL: "http://edc-1:8182/api/management"
         NEXT_PUBLIC_EDC_DEFAULT_URL: "http://edc-1:8181/api"
         NEXT_PUBLIC_EDC_PROTOCOL_URL: "http://edc-1:8183/api/dsp"
+        EDC_MANAGEMENT_API_KEY: "API_KEY"
     ports:
       - "3000:3000"
 
   edc-1:
-    image: ghcr.io/mobility-data-space/next-mds-edc/connector-inmemory:latest
+    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
     environment:
       EDC_PARTICIPANT_ID: "participant_1"
       EDC_COMPONENT_ID: "participant_1_MDS_COMPONENT"
@@ -59,7 +60,7 @@ services:
       - "3001:3000"
 
   edc-2:
-    image: ghcr.io/mobility-data-space/next-mds-edc/connector-inmemory:latest
+    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
     environment:
       EDC_PARTICIPANT_ID: "participant_2"
       EDC_COMPONENT_ID: "participant_2_MDS_COMPONENT"

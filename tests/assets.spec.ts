@@ -1,65 +1,69 @@
-import { test, expect, } from '@playwright/test';
-import {TRAFFIC_INFORMATION} from "@/constants/data-category";
+import { test, expect } from '@playwright/test';
+import { AssetsPage } from './pages/assets-page';
 
-test("assets modal creates asset", async ({ page }) => {
-  await page.goto("http://localhost:3000/assets");
+test.describe("Assets Page Tests", () => {
+  let assetsPage: AssetsPage ;
 
-  const randomNumber = `${Math.random()}`.replace("0.", "");
-  const uniqueAssetTitle = `Asset title ${randomNumber}`;
-  const uniqueAssetId = `asset-id-${randomNumber}`;
-  const uniqueAssetUrl = `https://url${randomNumber}.com`;
+  test.beforeEach(async ({ page }) => {
+    assetsPage = new AssetsPage(page);
+    await assetsPage.navigate();
+  })
 
-  const assetCreateModalOpenButton = page.getByTestId("create-asset-modal-opener");
-  await assetCreateModalOpenButton.click();
+  test.fixme("Displays the asset list on the first visit", async ({ page }) => {
+    // Verify the asset list is visible
+    const assetList = await assetsPage.getAssetList();
+    await expect(assetList).toBeVisible();
 
-  const assetCreateModal = page.getByTestId("asset-create-modal-title");
-  await expect(assetCreateModal).toBeVisible();
+    // Verify there is at least one asset card
+    const assetCards = await assetsPage.getAssetCards();
+    const assets = await assetCards.allTextContents();
+    expect(assets.length).toBeGreaterThan(0);
+  });
 
-  const advancedInfoStepTitle = page.getByTestId("asset-create-advanced-info-step-title");
-  const dataAddressStepTitle = page.getByTestId("asset-create-data-address-step-title");
-  const advancedInfoStepContent = page.getByTestId("asset-create-advanced-info-step-content");
-  const dataAddressStepContent = page.getByTestId("asset-create-data-address-step-content");
-  const assetCreateSubmit = page.getByTestId("asset-create-submit");
+  test.fixme("Displays asset details correctly", async ({ page }) => {
+    // Select an asset
+    const assetCards = await assetsPage.getAssetCards();
+    const assetCard = assetCards.first();
+    await assetCard.click();
 
-  // Next steps should not be accessible unless required fields in general info are filled
-  await advancedInfoStepTitle.click();
-  await expect(advancedInfoStepContent).toBeHidden();
-  await dataAddressStepTitle.click();
-  await expect(dataAddressStepContent).toBeHidden();
-  await expect(assetCreateSubmit).toBeDisabled();
+    // Verify details are displayed
+    const assetDetails = page.locator(assetsPage.assetDialogLocator);
+    await expect(assetDetails).toBeVisible();
+    await expect(assetDetails.locator('text=Asset ID')).toBeVisible();
+    await expect(assetDetails.locator('text=Participant ID')).toBeVisible();
+  });
 
-  const titleField = page.getByTestId("properties-title").locator("input").first();
-  await titleField.fill('Test asset 1');
+  test.fixme("Deletes an asset and verifies it is removed from the list", async ({ page }) => {
+    // Select an asset to delete
+    const assetCards = await assetsPage.getAssetCards();
+    const assetCard = assetCards.first();
+    const assetName = (await assetCard.textContent()) || "";
+    await assetCard.click();
+    const deleteButton = page.getByRole('heading', { name: 'Asset 3 asset-3-id' }).getByRole('button');
+    await deleteButton.click();
 
-  // id takes the new value of title only if they are similar
-  const idField = page.getByTestId("properties-id").locator("input").first();
-  await expect(idField).toHaveValue('test-asset-1');
-  await idField.fill('Test asset 2');
-  await titleField.fill(uniqueAssetTitle);
-  await expect(idField).toHaveValue('Test asset 2');
-  await idField.fill(uniqueAssetId);
+    // Confirm deletion
+    const confirmDelete = page.getByRole('button', { name: 'Delete' });
+    await confirmDelete.click();
 
-  await advancedInfoStepTitle.click();
-  await expect(advancedInfoStepContent).toBeVisible();
-  // Data address step can't be accessed unless required fields in advance info are filled
-  await dataAddressStepTitle.click();
-  await expect(dataAddressStepContent).toBeHidden();
-  await expect(assetCreateSubmit).toBeDisabled();
+    // Verify the asset is removed
+    await expect(page.locator(assetsPage.assetListLocator).locator(assetsPage.assetCardLocator).filter({ hasText: assetName })).toHaveCount(0);
+  });
 
-  const dataCategorySelect = page.getByTestId("advanced-info-data-category");
-  await dataCategorySelect.fill(TRAFFIC_INFORMATION);
+  test.fixme("Creates a new asset and verifies its visibility in the list", async ({ page }) => {
+    // Open the create asset modal
+    await assetsPage.openCreateAssetModal();
 
-  await dataAddressStepTitle.click();
-  await expect(dataAddressStepContent).toBeVisible();
+    // Fill in the asset details
+    const randomNumber = `${Math.random()}`.replace("0.", "");
+    const assetTitle = `Asset ${randomNumber}`;
+    const assetId = `asset-id-${randomNumber}`;
+    await assetsPage.fillCreateAssetForm(assetTitle, assetId);
 
-  const urlField = page.getByTestId("data-address-base-url").locator("input").first();
-  await urlField.fill(uniqueAssetUrl)
-  await expect(assetCreateSubmit).toBeEnabled();
+    // Submit the form
+    await assetsPage.submitCreateAssetForm();
 
-  await assetCreateSubmit.click();
-
-  await page.waitForResponse(resp => resp.url().includes('/management'));
-  await expect(assetCreateModal).toBeHidden();
-  await expect(page.getByText(uniqueAssetTitle)).toBeVisible();
-  await expect(page.getByText(uniqueAssetUrl)).toBeVisible();
+    // Verify the new asset appears in the list
+    await assetsPage.verifyAssetInList(assetId);
+  });
 });

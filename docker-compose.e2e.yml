@@ -1,0 +1,90 @@
+services:
+  edc-1:
+    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
+    environment:
+      EDC_PARTICIPANT_ID: "participant_1"
+      EDC_COMPONENT_ID: "participant_1_MDS_COMPONENT"
+      EDC_HOSTNAME: "edc-participant-1"
+      WEB_HTTP_PATH: "/api"
+      WEB_HTTP_PORT: "8181"
+      WEB_HTTP_CONTROL_PATH: "/api/control"
+      WEB_HTTP_CONTROL_PORT: "8186"
+      WEB_HTTP_MANAGEMENT_PATH: "/api/management"
+      WEB_HTTP_MANAGEMENT_PORT: "8182"
+      WEB_HTTP_PROTOCOL_PATH: "/api/dsp"
+      WEB_HTTP_PROTOCOL_PORT: "8183"
+      WEB_HTTP_VERSION_PATH: "/api/version"
+      WEB_HTTP_VERSION_PORT: "8184"
+      WEB_HTTP_PUBLIC_PATH: "/public"
+      WEB_HTTP_PUBLIC_PORT: "8185"
+
+      # Transfer Proxy Configuration
+      EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: "transfer-proxy-token-signer-public-key"
+      EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: "transfer-proxy-token-signer-private-key"
+
+      # CORS
+      EDC_WEB_REST_CORS_ENABLED: true
+      EDC_WEB_REST_CORS_HEADERS: origin,content-type,accept,authorization,X-Api-Key
+      EDC_WEB_REST_CORS_ORIGINS: '*'
+    ports:
+      - "8181:8181"  # API
+      - "8186:8186"  # Control
+      - "8182:8182"  # Management
+      - "8183:8183"  # Protocol
+      - "8184:8184"  # Version
+      - "8185:8185"  # Public
+    post_start:
+      - command: apk --no-cache add curl
+        user: root
+    healthcheck:
+      test: curl -f http://edc-1:8181/api/check/liveness
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 20s
+  
+  edc-2:
+    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
+    environment:
+      EDC_PARTICIPANT_ID: "participant_2"
+      EDC_COMPONENT_ID: "participant_2_MDS_COMPONENT"
+      EDC_HOSTNAME: "edc-participant-2"
+      WEB_HTTP_PATH: "/api"
+      WEB_HTTP_PORT: "8181"
+      WEB_HTTP_CONTROL_PATH: "/api/control"
+      WEB_HTTP_CONTROL_PORT: "8186"
+      WEB_HTTP_MANAGEMENT_PATH: "/api/management"
+      WEB_HTTP_MANAGEMENT_PORT: "8182"
+      WEB_HTTP_PROTOCOL_PATH: "/api/dsp"
+      WEB_HTTP_PROTOCOL_PORT: "8183"
+      WEB_HTTP_VERSION_PATH: "/api/version"
+      WEB_HTTP_VERSION_PORT: "8184"
+      WEB_HTTP_PUBLIC_PATH: "/public"
+      WEB_HTTP_PUBLIC_PORT: "8185"
+      EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: "transfer-proxy-token-signer-public-key"
+      EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: "transfer-proxy-token-signer-private-key"
+    ports:
+      - "9181:8181"  # API
+      - "9186:8186"  # Control
+      - "9182:8182"  # Management
+      - "9183:8183"  # Protocol
+      - "9184:8184"  # Version
+      - "9185:8185"  # Public
+    post_start:
+      - command: apk --no-cache add curl
+        user: root
+    healthcheck:
+      test: curl -f http://edc-2:8181/api/check/liveness
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 20s
+
+  seed_dataspace:
+    image: ghcr.io/mobility-data-space/mds-catalog/seed-dataspace-dev:latest
+    command: [ "/bin/sh", "-c" , "python3 /seed_dataspace.py http://edc-1:8182/api/management http://edc-2:8182/api/management"]
+    depends_on:
+      edc-1:
+        condition: service_healthy
+      edc-2:
+        condition: service_healthy

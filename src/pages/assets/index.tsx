@@ -106,15 +106,17 @@ export default function AssetListPage() {
             </MuiButton>
           </div>
 
-          <div className="flex flex-wrap gap-3">
-            <AssetsList.Items
-              limit={MAX_ITEMS}
-              sortOrder="DESC"
-            >
-              {({ item, index, deleteItem }) => (
-                <AssetCard asset={item} key={index} onClick={() => openDetailsModal(item, deleteItem)} participantId={connector.id} />
-              )}
-            </AssetsList.Items>
+          <div id="asset-list">
+            <div className="flex flex-wrap gap-3">
+              <AssetsList.Items
+                limit={MAX_ITEMS}
+                sortOrder="DESC"
+              >
+                {({ item, index, deleteItem }) => (
+                  <AssetCard asset={item} key={index} onClick={() => openDetailsModal(item, deleteItem)} participantId={connector.id} />
+                )}
+              </AssetsList.Items>
+            </div>
           </div>
 
           <AssetsList.Loading>

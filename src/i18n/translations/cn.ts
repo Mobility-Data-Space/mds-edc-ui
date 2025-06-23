@@ -93,6 +93,7 @@ export const cn = {
       title: "列出所有目录",
       description: "列出所有参与者，您可以检查他们的目录。",
       headingName: "姓名",
+      searchPlaceholder: "按资产标题搜索目录",
       headingStatus: "地位",
       "[participant]": {
         title: "列出合同报价",

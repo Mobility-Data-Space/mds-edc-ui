@@ -1,6 +1,7 @@
 import { QuerySpec } from "@think-it-labs/edc-connector-client";
-import {Context, createContext, ReactNode, useContext} from "react";
+import { Context, createContext, ReactNode, useContext } from "react";
 import { usePagination } from "../hooks/use-pagination";
+import { SearchSpec } from "../types";
 
 export type ListContext<T> = Context<ListContextType<T>>;
 
@@ -8,8 +9,8 @@ export type ListContextType<T> = {
   items: T[];
   isLoading: boolean;
   setQuerySpec: (querySpec: QuerySpec) => void;
-  searchQuery: string;
-  setSearchQuery: (searchQuery: string) => void;
+  searchSpec: SearchSpec;
+  setSearchSpec: (searchSpec: Partial<SearchSpec>) => void;
   triggerSearch: () => void;
   deleteItem: (itemId: string) => void;
   getId: (item: T) => string;
