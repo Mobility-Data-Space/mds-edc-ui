@@ -1,19 +1,4 @@
 services:
-  edc-ui-1:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-      args:
-        NEXT_PUBLIC_EDC_PUBLIC_URL: "http://edc-1:8185/public"
-        NEXT_PUBLIC_EDC_ID: "participant_1"
-        NEXT_PUBLIC_EDC_NAME: "participant_1_edc_name"
-        NEXT_PUBLIC_EDC_MANAGEMENT_URL: "http://edc-1:8182/api/management"
-        NEXT_PUBLIC_EDC_DEFAULT_URL: "http://edc-1:8181/api"
-        NEXT_PUBLIC_EDC_PROTOCOL_URL: "http://edc-1:8183/api/dsp"
-        EDC_MANAGEMENT_API_KEY: "API_KEY"
-    ports:
-      - "3000:3000"
-
   edc-1:
     image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
     environment:
@@ -36,6 +21,11 @@ services:
       # Transfer Proxy Configuration
       EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: "transfer-proxy-token-signer-public-key"
       EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: "transfer-proxy-token-signer-private-key"
+
+      # CORS
+      EDC_WEB_REST_CORS_ENABLED: true
+      EDC_WEB_REST_CORS_HEADERS: origin,content-type,accept,authorization,X-Api-Key
+      EDC_WEB_REST_CORS_ORIGINS: '*'
     ports:
       - "8181:8181"  # API
       - "8186:8186"  # Control
@@ -43,22 +33,16 @@ services:
       - "8183:8183"  # Protocol
       - "8184:8184"  # Version
       - "8185:8185"  # Public
-
-  edc-ui-2:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-      args:
-        GITHUB_TOKEN: ${GITHUB_TOKEN}
-        NEXT_PUBLIC_EDC_PUBLIC_URL: "http://edc-2:8185/public"
-        NEXT_PUBLIC_EDC_ID: "participant_2"
-        NEXT_PUBLIC_EDC_NAME: "participant_2_edc_name"
-        NEXT_PUBLIC_EDC_MANAGEMENT_URL: "http://edc-2:8182/management"
-        NEXT_PUBLIC_EDC_DEFAULT_URL: "http://edc-2:8181/api"
-        NEXT_PUBLIC_EDC_PROTOCOL_URL: "http://edc-2:8183/protocol"
-    ports:
-      - "3001:3000"
-
+    post_start:
+      - command: apk --no-cache add curl
+        user: root
+    healthcheck:
+      test: curl -f http://edc-1:8181/api/check/liveness
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 20s
+  
   edc-2:
     image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
     environment:
@@ -86,3 +70,21 @@ services:
       - "9183:8183"  # Protocol
       - "9184:8184"  # Version
       - "9185:8185"  # Public
+    post_start:
+      - command: apk --no-cache add curl
+        user: root
+    healthcheck:
+      test: curl -f http://edc-2:8181/api/check/liveness
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 20s
+
+  seed_dataspace:
+    image: ghcr.io/mobility-data-space/mds-catalog/seed-dataspace-dev:latest
+    command: [ "/bin/sh", "-c" , "python3 /seed_dataspace.py http://edc-1:8182/api/management http://edc-2:8182/api/management"]
+    depends_on:
+      edc-1:
+        condition: service_healthy
+      edc-2:
+        condition: service_healthy

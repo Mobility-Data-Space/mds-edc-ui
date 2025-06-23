@@ -1,0 +1,1 @@
+# Catalog Browser Page Tests
