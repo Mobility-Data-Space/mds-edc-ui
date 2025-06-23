@@ -56,7 +56,7 @@ export default function AssetDialog({ open, onClose, asset, onEditClick, deleteE
       <Dialog
         open={open}
         maxWidth="lg"
-        className="my-7"
+        className="asset-dialog my-7"
         onClose={onClose}
       >
         <DialogTitle>

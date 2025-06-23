@@ -27,7 +27,7 @@ export default function AssetDetails({ asset, participantId, connectorEndpoint }
   ], [asset, participantId, connectorEndpoint]);
 
   return (
-    <div className="flex flex-col gap-y-2.5">
+    <div className="asset-details flex flex-col gap-y-2.5">
       <div>
         {description ?
           <MarkdownCollapsableText data={description}/> :
