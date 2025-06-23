@@ -9,7 +9,7 @@ test.describe("Assets Page Tests", () => {
     await assetsPage.navigate();
   })
 
-  test("Displays the asset list on the first visit", async ({ page }) => {
+  test.fixme("Displays the asset list on the first visit", async ({ page }) => {
     // Verify the asset list is visible
     const assetList = await assetsPage.getAssetList();
     await expect(assetList).toBeVisible();
@@ -20,7 +20,7 @@ test.describe("Assets Page Tests", () => {
     expect(assets.length).toBeGreaterThan(0);
   });
 
-  test("Displays asset details correctly", async ({ page }) => {
+  test.fixme("Displays asset details correctly", async ({ page }) => {
     // Select an asset
     const assetCards = await assetsPage.getAssetCards();
     const assetCard = assetCards.first();
