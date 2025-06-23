@@ -1,13 +1,14 @@
 import { QuerySpec } from "@think-it-labs/edc-connector-client";
 import { useCallback, useEffect, useState } from "react";
+import { SearchSpec } from "../types";
 
 interface ListHook<T> {
   items: T[];
   error: Error | null;
   isLoading: boolean;
   setQuerySpec: (querySpec: QuerySpec) => void;
-  searchQuery: string;
-  setSearchQuery: (query: string) => void;
+  searchSpec: SearchSpec;
+  setSearchSpec: (searchSpec: Partial<SearchSpec>) => void;
   triggerSearch: () => void;
   deleteItem: (id: string) => void;
 }
@@ -21,7 +22,11 @@ export function useList<T>(
   { queryAll, delete: del }: UseListOptions<T>,
 ): ListHook<T> {
   const [querySpec, setQuerySpec] = useState<QuerySpec>({});
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [searchSpec, setSearchSpec] = useState<SearchSpec>({
+    operandLeft: "edc:name",
+    operator: "=",
+    operandRight: "",
+  });
   const [items, setItems] = useState<T[]>([]);
   const [error, setError] = useState<Error | null>(null);
   const [isLoading, setLoading] = useState(false);
@@ -73,28 +78,34 @@ export function useList<T>(
     )();
   }, [queryAll, querySpec, shouldSearch]);
 
+  const _setSearchSpec = useCallback((searchSpec: Partial<SearchSpec>) => {
+    setSearchSpec((state) => ({ ...state, ...searchSpec }))
+  }, [])
+
+  const triggerSearch = useCallback(() => {
+    const shouldWrap = searchSpec.operandRight && searchSpec.operator === "ilike" || searchSpec.operator === "like";
+    const operandRight = shouldWrap
+      ? `%${searchSpec.operandRight}%`
+      : searchSpec.operandRight;
+
+    setQuerySpec({
+      ...querySpec,
+      filterExpression: searchSpec.operandRight
+        ? [{ ...searchSpec, operandRight }]
+        : [],
+    });
+
+    setShouldSearch(true);
+  }, [searchSpec, querySpec])
+
   return {
     items,
     error,
     isLoading,
     setQuerySpec,
-    searchQuery,
-    setSearchQuery,
+    searchSpec,
+    setSearchSpec: _setSearchSpec,
     deleteItem,
-    triggerSearch: () => {
-      setQuerySpec({
-        ...querySpec,
-        filterExpression: searchQuery
-          ? [
-            {
-              operandLeft: "edc:name",
-              operator: "=",
-              operandRight: searchQuery,
-            },
-          ]
-          : [],
-      });
-      setShouldSearch(true);
-    },
+    triggerSearch,
   };
 }

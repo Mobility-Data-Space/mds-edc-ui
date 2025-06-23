@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import LinkIcon from "@mui/icons-material/Link";
 import InfoIcon from "@mui/icons-material/Info";
 import { IconButton, Tooltip } from "@mui/material";
@@ -87,34 +87,6 @@ export default function CatalogPage() {
       />
 
       <SideDrawer title={<T string="catalog.title" />}>
-        <div className="grid grid-cols-3 gap-x-3.5 py-4">
-          <div>
-            <Input
-              id="catalog-url"
-              fullWidth
-              data-testid="catalog-url"
-              type="text"
-              label={<T string="catalog.connectorEndpoints" />}
-              placeholder="https://other-connector.com/"
-              value={counterPartyAddress}
-              slotProps={{
-                input: {
-                  classes: { root: "flex-grow" },
-                  startAdornment: <LinkIcon className="mr-2" />,
-                  endAdornment: <Tooltip title={translator("catalog.clickForDetails")}>
-                    <IconButton onClick={() => setIsCounterPartyAddressDialogOpen(true)}>
-                      <InfoIcon color="primary" />
-                    </IconButton>
-                  </Tooltip>
-                }
-              }}
-              onChange={(event) => {
-                setCounterPartyAddress(event.target.value);
-                debouncedSetCounterPartyAddress(event.target.value);
-              }}
-            />
-          </div>
-        </div>
         <ContractOffersList
           managementUrl={connector.managementUrl}
           counterPartyAddress={counterPartyAddressToSearch}
@@ -123,10 +95,56 @@ export default function CatalogPage() {
           currentPage={parseInt(query.page as string) || 0}
           firstPage={0}
         >
-          <div className="flex justify-end items-center">
+          <div className="w-full grid grid-rows-1 grid-cols-5 gap-x-3.5 py-4 items-center">
+            <div className="col-span-2">
+              <div>
+                <Input
+                  id="catalog-url"
+                  fullWidth
+                  data-testid="catalog-url"
+                  type="text"
+                  label={<T string="catalog.connectorEndpoints" />}
+                  placeholder="https://other-connector.com/"
+                  value={counterPartyAddress}
+                  slotProps={{
+                    input: {
+                      classes: { root: "flex-grow" },
+                      startAdornment: <LinkIcon className="mr-2" />,
+                      endAdornment: <Tooltip title={translator("catalog.clickForDetails")}>
+                        <IconButton onClick={() => setIsCounterPartyAddressDialogOpen(true)}>
+                          <InfoIcon color="primary" />
+                        </IconButton>
+                      </Tooltip>
+                    }
+                  }}
+                  onChange={(event) => {
+                    setCounterPartyAddress(event.target.value);
+                    debouncedSetCounterPartyAddress(event.target.value);
+                  }}
+                />
+              </div>
+            </div>
+            <div className="col-span-2">
+              <div className="relative flex rounded-lg shadow-sm">
+                <ContractOffersList.Search
+                  name="hs-as-table-product-review-search"
+                  className="py-[15px] px-4 ps-11 block w-full border border-black/25 hover:border-black rounded-s-sm text-md focus:z-10 focus:outline-black focus:ring-black disabled:opacity-50 disabled:pointer-events-none"
+                  placeholder={translator("catalog.searchPlaceholder")}
+                  searchOperation="ilike"
+                  searchTarget="http://purl.org/dc/terms/title"
+                />
+                <div className="absolute inset-y-0 start-0 flex items-center pointer-events-none z-20 ps-4">
+                  <Search className="size-5" />
+                </div>
+                <ContractOffersList.SearchTrigger
+                  className="py-3 px-4 inline-flex justify-center items-center gap-x-2 text-black bg-[#ffff26] text-sm font-semibold rounded-e-md border border-transparent  hover:bg-yellow-300 disabled:opacity-50 disabled:pointer-events-none">
+                  <T global string="search" />
+                </ContractOffersList.SearchTrigger>
+              </div>
+            </div>
             <List.Pagination>
               {({ hasNext, incrementPage, hasPrev, decrementPage }) =>
-                <div className="inline-flex float-right gap-x-2">
+                <div className="flex justify-self-end">
                   <IconButton
                     onClick={decrementPage}
                     disabled={!hasPrev}
@@ -148,6 +166,7 @@ export default function CatalogPage() {
               key={listKey}
               limit={MAX_ITEMS}
               sortOrder="DESC"
+
             >
               {({ item, index }) => (
                 <DataOfferCard

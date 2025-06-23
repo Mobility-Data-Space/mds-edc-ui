@@ -1,15 +1,16 @@
 import React from "react";
 import Typography from "@mui/material/Typography";
-import {Card, CardContent, Chip} from "@mui/material";
-import {Asset, Dataset} from "@think-it-labs/edc-connector-client";
-import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
-import {AssetIcon} from "@/components/atoms/asset-icon";
+import { Card, CardContent, Chip } from "@mui/material";
+import { Asset, Dataset } from "@think-it-labs/edc-connector-client";
+import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
+import { AssetIcon } from "@/components/atoms/asset-icon";
 import {
   ASSET_DESCRIPTION,
   ASSET_KEYWORDS,
+  ASSET_TITLE,
   ASSET_VERSION,
 } from "@/schema/asset";
-import {truncate} from "@/utilities/utilities";
+import { truncate } from "@/utilities/utilities";
 import { datasetToAsset } from "@/utilities/catalog";
 
 export interface DataOfferCardProps {
@@ -18,8 +19,8 @@ export interface DataOfferCardProps {
   onClick?: () => void
 }
 
-export default function DataOfferCard({ dataset, participantId, onClick = () => {} }: DataOfferCardProps) {
-  const asset_id = dataset["@id"] ;
+export default function DataOfferCard({ dataset, participantId, onClick = () => { } }: DataOfferCardProps) {
+  const assetTitle = readValue(dataset, ASSET_TITLE)
   const keywords = dataset[ASSET_KEYWORDS] || [];
   const slicedKeywords = keywords.slice(0, 3);
   const remainingKeywordsCount = keywords.length - slicedKeywords.length;
@@ -34,7 +35,7 @@ export default function DataOfferCard({ dataset, participantId, onClick = () => 
           <AssetIcon asset={datasetToAsset(dataset)} fontSize="large" />
           <div className="flex flex-col">
             <Typography variant="h4" className="!leading-none hover:underline cursor-pointer">
-              {asset_id}
+              {assetTitle}
             </Typography>
             <Typography variant="body1" color="textSecondary">
               {participantId}

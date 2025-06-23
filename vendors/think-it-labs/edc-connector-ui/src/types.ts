@@ -15,3 +15,9 @@ interface ListPropsWithPagination extends ListPropsBase {
 export type ListProps =
   | ListPropsWithoutPagination
   | ListPropsWithPagination;
+
+export interface SearchSpec {
+  operandLeft: string
+  operator: "=" | "!=" | "in" | "like" | "ilike" | "contains"
+  operandRight: string | string[]
+}
