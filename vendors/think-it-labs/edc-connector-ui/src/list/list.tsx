@@ -1,6 +1,7 @@
 import { CriterionInput, QuerySpec } from "@think-it-labs/edc-connector-client";
 import React, { PropsWithChildren, ReactNode, useEffect, useMemo } from "react";
 import { usePagination } from "../hooks/use-pagination";
+import { SearchSpec } from "../types";
 import { ListContext, useListContext } from "./list-context";
 import { useList } from "./use-list";
 
@@ -47,8 +48,8 @@ export function List<T>({
     items,
     setQuerySpec,
     isLoading,
-    searchQuery,
-    setSearchQuery,
+    searchSpec,
+    setSearchSpec,
     triggerSearch,
     deleteItem,
   } = useList<T>({
@@ -64,9 +65,10 @@ export function List<T>({
         isLoading,
         items,
         setQuerySpec,
-        searchQuery,
+        searchSpec,
+        setSearchSpec,
         deleteItem: (id: string) => deleteItem(id),
-        setSearchQuery: (value: string) => setSearchQuery(value),
+        setSearchQuery: setSearchSpec,
         triggerSearch: () => triggerSearch(),
         getId,
         managementUrl,
@@ -124,7 +126,6 @@ List.Items = function ListItems<T,>({
 
     limit++
   }
-
 
   useEffect(() => {
     setQuerySpec({
@@ -192,12 +193,18 @@ export interface ListSearchProps {
   placeholder?: string;
   name?: string;
   className?: string;
+  searchTarget?: string
+  searchOperation?: SearchSpec["operator"]
 }
 
 List.Search = function ListSearch(
-  { placeholder, name, className }: ListSearchProps,
+  { placeholder, name, className, searchTarget, searchOperation }: ListSearchProps,
 ) {
-  const { searchQuery, setSearchQuery, triggerSearch } = useListContext();
+  const { searchSpec, setSearchSpec, triggerSearch } = useListContext();
+
+  useEffect(() => {
+    setSearchSpec({ operator: searchOperation, operandLeft: searchTarget })
+  }, [searchTarget, searchOperation])
 
   return (
     <input
@@ -205,13 +212,13 @@ List.Search = function ListSearch(
       name={name}
       className={className}
       placeholder={placeholder}
-      value={searchQuery}
+      value={searchSpec.operandRight}
       onKeyDown={(event) => {
         if (event.key === "Enter") {
           triggerSearch();
         }
       }}
-      onChange={(event) => setSearchQuery(event.currentTarget.value)}
+      onChange={(event) => setSearchSpec({ operandRight: event.currentTarget.value })}
     />
   );
 };

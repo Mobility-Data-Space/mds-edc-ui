@@ -96,6 +96,7 @@ export const de = {
       description:
         "Listen Sie alle Teilnehmer auf, deren Kataloge Sie einsehen können.",
       headingName: "Name",
+      searchPlaceholder: "Katalog nach Asset-Titel durchsuchen",
       headingStatus: "Status",
       "[participant]": {
         title: "Vertragsangebote für auflisten",
