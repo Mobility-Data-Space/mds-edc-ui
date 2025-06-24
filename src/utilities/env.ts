@@ -1,6 +1,6 @@
 import {Participant} from "@/constants/dataspace.ts";
 
-export const managementPrefix = "/api/connector/management";
+export const managementPrefix = "/connector/management";
 
 export function connectorApiKey() {
   return process.env.EDC_MANAGEMENT_API_KEY || "";
@@ -20,7 +20,7 @@ export function participantConfig() {
 
 export async function readEnvironment(): Promise<Participant> {
   if (typeof window !== "undefined") {
-    const response = await fetch("/api/config");
+    const response = await fetch("/connector/config");
     return response.json();
   }
 
