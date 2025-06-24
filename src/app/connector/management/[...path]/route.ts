@@ -1,44 +1,83 @@
 import { connectorApiKey, managementPrefix, participantConfig } from "@/utilities/env";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function handler(req: NextRequest): Promise<NextResponse> {
+const buildUrl = (req: NextRequest): string => {
   const { connectorManagementUrl } = participantConfig();
-  const url = connectorManagementUrl + req.nextUrl.pathname.replace(managementPrefix, "") ;
-  
-  if (req.method?.toLowerCase() === "head") {
-    return NextResponse.json(null, { status: 200 });
-  }
+  return connectorManagementUrl + req.nextUrl.pathname.replace(managementPrefix, "");
+};
 
-  const requestBody = await req.json()
-  const proxy = await fetch(url, {
-    method: req.method,
+const fetchProxy = async (url: string, options: RequestInit): Promise<Response> => {
+  return await fetch(url, options);
+};
+
+const setResponseHeaders = (proxy: Response, response: NextResponse): void => {
+  const contentType = proxy.headers.get("content-type");
+  if (contentType) {
+    response.headers.set("content-type", contentType);
+  }
+};
+
+// Handler for GET requests
+const handleGet = async (req: NextRequest): Promise<NextResponse> => {
+  const url = buildUrl(req);
+  const proxy = await fetchProxy(url, {
+    method: "GET",
+    headers: {
+      "x-api-key": connectorApiKey(),
+    },
+  });
+
+  const readableStream = proxy.body;
+  const response = new NextResponse(readableStream, { status: proxy.status });
+  setResponseHeaders(proxy, response);
+
+  return response;
+};
+
+// Handler for POST requests
+const handlePost = async (req: NextRequest): Promise<NextResponse> => {
+  const url = buildUrl(req);
+  const requestBody = await req.json();
+
+  const proxy = await fetchProxy(url, {
+    method: "POST",
     headers: {
       "content-type": "application/json",
       "x-api-key": connectorApiKey(),
     },
     credentials: "same-origin",
-    body: !["get"].includes(req.method?.toLowerCase() || "") && requestBody
-      ? JSON.stringify(requestBody)
-      : undefined,
+    body: requestBody ? JSON.stringify(requestBody) : undefined,
   });
 
-  const contentType = proxy.headers.get("content-type");
-  const response = new NextResponse(null, { status: proxy.status });
-
-  if (contentType) {
-    response.headers.set("content-type", contentType);
-  }
-
-  if (req.method?.toLowerCase() === "delete") {
-    return response;
-  }
-
   const readableStream = proxy.body;
-  return new NextResponse(readableStream, { status: proxy.status });
-}
+  const response = new NextResponse(readableStream, { status: proxy.status });
+  setResponseHeaders(proxy, response);
 
-export const GET: (req: NextRequest) => Promise<NextResponse> = handler;
-export const POST: (req: NextRequest) => Promise<NextResponse> = handler;
-export const PUT: (req: NextRequest) => Promise<NextResponse> = handler;
-export const DELETE: (req: NextRequest) => Promise<NextResponse> = handler;
-export const HEAD: (req: NextRequest) => Promise<NextResponse> = handler;
+  return response;
+};
+
+// Handler for DELETE requests
+const handleDelete = async (req: NextRequest): Promise<NextResponse> => {
+  const url = buildUrl(req);
+
+  const proxy = await fetchProxy(url, {
+    method: "DELETE",
+    headers: {
+      "x-api-key": connectorApiKey(),
+    },
+  });
+
+  return new NextResponse(null, { status: proxy.status });
+};
+
+// Default handler for unsupported methods
+const handleDefault = async (): Promise<NextResponse> => {
+  return NextResponse.json(null, { status: 200 });
+};
+
+// Export handlers for each HTTP method
+export const GET = handleGet;
+export const POST = handlePost;
+export const DELETE = handleDelete;
+export const PUT = handleDefault;
+export const HEAD = handleDefault;
