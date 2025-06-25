@@ -52,6 +52,7 @@ export function List<T>({
     setSearchSpec,
     triggerSearch,
     deleteItem,
+    error,
   } = useList<T>({
     delete: del,
     queryAll,
@@ -63,6 +64,7 @@ export function List<T>({
     <ListContext.Provider
       value={{
         isLoading,
+        error,
         items,
         setQuerySpec,
         searchSpec,
@@ -291,4 +293,18 @@ List.Pagination = function Pagination({
     decrementPage={pagination.decrementPage}
     incrementPage={pagination.incrementPage}
   />
+}
+
+List.Error = function ListError({ children }: {
+  children: (props: { error: Error | null }) => JSX.Element;
+}) {
+  const { error } = useListContext()
+
+  const ErrorComponent = useMemo(() => {
+    return function (props: { error: Error | null }) {
+      return <>{children(props)}</>;
+    };
+  }, [children]);
+
+  return <ErrorComponent error={error} />
 }

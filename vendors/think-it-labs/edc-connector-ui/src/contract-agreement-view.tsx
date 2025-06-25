@@ -1,6 +1,5 @@
-import {ContractAgreement, JsonLdObject, Policy} from "@think-it-labs/edc-connector-client";
-import React, {ReactNode, useMemo} from "react";
-import { PropsWithChildren, useCallback } from "react";
+import { ContractAgreement, JsonLdObject, Policy } from "@think-it-labs/edc-connector-client";
+import React, { PropsWithChildren, ReactNode, useCallback, useMemo } from "react";
 import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
 import { Local, useLocalContext } from "./local";
 import { useViewContext, View } from "./view";
@@ -165,3 +164,5 @@ ContractAgreementViewPolicy.Permissions =
   };
 
 ContractAgreementView.Policy = ContractAgreementViewPolicy;
+
+ContractAgreementView.Error = View.Error
