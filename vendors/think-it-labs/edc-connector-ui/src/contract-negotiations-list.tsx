@@ -68,3 +68,5 @@ ContractNegotiationsList.Search = List.Search;
 ContractNegotiationsList.SearchTrigger = List.SearchTrigger;
 
 ContractNegotiationsList.Pagination = List.Pagination;
+
+ContractNegotiationsList.Error = List.Error

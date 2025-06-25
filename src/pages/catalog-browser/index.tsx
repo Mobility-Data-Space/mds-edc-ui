@@ -17,6 +17,7 @@ import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use
 import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
+import { enqueueSnackbar } from "notistack";
 
 export default function CatalogPage() {
   const { query, push } = useRouter()
@@ -171,6 +172,12 @@ export default function CatalogPage() {
               </span>
             </div>
           </ContractOffersList.Loading>
+          <ContractOffersList.Error >
+            {({ error }) => {
+              error && enqueueSnackbar("Failed To load Catalog")
+              return <></>
+            }}
+          </ContractOffersList.Error>
         </ContractOffersList>
       </SideDrawer>
     </>

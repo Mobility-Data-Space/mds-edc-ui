@@ -73,6 +73,8 @@ AssetsList.SearchTrigger = List.SearchTrigger;
 
 AssetsList.Pagination = List.Pagination
 
+AssetsList.Error = List.Error
+
 interface AssetsListAssetProps {
   asset?: Asset;
 }
