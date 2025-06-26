@@ -11,7 +11,6 @@ import {useEdcFields} from "@/hooks/use-edc-fields.ts";
 import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
 import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/entities";
 import {useEffect, useState} from "react";
-import {TransferProcessStatusChartCardCarbon} from "@/components/molecules/transfer-process-status-chart-card-carbon.tsx";
 import { TransferProcessStatusChartCard } from "@/components/molecules/transfer-process-status-chart-card.tsx";
 
 export default function ConnectorPage() {
