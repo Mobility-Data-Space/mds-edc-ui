@@ -41,24 +41,6 @@ function CustomLegend({ data }: { data: Entry[] }) {
           </span>
         </div>
       ))}
-        <div key={3} className="flex items-center gap-2">
-          <div
-            className="w-8 h-3"
-            style={{backgroundColor: (data && data[0] && data[0].color)}}
-          />
-          <span className="text-[10px] text-gray-600">
-            {(data && data[0] && data[0].name)}
-          </span>
-        </div>
-        <div key={3} className="flex items-center gap-2">
-          <div
-            className="w-8 h-3"
-            style={{backgroundColor: (data && data[0] && data[0].color)}}
-          />
-          <span className="text-[10px] text-gray-600">
-            {(data && data[0] && data[0].name)}
-          </span>
-        </div>
     </div>
   );
 }
