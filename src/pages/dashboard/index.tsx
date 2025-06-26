@@ -12,7 +12,7 @@ import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-e
 import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/entities";
 import {useEffect, useState} from "react";
 import {TransferProcessStatusChartCardCarbon} from "@/components/molecules/transfer-process-status-chart-card-carbon.tsx";
-import {TransferProcessStatusCharCard2} from "@/components/molecules/transfer-process-status-chart-card-recharts.tsx";
+import { TransferProcessStatusChartCard } from "@/components/molecules/transfer-process-status-chart-card.tsx";
 
 export default function ConnectorPage() {
   const { connector } = useParticipantConnectorState();
@@ -30,24 +30,13 @@ export default function ConnectorPage() {
   return (
     <SideDrawer title={<T string="dashboard.title" />}>
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
-
         <div className="flex flex-col gap-y-3 xl:col-span-2">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-            <TransferProcessStatusChartCardCarbon
+            <TransferProcessStatusChartCard
               title="dashboard.incomingData"
               transferProcesses={transferProcesses.filter(transferProcess => transferProcess.type === "CONSUMER")}
             />
-            <TransferProcessStatusChartCardCarbon
-              title="dashboard.outgoingData"
-              transferProcesses={transferProcesses.filter(transferProcess => transferProcess.type === "PROVIDER")}
-            />
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-            <TransferProcessStatusCharCard2
-              title="dashboard.incomingData"
-              transferProcesses={transferProcesses.filter(transferProcess => transferProcess.type === "CONSUMER")}
-            />
-            <TransferProcessStatusCharCard2
+            <TransferProcessStatusChartCard
               title="dashboard.outgoingData"
               transferProcesses={transferProcesses.filter(transferProcess => transferProcess.type === "PROVIDER")}
             />

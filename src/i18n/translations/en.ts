@@ -35,6 +35,7 @@ export const en = {
       copyToClipboard: "Copy to clipboard",
       title: "Title",
       description: "Description",
+      total: "Total",
     },
     dashboard: {
       title: "Dashboard",
@@ -78,6 +79,7 @@ export const en = {
       incomingData: "Incoming Data",
       outgoingData: "Outgoing Data",
       transferProcesses: "Transfer Processes",
+      numberTransferProcesses: "Number of Transfer Processes"
     },
     assets: {
       title: "My assets",
