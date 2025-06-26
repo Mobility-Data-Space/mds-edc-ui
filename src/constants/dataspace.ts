@@ -1,8 +1,10 @@
 export interface Participant {
   id: string;
   name: string;
+  description?: string;
   edcUrl: string; // public url
   managementUrl: string;
+  connectorManagementUrl: string;
   defaultUrl: string;
   protocolUrl: string;
 }
@@ -52,6 +54,7 @@ export const DATASPACE = new Dataspace([
         name: "MDS UI (local)",
         edcUrl: "localhost:3000",
         managementUrl: "http://localhost:3000/api/3001/management",
+        connectorManagementUrl: "http://localhost:3000/api/3001/management",
         defaultUrl: "http://localhost:3000/api/8860/api",
         protocolUrl: "http://zf-circular-economy-integration:9194/protocol",
       },
@@ -62,6 +65,7 @@ export const DATASPACE = new Dataspace([
         name: "MDS UI (dev)",
         edcUrl: "localhost:3000",
         managementUrl: "http://localhost:3000/api/3001/management",
+        connectorManagementUrl: "http://localhost:3000/api/3001/management",
         defaultUrl: "http://localhost:3000/api/8860/api",
         protocolUrl: "http://zf-circular-economy-integration:9194/protocol",
       },
@@ -72,6 +76,7 @@ export const DATASPACE = new Dataspace([
         name: "MDS UI (prod)",
         edcUrl: "localhost:3000",
         managementUrl: "http://localhost:3000/api/3003/management",
+        connectorManagementUrl: "http://localhost:3000/api/3003/management",
         defaultUrl: "http://localhost:3000/api/8870/api",
         protocolUrl: "http://zf-circular-economy-production:9194/protocol",
       },

@@ -10,6 +10,7 @@ export function participantConfig() {
   return {
     id: process.env.EDC_ID || "",
     name: process.env.EDC_NAME || "",
+    description: process.env.EDC_DESCRIPTION || "",
     edcUrl: process.env.EDC_URL || "",
     managementUrl: managementPrefix,
     connectorManagementUrl: process.env.EDC_MANAGEMENT_URL || "",

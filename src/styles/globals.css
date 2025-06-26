@@ -86,6 +86,10 @@
   }
 }
 
+.recharts-responsive-container, .recharts-responsive-container * {
+  outline: none !important;
+}
+
 #__next {
     @apply h-full;
 }
