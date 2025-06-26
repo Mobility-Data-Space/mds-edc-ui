@@ -13,7 +13,7 @@ import TransferProcessTableRow from "@/components/organisms/transfer-process-tab
 
 export default function TransferProcessesListPage() {
   const router = useRouter();
-  const { push, connector } = useParticipantConnectorState();
+  const { connector } = useParticipantConnectorState();
   const managementUrl = connector?.managementUrl as string;
 
   const currentPage = parseInt(router.query.page as string) || 0
