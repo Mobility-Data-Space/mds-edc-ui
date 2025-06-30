@@ -3,12 +3,12 @@ import { Minus } from "lucide-react";
 import { IconButton } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
+import { DATE_FORMAT, DEFAULT_DATE_FORMAT } from "@/utilities/date.ts";
 import { MuiSelect } from "@/components/atoms/mui-select";
 import { DatePicker } from "@/components/atoms/date-picker";
 import { ConstraintProps } from "@/components/molecules/constraint";
 import { T } from "@/i18n";
 import { timeRestrictionOperators } from "@/utilities/policy-constraints";
-import { browserDateFormat, DATE_FORMAT, DEFAULT_DATE_FORMAT, formatDateTime } from "@/utilities/date.ts";
 import dayjs from "dayjs";
 
 export function TimeRestrictionConstraint({ value, onChange, onRemove }: ConstraintProps) {
@@ -26,6 +26,12 @@ export function TimeRestrictionConstraint({ value, onChange, onRemove }: Constra
         options={timeRestrictionOperators}
         value={value.operator}
         onChange={(event) => onChange({ ...value, operator: event.target.value })}
+      />
+      <DatePicker
+        label={<span><T string={"dataOffer.new.policyExpressionTimeRestriction"} /> *</span>}
+        error={!dayjs(value.rightOperand, DATE_FORMAT).isValid()}
+        onChange={(dateValue) => onChange({ ...value, rightOperand: dateValue })}
+        value={value.rightOperand as string}
       />
       <DatePicker
         label={<span><T string={"dataOffer.new.policyExpressionTimeRestriction"} /> *</span>}
