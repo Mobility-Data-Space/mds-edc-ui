@@ -22,14 +22,16 @@ export function ConsumerParticipantIdConstraint({value, onChange, onRemove}: Con
       <MuiSelect label="participant-id" options={consumerParticipantIdOperators} value={value.operator}
                  onChange={(event) => onChange({...value, operator: event.target.value})}/>
       <Input value={value.rightOperand} onChange={(event) => onChange({...value, rightOperand: event.target.value})}/>
-      <IconButton
-        size="large"
-        onClick={onRemove}
-        className="font-medium !p-0 !-mt-5"
-        color="secondary"
-      >
-        <Minus className="size-6"/>
-      </IconButton>
+      <div className="flex items-center">
+        <IconButton
+          size="large"
+          onClick={onRemove}
+          className="font-medium !-mt-5"
+          color="secondary"
+        >
+          <Minus className="size-6"/>
+        </IconButton>
+      </div>
     </div>
   );
 }
