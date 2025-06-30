@@ -3,14 +3,10 @@ import Typography from "@mui/material/Typography";
 import {Card, CardContent, Icon} from "@mui/material";
 import {PolicyDefinition} from "@think-it-labs/edc-connector-client";
 import {Timestamp} from "@think-it-labs/edc-connector-ui/timestamp";
-import {ContractAgreementView} from "@think-it-labs/edc-connector-ui/contract-agreement-view";
-
 import {ConstraintShow} from "@/components/molecules/constraint-show";
-
 import {T} from "@/i18n";
 import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
 import {convertOdrlToJsonHtml, removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
-
 
 interface Constraint {
   operandLeft?: { "@value": string }[],
@@ -37,35 +33,33 @@ export default function PolicyCard({ policyDefinition, onClick }: PolicyCardProp
   const { connector } = useParticipantConnectorState();
 
   return (
-    <ContractAgreementView id={policyDefinition.id} managementUrl={connector.managementUrl}>
-      <Card className="w-[400px]" onClick={onClick}>
-        <CardContent className="flex flex-col gap-y-3">
-          <div>
-            <div className="flex gap-x-4">
-              <div className="flex items-center">
-                <Icon fontSize="large">policy</Icon>
-              </div>
-              <div>
-                <Typography variant="h5" className="!leading-none hover:underline cursor-pointer">
-                  {policyDefinition.id}
-                </Typography>
-              </div>
+    <Card className="w-[400px]" onClick={onClick}>
+      <CardContent className="flex flex-col gap-y-3">
+        <div>
+          <div className="flex gap-x-4">
+            <div className="flex items-center">
+              <Icon fontSize="large">policy</Icon>
             </div>
-
             <div>
-              <Typography variant="body2" color="textDisabled">
-                <T string="policyDefinitions.headingCreatedAt"/>
-              </Typography>
-              <Typography variant="body2">
-                <Timestamp seconds={policyDefinition.createdAt} />
+              <Typography variant="h5" className="!leading-none hover:underline cursor-pointer">
+                {policyDefinition.id}
               </Typography>
             </div>
-
-            <ConstraintShow data={getConstraintData(policyDefinition)} />
-
           </div>
-        </CardContent>
-      </Card>
-    </ContractAgreementView>
+
+          <div>
+            <Typography variant="body2" color="textDisabled">
+              <T string="policyDefinitions.headingCreatedAt"/>
+            </Typography>
+            <Typography variant="body2">
+              <Timestamp seconds={policyDefinition.createdAt} />
+            </Typography>
+          </div>
+
+          <ConstraintShow data={getConstraintData(policyDefinition)} />
+
+        </div>
+      </CardContent>
+    </Card>
   );
 }
