@@ -24,14 +24,16 @@ export function TimeRestrictionConstraint({value, onChange, onRemove}: Constrain
         onChange={(dateValue) => onChange({...value, rightOperand: dateValue})}
         value={value.rightOperand as string}
       />
-      <IconButton
-        size="large"
-        onClick={onRemove}
-        className="font-medium !p-0 !-mt-5"
-        color="secondary"
-      >
-        <Minus className="size-6"/>
-      </IconButton>
+      <div className="flex items-center">
+        <IconButton
+          size="large"
+          onClick={onRemove}
+          className="font-medium !-mt-5"
+          color="secondary"
+        >
+          <Minus className="size-6"/>
+        </IconButton>
+      </div>
     </div>
   );
 }
