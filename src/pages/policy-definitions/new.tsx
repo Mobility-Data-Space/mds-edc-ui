@@ -38,7 +38,8 @@ export default function CreatePolicyDefinitionPage() {
   };
 
   const onFormSubmitFail = (error: Error) => {
-    enqueueSnackbar(translator("policyDefinition.new.saveFail"));
+    const match = /"message":"(.*?)"/.exec(error.message)
+    enqueueSnackbar((match && match[1]) || translator("policyDefinition.new.saveFail"));
   };
 
   if (!connector) {
