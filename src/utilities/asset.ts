@@ -391,7 +391,7 @@ export const validateDataAddress = (formDataToValidate: DataAddress, translator:
   }
 
   if (formDataToValidate.type === DataAddressTypes.AmazonS3) {
-    const requiredProperties = ["bucketName", "region", "keyname", "objectName", "objectPrefix"];
+    const requiredProperties = ["bucketName", "region", "keyname"];
     const errors : DataAddressErrors<S3DataAddress> = {}
     requiredProperties.forEach((propertyName) => {
       if (! formDataToValidate[propertyName]) {
@@ -399,17 +399,27 @@ export const validateDataAddress = (formDataToValidate: DataAddress, translator:
       }
     });
 
+    if (! isDestination && ! formDataToValidate.objectPrefix && ! formDataToValidate.objectName) {
+      errors.objectName = true;
+      errors.objectPrefix = true;
+    }
+
     return errors;
   }
 
   if (formDataToValidate.type === DataAddressTypes.AzureBlob) {
-    const requiredProperties = ["bucketName", "region", "keyname", "objectName", "objectPrefix"];
+    const requiredProperties = ["bucketName", "region", "keyname"];
     const errors : DataAddressErrors<AzureBlobDataAddress> = {}
     requiredProperties.forEach((propertyName) => {
       if (! formDataToValidate[propertyName]) {
         errors[propertyName] = true;
       }
     });
+
+    if (! isDestination && ! formDataToValidate.objectPrefix && ! formDataToValidate.objectName) {
+      errors.objectName = true;
+      errors.objectPrefix = true;
+    }
 
     return errors;
   }

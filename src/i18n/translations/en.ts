@@ -215,6 +215,8 @@ export const en = {
         customProperties: "Custom Properties",
         privateProperties: "Private Properties",
 
+        isPull: "Data address PULL",
+
         buttonCancel: "Cancel",
         buttonSave: "Add asset",
 
