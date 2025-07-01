@@ -1,4 +1,4 @@
-import React, {ReactNode} from 'react';
+import React from 'react';
 import {DatePicker as MuiDatePicker, DatePickerProps as MuiDatePickerProps} from '@mui/x-date-pickers/DatePicker';
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
@@ -10,7 +10,7 @@ import {DatePickerDaySlot} from "@/components/atoms/date-picker-day-slot";
 export type DatePickerPros = Partial<MuiDatePickerProps<any>> & {
   name?: string,
   id?: string,
-  label?: string | ReactNode,
+  label?: string
   onChange: (value: string) => void,
   value: string,
   error?: boolean,
