@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { DataAddress } from "@think-it-labs/edc-connector-client";
 import {T} from "@/i18n";
 import {Input} from "@/components/atoms/input";
@@ -9,6 +9,7 @@ import {DataAddressTypes} from "@/utilities/data-address.ts";
 import {AssetFormDataAddressAmazonS3} from "@/components/organisms/asset-form-data-address-amazon-s3.tsx";
 import {AssetContactEmailAndSubject} from "@/components/molecules/asset-contact-email-and-subject.tsx";
 import {AssetFormDataAddressHttp} from "@/components/organisms/asset-form-data-address-http";
+import {Checkbox} from "@/components/atoms/checkbox.tsx";
 
 export interface AssetDataAddressFormStepProps {
   translator: (key: string) => string,
@@ -17,9 +18,12 @@ export interface AssetDataAddressFormStepProps {
   errors: { [key: string]: boolean | string },
   methodAlwaysShowing?: boolean,
   customDataSourceConfigRows?: number,
+  isDestination?: boolean,
 }
 
-export function AssetFormDataAddressStep({ formData, errors, onChange, translator, methodAlwaysShowing = false, customDataSourceConfigRows = 2 }: AssetDataAddressFormStepProps): JSX.Element {
+export function AssetFormDataAddressStep({ formData, errors, onChange, translator, methodAlwaysShowing = false, customDataSourceConfigRows = 2, isDestination = false }: AssetDataAddressFormStepProps): JSX.Element {
+  const [isPull, setIsPull] = useState(false);
+
   return (
     <div className="flex flex-col gap-y-5">
       <div className="flex flex-col gap-y-5 items-start">
@@ -55,6 +59,7 @@ export function AssetFormDataAddressStep({ formData, errors, onChange, translato
           formData={formData}
           onChange={onChange}
           errors={errors}
+          isDestination={isDestination}
         />
       }
 
@@ -64,6 +69,7 @@ export function AssetFormDataAddressStep({ formData, errors, onChange, translato
           formData={formData}
           onChange={onChange}
           errors={errors}
+          isDestination={isDestination}
         />
       }
 
@@ -77,7 +83,6 @@ export function AssetFormDataAddressStep({ formData, errors, onChange, translato
           label={translator("assets.new.fieldCustomDatasourceConfig")}
           placeholder={'{"https://w3id.org/edc/v0.0.1/ns/type": "HttpData", ...}'}
           required
-          helperText={typeof errors.description === "string" ? errors.description : ""}
           classes={{ textField: { '& p':{ color: theme.palette.error.main } }} as any}
           error={errors.description}
           value={formData.description}
@@ -85,15 +90,23 @@ export function AssetFormDataAddressStep({ formData, errors, onChange, translato
         />
       }
 
-      {formData.type === DataAddressTypes.HttpData &&
+      {formData.type === DataAddressTypes.HttpData && <>
+        {isDestination &&
+          <Checkbox
+            label={<T string="assets.new.isPull" />}
+            value={isPull}
+            onChange={(event) => setIsPull(event.target.checked)}
+          />
+        }
         <AssetFormDataAddressHttp
           translator={translator}
           formData={formData}
           onChange={onChange}
           errors={errors}
           methodAlwaysShowing={methodAlwaysShowing}
+          isPull={isPull}
         />
-      }
+      </>}
     </div>
   );
 }

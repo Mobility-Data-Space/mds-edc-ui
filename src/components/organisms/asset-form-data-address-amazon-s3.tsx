@@ -9,9 +9,10 @@ export interface AssetFormDataAddressRemoteProps {
   formData: DataAddress,
   onChange: any,
   errors: { [key: string]: boolean | string },
+  isDestination?: boolean,
 }
 
-export function AssetFormDataAddressAmazonS3({ formData, errors, onChange, translator}: AssetFormDataAddressRemoteProps): JSX.Element {
+export function AssetFormDataAddressAmazonS3({ formData, errors, onChange, translator, isDestination = false }: AssetFormDataAddressRemoteProps): JSX.Element {
   return (
     <>
       <div>
@@ -82,7 +83,8 @@ export function AssetFormDataAddressAmazonS3({ formData, errors, onChange, trans
           htmlFor="data-address-objectName"
           className="inline-block text-sm text-black font-medium mb-2"
         >
-          <T string="assets.new.fieldObjectName"/> *
+          <T string="assets.new.fieldObjectName"/>
+          {isDestination || formData.objectPrefix ? "" : " *"}
         </label>
         <Input
           name="objectName"
@@ -90,7 +92,7 @@ export function AssetFormDataAddressAmazonS3({ formData, errors, onChange, trans
           key="data-address-objectName"
           label={translator("assets.new.fieldObjectName")}
           placeholder={translator("assets.new.fieldObjectName")}
-          required
+          required={! isDestination && !formData.objectPrefix}
           helperText={typeof errors.objectName === "string" ? errors.objectName : ""}
           classes={{ textField: { '& p':{ color: theme.palette.error.main } }} as any}
           error={errors.objectName}
@@ -98,27 +100,30 @@ export function AssetFormDataAddressAmazonS3({ formData, errors, onChange, trans
           onChange={(event) => onChange({ ...formData, objectName: event.target.value })}
         />
       </div>
-      <div>
-        <label
-          htmlFor="data-address-objectPrefix"
-          className="inline-block text-sm text-black font-medium mb-2"
-        >
-          <T string="assets.new.fieldObjectPrefix"/> *
-        </label>
-        <Input
-          name="objectPrefix"
-          id="data-address-objectPrefix"
-          key="data-address-objectPrefix"
-          label={translator("assets.new.fieldObjectPrefix")}
-          placeholder={translator("assets.new.fieldObjectPrefix")}
-          required
-          helperText={typeof errors.objectPrefix === "string" ? errors.objectPrefix : ""}
-          classes={{ textField: { '& p':{ color: theme.palette.error.main } }} as any}
-          error={errors.objectPrefix}
-          value={formData.objectPrefix}
-          onChange={(event) => onChange({ ...formData, objectPrefix: event.target.value })}
-        />
-      </div>
+      {isDestination ? "" :
+        <div>
+          <label
+            htmlFor="data-address-objectPrefix"
+            className="inline-block text-sm text-black font-medium mb-2"
+          >
+            <T string="assets.new.fieldObjectPrefix"/>
+            {formData.objectName ? "" : " *"}
+          </label>
+          <Input
+            name="objectPrefix"
+            id="data-address-objectPrefix"
+            key="data-address-objectPrefix"
+            label={translator("assets.new.fieldObjectPrefix")}
+            placeholder={translator("assets.new.fieldObjectPrefix")}
+            required={! isDestination && !formData.objectName}
+            helperText={typeof errors.objectPrefix === "string" ? errors.objectPrefix : ""}
+            classes={{ textField: { '& p':{ color: theme.palette.error.main } }} as any}
+            error={errors.objectPrefix}
+            value={formData.objectPrefix}
+            onChange={(event) => onChange({ ...formData, objectPrefix: event.target.value })}
+          />
+        </div>
+      }
     </>
   );
 }

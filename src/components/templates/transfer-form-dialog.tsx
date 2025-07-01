@@ -57,7 +57,7 @@ export function TransferFormDialog({ contractAgreementLd, open, onClose, onSucce
   }
 
   const onChange = (newFormData: DataAddress) => {
-    setErrors(validateDataAddress(newFormData, translator));
+    setErrors(validateDataAddress(newFormData, translator, true));
     setFormData(newFormData);
   }
 
@@ -86,6 +86,7 @@ export function TransferFormDialog({ contractAgreementLd, open, onClose, onSucce
             formData={formData}
             onChange={onChange}
             errors={errors}
+            isDestination
           />
         </form>
       </DialogContent>

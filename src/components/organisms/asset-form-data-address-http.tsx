@@ -12,9 +12,14 @@ export interface AssetFormDataAddressHttpProps {
   onChange: any,
   errors: { [key: string]: boolean | string },
   methodAlwaysShowing?: boolean,
+  isPull?: boolean,
 }
 
-export function AssetFormDataAddressHttp({ formData, errors, onChange, translator, methodAlwaysShowing = false}: AssetFormDataAddressHttpProps): JSX.Element {
+export function AssetFormDataAddressHttp({ formData, errors, onChange, translator, methodAlwaysShowing = false, isPull = false }: AssetFormDataAddressHttpProps): JSX.Element {
+  if (isPull) {
+    return <></>;
+  }
+
   return (
     <>
       <div className="flex flex-col gap-y-5">
