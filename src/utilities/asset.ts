@@ -39,7 +39,7 @@ export const fromAssetForm = (formData: AssetInput) => {
     "@id": cleanFormDataObject["@id"],
     properties: cleanFormDataObject.properties,
     privateProperties: cleanFormDataObject.privateProperties,
-    dataAddress: cleanFormDataObject.dataAddress
+    dataAddress: transformDataAddress(cleanFormDataObject.dataAddress),
   };
 };
 
@@ -349,7 +349,7 @@ export const transformForId = (str?: string) => {
     .toLowerCase();
 };
 
-export const validateDataAddress = (formDataToValidate: DataAddress, translator: (str: string) => string) => {
+export const validateDataAddress = (formDataToValidate: DataAddress, translator: (str: string) => string, isDestination = false) => {
   if (formDataToValidate.type === DataAddressTypes.CustomJson) {
     if (! formDataToValidate.description) {
       return { description: true };
@@ -425,4 +425,64 @@ export const validateDataAddress = (formDataToValidate: DataAddress, translator:
   }
 
   return {};
+}
+
+export const transformDataAddress = (formDataToTransform: DataAddress) => {
+  if (formDataToTransform.type === DataAddressTypes.CustomJson) {
+    try {
+      return JSON.parse(formDataToTransform.description as string);
+    } catch (e) {
+      return formDataToTransform;
+    }
+  }
+
+  if (formDataToTransform.type === DataAddressTypes.HttpData) {
+    return {
+      type: DataAddressTypes.HttpData,
+      method: formDataToTransform?.method,
+      name: formDataToTransform?.name,
+      path: formDataToTransform?.path,
+      baseUrl: formDataToTransform?.baseUrl,
+      authKey: formDataToTransform?.authKey,
+      authCode: formDataToTransform?.authCode,
+      secretName: formDataToTransform?.secretName,
+      proxyBody: formDataToTransform?.proxyBody,
+      proxyPath: formDataToTransform?.proxyPath,
+      proxyQueryParams: formDataToTransform?.proxyQueryParams,
+      proxyMethod: formDataToTransform?.proxyMethod,
+      contentType: formDataToTransform?.contentType,
+    };
+  }
+
+  if (formDataToTransform.type === DataAddressTypes.MDSOnRequestOffer) {
+    return {
+      type: DataAddressTypes.MDSOnRequestOffer,
+      email: formDataToTransform.email,
+      preferred_email_subject: formDataToTransform.preferred_email_subject,
+    };
+  }
+
+  if (formDataToTransform.type === DataAddressTypes.AmazonS3) {
+    return {
+      type: DataAddressTypes.AmazonS3,
+      bucketName: formDataToTransform.bucketName,
+      region: formDataToTransform.region,
+      keyname: formDataToTransform.keyname,
+      objectName: formDataToTransform?.objectName,
+      objectPrefix: formDataToTransform?.objectPrefix,
+    };
+  }
+
+  if (formDataToTransform.type === DataAddressTypes.AzureBlob) {
+    return {
+      type: DataAddressTypes.AzureBlob,
+      bucketName: formDataToTransform.bucketName,
+      region: formDataToTransform.region,
+      keyname: formDataToTransform.keyname,
+      objectName: formDataToTransform?.objectName,
+      objectPrefix: formDataToTransform?.objectPrefix,
+    };
+  }
+
+  return formDataToTransform;
 }
