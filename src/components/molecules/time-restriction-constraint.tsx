@@ -4,17 +4,18 @@ import { IconButton } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
 import { DATE_FORMAT, DEFAULT_DATE_FORMAT } from "@/utilities/date.ts";
+import { T, useTranslator } from "@/i18n";
+import dayjs from "dayjs";
 import { MuiSelect } from "@/components/atoms/mui-select";
 import { DatePicker } from "@/components/atoms/date-picker";
 import { ConstraintProps } from "@/components/molecules/constraint";
-import { T } from "@/i18n";
 import { timeRestrictionOperators } from "@/utilities/policy-constraints";
-import dayjs from "dayjs";
 
 export function TimeRestrictionConstraint({ value, onChange, onRemove }: ConstraintProps) {
   value = value as AtomicConstraint
   const dayJsDate = dayjs(value.rightOperand, DEFAULT_DATE_FORMAT);
   const dateIsNotValid = !dayJsDate.isValid();
+  const { translator } = useTranslator()
 
   return (
     <div className="flex flex-row gap-4">
@@ -28,13 +29,7 @@ export function TimeRestrictionConstraint({ value, onChange, onRemove }: Constra
         onChange={(event) => onChange({ ...value, operator: event.target.value })}
       />
       <DatePicker
-        label={<span><T string={"dataOffer.new.policyExpressionTimeRestriction"} /> *</span>}
-        error={!dayjs(value.rightOperand, DATE_FORMAT).isValid()}
-        onChange={(dateValue) => onChange({ ...value, rightOperand: dateValue })}
-        value={value.rightOperand as string}
-      />
-      <DatePicker
-        label={<span><T string={"dataOffer.new.policyExpressionTimeRestriction"} /> *</span>}
+        label={`${translator("dataOffer.new.policyExpressionTimeRestriction")}*`}
         error={dateIsNotValid}
         onChange={(dateValue) => onChange({ ...value, rightOperand: dayjs(dateValue, DATE_FORMAT).format(DEFAULT_DATE_FORMAT) })}
         value={dateIsNotValid ? "" : dayJsDate.format(DATE_FORMAT)}
