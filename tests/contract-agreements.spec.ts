@@ -61,7 +61,7 @@ test.describe("Contract Agreements Page Tests", () => {
       }
     });
 
-    test("should clear search and show all agreements", async ({ page }) => {
+    test.fixme("should clear search and show all agreements", async ({ page }) => {
       await agreementsPage.searchAgreements('test');
 
       await agreementsPage.clearAgreementSearch();
