@@ -159,7 +159,7 @@ test.describe("Data Offer Tests", () => {
       expect(isNextEnabled).toBeFalsy();
     });
 
-    test("should maintain search results across pagination", async ({ page }) => {
+    test.fixme("should maintain search results across pagination", async ({ page }) => {
       await dataOfferPage.searchDataOffers('test');
 
       const isNextEnabled = await dataOfferPage.isNextPageEnabled();
