@@ -1,4 +1,5 @@
 import { TitleWithIcon } from "@/components/atoms/TitleWithIcon";
+import { ErrorSnackbar } from "@/components/molecules/error-snackbar";
 import { JsonLdDialog } from "@/components/molecules/JsonLdDialog";
 import PaginationControls from "@/components/molecules/pagination-controls";
 import SearchBar from "@/components/molecules/search-bar";
@@ -11,6 +12,7 @@ import { PolicyDefinition } from "@think-it-labs/edc-connector-client";
 import { PolicyDefinitionsList } from "@think-it-labs/edc-connector-ui/policy-definitions-list";
 import { CirclePlus } from "lucide-react";
 import { useRouter } from "next/router";
+import { useSnackbar } from "notistack";
 import { useCallback, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
 
@@ -18,6 +20,7 @@ export default function PolicyDefinitionListPage() {
   const router = useRouter()
   const { push, connector } = useParticipantConnectorState();
   const { translator } = useTranslator();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const managementUrl = connector?.managementUrl as string;
 
@@ -92,6 +95,23 @@ export default function PolicyDefinitionListPage() {
             </PolicyDefinitionsList.Pagination>
           </div>
         </div>
+        <PolicyDefinitionsList.Error>
+          {({ error }) => {
+            if (error) {
+              enqueueSnackbar(translator('common.policyDefinitionsLoadError'), {
+                variant: "error",
+                content: (key: any) => (
+                  <ErrorSnackbar
+                    message={translator('common.policyDefinitionsLoadError')}
+                    details={error.message || undefined}
+                    onClose={() => { closeSnackbar(key); }}
+                  />
+                )
+              });
+            }
+            return <></>;
+          }}
+        </PolicyDefinitionsList.Error>
 
         <div className="flex flex-wrap gap-4 py-4" data-testid="policies-list">
           <PolicyDefinitionsList.Items
