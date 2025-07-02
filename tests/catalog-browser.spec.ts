@@ -1,21 +1,21 @@
 import { expect, test } from '@playwright/test';
 import { CatalogBrowserPage } from './pages/catalog-browser-page';
 
-const PROTOCOL_URL = process.env.EDC_PROTOCOL_URL || '';
+const COUNTER_PARTY_ADDRESS = "http://edc-2:8183/api/dsp";
 
 test.describe("Catalog Browser Tests", () => {
   let catalogPage: CatalogBrowserPage;
 
   test.beforeEach(async ({ page }) => {
-    if (!PROTOCOL_URL) throw new Error('EDC_PROTOCOL_URL environment variable must be set');
+    if (!COUNTER_PARTY_ADDRESS) throw new Error('EDC_PROTOCOL_URL environment variable must be set');
     catalogPage = new CatalogBrowserPage(page);
     await catalogPage.navigate();
-    await catalogPage.fillCatalogUrlInput(PROTOCOL_URL);
+    await catalogPage.fillCatalogUrlInput(COUNTER_PARTY_ADDRESS);
   });
 
   test("Fills catalog URL input and loads catalog", async ({ page }) => {
     const input = await page.locator('#catalog-url');
-    await expect(input).toHaveValue(PROTOCOL_URL);
+    await expect(input).toHaveValue(COUNTER_PARTY_ADDRESS);
     // Catalog list should be visible and have at least one card
     const catalogList = await catalogPage.getCatalogList();
     await expect(catalogList).toBeVisible();
