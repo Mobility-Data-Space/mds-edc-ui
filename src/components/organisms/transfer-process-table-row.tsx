@@ -1,28 +1,18 @@
-import React, {useEffect, useMemo, useState} from "react";
-import {Chip, Icon, Tooltip} from "@mui/material";
-import Divider from "@mui/material/Divider";
-import {Asset, compact, ContractAgreement, ContractNegotiation} from "@think-it-labs/edc-connector-client";
-import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
-import {MarkdownCollapsableText} from "@/components/molecules/markdown-collapsable-text";
-import FieldGrid from "@/components/molecules/field-grid";
-import {T} from "@/i18n";
-import {ASSET_KEYWORDS, ASSET_DESCRIPTION} from "@/schema/asset";
-import {assetDataAddressFieldsTitle, assetDataAddressFieldsToShow, assetFieldsToShow, assetPrivateFieldsToShow} from "@/utilities/asset";
-import {Table} from "@/components/atoms/table.tsx";
-import {TransferProcessIcon} from "@/components/atoms/transfer-process-icon.tsx";
-import {TransferProcessStateIcon} from "@/components/atoms/transfer-process-state-icon.tsx";
-import {ContractAgreementView} from "@think-it-labs/edc-connector-ui/contract-agreement-view.tsx";
-import {AssetView} from "@think-it-labs/edc-connector-ui/asset-view.tsx";
-import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/entities";
-import jsonld from "jsonld";
-import {contextToCompact} from "@/schema/context.ts";
-import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog.ts";
-import {formatDateTime, formatDateTimeAgo} from "@/utilities/utilities.ts";
-import {ContractNegotiationView} from "@think-it-labs/edc-connector-ui/contract-negotiation-view.tsx";
-import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
+import { Table } from "@/components/atoms/table.tsx";
+import { TransferProcessIcon } from "@/components/atoms/transfer-process-icon.tsx";
+import { TransferProcessStateIcon } from "@/components/atoms/transfer-process-state-icon.tsx";
+import { JsonLdDialog } from "@/components/molecules/JsonLdDialog.tsx";
 import AssetDialog from "@/components/organisms/asset-dialog.tsx";
-import {JsonLdDialog} from "@/components/molecules/JsonLdDialog.tsx";
-import {useTransferProcessJsonLd} from "@/hooks/use-transfer-process-json-ld.ts";
+import { useTransferProcessJsonLd } from "@/hooks/use-transfer-process-json-ld.ts";
+import { T } from "@/i18n";
+import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog.ts";
+import { formatDateTime, formatDateTimeAgo } from "@/utilities/utilities.ts";
+import { Icon, Tooltip } from "@mui/material";
+import { Asset, ContractAgreement, ContractNegotiation } from "@think-it-labs/edc-connector-client";
+import { TransferProcess } from "@think-it-labs/edc-connector-client/dist/src/entities";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
+import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
+import { useEffect, useState } from "react";
 
 interface AssetDetailsProps {
   transferProcess: TransferProcess;
@@ -42,34 +32,34 @@ export default function TransferProcessTableRow({ transferProcess, managementUrl
   const [asset, setAsset] = useState({} as Asset);
 
   useEffect(() => {
-    if (! transferProcess.contractId) {
+    if (!transferProcess.contractId) {
       return;
     }
 
     edcClient.management.contractAgreements.getNegotiation(transferProcess.contractId)
-    .then((negotiation) => {
-      const cleanNegotiation = removeJsonLdSchemaFromProperties(negotiation);
-      setContractNegotiation({
-        ...negotiation,
-        counterPartyId: readValue(cleanNegotiation, "counterPartyId"),
-        counterPartyAddress: readValue(cleanNegotiation, "counterPartyAddress"),
-      } as unknown as ContractNegotiation);
-    })
-    .catch(() => setContractNegotiation({} as ContractNegotiation));
+      .then((negotiation) => {
+        const cleanNegotiation = removeJsonLdSchemaFromProperties(negotiation);
+        setContractNegotiation({
+          ...negotiation,
+          counterPartyId: readValue(cleanNegotiation, "counterPartyId"),
+          counterPartyAddress: readValue(cleanNegotiation, "counterPartyAddress"),
+        } as unknown as ContractNegotiation);
+      })
+      .catch(() => setContractNegotiation({} as ContractNegotiation));
 
     edcClient.management.contractAgreements.get(transferProcess.contractId)
-    .then(setContractAgreement)
-    .catch(() => setContractAgreement({} as ContractAgreement));
+      .then(setContractAgreement)
+      .catch(() => setContractAgreement({} as ContractAgreement));
   }, [edcClient, transferProcess.contractId]);
 
   useEffect(() => {
-    if (! transferProcess.assetId) {
+    if (!transferProcess.assetId) {
       return;
     }
 
     edcClient.management.assets.get(transferProcess.assetId)
-    .then(setAsset)
-    .catch(() => setAsset({} as Asset));
+      .then(setAsset)
+      .catch(() => setAsset({} as Asset));
   }, [edcClient, transferProcess.assetId]);
 
   const jsonLdObject = useTransferProcessJsonLd(transferProcess, contractNegotiation);
@@ -90,7 +80,7 @@ export default function TransferProcessTableRow({ transferProcess, managementUrl
         jsonLdObject={jsonLdObject}
       />
 
-      <Table.Row >
+      <Table.Row className="transfer-process-row">
         <Table.Cell>
           <TransferProcessIcon transferProcess={transferProcess} />
         </Table.Cell>

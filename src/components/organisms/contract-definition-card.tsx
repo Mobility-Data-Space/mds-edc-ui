@@ -1,12 +1,11 @@
-import React from "react";
+import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
+import { T } from "@/i18n";
+import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog";
+import { Card, CardContent, Icon } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import {Card, CardContent, Icon} from "@mui/material";
-import {ContractDefinition} from "@think-it-labs/edc-connector-client";
-import {ContractDefinitionsList} from "@think-it-labs/edc-connector-ui/contract-definitions-list";
-import {ContractDefinitionView} from "@think-it-labs/edc-connector-ui/contract-definition-view";
-import {T} from "@/i18n";
-import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
-import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
+import { ContractDefinition } from "@think-it-labs/edc-connector-client";
+import { ContractDefinitionView } from "@think-it-labs/edc-connector-ui/contract-definition-view";
+import { ContractDefinitionsList } from "@think-it-labs/edc-connector-ui/contract-definitions-list";
 
 
 interface Constraint {
@@ -35,7 +34,7 @@ export default function ContractDefinitionCard({ contractDefinition, onClick }: 
 
   return (
     <ContractDefinitionView id={contractDefinition.id} managementUrl={connector.managementUrl}>
-      <Card className="w-[368px]" onClick={onClick}>
+      <Card className="data-offer-card w-[368px]" onClick={onClick}>
         <CardContent className="flex flex-col gap-y-3">
           <div>
             <div className="flex gap-x-4">
@@ -43,7 +42,7 @@ export default function ContractDefinitionCard({ contractDefinition, onClick }: 
                 <Icon fontSize="large">policy</Icon>
               </div>
               <div>
-                <Typography variant="h4" className="!leading-none hover:underline cursor-pointer">
+                <Typography variant="h4" className="!leading-none hover:underline cursor-pointer" data-testid="contract-definition-id">
                   {contractDefinition.id}
                 </Typography>
                 <Typography variant="body1" color="textSecondary">
@@ -55,7 +54,7 @@ export default function ContractDefinitionCard({ contractDefinition, onClick }: 
             <div className="grid grid-cols-1 gap-y-4 py-4">
               <div>
                 <Typography variant="body2" color="textDisabled">
-                  <T string="contractDefinitions.accessPolicy"/>
+                  <T string="contractDefinitions.accessPolicy" />
                 </Typography>
                 <Typography variant="body2">
                   <ContractDefinitionsList.Policy
@@ -72,7 +71,7 @@ export default function ContractDefinitionCard({ contractDefinition, onClick }: 
               </div>
               <div>
                 <Typography variant="body2" color="textDisabled">
-                  <T string="contractDefinitions.contractPolicy"/>
+                  <T string="contractDefinitions.contractPolicy" />
                 </Typography>
                 <Typography variant="body2">
                   <ContractDefinitionsList.Policy
@@ -90,7 +89,7 @@ export default function ContractDefinitionCard({ contractDefinition, onClick }: 
 
               <div>
                 <Typography variant="body2" color="textDisabled">
-                  <T string="contractDefinitions.assets"/>
+                  <T string="contractDefinitions.assets" />
                 </Typography>
                 <Typography variant="body2">
                   {getAssets(contractDefinition).join(", ")}
