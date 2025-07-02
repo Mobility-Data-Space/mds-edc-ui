@@ -1,20 +1,22 @@
-import React, { useCallback, useState } from "react";
-import { useRouter } from "next/router";
-import { ChevronLeft, ChevronRight, PlusCircle } from "lucide-react";
-import { IconButton, Button as MuiButton, Typography } from '@mui/material';
-import { Asset } from "@think-it-labs/edc-connector-client";
-import { AssetsList } from "@think-it-labs/edc-connector-ui/assets-list";
-import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
-import { T } from "@/i18n";
-import SideDrawer from "@/components/organisms/side-drawer";
+import PaginationControls from "@/components/molecules/pagination-controls";
+import SearchBar from "@/components/molecules/search-bar";
 import AssetCard from "@/components/organisms/asset-card";
 import AssetDialog from "@/components/organisms/asset-dialog";
+import SideDrawer from "@/components/organisms/side-drawer";
 import AssetFormDialog from "@/components/templates/asset-form-dialog";
-import { List } from "@think-it-labs/edc-connector-ui/list";
+import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
+import { T, useTranslator } from "@/i18n";
+import { Button as MuiButton } from '@mui/material';
+import { Asset } from "@think-it-labs/edc-connector-client";
+import { AssetsList } from "@think-it-labs/edc-connector-ui/assets-list";
+import { PlusCircle } from "lucide-react";
+import { useRouter } from "next/router";
+import { useCallback, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
 
 export default function AssetListPage() {
   const router = useRouter();
+  const { translator } = useTranslator();
   const { connector } = useParticipantConnectorState();
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -69,51 +71,48 @@ export default function AssetListPage() {
           currentPage={parseInt(router.query.page as string) || 0}
           firstPage={0}
         >
-          <div className="flex justify-between gap-x-5">
-            <Typography variant="h4" >
-              <T string="assets.title" />
-            </Typography>
-            <List.Pagination>
-              {({ decrementPage, hasPrev, hasNext, incrementPage }) =>
-                <div className="flex justify-end items-center">
-                  <div className="inline-flex float-right gap-x-2">
-                    <IconButton
-                      onClick={decrementPage}
-                      disabled={!hasPrev}
-                    >
-                      <ChevronLeft className="size-6" />
-                    </IconButton>
-                    <IconButton
-                      onClick={incrementPage}
-                      disabled={!hasNext}
-                    >
-                      <ChevronRight className="size-6" />
-                    </IconButton>
-                  </div>
-                </div>
-              }
-            </List.Pagination>
-          </div>
-          <div className="flex gap-x-4 py-4">
-            <MuiButton
-              data-testid="create-asset-modal-opener"
-              variant="contained"
-              className="gap-x-2 font-medium"
-              onClick={() => setIsCreateModalOpen(true)}
-            >
-              <PlusCircle className="h-4 w-4" />
-              <T string="assets.buttonAdd" />
-            </MuiButton>
+          <div className="flex justify-between pb-6">
+            <div className="flex justify-start gap-x-5 items-center">
+              <div className="min-w-xl">
+                <SearchBar searchTarget="http://purl.org/dc/terms/title" placeholder={translator("assets.searchPlaceholder")} searchOperator="ilike" />
+              </div>
+              <div className="flex gap-x-4 py-4">
+                <MuiButton
+                  data-testid="create-asset-modal-opener"
+                  variant="contained"
+                  className="gap-x-2 font-medium min-h-14"
+                  onClick={() => setIsCreateModalOpen(true)}
+                >
+                  <PlusCircle className="h-4 w-4" />
+                  <T string="assets.buttonAdd" />
+                </MuiButton>
+              </div>
+            </div>
+            <div className="flex justify-end items-center">
+              <AssetsList.Pagination>
+                {({ decrementPage, hasPrev, page, hasNext, incrementPage }) =>
+                  <PaginationControls
+                    page={page}
+                    hasPrev={hasPrev}
+                    hasNext={hasNext}
+                    decrementPage={decrementPage}
+                    incrementPage={incrementPage}
+                    maxItems={MAX_ITEMS}
+                    dataTestIdPrefix="pagination"
+                  />
+                }
+              </AssetsList.Pagination>
+            </div>
           </div>
 
-          <div id="asset-list">
+          <div id="asset-list" data-testid="assets-list">
             <div className="flex flex-wrap gap-3">
               <AssetsList.Items
                 limit={MAX_ITEMS}
                 sortOrder="DESC"
               >
                 {({ item, index, deleteItem }) => (
-                  <AssetCard asset={item} key={index} onClick={() => openDetailsModal(item, deleteItem)} participantId={connector.id} />
+                  <AssetCard asset={item} key={index} onClick={() => openDetailsModal(item, deleteItem)} participantId={connector.id} data-testid="asset-card" />
                 )}
               </AssetsList.Items>
             </div>

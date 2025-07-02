@@ -1,18 +1,18 @@
-import React, { useCallback, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { IconButton, Tooltip } from "@mui/material";
-import { ContractAgreementView } from "@think-it-labs/edc-connector-ui/contract-agreement-view";
-import { ContractNegotiationsList } from "@think-it-labs/edc-connector-ui/contract-negotiations-list";
+import { Table } from "@/components/atoms/table";
+import PaginationControls from "@/components/molecules/pagination-controls";
+import SearchBar from "@/components/molecules/search-bar";
+import ContractNegotiationDialog from "@/components/organisms/contract-negotiation-dialog";
+import SideDrawer from "@/components/organisms/side-drawer";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
-import SideDrawer from "@/components/organisms/side-drawer";
-import { ContractNegotiation } from "@think-it-labs/edc-connector-client";
-import { Table } from "@/components/atoms/table";
-import ContractNegotiationDialog from "@/components/organisms/contract-negotiation-dialog";
 import { formatDateTime, formatDateTimeAgo } from "@/utilities/utilities.ts";
+import { Tooltip } from "@mui/material";
+import { ContractNegotiation } from "@think-it-labs/edc-connector-client";
+import { ContractAgreementView } from "@think-it-labs/edc-connector-ui/contract-agreement-view";
+import { ContractNegotiationsList } from "@think-it-labs/edc-connector-ui/contract-negotiations-list";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld.tsx";
 import { useRouter } from "next/router";
-import { List } from "@think-it-labs/edc-connector-ui/list";
+import { useCallback, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
 
 const CreatedAt = ({ item }: { item: ContractNegotiation }) => {
@@ -81,26 +81,28 @@ export default function ContractNegotiationsListPage() {
         currentPage={currentPage}
         firstPage={0}
       >
-        <div className="flex justify-end items-center mb-3">
-          <List.Pagination>
-            {({ decrementPage, hasPrev, hasNext, incrementPage }) =>
-              <div className="inline-flex float-right gap-x-2">
-                <IconButton
-                  onClick={decrementPage}
-                  disabled={!hasPrev}
-                >
-                  <ChevronLeft className="size-6" />
-                </IconButton>
-                <IconButton
-                  onClick={incrementPage}
-                  disabled={!hasNext}
-                >
-                  <ChevronRight className="size-6" />
-                </IconButton>
-              </div>}
-          </List.Pagination>
+        <div className="flex justify-between pb-6">
+          <div className="flex justify-start gap-x-5 items-center">
+            <div className="min-w-xl">
+              <SearchBar searchTarget="counterPartyId" placeholder={translator("contractNegotiations.searchPlaceholder")} searchOperator="ilike" />
+            </div>
+          </div>
+          <div className="flex justify-end items-center">
+            <ContractNegotiationsList.Pagination>
+              {({ decrementPage, hasPrev, hasNext, incrementPage, page }) =>
+                <PaginationControls
+                  page={page}
+                  hasPrev={hasPrev}
+                  hasNext={hasNext}
+                  decrementPage={decrementPage}
+                  incrementPage={incrementPage}
+                  maxItems={MAX_ITEMS}
+                />
+              }
+            </ContractNegotiationsList.Pagination>
+          </div>
         </div>
-        <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">
+        <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200" data-testid="negotiations-list">
           <Table>
             <Table.Head>
               <Table.Row>
@@ -135,6 +137,7 @@ export default function ContractNegotiationsListPage() {
                   <Table.Row
                     key={index}
                     onClick={() => openDetailsModal(item)}
+                    data-testid="negotiation-item"
                   >
                     <Table.Cell>
                       <button

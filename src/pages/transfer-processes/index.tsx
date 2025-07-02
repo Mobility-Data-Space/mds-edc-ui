@@ -1,19 +1,19 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import React, { useCallback } from "react";
-import { TransferProcessesList } from "@think-it-labs/edc-connector-ui/transfer-processes-list";
-import { Button } from "@/components/atoms/button";
 import { Table } from "@/components/atoms/table";
-import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
-import { T } from "@/i18n";
+import PaginationControls from "@/components/molecules/pagination-controls";
+import SearchBar from "@/components/molecules/search-bar";
 import SideDrawer from "@/components/organisms/side-drawer";
-import { useRouter } from "next/router";
-import { List } from "@think-it-labs/edc-connector-ui/list";
-import { MAX_ITEMS } from "../../constants/lists";
 import TransferProcessTableRow from "@/components/organisms/transfer-process-table-row.tsx";
+import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
+import { T, useTranslator } from "@/i18n";
+import { TransferProcessesList } from "@think-it-labs/edc-connector-ui/transfer-processes-list";
+import { useRouter } from "next/router";
+import { useCallback } from "react";
+import { MAX_ITEMS } from "../../constants/lists";
 
 export default function TransferProcessesListPage() {
   const router = useRouter();
   const { connector } = useParticipantConnectorState();
+  const { translator } = useTranslator();
   const managementUrl = connector?.managementUrl as string;
 
   const currentPage = parseInt(router.query.page as string) || 0
@@ -39,31 +39,30 @@ export default function TransferProcessesListPage() {
         currentPage={currentPage}
         firstPage={0}
       >
-        <div className="px-6 py-4 gap-3 flex justify-end border-gray-200">
-          <List.Pagination>
-            {({ decrementPage, incrementPage, hasNext, hasPrev }) =>
-              <div className="inline-flex gap-x-2">
-                <Button
-                  variant="secondary"
-                  onClick={decrementPage}
-                  disabled={!hasPrev}
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </Button>
-
-                <Button
-                  variant="secondary"
-                  onClick={incrementPage}
-                  disabled={!hasNext}
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </Button>
-              </div>
-            }
-          </List.Pagination>
+        <div className="flex justify-between pb-6">
+          <div className="flex justify-start gap-x-5 items-center">
+            <div className="min-w-xl">
+              <SearchBar searchTarget="id" placeholder={translator("transferProcesses.searchPlaceholder")} searchOperator="ilike" />
+            </div>
+          </div>
+          <div className="flex justify-end items-center">
+            <TransferProcessesList.Pagination>
+              {({ decrementPage, hasPrev, hasNext, incrementPage, page }) =>
+                <PaginationControls
+                  page={page}
+                  hasPrev={hasPrev}
+                  hasNext={hasNext}
+                  decrementPage={decrementPage}
+                  incrementPage={incrementPage}
+                  maxItems={MAX_ITEMS}
+                  dataTestIdPrefix="pagination"
+                />
+              }
+            </TransferProcessesList.Pagination>
+          </div>
         </div>
 
-        <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">
+        <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200" data-testid="transfer-processes-list">
           <Table>
             <Table.Head>
               <Table.Row>
@@ -113,6 +112,7 @@ export default function TransferProcessesListPage() {
                     managementUrl={managementUrl}
                     connectorEndpoint={connector.protocolUrl}
                     participantId={connector.id}
+                    data-testid="transfer-process-row"
                   />
                 )}
               </TransferProcessesList.Items>

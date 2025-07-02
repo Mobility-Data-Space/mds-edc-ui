@@ -1,32 +1,49 @@
 import { Page } from '@playwright/test';
+import { BaseListPage } from './base-list-page';
 
-export class ContractAgreementsPage {
-  readonly page: Page;
-  readonly agreementsListLocator = '#agreements-list';
-  readonly agreementItemLocator = '.agreement-item';
-  readonly agreementDetailsLocator = '#agreement-details';
+export class ContractAgreementsPage extends BaseListPage {
+  readonly agreementsListLocator = '.contract-agreements-list';
+  readonly agreementCardLocator = '.contract-agreement-card';
+  readonly agreementDialogLocator = '.contract-agreement-dialog';
 
   constructor(page: Page) {
-    this.page = page;
+    super(page);
   }
 
   async navigate() {
     await this.page.goto('/contract-agreements');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForResponse((response) => response.url().includes('/connector/management/v3/contractagreements'));
   }
 
   async getAgreementsList() {
     return this.page.locator(this.agreementsListLocator);
   }
 
+  async getAgreementCards() {
+    return this.page.locator(this.agreementCardLocator);
+  }
+
   async selectAgreement(agreementName: string) {
-    const agreementItem = this.page.locator(this.agreementItemLocator).filter({ hasText: agreementName });
-    await agreementItem.click();
+    await this.page.locator(this.agreementCardLocator).filter({ hasText: agreementName }).click();
   }
 
   async verifyAgreementDetails() {
-    const agreementDetails = this.page.locator(this.agreementDetailsLocator);
-    await agreementDetails.waitFor();
-    return agreementDetails;
+    return this.page.locator(this.agreementDialogLocator);
+  }
+
+  async searchAgreements(searchTerm: string) {
+    await this.searchItems(searchTerm, '/connector/management/v3/contractagreements');
+  }
+
+  async clearAgreementSearch() {
+    await this.clearSearch('/connector/management/v3/contractagreements');
+  }
+
+  async goToNextPage() {
+    await super.goToNextPage('/connector/management/v3/contractagreements');
+  }
+
+  async goToPreviousPage() {
+    await super.goToPreviousPage('/connector/management/v3/contractagreements');
   }
 }
