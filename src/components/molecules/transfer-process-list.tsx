@@ -2,11 +2,10 @@ import React from "react";
 import Typography from "@mui/material/Typography";
 import {T} from "@/i18n";
 import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/entities";
-import {CircularProgress, Icon, Tooltip} from "@mui/material";
-import {formatDateTime, formatDateTimeAgo} from "@/utilities/utilities.ts";
+import {formatDateTime, formatDateTimeAgo} from "@/utilities/date.ts";
+import {Icon, Tooltip} from "@mui/material";
 import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
 import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog.ts";
-import {STATE_RUNNING, STATE_ERROR} from "@/constants/transfer-process.ts";
 import {TransferProcessStateIcon} from "@/components/atoms/transfer-process-state-icon.tsx";
 
 interface TransferProcessListProps {

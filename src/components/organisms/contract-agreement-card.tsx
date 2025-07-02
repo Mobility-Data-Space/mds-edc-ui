@@ -5,7 +5,8 @@ import {ContractAgreement} from "@think-it-labs/edc-connector-client";
 import {ContractAgreementView} from "@think-it-labs/edc-connector-ui/contract-agreement-view";
 import {T} from "@/i18n";
 import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
-import {formatDateTimeAgo} from "@/utilities/utilities.ts";
+
+import {formatDateTimeAgo} from "@/utilities/date.ts";
 
 export interface ContractAgreementCard {
   contractAgreement: ContractAgreement;

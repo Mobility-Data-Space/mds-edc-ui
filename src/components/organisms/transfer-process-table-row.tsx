@@ -17,12 +17,12 @@ import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/enti
 import jsonld from "jsonld";
 import {contextToCompact} from "@/schema/context.ts";
 import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog.ts";
-import {formatDateTime, formatDateTimeAgo} from "@/utilities/utilities.ts";
 import {ContractNegotiationView} from "@think-it-labs/edc-connector-ui/contract-negotiation-view.tsx";
 import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
 import AssetDialog from "@/components/organisms/asset-dialog.tsx";
 import {JsonLdDialog} from "@/components/molecules/JsonLdDialog.tsx";
 import {useTransferProcessJsonLd} from "@/hooks/use-transfer-process-json-ld.ts";
+import {formatDateTime, formatDateTimeAgo} from "@/utilities/date.ts";
 
 interface AssetDetailsProps {
   transferProcess: TransferProcess;
