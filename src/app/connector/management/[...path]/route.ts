@@ -39,6 +39,7 @@ const handlePost = async (req: NextRequest): Promise<NextResponse> => {
   const url = buildUrl(req);
   const requestBody = await req.json();
 
+  console.log(connectorApiKey())
   const proxy = await fetchProxy(url, {
     method: "POST",
     headers: {
@@ -49,9 +50,12 @@ const handlePost = async (req: NextRequest): Promise<NextResponse> => {
     body: requestBody ? JSON.stringify(requestBody) : undefined,
   });
 
+  
   const readableStream = proxy.body;
   const response = new NextResponse(readableStream, { status: proxy.status });
   setResponseHeaders(proxy, response);
+
+  console.log(response)
 
   return response;
 };
