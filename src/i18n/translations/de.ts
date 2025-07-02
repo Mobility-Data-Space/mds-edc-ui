@@ -165,5 +165,15 @@ export const de = {
         fieldErrorDetail: "Fehlerdetails",
       },
     },
+    common: {
+      listLoadError: "Fehler beim Laden der Liste. Bitte versuchen Sie es erneut.",
+      catalogLoadError: "Fehler beim Laden des Katalogs. Bitte versuchen Sie es erneut.",
+      assetsLoadError: "Fehler beim Laden der Assets. Bitte versuchen Sie es erneut.",
+      dataOffersLoadError: "Fehler beim Laden der Datenangebote. Bitte versuchen Sie es erneut.",
+      contractAgreementsLoadError: "Fehler beim Laden der Vertragsvereinbarungen. Bitte versuchen Sie es erneut.",
+      contractNegotiationsLoadError: "Fehler beim Laden der Vertragsverhandlungen. Bitte versuchen Sie es erneut.",
+      transferProcessesLoadError: "Fehler beim Laden der Übertragungsvorgänge. Bitte versuchen Sie es erneut.",
+      policyDefinitionsLoadError: "Fehler beim Laden der Richtliniendefinitionen. Bitte versuchen Sie es erneut.",
+    },
   },
 };

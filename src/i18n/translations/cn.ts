@@ -160,5 +160,15 @@ export const cn = {
         fieldErrorDetail: "错误详情",
       },
     },
+    common: {
+      listLoadError: "加载列表失败。请再试一次。",
+      catalogLoadError: "加载目录失败。请再试一次。",
+      assetsLoadError: "加载资产失败。请再试一次。",
+      dataOffersLoadError: "加载数据产品失败。请再试一次。",
+      contractAgreementsLoadError: "加载合同协议失败。请再试一次。",
+      contractNegotiationsLoadError: "加载合同谈判失败。请再试一次。",
+      transferProcessesLoadError: "加载传输进程失败。请再试一次。",
+      policyDefinitionsLoadError: "加载策略定义失败。请再试一次。",
+    },
   },
 };

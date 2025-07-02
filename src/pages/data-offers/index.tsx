@@ -1,4 +1,5 @@
 import { TitleWithIcon } from "@/components/atoms/TitleWithIcon";
+import { ErrorSnackbar } from "@/components/molecules/error-snackbar";
 import { JsonLdDialog } from "@/components/molecules/JsonLdDialog";
 import PaginationControls from "@/components/molecules/pagination-controls";
 import SearchBar from "@/components/molecules/search-bar";
@@ -12,6 +13,7 @@ import { ContractDefinition } from "@think-it-labs/edc-connector-client";
 import { ContractDefinitionsList } from "@think-it-labs/edc-connector-ui/contract-definitions-list";
 import { CirclePlus } from "lucide-react";
 import { useRouter } from "next/router";
+import { useSnackbar } from "notistack";
 import { useCallback, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
 
@@ -20,6 +22,7 @@ export default function AssetListPage() {
   const { connector } = useParticipantConnectorState();
   const { translator } = useTranslator();
   const managementUrl = connector?.managementUrl as string;
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -76,6 +79,24 @@ export default function AssetListPage() {
         currentPage={parseInt(query.page as string) || 0}
         firstPage={0}
       >
+        --- HEAD
+        <ContractDefinitionsList.Error>
+          {({ error }) => {
+            if (error) {
+              enqueueSnackbar(translator("common.dataOffersLoadError"), {
+                variant: "error",
+                content: (key: any) => (
+                  <ErrorSnackbar
+                    message={translator("common.dataOffersLoadError")}
+                    details={error.message || undefined}
+                    onClose={() => { closeSnackbar(key); }}
+                  />
+                )
+              });
+            }
+            return <></>;
+          }}
+        </ContractDefinitionsList.Error>
         <div className="flex justify-between pb-6">
           <div className="flex justify-start gap-x-5 items-center">
             <div className="min-w-xl">
