@@ -60,5 +60,5 @@ export const formatDateTimeAgo = (melliSecondsTimestamp: number) => {
     return "";
   }
 
-  return timeAgo.format(new Date(melliSecondsTimestamp));
+  return timeAgo.format(new Date(milliSecondsTimestamp));
 }
