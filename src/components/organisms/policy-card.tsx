@@ -1,20 +1,13 @@
 import Typography from "@mui/material/Typography";
 import { ContractAgreementView } from "@think-it-labs/edc-connector-ui/contract-agreement-view";
-import { T } from "@/i18n";
+import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { Card, CardContent, Icon } from "@mui/material";
+import { T } from "@/i18n";
 import { PolicyDefinition } from "@think-it-labs/edc-connector-client";
 import { Timestamp } from "@think-it-labs/edc-connector-ui/timestamp";
 import { ConstraintShow } from "@/components/molecules/constraint-show";
-import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { convertOdrlToJsonHtml, removeJsonLdSchemaFromProperties } from "@/utilities/catalog";
 
-interface Constraint {
-  operandLeft?: { "@value": string }[],
-  leftOperand?: { "@value": string }[],
-  operator?: { "@value": string }[];
-  operandRight?: { "@value": string }[],
-  rightOperand?: { "@value": string }[],
-}
 
 export interface PolicyCardProps {
   policyDefinition: PolicyDefinition;
@@ -30,7 +23,7 @@ function getConstraintData(policyDefinition: PolicyDefinition) {
 }
 
 export default function PolicyCard({ policyDefinition, onClick }: PolicyCardProps) {
-  const { connector } = useParticipantConnectorState();
+  const { connector } = useParticipantConnectorState()
 
   return (
     <ContractAgreementView id={policyDefinition.id} managementUrl={connector.managementUrl}>
@@ -55,14 +48,6 @@ export default function PolicyCard({ policyDefinition, onClick }: PolicyCardProp
                 <Timestamp seconds={policyDefinition.createdAt} />
               </Typography>
             </div>
-          </div>
-          <div>
-            <Typography variant="body2" color="textDisabled">
-              <T string="policyDefinitions.headingCreatedAt" />
-            </Typography>
-            <Typography variant="body2">
-              <Timestamp seconds={policyDefinition.createdAt} />
-            </Typography>
           </div>
           <ConstraintShow data={getConstraintData(policyDefinition)} />
         </CardContent>
