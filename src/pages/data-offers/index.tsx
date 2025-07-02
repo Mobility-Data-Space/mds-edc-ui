@@ -1,17 +1,18 @@
-import React, { useCallback, useState } from "react";
-import { ChevronLeft, ChevronRight, CirclePlus } from "lucide-react";
-import { Button as MuiButton, IconButton, Icon } from "@mui/material";
-import { ContractDefinitionsList } from "@think-it-labs/edc-connector-ui/contract-definitions-list";
+import { TitleWithIcon } from "@/components/atoms/TitleWithIcon";
+import { JsonLdDialog } from "@/components/molecules/JsonLdDialog";
+import PaginationControls from "@/components/molecules/pagination-controls";
+import SearchBar from "@/components/molecules/search-bar";
+import ContractDefinitionCard from "@/components/organisms/contract-definition-card";
+import DataOfferCreateDialog from "@/components/organisms/data-offer-create-dialog.tsx";
+import SideDrawer from "@/components/organisms/side-drawer";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
-import SideDrawer from "@/components/organisms/side-drawer";
-import ContractDefinitionCard from "@/components/organisms/contract-definition-card";
-import { JsonLdDialog } from "@/components/molecules/JsonLdDialog";
-import { TitleWithIcon } from "@/components/atoms/TitleWithIcon";
+import { Icon, Button as MuiButton } from "@mui/material";
 import { ContractDefinition } from "@think-it-labs/edc-connector-client";
-import DataOfferCreateDialog from "@/components/organisms/data-offer-create-dialog.tsx";
+import { ContractDefinitionsList } from "@think-it-labs/edc-connector-ui/contract-definitions-list";
+import { CirclePlus } from "lucide-react";
 import { useRouter } from "next/router";
-import { List } from "@think-it-labs/edc-connector-ui/list";
+import { useCallback, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
 
 export default function AssetListPage() {
@@ -58,6 +59,7 @@ export default function AssetListPage() {
         onSuccess={() => setListKey(key => key + 1)}
       />
       <JsonLdDialog
+        dataTestId="data-offer-dialog"
         isOpen={isDetailsModalOpen}
         jsonLdObject={openDataOfferData.contractDefinition}
         onClose={() => setIsDetailsModalOpen(false)}
@@ -73,39 +75,37 @@ export default function AssetListPage() {
         navigate={navigate}
         currentPage={parseInt(query.page as string) || 0}
         firstPage={0}
-
       >
-        <div className="flex gap-x-5">
-          <div className="flex items-center">
-            <div>
-              <MuiButton onClick={() => setIsCreateModalOpen(true)} variant="contained">
+        <div className="flex justify-between pb-6">
+          <div className="flex justify-start gap-x-5 items-center">
+            <div className="min-w-xl">
+              <SearchBar searchTarget="id" placeholder={translator("contractDefinitions.searchPlaceholder")} searchOperator="ilike" />
+            </div>
+            <div className="flex gap-x-4 py-4">
+              <MuiButton className="min-h-12" onClick={() => setIsCreateModalOpen(true)} variant="contained">
                 <CirclePlus fontSize="large" className="mr-2" />
                 <T string="contractDefinitions.publishDataOffer" />
               </MuiButton>
             </div>
           </div>
-          <div className="flex justify-end items-center flex-grow">
-            <List.Pagination>
-              {({ decrementPage, hasNext, hasPrev, incrementPage }) =>
-                <div className="inline-flex float-right gap-x-2">
-                  <IconButton
-                    onClick={decrementPage}
-                    disabled={!hasPrev}
-                  >
-                    <ChevronLeft className="size-6" />
-                  </IconButton>
-                  <IconButton
-                    onClick={incrementPage}
-                    disabled={!hasNext}
-                  >
-                    <ChevronRight className="size-6" />
-                  </IconButton>
-                </div>}
-            </List.Pagination>
+          <div className="flex justify-end items-center">
+            <ContractDefinitionsList.Pagination>
+              {({ decrementPage, hasPrev, hasNext, incrementPage, page }) =>
+                <PaginationControls
+                  page={page}
+                  hasPrev={hasPrev}
+                  hasNext={hasNext}
+                  decrementPage={decrementPage}
+                  incrementPage={incrementPage}
+                  maxItems={MAX_ITEMS}
+                  dataTestIdPrefix="pagination"
+                />
+              }
+            </ContractDefinitionsList.Pagination>
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-4 py-4">
+        <div className="flex flex-wrap gap-4 py-4" data-testid="data-offers-list">
           <ContractDefinitionsList.Items
             key={listKey}
             limit={MAX_ITEMS}
@@ -116,6 +116,7 @@ export default function AssetListPage() {
                 key={index}
                 contractDefinition={item}
                 onClick={() => openDetailsModal(item)}
+                data-testid="data-offer-card"
               />
             )}
           </ContractDefinitionsList.Items>
