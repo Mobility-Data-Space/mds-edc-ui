@@ -10,7 +10,7 @@ services:
       EDC_ID: "participant_1"
       EDC_NAME: "participant_1_edc_name"
       EDC_DESCRIPTION: "This is the connector description from env variables"
-      EDC_URL: "http://localhost:3000"
+      EDC_URL: "http://127.0.0.1:3000"
       EDC_MANAGEMENT_URL: "http://edc:8182/management"
       EDC_DEFAULT_URL: "http://edc:8181/api"
       EDC_PROTOCOL_URL: "http://edc:8183/api/dsp"
