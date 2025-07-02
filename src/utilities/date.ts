@@ -56,7 +56,7 @@ export const formatDateTime = (melliSecondsTimestamp: number, {
 export const formatDateTimeAgo = (melliSecondsTimestamp: number) => {
   const timeAgo = new TimeAgo(browserLanguage());
 
-  if (! melliSecondsTimestamp) {
+  if (! milliSecondsTimestamp) {
     return "";
   }
 
