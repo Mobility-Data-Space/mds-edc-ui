@@ -9,11 +9,11 @@ import SideDrawer from "@/components/organisms/side-drawer";
 import { ContractNegotiation } from "@think-it-labs/edc-connector-client";
 import { Table } from "@/components/atoms/table";
 import ContractNegotiationDialog from "@/components/organisms/contract-negotiation-dialog";
-import { formatDateTime, formatDateTimeAgo } from "@/utilities/utilities.ts";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld.tsx";
 import { useRouter } from "next/router";
 import { List } from "@think-it-labs/edc-connector-ui/list";
 import { MAX_ITEMS } from "../../constants/lists";
+import {formatDateTime, formatDateTimeAgo} from "@/utilities/date.ts";
 
 const CreatedAt = ({ item }: { item: ContractNegotiation }) => {
   const createdAtValue = readValue(item, "https://w3id.org/edc/v0.0.1/ns/createdAt");
