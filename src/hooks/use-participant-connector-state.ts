@@ -1,6 +1,5 @@
 import { Participant } from "@/constants/dataspace";
 import { useRouter } from "next/router";
-import {useEffect, useState} from "react";
 import {readEnvironment} from "@/utilities/env.ts";
 
 type ParticipantConnectorState = {

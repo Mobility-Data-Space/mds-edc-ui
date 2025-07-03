@@ -8,8 +8,8 @@ import {ShowTreeBranch} from "@/components/atoms/show-tree-branch";
 
 import {useTranslator} from "@/i18n";
 import {dateToString} from "@/utilities/date";
-import {operators} from "@/utilities/policy-constraints";
 import {tryTranslatingWithTooltip} from "@/utilities/utilities";
+import { operators } from "@/utilities/policy-operators";
 
 interface ConstraintShowProps {
   data: any;

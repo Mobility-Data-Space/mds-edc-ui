@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const buildUrl = (req: NextRequest): string => {
   const { connectorManagementUrl } = participantConfig();
+  console.log("Mgmt URL in Config: " + connectorManagementUrl);
   return connectorManagementUrl + req.nextUrl.pathname.replace(managementPrefix, "");
 };
 

@@ -9,7 +9,7 @@ import {Input} from "@/components/atoms/input";
 import {ConstraintProps} from "@/components/molecules/constraint";
 
 import {T} from "@/i18n";
-import {consumerParticipantIdOperators} from "@/utilities/policy-constraints";
+import { consumerParticipantIdOperators } from "@/utilities/policy-operators";
 
 export function ConsumerParticipantIdConstraint({value, onChange, onRemove}: ConstraintProps) {
   value = value as AtomicConstraint ;

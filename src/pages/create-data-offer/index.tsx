@@ -34,7 +34,7 @@ import { AssetFormDataAddressStep } from "@/components/organisms/asset-form-data
 import { defaultCreatePolicyFormData, fromPolicyDefinitionForm } from "@/utilities/policy";
 import { defaultCreateContractDefinitionFormData, fromContractDefinitionForm, MdsContractDefinitionInput } from "@/utilities/contract-definition";
 import {PUBLISH_MODE_DO_NOT_PUBLISH, PUBLISH_MODES} from "@/constants/data-address-types";
-import { MultiplicityConstraint, operatorIn } from "@/utilities/policy-constraints";
+import { MultiplicityConstraint } from "@/utilities/policy-constraints";
 import {UNRESTRICTED_POLICY_ID} from "@/schema/policy";
 import {defaultCreateAssetFormData, AssetProperties, generateId, fromAssetForm, validateDataAddress} from "@/utilities/asset"
 import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_TITLE} from "@/schema/asset";

@@ -9,7 +9,6 @@ import { useParticipantConnectorState } from "@/hooks/use-participant-connector-
 import { T, useTranslator } from "@/i18n";
 import { theme } from "@/theme/ThemeProvider.tsx";
 import { AGREEMENT_RETIREMENT_DATE, AGREEMENT_RETIREMENT_REASON, AgreementsRetirementController, RetiredContractAgreement } from "@/utilities/contract-agreement";
-import { operatorEquals, operatorIn } from "@/utilities/policy-constraints.ts";
 import { Button, ButtonGroup } from "@mui/material";
 import { ContractAgreement, TransferProcessStates } from "@think-it-labs/edc-connector-client";
 import { ContractAgreementsList } from "@think-it-labs/edc-connector-ui/contract-agreements-list";
@@ -18,6 +17,7 @@ import { useRouter } from "next/router";
 import { enqueueSnackbar } from "notistack";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
+import { operatorEqual, operatorIn } from "@/utilities/edc-operators";
 
 enum TypeFilter {
   Consuming = "Consuming",
@@ -53,12 +53,12 @@ export default function ContractAgreementsListPage() {
   const typeFilterExpression = useMemo(() => ({
     [TypeFilter.Consuming]: [{
       operandLeft: "consumerId",
-      operator: operatorEquals.value,
+      operator: operatorEqual.value,
       operandRight: connector.id
     }],
     [TypeFilter.Providing]: [{
       operandLeft: "providerId",
-      operator: operatorEquals.value,
+      operator: operatorEqual.value,
       operandRight: connector.id
     }],
   }), [connector.id]);

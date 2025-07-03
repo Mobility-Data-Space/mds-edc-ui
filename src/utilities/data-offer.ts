@@ -1,10 +1,11 @@
 import {CriterionInput} from "@think-it-labs/edc-connector-client";
-import {operatorIn} from "@/utilities/policy-constraints";
+import { operatorIn } from "./edc-operators";
 
+const EDC_ID_FIELD = "https://w3id.org/edc/v0.0.1/ns/id"
 export const idSelector = (id: string): CriterionInput[] => {
   return [
     {
-      operandLeft: "@id",
+      operandLeft: EDC_ID_FIELD,
       operator: operatorIn.value,
       operandRight: id
     }
@@ -13,7 +14,7 @@ export const idSelector = (id: string): CriterionInput[] => {
 
 export const idMultipleSelector = (ids: string[]): CriterionInput[] => {
   return ids.map(id => ({
-    operandLeft: "@id",
+    operandLeft: EDC_ID_FIELD,
     operator: operatorIn.value,
     operandRight: id
   }));
