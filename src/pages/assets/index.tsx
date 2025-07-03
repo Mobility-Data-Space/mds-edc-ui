@@ -90,7 +90,7 @@ export default function AssetListPage() {
             </div>
             <div className="flex justify-end items-center">
               <AssetsList.Pagination>
-                {({ decrementPage, hasPrev, page, hasNext, incrementPage }) =>
+                {({ decrementPage, hasPrev, page, hasNext, incrementPage, itemsCount }) =>
                   <PaginationControls
                     page={page}
                     hasPrev={hasPrev}
@@ -99,6 +99,7 @@ export default function AssetListPage() {
                     incrementPage={incrementPage}
                     maxItems={MAX_ITEMS}
                     dataTestIdPrefix="pagination"
+                    itemsCount={itemsCount}
                   />
                 }
               </AssetsList.Pagination>

@@ -128,7 +128,7 @@ export default function CatalogPage() {
               <SearchBar searchTarget="http://purl.org/dc/terms/title" placeholder={translator("catalog.searchPlaceholder")} searchOperator="ilike" />
             </div>
             <ContractOffersList.Pagination>
-              {({ decrementPage, hasPrev, hasNext, incrementPage, page }) =>
+              {({ decrementPage, hasPrev, hasNext, incrementPage, page, itemsCount }) =>
                 <PaginationControls
                   page={page}
                   hasPrev={hasPrev}
@@ -136,6 +136,7 @@ export default function CatalogPage() {
                   decrementPage={decrementPage}
                   incrementPage={incrementPage}
                   maxItems={MAX_ITEMS}
+                  itemsCount={itemsCount}
                 />
               }
             </ContractOffersList.Pagination>

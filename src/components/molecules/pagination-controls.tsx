@@ -8,7 +8,8 @@ interface PaginationControlsProps {
     hasNext: boolean;
     decrementPage: () => void;
     incrementPage: () => void;
-    maxItems: number;
+    itemsCount: number;
+    maxItems: number
     dataTestIdPrefix?: string;
 }
 
@@ -18,13 +19,15 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
     hasNext,
     decrementPage,
     incrementPage,
+    itemsCount,
     maxItems,
     dataTestIdPrefix = "pagination"
 }) => {
+    const firstPageItemIndex = page ? maxItems * page + 1 : 1
     return (
         <div className="flex items-center">
             <h5 data-testid={`${dataTestIdPrefix}-info`}>
-                {page ? maxItems * page + 1 : 1}-{maxItems * (page + 1)}
+                {firstPageItemIndex}-{itemsCount}
             </h5>
             <div className="inline-flex float-right gap-x-2">
                 <IconButton
