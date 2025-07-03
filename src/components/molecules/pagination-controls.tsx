@@ -23,11 +23,17 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
     maxItems,
     dataTestIdPrefix = "pagination"
 }) => {
-    const firstPageItemIndex = page ? maxItems * page + 1 : 1
+    const firstItemIndex = page ? maxItems * page + 1 : 1
+    const lastItemIndex = page ? page * maxItems + itemsCount : itemsCount
+
+    if (!itemsCount) {
+        return <></>
+    }
+
     return (
         <div className="flex items-center">
             <h5 data-testid={`${dataTestIdPrefix}-info`}>
-                {firstPageItemIndex}-{itemsCount}
+                {firstItemIndex}-{lastItemIndex}
             </h5>
             <div className="inline-flex float-right gap-x-2">
                 <IconButton
