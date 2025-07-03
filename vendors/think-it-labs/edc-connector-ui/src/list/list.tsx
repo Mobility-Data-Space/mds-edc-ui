@@ -98,7 +98,7 @@ export interface ListItemsProps<T> {
 
 List.Items = function ListItems<T,>({
   children,
-  limit,
+  limit: clientLimit,
   offset,
   filterExpression,
   sortField,
@@ -113,6 +113,14 @@ List.Items = function ListItems<T,>({
     pagination,
     sections
   } = useListContext<T>();
+
+  let limit = clientLimit
+
+  useEffect(() => {
+    if (clientLimit) {
+      pagination?.setMaxItems(clientLimit);
+    }
+  }, [clientLimit, pagination?.setMaxItems]);
 
   if (pagination && limit) {
     offset = pagination.page * limit;
@@ -251,6 +259,7 @@ export interface PaginationProps {
 
 export interface PaginationControlsProps {
   page: number
+  itemsCount: number
   hasNext: boolean
   hasPrev: boolean
   decrementPage: () => void
@@ -260,11 +269,13 @@ export interface PaginationControlsProps {
 List.Pagination = function Pagination({
   children,
 }: PaginationProps) {
-  const { pagination } = useListContext()
+  const { pagination, items } = useListContext()
 
   if (!pagination) {
     throw Error("Need to use usePagination=true on provider")
   }
+
+  let itemsCount = Math.min(items.length, pagination.maxItems)
 
   const PaginationControls = useMemo(() => {
     return function PaginationControls(props: PaginationControlsProps) {
@@ -274,6 +285,7 @@ List.Pagination = function Pagination({
 
   return <PaginationControls
     page={pagination.page}
+    itemsCount={itemsCount}
     hasNext={pagination.hasNext}
     hasPrev={pagination.hasPrev}
     decrementPage={pagination.decrementPage}

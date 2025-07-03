@@ -8,7 +8,6 @@ import { MDSManualApprovalController } from "@/utilities/contract-negotiations";
 import { Button, Icon } from "@mui/material";
 import { ContractNegotiation, CriterionInput } from "@think-it-labs/edc-connector-client";
 import { ContractNegotiationsList } from "@think-it-labs/edc-connector-ui/contract-negotiations-list";
-import { List } from "@think-it-labs/edc-connector-ui/list";
 import { Timestamp } from "@think-it-labs/edc-connector-ui/timestamp";
 import { Search } from "lucide-react";
 import { useRouter } from "next/router";
@@ -126,7 +125,7 @@ export default function ContractNegotiationsManualApprovalListPage() {
           </div>
           <div className="flex justify-end items-center">
             <ContractNegotiationsList.Pagination>
-              {({ decrementPage, hasPrev, hasNext, incrementPage, page }) =>
+              {({ decrementPage, hasPrev, hasNext, incrementPage, page, itemsCount }) =>
                 <PaginationControls
                   page={page}
                   hasPrev={hasPrev}
@@ -134,6 +133,7 @@ export default function ContractNegotiationsManualApprovalListPage() {
                   decrementPage={decrementPage}
                   incrementPage={incrementPage}
                   maxItems={MAX_ITEMS}
+                  itemsCount={itemsCount}
                 />
               }
             </ContractNegotiationsList.Pagination>
