@@ -7,6 +7,7 @@ interface PaginationProps {
 }
 
 export function usePagination({ firstPage = 0, page, navigate }: PaginationProps) {
+  const [maxItems, setMaxItems] = useState(0)
   const [hasNext, setHasNext] = useState(true)
   const incrementPage = useCallback(
     () => {
@@ -34,8 +35,10 @@ export function usePagination({ firstPage = 0, page, navigate }: PaginationProps
   return {
     page,
     hasPrev: page !== firstPage,
-    hasNext: hasNext,
-    setHasNext: setHasNext,
+    hasNext,
+    maxItems,
+    setMaxItems,
+    setHasNext,
     incrementPage,
     decrementPage,
   };

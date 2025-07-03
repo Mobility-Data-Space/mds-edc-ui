@@ -47,7 +47,7 @@ export default function TransferProcessesListPage() {
           </div>
           <div className="flex justify-end items-center">
             <TransferProcessesList.Pagination>
-              {({ decrementPage, hasPrev, hasNext, incrementPage, page }) =>
+              {({ decrementPage, hasPrev, hasNext, incrementPage, page, itemsCount }) =>
                 <PaginationControls
                   page={page}
                   hasPrev={hasPrev}
@@ -56,6 +56,7 @@ export default function TransferProcessesListPage() {
                   incrementPage={incrementPage}
                   maxItems={MAX_ITEMS}
                   dataTestIdPrefix="pagination"
+                  itemsCount={itemsCount}
                 />
               }
             </TransferProcessesList.Pagination>
