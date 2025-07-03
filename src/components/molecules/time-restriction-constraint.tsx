@@ -9,7 +9,7 @@ import {DatePicker} from "@/components/atoms/date-picker";
 import {ConstraintProps} from "@/components/molecules/constraint";
 
 import {T} from "@/i18n";
-import {timeRestrictionOperators} from "@/utilities/policy-constraints";
+import { timeRestrictionOperators } from "@/utilities/policy-operators";
 
 export function TimeRestrictionConstraint({value, onChange, onRemove}: ConstraintProps) {
   value = value as AtomicConstraint
