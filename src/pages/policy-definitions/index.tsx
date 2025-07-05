@@ -77,7 +77,7 @@ export default function PolicyDefinitionListPage() {
           </div>
           <div className="flex justify-end items-center">
             <PolicyDefinitionsList.Pagination>
-              {({ decrementPage, page, hasNext, hasPrev, incrementPage }) => (
+              {({ decrementPage, page, hasNext, hasPrev, incrementPage, itemsCount }) => (
                 <PaginationControls
                   page={page}
                   hasPrev={hasPrev}
@@ -86,6 +86,7 @@ export default function PolicyDefinitionListPage() {
                   incrementPage={incrementPage}
                   maxItems={MAX_ITEMS}
                   dataTestIdPrefix="pagination"
+                  itemsCount={itemsCount}
                 />
               )}
             </PolicyDefinitionsList.Pagination>
