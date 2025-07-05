@@ -1,9 +1,6 @@
 import {DELIMITER} from "@/i18n";
 import TimeAgo from "javascript-time-ago";
 import {TIME_LOCALE} from "@/constants/time-locale.ts";
-import en from 'javascript-time-ago/locale/en'
-
-TimeAgo.addDefaultLocale(en)
 
 export const truncate = (string: string, length: number = 10) => {
   if (! string) {
