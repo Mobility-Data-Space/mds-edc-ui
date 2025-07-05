@@ -1,8 +1,3 @@
-import React from "react";
-import Typography from "@mui/material/Typography";
-import { Card, CardContent, Chip } from "@mui/material";
-import { Asset, Dataset } from "@think-it-labs/edc-connector-client";
-import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
 import { AssetIcon } from "@/components/atoms/asset-icon";
 import {
   ASSET_DESCRIPTION,
@@ -10,16 +5,21 @@ import {
   ASSET_TITLE,
   ASSET_VERSION,
 } from "@/schema/asset";
-import { truncate } from "@/utilities/utilities";
 import { datasetToAsset } from "@/utilities/catalog";
+import { truncate } from "@/utilities/utilities";
+import { Card, CardContent, Chip } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import { Dataset } from "@think-it-labs/edc-connector-client";
+import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
 
 export interface DataOfferCardProps {
   dataset: Dataset,
   participantId: string,
   onClick?: () => void
+  dataTestId?: string;
 }
 
-export default function DataOfferCard({ dataset, participantId, onClick = () => { } }: DataOfferCardProps) {
+export default function DataOfferCard({ dataset, participantId, dataTestId, onClick = () => { } }: DataOfferCardProps) {
   const assetTitle = readValue(dataset, ASSET_TITLE)
   const keywords = dataset[ASSET_KEYWORDS] || [];
   const slicedKeywords = keywords.slice(0, 3);
@@ -29,7 +29,7 @@ export default function DataOfferCard({ dataset, participantId, onClick = () => 
   const version = readValue(dataset, ASSET_VERSION);
 
   return (
-    <Card className="w-[300px]" onClick={onClick}>
+    <Card className="w-[300px]" onClick={onClick} data-testid={dataTestId}>
       <CardContent className="flex flex-col gap-y-3">
         <div className="flex flex-row gap-x-4 items-start">
           <AssetIcon asset={datasetToAsset(dataset)} fontSize="large" />

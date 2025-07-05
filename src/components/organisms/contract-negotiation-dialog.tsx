@@ -1,9 +1,8 @@
-import React, {useState} from "react";
-import { T } from "@/i18n";
-import {ContractNegotiation} from "@think-it-labs/edc-connector-client";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
-import {TitleWithIcon} from "@/components/atoms/TitleWithIcon";
+import { TitleWithIcon } from "@/components/atoms/TitleWithIcon";
 import ContractNegotiationDetails from "@/components/organisms/contract-negotiation-details";
+import { T } from "@/i18n";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { ContractNegotiation } from "@think-it-labs/edc-connector-client";
 
 interface ContractNegotiationDialogProps {
   contractNegotiation: ContractNegotiation;
@@ -21,6 +20,7 @@ export default function ContractNegotiationDialog({ open, onClose, contractNegot
       <Dialog
         open={open}
         maxWidth="lg"
+        id="negotiation-details"
         className="my-7"
         onClose={onClose}
       >
@@ -32,7 +32,7 @@ export default function ContractNegotiationDialog({ open, onClose, contractNegot
         </DialogContent>
         <DialogActions>
           <Button color="secondary" onClick={onClose}>
-            <T string="common.close"/>
+            <T string="common.close" />
           </Button>
         </DialogActions>
       </Dialog>
