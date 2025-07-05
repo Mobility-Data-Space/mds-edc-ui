@@ -36,6 +36,11 @@ export const pascalCase = (string: string) => {
   ).replaceAll(' ', '');
 }
 
+export const upperAndSnakeCase = (string: string) => {
+  return string;
+  return string.replaceAll(" ", "_").toUpperCase();
+}
+
 export const tryTranslatingWithTooltip = (value: string, prefix: string, translator: (key: string) => string) => {
   const tooltipTitleTranslationKey = `${prefix}.${value}Tooltip`;
   const tooltipTitleTranslation = translator(tooltipTitleTranslationKey);
