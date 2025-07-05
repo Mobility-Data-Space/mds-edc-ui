@@ -62,7 +62,7 @@ export default function ContractNegotiationsListPage() {
         },
       },
     );
-  }, [])
+  }, [push, query])
 
   return (
     <SideDrawer title={<T string="contractNegotiations.title" />}>
