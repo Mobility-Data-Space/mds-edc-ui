@@ -210,7 +210,7 @@ export default function ContractAgreementsListPage() {
           </div>
           <div className="flex justify-end items-center">
             <ContractAgreementsList.Pagination>
-              {({ decrementPage, hasPrev, hasNext, incrementPage, page }) =>
+              {({ decrementPage, hasPrev, hasNext, incrementPage, page, itemsCount }) =>
                 <PaginationControls
                   page={page}
                   hasPrev={hasPrev}
@@ -219,6 +219,7 @@ export default function ContractAgreementsListPage() {
                   incrementPage={incrementPage}
                   maxItems={MAX_ITEMS}
                   dataTestIdPrefix="pagination"
+                  itemsCount={itemsCount}
                 />
               }
             </ContractAgreementsList.Pagination>
