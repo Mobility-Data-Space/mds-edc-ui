@@ -28,7 +28,7 @@ export default function TransferProcessesListPage() {
         },
       },
     );
-  }, [])
+  }, [router])
 
   return (
     <SideDrawer title={<T string="transferProcesses.title" />}>

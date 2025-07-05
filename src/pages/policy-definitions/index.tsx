@@ -42,7 +42,7 @@ export default function PolicyDefinitionListPage() {
         },
       },
     );
-  }, [])
+  }, [router])
 
   return (
     <SideDrawer title={<T string="policyDefinitions.title" />}>

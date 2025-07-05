@@ -44,7 +44,7 @@ export default function AssetListPage() {
         },
       },
     );
-  }, [])
+  }, [push, query])
 
   return (
     <SideDrawer title={<T string="contractDefinitions.title" />}>

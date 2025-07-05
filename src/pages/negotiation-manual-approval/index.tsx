@@ -8,7 +8,6 @@ import { MDSManualApprovalController } from "@/utilities/contract-negotiations";
 import { Button, Icon } from "@mui/material";
 import { ContractNegotiation, CriterionInput } from "@think-it-labs/edc-connector-client";
 import { ContractNegotiationsList } from "@think-it-labs/edc-connector-ui/contract-negotiations-list";
-import { List } from "@think-it-labs/edc-connector-ui/list";
 import { Timestamp } from "@think-it-labs/edc-connector-ui/timestamp";
 import { Search } from "lucide-react";
 import { useRouter } from "next/router";
@@ -31,7 +30,6 @@ const CounterPartyAddress = ({ item }: { item: ContractNegotiation }) => {
 export default function ContractNegotiationsManualApprovalListPage() {
   const { query, push } = useRouter()
   const { connector } = useParticipantConnectorState();
-  const managementUrl = connector?.managementUrl as string;
   const { globalTranslator, translator } = useTranslator();
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
@@ -39,7 +37,7 @@ export default function ContractNegotiationsManualApprovalListPage() {
     contractNegotiation: {} as ContractNegotiation,
   });
 
-  const mdsManualApprovalController = useMemo(() => new MDSManualApprovalController(connector.managementUrl), [connector.managementUrl]);
+  const mdsManualApprovalController = useMemo(() => new MDSManualApprovalController(connector.managementUrl), [connector]);
 
   const openDetailsModal = (contractNegotiation: ContractNegotiation) => {
     setIsDetailsModalOpen(true);
@@ -82,7 +80,7 @@ export default function ContractNegotiationsManualApprovalListPage() {
         },
       },
     );
-  }, [])
+  }, [push, query])
 
   return (
     <SideDrawer title={<T string="contractNegotiations.title" />}>
@@ -95,7 +93,7 @@ export default function ContractNegotiationsManualApprovalListPage() {
         translator={translator}
       />
       <ContractNegotiationsList
-        managementUrl={managementUrl}
+        managementUrl={connector.managementUrl}
         usePagination
         navigate={navigate}
         currentPage={currentPage}

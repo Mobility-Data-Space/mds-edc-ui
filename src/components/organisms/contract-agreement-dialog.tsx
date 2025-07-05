@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useCallback} from "react";
 import { T } from "@/i18n";
 import {Asset, ContractAgreement, Dataset, TransferProcessStates} from "@think-it-labs/edc-connector-client";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, LinearProgress} from "@mui/material";
@@ -67,9 +67,9 @@ export default function ContractAgreementDialog({ open, onClose, contractAgreeme
             ));
         });
     }
-  }, [edcClient, contractAgreement.assetId]);
+  }, [edcClient, contractAgreement, participantId, connectorEndpoint, translator]);
 
-  const populateTransferProcesses = () => {
+  const populateTransferProcesses = useCallback(() => {
     if (! contractAgreement.id) {
       return;
     }
@@ -80,11 +80,11 @@ export default function ContractAgreementDialog({ open, onClose, contractAgreeme
         "operandRight": contractAgreement.id
       }]
     }).then(setTransferProcesses)
-  };
+  }, [edcClient, contractAgreement.id]);
 
   useEffect(() => {
     populateTransferProcesses();
-  }, [edcClient, contractAgreement.id]);
+  }, [edcClient, contractAgreement.id, populateTransferProcesses]);
 
   return (
     <>

@@ -70,7 +70,7 @@ export default function ContractAgreementsListPage() {
       operator: operatorIn.value,
       operandRight: retiredContractAgreementIds,
     }],
-  }), [contractAgreementInfo]);
+  }), [retiredContractAgreementIds]);
 
   const { push, query } = useRouter()
 
@@ -85,7 +85,7 @@ export default function ContractAgreementsListPage() {
       },
     );
 
-  }, [])
+  }, [push, query])
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
@@ -100,7 +100,7 @@ export default function ContractAgreementsListPage() {
 
   const edcClient = useEdcConnectorClient({ management: managementUrl });
 
-  const populateRetired = () => {
+  const populateRetired = useCallback(() => {
     const controller = new AgreementsRetirementController(managementUrl)
     controller.retiredAgreementsRequest().then(retiredAgreements => {
       setRetiredContractAgreementIds(retiredAgreements.map(contractAgreement => contractAgreement.agreementId as string));
@@ -133,11 +133,11 @@ export default function ContractAgreementsListPage() {
         setContractAgreementInfo(contractAgreementInfoToSave);
       });
     }).catch(error => enqueueSnackbar("contractAgreements.retiredFetchError"));
-  };
+  }, [edcClient, managementUrl]);
 
   useEffect(() => {
     populateRetired();
-  }, [edcClient]);
+  }, [populateRetired, edcClient, managementUrl]);
 
   if (!connector) {
     return "No connector";
