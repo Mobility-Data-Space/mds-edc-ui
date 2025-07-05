@@ -49,6 +49,7 @@ const handlePost = async (req: NextRequest): Promise<NextResponse> => {
     body: requestBody ? JSON.stringify(requestBody) : undefined,
   });
 
+  
   const readableStream = proxy.body;
   const response = new NextResponse(readableStream, { status: proxy.status });
   setResponseHeaders(proxy, response);

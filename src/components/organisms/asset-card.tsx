@@ -1,16 +1,15 @@
-import React from "react";
-import Typography from "@mui/material/Typography";
-import {Card, CardContent, Chip} from "@mui/material";
-import {Asset} from "@think-it-labs/edc-connector-client";
-import {AssetIcon} from "@/components/atoms/asset-icon";
+import { AssetIcon } from "@/components/atoms/asset-icon";
 import {
   ASSET_DESCRIPTION,
   ASSET_KEYWORDS,
   ASSET_TITLE,
   ASSET_VERSION,
 } from "@/schema/asset";
-import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
-import {truncate} from "@/utilities/utilities";
+import { truncate } from "@/utilities/utilities";
+import { Card, CardContent, Chip } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import { Asset } from "@think-it-labs/edc-connector-client";
+import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
 
 export interface AssetCardProps {
   asset: Asset,
@@ -18,8 +17,7 @@ export interface AssetCardProps {
   onClick?: () => void
 }
 
-export default function AssetCard({ asset, participantId, onClick = () => {} }: AssetCardProps) {
-  const asset_id = asset["@id"]
+export default function AssetCard({ asset, participantId, onClick = () => { } }: AssetCardProps) {
   const keywords = asset.properties[ASSET_KEYWORDS] || [];
   const slicedKeywords = keywords.slice(0, 3);
   const remainingKeywordsCount = keywords.length - slicedKeywords.length;
@@ -34,8 +32,8 @@ export default function AssetCard({ asset, participantId, onClick = () => {} }: 
         <div className="flex flex-row gap-x-4 items-start">
           <AssetIcon asset={asset} fontSize="large" />
           <div className="flex flex-col">
-            <Typography variant="h4" className="!leading-none hover:underline cursor-pointer">
-              {asset_id}
+            <Typography variant="h4" className="!leading-none hover:underline cursor-pointer" data-testid="asset-title">
+              {title}
             </Typography>
             <Typography variant="body1" color="textSecondary">
               {participantId}

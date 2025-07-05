@@ -1,18 +1,18 @@
-import React, { useState, MouseEvent, useMemo, useCallback } from "react";
-import { ChevronLeft, ChevronRight, Search } from "lucide-react";
-import { Button, IconButton, Icon } from "@mui/material";
-import { ContractNegotiationsList } from "@think-it-labs/edc-connector-ui/contract-negotiations-list";
-import { Timestamp } from "@think-it-labs/edc-connector-ui/timestamp";
+import { Table } from "@/components/atoms/table";
+import PaginationControls from "@/components/molecules/pagination-controls";
+import ContractNegotiationDialog from "@/components/organisms/contract-negotiation-dialog";
+import SideDrawer from "@/components/organisms/side-drawer";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
-import SideDrawer from "@/components/organisms/side-drawer";
-import { ContractNegotiation, CriterionInput } from "@think-it-labs/edc-connector-client";
-import { Table } from "@/components/atoms/table";
-import ContractNegotiationDialog from "@/components/organisms/contract-negotiation-dialog";
-import { enqueueSnackbar } from "notistack";
 import { MDSManualApprovalController } from "@/utilities/contract-negotiations";
+import { Button, Icon } from "@mui/material";
+import { ContractNegotiation, CriterionInput } from "@think-it-labs/edc-connector-client";
+import { ContractNegotiationsList } from "@think-it-labs/edc-connector-ui/contract-negotiations-list";
+import { Timestamp } from "@think-it-labs/edc-connector-ui/timestamp";
+import { Search } from "lucide-react";
 import { useRouter } from "next/router";
-import { List } from "@think-it-labs/edc-connector-ui/list";
+import { enqueueSnackbar } from "notistack";
+import { MouseEvent, useCallback, useMemo, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
 
 const CreatedAt = ({ item }: { item: ContractNegotiation }) => {
@@ -124,24 +124,19 @@ export default function ContractNegotiationsManualApprovalListPage() {
             </div>
           </div>
           <div className="flex justify-end items-center">
-            <List.Pagination>
-              {({ hasNext, hasPrev, incrementPage, decrementPage }) =>
-                <div className="inline-flex float-right gap-x-2">
-                  <IconButton
-                    onClick={decrementPage}
-                    disabled={!hasPrev}
-                  >
-                    <ChevronLeft className="size-6" />
-                  </IconButton>
-                  <IconButton
-                    onClick={incrementPage}
-                    disabled={!hasNext}
-                  >
-                    <ChevronRight className="size-6" />
-                  </IconButton>
-                </div>
+            <ContractNegotiationsList.Pagination>
+              {({ decrementPage, hasPrev, hasNext, incrementPage, page, itemsCount }) =>
+                <PaginationControls
+                  page={page}
+                  hasPrev={hasPrev}
+                  hasNext={hasNext}
+                  decrementPage={decrementPage}
+                  incrementPage={incrementPage}
+                  maxItems={MAX_ITEMS}
+                  itemsCount={itemsCount}
+                />
               }
-            </List.Pagination>
+            </ContractNegotiationsList.Pagination>
           </div>
         </div>
         <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">

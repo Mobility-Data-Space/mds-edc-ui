@@ -1,20 +1,21 @@
-import React, {ReactNode, useEffect, useState} from "react";
-import {T} from "@/i18n";
-import {Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
+import { T } from "@/i18n";
+import { contextToCompact } from "@/schema/context.ts";
+import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import {ReactJsonViewProps} from "react-json-view";
-import dynamic from "next/dynamic";
 import jsonld from "jsonld";
-import {contextToCompact} from "@/schema/context.ts";
+import dynamic from "next/dynamic";
+import React, { ReactNode, useEffect, useState } from "react";
+import { ReactJsonViewProps } from "react-json-view";
 
 export interface JsonLdDialogProps {
   title?: string | ReactNode;
   isOpen: boolean;
   onClose: () => void;
   jsonLdObject: any;
+  dataTestId?: string;
 }
 
-export function JsonLdDialog({ isOpen, onClose, title, jsonLdObject }: JsonLdDialogProps): JSX.Element {
+export function JsonLdDialog({ isOpen, onClose, title, jsonLdObject, dataTestId = "jsonld-dialog" }: JsonLdDialogProps): JSX.Element {
   const [ReactJson, setReactJson] = useState<React.ComponentType<ReactJsonViewProps>>();
   const [jsonIsCleaned, setJsonIsCleaned] = useState(false);
   const [cleanJson, setCleanJson] = useState({});
@@ -38,6 +39,7 @@ export function JsonLdDialog({ isOpen, onClose, title, jsonLdObject }: JsonLdDia
       maxWidth="lg"
       className="my-7 py-5"
       onClose={onClose}
+      data-testid={dataTestId}
     >
       <DialogTitle>
         {title}

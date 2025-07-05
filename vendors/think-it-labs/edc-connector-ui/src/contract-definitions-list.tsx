@@ -91,6 +91,8 @@ ContractDefinitionsList.Search = List.Search;
 
 ContractDefinitionsList.SearchTrigger = List.SearchTrigger;
 
+ContractDefinitionsList.Pagination = List.Pagination;
+
 interface ContractDefinitionsListContractDefinitionProps {
   contractDefinition?: ContractDefinition;
 }

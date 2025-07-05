@@ -1,44 +1,49 @@
 import { Page } from '@playwright/test';
+import { BaseListPage } from './base-list-page';
 
-export class TransferProcessesPage {
-  readonly page: Page;
-  readonly transferListLocator = '[data-testid="transfer-list"]';
-  readonly transferItemLocator = '.transfer-item';
-  readonly transferDetailsLocator = '[data-testid="transfer-details"]';
-  readonly searchBoxLocator = '[data-testid="search-box"]';
-  readonly paginationNextLocator = '[data-testid="pagination-next"]';
+export class TransferProcessesPage extends BaseListPage {
+  readonly transferProcessesListLocator = '.transfer-processes-list';
+  readonly transferProcessRowLocator = '.transfer-process-row';
+  readonly transferProcessDialogLocator = '.transfer-process-dialog';
 
   constructor(page: Page) {
-    this.page = page;
+    super(page);
   }
 
   async navigate() {
     await this.page.goto('/transfer-processes');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForResponse((response) => response.url().includes('/connector/management/v3/transferprocesses'));
   }
 
-  async getTransferList() {
-    return this.page.locator(this.transferListLocator);
+  async getTransferProcessesList() {
+    return this.page.locator(this.transferProcessesListLocator);
   }
 
-  async searchTransfer(transferName: string) {
-    const searchBox = this.page.locator(this.searchBoxLocator);
-    await searchBox.fill(transferName);
+  async getTransferProcessRows() {
+    return this.page.locator(this.transferProcessRowLocator);
   }
 
-  async selectTransferItem(index: number) {
-    const transferItem = this.page.locator(this.transferListLocator).locator(this.transferItemLocator).nth(index);
-    await transferItem.click();
+  async selectTransferProcess(transferProcessName: string) {
+    await this.page.locator(this.transferProcessRowLocator).filter({ hasText: transferProcessName }).click();
   }
 
-  async verifyTransferDetails() {
-    const transferDetails = this.page.locator(this.transferDetailsLocator);
-    await transferDetails.waitFor();
-    return transferDetails;
+  async verifyTransferProcessDetails() {
+    return this.page.locator(this.transferProcessDialogLocator);
+  }
+
+  async searchTransferProcesses(searchTerm: string) {
+    await this.searchItems(searchTerm, '/connector/management/v3/transferprocesses');
+  }
+
+  async clearTransferProcessSearch() {
+    await this.clearSearch('/connector/management/v3/transferprocesses');
   }
 
   async goToNextPage() {
-    const nextPageButton = this.page.locator(this.paginationNextLocator);
-    await nextPageButton.click();
+    await super.goToNextPage('/connector/management/v3/transferprocesses');
+  }
+
+  async goToPreviousPage() {
+    await super.goToPreviousPage('/connector/management/v3/transferprocesses');
   }
 }
