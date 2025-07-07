@@ -1,7 +1,7 @@
 import { Page } from '@playwright/test';
+import { BaseListPage } from './base-list-page';
 
-export class AssetsPage {
-  readonly page: Page;
+export class AssetsPage extends BaseListPage {
   readonly assetListLocator = '#asset-list';
   readonly assetCardLocator = '.asset-card';
   readonly assetDialogLocator = '.asset-dialog';
@@ -9,12 +9,12 @@ export class AssetsPage {
   readonly createAssetModalLocator = '.create-asset-form';
 
   constructor(page: Page) {
-    this.page = page;
+    super(page);
   }
 
   async navigate() {
     await this.page.goto('/assets');
-    await this.page.waitForResponse((response) => response.url().includes('/api/management/v3/assets'));
+    await this.page.waitForResponse((response) => response.url().includes('/connector/management/v3/assets'));
   }
 
   async getAssetList() {
@@ -41,5 +41,25 @@ export class AssetsPage {
 
   async verifyAssetInList(assetId: string) {
     await this.page.locator(this.assetListLocator).locator(this.assetCardLocator).filter({ hasText: assetId }).waitFor();
+  }
+
+  async searchAssets(searchTerm: string) {
+    await this.searchItems(searchTerm, '/connector/management/v3/assets');
+  }
+
+  async clearSearch() {
+    await super.clearSearch('/connector/management/v3/assets');
+  }
+
+  async goToNextPage() {
+    await super.goToNextPage('/connector/management/v3/assets');
+  }
+
+  async goToPreviousPage() {
+    await super.goToPreviousPage('/connector/management/v3/assets');
+  }
+
+  async getSearchResults() {
+    return this.page.locator(this.assetListLocator).locator(this.assetCardLocator);
   }
 }

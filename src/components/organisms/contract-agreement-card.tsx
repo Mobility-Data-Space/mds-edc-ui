@@ -1,12 +1,10 @@
-import React from "react";
-import Typography from "@mui/material/Typography";
+import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
+import {T} from "@/i18n";
+import {formatDateTimeAgo} from "@/utilities/date.ts";
 import {Card, CardContent, Icon, LinearProgress} from "@mui/material";
+import Typography from "@mui/material/Typography";
 import {ContractAgreement} from "@think-it-labs/edc-connector-client";
 import {ContractAgreementView} from "@think-it-labs/edc-connector-ui/contract-agreement-view";
-import {T} from "@/i18n";
-import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
-
-import {formatDateTimeAgo} from "@/utilities/date.ts";
 
 export interface ContractAgreementCard {
   contractAgreement: ContractAgreement;
@@ -21,7 +19,7 @@ export default function ContractAgreementCard({ contractAgreement, onClick, isTe
 
   return (
     <ContractAgreementView id={contractAgreement.id} managementUrl={connector.managementUrl}>
-      <Card className="w-[300px]" onClick={onClick}>
+      <Card className="contract-agreement-card w-[300px]" onClick={onClick}>
         <CardContent className="flex flex-col gap-y-3">
           <div>
             <div className="flex gap-x-4">
@@ -34,7 +32,7 @@ export default function ContractAgreementCard({ contractAgreement, onClick, isTe
                 </Icon>
               </div>
               <div>
-                <Typography variant="h4" className="!leading-none hover:underline cursor-pointer">
+                <Typography data-testid="asset-id" variant="h4" className="!leading-none hover:underline cursor-pointer">
                   <ContractAgreementView.AssetId />
                 </Typography>
                 <Typography variant="body1" color="textSecondary">
@@ -48,15 +46,15 @@ export default function ContractAgreementCard({ contractAgreement, onClick, isTe
             <div className="grid grid-cols-2 gap-y-4 py-4">
               <div className="col-span-2">
                 <Typography variant="body2" color="textDisabled">
-                  <T string="contractAgreements.headingId"/>
+                  <T string="contractAgreements.headingId" />
                 </Typography>
                 <Typography variant="body2">
-                  <ContractAgreementView.Id/>
+                  <ContractAgreementView.Id />
                 </Typography>
               </div>
               <div>
                 <Typography variant="body2" color="textDisabled">
-                  <T string="contractAgreements.signed"/>
+                  <T string="contractAgreements.signed" />
                 </Typography>
                 <Typography variant="body2">
                   {formatDateTimeAgo(contractAgreement.contractSigningDate * 1000)}
@@ -65,7 +63,7 @@ export default function ContractAgreementCard({ contractAgreement, onClick, isTe
 
               <div className="text-right">
                 <Typography variant="body2" color="textDisabled">
-                  <T string="contractAgreements.transfers"/>
+                  <T string="contractAgreements.transfers" />
                 </Typography>
                 <Typography variant="body2">
                   {transferCount}
@@ -74,17 +72,17 @@ export default function ContractAgreementCard({ contractAgreement, onClick, isTe
 
               <div className="">
                 <Typography variant="body2" color="textDisabled">
-                  <T string="contractAgreements.headingConsumer"/> →{" "} <T
-                  string="contractAgreements.headingProvider"/>
+                  <T string="contractAgreements.headingConsumer" /> →{" "} <T
+                    string="contractAgreements.headingProvider" />
                 </Typography>
                 <Typography variant="body2">
-                  <ContractAgreementView.ConsumerId/> →{" "} <ContractAgreementView.ProviderId/>
+                  <ContractAgreementView.ConsumerId /> →{" "} <ContractAgreementView.ProviderId />
                 </Typography>
               </div>
 
               <div className="text-right">
                 <Typography variant="body2" color="textDisabled">
-                  <T string="contractAgreements.status"/>
+                  <T string="contractAgreements.status" />
                 </Typography>
                 <Typography variant="body2" color={isTerminated ? "error" : "inherit"}>
                   <T string={`contractAgreements.[id].status${isTerminated ? 'Terminated' : "Active"}`} />

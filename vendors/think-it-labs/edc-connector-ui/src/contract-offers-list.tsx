@@ -73,6 +73,8 @@ ContractOffersList.Search = List.Search;
 
 ContractOffersList.SearchTrigger = List.SearchTrigger;
 
+ContractOffersList.Pagination = List.Pagination
+
 interface ContractOffersListOfferContextType {
   offer: Offer;
 }

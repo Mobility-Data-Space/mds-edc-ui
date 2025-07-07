@@ -28,6 +28,7 @@ export const cn = {
       headingDataAddressName: "数据地址名称",
       headingDataAddressType: "数据地址类型",
       headingDataAddressUrl: "数据地址 URL",
+      searchPlaceholder: "搜索资产",
       "[id]": {
         title: "查看资产",
         dataAddress: "数据地址",
@@ -58,6 +59,7 @@ export const cn = {
       headingId: "ID",
       headingContractPolicy: "合约政策",
       headingAccessPolicy: "准入政策",
+      searchPlaceholder: "搜索合约定义",
       "[id]": {
         title: "查看合约定义",
         deleteButton: "删除",
@@ -77,6 +79,7 @@ export const cn = {
       buttonAdd: "添加策略定义",
       headingId: "ID",
       headingCreatedAt: "创建于",
+      searchPlaceholder: "搜索策略",
       "[id]": {
         title: "查看策略定义",
         deleteButton: "删除",
@@ -112,6 +115,7 @@ export const cn = {
       headingProvider: "提供者",
       headingAsset: "资产",
       headingContractSigningDate: "合同签订日期",
+      searchPlaceholder: "搜索合同协议",
       "[id]": {
         title: "查看合同协议",
         description: "单一合同协议",
@@ -126,6 +130,7 @@ export const cn = {
       headingContractAgreement: "合同协议",
       headingCounterPartyAddress: "交易对手地址",
       headingCreatedAt: "创建于",
+      searchPlaceholder: "搜索合同谈判",
       "[id]": {
         title: "查看合同谈判",
         description: "单一合同谈判",
@@ -143,6 +148,7 @@ export const cn = {
       headingContractAgreement: "合同协议",
       headingAsset: "资产",
       headingCorrelationId: "相关 ID",
+      searchPlaceholder: "搜索传输进程",
       "[id]": {
         title: "查看转账流程",
         description: "单一传输过程",

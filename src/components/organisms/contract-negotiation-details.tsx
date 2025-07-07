@@ -1,5 +1,4 @@
-import React, {useState} from "react";
-import { T } from "@/i18n";
+import {T} from "@/i18n";
 import {ContractNegotiation} from "@think-it-labs/edc-connector-client";
 import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
 import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog.ts";
@@ -21,35 +20,35 @@ export default function ContractNegotiationDetails({ contractNegotiation }: Cont
     <ul>
       <li className="mt-2">
         <span className="font-bold"><T
-          string="contractNegotiations.[id].fieldId"/></span>: {contractNegotiation.id}
+          string="contractNegotiations.[id].fieldId" /></span>: {contractNegotiation.id}
       </li>
       <li className="mt-2">
         <span className="font-bold"><T
-          string="contractNegotiations.[id].fieldContractAgreementId"/></span>: {contractNegotiation.contractAgreementId}
+          string="contractNegotiations.[id].fieldContractAgreementId" /></span>: {contractNegotiation.contractAgreementId}
       </li>
       <li className="mt-2">
         <span className="font-bold"><T
-          string="contractNegotiations.[id].fieldCounterPartyAddress"/></span>: {counterPartyAddress}
+          string="contractNegotiations.[id].fieldCounterPartyAddress" /></span>: {counterPartyAddress}
       </li>
       <li className="mt-2">
         <span className="font-bold"><T
-          string="contractNegotiations.[id].fieldCreatedAt"/></span>: {createdAt}
+          string="contractNegotiations.[id].fieldCreatedAt" /></span>: {createdAt}
       </li>
       <li className="mt-2">
         <span className="font-bold"><T
-          string="contractNegotiations.[id].fieldCounterPartyId"/></span>: {counterPartyId}
+          string="contractNegotiations.[id].fieldCounterPartyId" /></span>: <span data-testid="counterparty-id">{counterPartyId}</span>
       </li>
       <li className="mt-2">
         <span className="font-bold"><T
-          string="contractNegotiations.[id].fieldProtocol"/></span>: {protocol}
+          string="contractNegotiations.[id].fieldProtocol" /></span>: {protocol}
       </li>
       <li className="mt-2">
         <span className="font-bold"><T
-          string="contractNegotiations.[id].fieldState"/></span>: {contractNegotiation.state}
+          string="contractNegotiations.[id].fieldState" /></span>: {contractNegotiation.state}
       </li>
       <li className="mt-2">
         <span className="font-bold"><T
-          string="contractNegotiations.[id].fieldType"/></span>: {type}
+          string="contractNegotiations.[id].fieldType" /></span>: {type}
       </li>
     </ul>
   );

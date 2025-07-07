@@ -1,9 +1,9 @@
 import { Asset, QuerySpec } from "@think-it-labs/edc-connector-client";
 import React, { PropsWithChildren, useCallback } from "react";
 import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
+import { JsonLdValue, ValueProps } from "./json-ld";
 import { List, useListContext } from "./list";
 import { Local, useLocalContext } from "./local";
-import { JsonLdValue, ValueProps } from "./json-ld";
 import { ListProps } from "./types";
 
 export type AssetsListProps = ListProps & {
@@ -70,6 +70,8 @@ AssetsList.Loading = List.Loading;
 AssetsList.Search = List.Search;
 
 AssetsList.SearchTrigger = List.SearchTrigger;
+
+AssetsList.Pagination = List.Pagination
 
 interface AssetsListAssetProps {
   asset?: Asset;

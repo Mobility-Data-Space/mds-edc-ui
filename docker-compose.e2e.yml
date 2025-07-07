@@ -1,6 +1,6 @@
 services:
   edc-1:
-    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
+    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:1.0.0-rc.3
     environment:
       EDC_PARTICIPANT_ID: "participant_1"
       EDC_COMPONENT_ID: "participant_1_MDS_COMPONENT"
@@ -44,7 +44,7 @@ services:
       start_period: 20s
   
   edc-2:
-    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
+    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:1.0.0-rc.3
     environment:
       EDC_PARTICIPANT_ID: "participant_2"
       EDC_COMPONENT_ID: "participant_2_MDS_COMPONENT"
