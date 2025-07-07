@@ -71,7 +71,7 @@ export default function CreateDataOfferPage() {
     client.management.assets.queryAll({ offset: 0 })
     .then(assets => setExistingIds(assets.map(asset => asset["@id"])));
   }, [client]);
-console.log('existingIds : ', existingIds)
+
   const generalInfoIsNotValid = () => {
     return 0 < Object.entries(validateGeneralInfo(formData.asset.properties)).length
   }
