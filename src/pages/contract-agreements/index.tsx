@@ -17,7 +17,7 @@ import { useRouter } from "next/router";
 import { enqueueSnackbar } from "notistack";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
-import { operatorEqual, operatorIn } from "@/utilities/edc-operators";
+import { operatorEqual, operatorIn } from "@/utilities/policy-operators";
 
 enum TypeFilter {
   Consuming = "Consuming",
