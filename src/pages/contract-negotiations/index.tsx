@@ -5,15 +5,15 @@ import ContractNegotiationDialog from "@/components/organisms/contract-negotiati
 import SideDrawer from "@/components/organisms/side-drawer";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
-import { formatDateTime, formatDateTimeAgo } from "@/utilities/utilities.ts";
-import { Tooltip } from "@mui/material";
 import { ContractNegotiation } from "@think-it-labs/edc-connector-client";
+import { Tooltip } from "@mui/material";
 import { ContractAgreementView } from "@think-it-labs/edc-connector-ui/contract-agreement-view";
 import { ContractNegotiationsList } from "@think-it-labs/edc-connector-ui/contract-negotiations-list";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld.tsx";
 import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
+import {formatDateTime, formatDateTimeAgo} from "@/utilities/date.ts";
 
 const CreatedAt = ({ item }: { item: ContractNegotiation }) => {
   const createdAtValue = readValue(item, "https://w3id.org/edc/v0.0.1/ns/createdAt");

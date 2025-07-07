@@ -125,8 +125,8 @@ export default function AssetForm() {
 
   const validateAdvancedInfo = (formDataToValidate: AssetProperties) => {
     const newErrors: { [key: string]: boolean } = {};
-    const required_properties = [ASSET_ADVANCED_INFO_DATA_CATEGORY];
-    required_properties.forEach((propertyName) => {
+    const requiredProperties = [ASSET_ADVANCED_INFO_DATA_CATEGORY];
+    requiredProperties.forEach((propertyName) => {
       if (! formDataToValidate[ASSET_ADVANCED_INFO_MOBILITY_THEME][propertyName]) {
         newErrors[propertyName] = true;
       }

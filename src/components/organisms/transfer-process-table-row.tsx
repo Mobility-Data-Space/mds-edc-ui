@@ -1,18 +1,18 @@
-import { Table } from "@/components/atoms/table.tsx";
-import { TransferProcessIcon } from "@/components/atoms/transfer-process-icon.tsx";
-import { TransferProcessStateIcon } from "@/components/atoms/transfer-process-state-icon.tsx";
-import { JsonLdDialog } from "@/components/molecules/JsonLdDialog.tsx";
+import React, {useEffect, useState} from "react";
+import {Icon, Tooltip} from "@mui/material";
+import {Asset, ContractAgreement, ContractNegotiation} from "@think-it-labs/edc-connector-client";
+import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
+import {T} from "@/i18n";
+import {Table} from "@/components/atoms/table.tsx";
+import {TransferProcessIcon} from "@/components/atoms/transfer-process-icon.tsx";
+import {TransferProcessStateIcon} from "@/components/atoms/transfer-process-state-icon.tsx";
+import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/entities";
+import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog.ts";
+import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
 import AssetDialog from "@/components/organisms/asset-dialog.tsx";
-import { useTransferProcessJsonLd } from "@/hooks/use-transfer-process-json-ld.ts";
-import { T } from "@/i18n";
-import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog.ts";
-import { formatDateTime, formatDateTimeAgo } from "@/utilities/utilities.ts";
-import { Icon, Tooltip } from "@mui/material";
-import { Asset, ContractAgreement, ContractNegotiation } from "@think-it-labs/edc-connector-client";
-import { TransferProcess } from "@think-it-labs/edc-connector-client/dist/src/entities";
-import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
-import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
-import { useEffect, useState } from "react";
+import {JsonLdDialog} from "@/components/molecules/JsonLdDialog.tsx";
+import {useTransferProcessJsonLd} from "@/hooks/use-transfer-process-json-ld.ts";
+import {formatDateTime, formatDateTimeAgo} from "@/utilities/date.ts";
 
 interface AssetDetailsProps {
   transferProcess: TransferProcess;

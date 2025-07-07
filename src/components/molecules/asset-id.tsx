@@ -1,7 +1,5 @@
 import React from "react";
-
 import {Input} from "@/components/atoms/input";
-
 import {T} from "@/i18n";
 import {theme} from "@/theme/ThemeProvider";
 import {AssetProperties} from "@/utilities/asset";
