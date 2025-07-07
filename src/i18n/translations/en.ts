@@ -228,11 +228,16 @@ export const en = {
         buttonSave: "Add asset",
 
         saveFail: "Failed saving asset!",
+        formHasErrors: "Please fix the errors above.",
+        duplicateId: "Asset ID already exists.",
+        saveFailDetails: "Failed to save asset. See details below.",
         invalidWhitespacesOrColons: "Must not contain whitespaces or colons.",
         mustBeValidJson: "Must be valid JSON",
         mustBeValidUrl: "Must be valid Url",
         mustBeValidEmail: "Must be valid Email",
       },
+      createSuccess: "Asset created successfully!",
+      deleteSuccess: "Asset deleted successfully!",
     },
     dataOffer: {
       negotiateError: "Failed negotiating contract.",

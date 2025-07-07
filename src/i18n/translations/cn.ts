@@ -50,6 +50,8 @@ export const cn = {
         buttonCancel: "取消",
         buttonSave: "保存更改",
       },
+      createSuccess: "资产创建成功！",
+      deleteSuccess: "资产删除成功！",
     },
     "contract-definitions": {
       title: "列出所有合约定义",

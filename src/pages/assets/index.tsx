@@ -1,6 +1,6 @@
-import { ErrorSnackbar } from "@/components/molecules/error-snackbar";
 import PaginationControls from "@/components/molecules/pagination-controls";
 import SearchBar from "@/components/molecules/search-bar";
+import { Snackbar } from "@/components/molecules/snackbar";
 import AssetCard from "@/components/organisms/asset-card";
 import AssetDialog from "@/components/organisms/asset-dialog";
 import SideDrawer from "@/components/organisms/side-drawer";
@@ -63,7 +63,17 @@ export default function AssetListPage() {
         participantId={connector.id}
         connectorEndpoint={connector.protocolUrl}
         contentStyle={{ maxWidth: "90vw", width: "1000px" }}
-        onDeleteSuccess={() => router.reload()}
+        onDeleteSuccess={() => {
+          enqueueSnackbar("", {
+            content: (key) => (
+              <Snackbar
+                type="success"
+                message={translator('assets.deleteSuccess')}
+                onClose={() => { closeSnackbar(key); }}
+              />
+            )
+          });
+        }}
       />
 
       <SideDrawer title={<T string="assets.title" />}>
@@ -80,7 +90,8 @@ export default function AssetListPage() {
                 enqueueSnackbar(translator('common.assetsLoadError'), {
                   variant: "error",
                   content: (key: any) => (
-                    <ErrorSnackbar
+                    <Snackbar
+                      type="error"
                       message={translator('common.assetsLoadError')}
                       details={error.message || undefined}
                       onClose={() => { closeSnackbar(key); }}

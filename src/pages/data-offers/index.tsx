@@ -1,5 +1,5 @@
 import { TitleWithIcon } from "@/components/atoms/TitleWithIcon";
-import { ErrorSnackbar } from "@/components/molecules/error-snackbar";
+import { Snackbar } from "@/components/molecules/snackbar";
 import { JsonLdDialog } from "@/components/molecules/JsonLdDialog";
 import PaginationControls from "@/components/molecules/pagination-controls";
 import SearchBar from "@/components/molecules/search-bar";
@@ -79,15 +79,15 @@ export default function AssetListPage() {
         currentPage={parseInt(query.page as string) || 0}
         firstPage={0}
       >
-        --- HEAD
         <ContractDefinitionsList.Error>
           {({ error }) => {
             if (error) {
               enqueueSnackbar(translator("common.dataOffersLoadError"), {
                 variant: "error",
                 content: (key: any) => (
-                  <ErrorSnackbar
-                    message={translator("common.dataOffersLoadError")}
+                  <Snackbar
+                    type="error"
+                    message={translator('common.dataOffersLoadError')}
                     details={error.message || undefined}
                     onClose={() => { closeSnackbar(key); }}
                   />

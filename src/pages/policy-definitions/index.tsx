@@ -1,5 +1,5 @@
 import { TitleWithIcon } from "@/components/atoms/TitleWithIcon";
-import { ErrorSnackbar } from "@/components/molecules/error-snackbar";
+import { Snackbar } from "@/components/molecules/snackbar";
 import { JsonLdDialog } from "@/components/molecules/JsonLdDialog";
 import PaginationControls from "@/components/molecules/pagination-controls";
 import SearchBar from "@/components/molecules/search-bar";
@@ -101,7 +101,8 @@ export default function PolicyDefinitionListPage() {
               enqueueSnackbar(translator('common.policyDefinitionsLoadError'), {
                 variant: "error",
                 content: (key: any) => (
-                  <ErrorSnackbar
+                  <Snackbar
+                    type="error"
                     message={translator('common.policyDefinitionsLoadError')}
                     details={error.message || undefined}
                     onClose={() => { closeSnackbar(key); }}
