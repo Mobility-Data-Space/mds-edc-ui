@@ -168,7 +168,6 @@ export default function DataOfferCreateDialog({ open, onClose, managementUrl, co
 
               <MuiSelect
                 multiple
-                required
                 name="assets-selector"
                 id="asset-id"
                 data-testid="asset-id"

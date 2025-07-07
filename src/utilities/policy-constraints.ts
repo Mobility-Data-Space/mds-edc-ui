@@ -1,7 +1,6 @@
 import { AtomicConstraint, Constraint } from "@think-it-labs/edc-connector-client";
-import { operatorIn, operatorLessThan } from "./edc-operators";
 
-import { consumerParticipantIdLeft, timeRestrictionLeft } from "./policy-operators";
+import { consumerParticipantIdLeft, operatorIn, operatorLessThan, timeRestrictionLeft } from "./policy-operators";
 
 export const createParticipantIdConstraint = (): AtomicConstraint => ({
   leftOperand: consumerParticipantIdLeft,

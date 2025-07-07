@@ -1,83 +1,82 @@
-import { 
-  operatorIn as edcOperatorIn, 
-  operatorEqual as edcOperatorEqual,
-  operatorGreaterThanOrEqual as edcOperatorGreaterThanOrEqual, 
-  operatorGreaterThan as edcOperatorGreaterThan, 
-  operatorLessThanOrEqual as edcOperatorLessThanOrEqual, 
-  operatorLessThan as edcOperatorLessThan } from "./edc-operators";
+// EDC Operator Registry
+// https://github.com/eclipse-edc/Connector/blob/main/spi/common/core-spi/src/main/java/org/eclipse/edc/spi/query/CriterionOperatorRegistry.java
 
 export const operatorEqual = {
-  value: 'odrl:eq',
+  value: 'eq',
   text: '=',
   tooltip: 'Equal to',
 }
 
 export const operatorNotEqual = {
-  value: 'odrl:neq',
-  text: '≠',
+  value: 'neq',
+  text: '!=',
   tooltip: 'Not equal to',
 }
 
-export const operatorGreaterThanOrEqual = {
-  value: 'odrl:gteq',
-  text: '≥',
-  tooltip: 'Greater than or equal to',
-};
-
-export const operatorGreaterThan = {
-  value: 'odrl:gt',
-  text: '>',
-  tooltip: 'Greater than',
-};
-
-export const operatorLessThanOrEqual =   {
-  value: 'odrl:lteq',
-  text: '≤',
-  tooltip: 'Less than or equal to',
+export const operatorIn = {
+  value: 'isPartOf',
+  text: 'IN',
+  tooltip: 'In',
 };
 
 export const operatorLessThan = {
-  value: 'odrl:lt',
+  value: 'lt',
   text: '<',
-  tooltip: 'Less than',
+  tooltip: '<',
+};
+
+export const operatorLessThanOrEqual = {
+  value: 'lteq',
+  text: '<=',
+  tooltip: '<=',
+};
+
+export const operatorGreaterThan = {
+  value: 'gt',
+  text: '>',
+  tooltip: '>',
+};
+
+export const operatorGreaterThanOrEqual = {
+  value: 'gteq',
+  text: '>=',
+  tooltip: '>=',
 };
 
 export const operatorHasPart = {
-  value: 'odrl:hasPart',
+  value: 'hasPart',
   text: 'HAS PART',
   tooltip: 'Has Part',
 };
 
 export const operatorIsA = {
-  value: 'odrl:isA',
+  value: 'isA',
   text: 'IS A',
   tooltip: 'Is a',
 };
 
-export const operatorIsPartOf = {
-  value: 'odrl:isPartOf',
-  text: 'IS PART OF',
-  tooltip: 'Is part of',
-};
-
 export const operatorIsAnyOf = {
-  value: 'odrl:isAnyOf',
+  value: 'isAnyOf',
   text: 'IS ANY OF',
   tooltip: 'Is any of',
 };
 
 export const operatorIsAllOf = {
-  value: 'odrl:isAllOf',
+  value: 'isAllOf',
   text: 'IS ALL OF',
   tooltip: 'Is all of',
 };
 
-export const andSequenceLeft = 'odrl:andSequence'; // Not used
+export const operatorIsNoneOf = {
+  value: 'isNoneOf',
+  text: 'IS NONE OF',
+  tooltip: 'Is none of',
+};
 
 export const consumerParticipantIdLeft = 'REFERRING_CONNECTOR';
-export const consumerParticipantIdOperators = [edcOperatorEqual, edcOperatorIn];
+export const consumerParticipantIdOperators = [operatorEqual, operatorIn];
 
 export const timeRestrictionLeft = 'POLICY_EVALUATION_TIME';
-export const timeRestrictionOperators = [ edcOperatorGreaterThanOrEqual, edcOperatorGreaterThan, edcOperatorLessThanOrEqual, edcOperatorLessThan]
+export const timeRestrictionOperators = [ operatorGreaterThanOrEqual, operatorGreaterThan, operatorLessThanOrEqual, operatorLessThan]
 
 export const operators = [ operatorEqual, operatorNotEqual, operatorGreaterThanOrEqual, operatorGreaterThan, operatorLessThanOrEqual, operatorLessThan, operatorHasPart, operatorIsA, operatorIsAnyOf, operatorIsAllOf ];
