@@ -1,6 +1,5 @@
 import { TransferProcess } from "@think-it-labs/edc-connector-client";
-import React from "react";
-import { PropsWithChildren, useCallback } from "react";
+import React, { PropsWithChildren, useCallback } from "react";
 import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
 import { useViewContext, View } from "./view";
 
@@ -23,7 +22,7 @@ export function TransferProcessView(
     () => {
       if (id != undefined)
         return client.management.transferProcesses.get(id)
-      
+
       return Promise.resolve(new TransferProcess())
     },
     [client, id],
@@ -66,3 +65,5 @@ TransferProcessView.CorrelationId =
   };
 
 TransferProcessView.Loading = View.Loading;
+
+TransferProcessView.Error = View.Error;

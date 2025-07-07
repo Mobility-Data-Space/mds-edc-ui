@@ -20,7 +20,7 @@ test.describe("Contract Negotiations Tests", () => {
     expect(negotiations.length).toBeGreaterThan(0);
   });
 
-  test.fixme("Displays negotiation details when a negotiation is selected", async ({ page }) => {
+  test("Displays negotiation details when a negotiation is selected", async ({ page }) => {
     // Select a negotiation
     const negotiationCards = await negotiationsPage.getNegotiationCards();
     const negotiationCard = negotiationCards.first();

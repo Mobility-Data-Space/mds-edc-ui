@@ -1,6 +1,5 @@
-import {ContractDefinition, Criterion, PolicyDefinition} from "@think-it-labs/edc-connector-client";
-import React, {ReactNode} from "react";
-import { PropsWithChildren, useCallback } from "react";
+import { ContractDefinition, Criterion, PolicyDefinition } from "@think-it-labs/edc-connector-client";
+import React, { PropsWithChildren, ReactNode, useCallback } from "react";
 import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
 import { PolicyDefinitionView } from "./policy-definition-view";
 import { Timestamp, TimestampProps } from "./timestamp";
@@ -127,3 +126,5 @@ ContractDefinitionViewContractPolicy.CreatedAt = PolicyDefinitionView.CreatedAt;
 ContractDefinitionViewContractPolicy.Loading = View.Loading;
 
 ContractDefinitionView.ContractPolicy = ContractDefinitionViewContractPolicy;
+
+ContractDefinitionView.Error = View.Error;

@@ -136,3 +136,5 @@ function ContractAgreementsListContractAgreementPolicy(
 
 ContractAgreementsListContractAgreement.Policy =
   ContractAgreementsListContractAgreementPolicy;
+
+ContractAgreementsList.Error = List.Error

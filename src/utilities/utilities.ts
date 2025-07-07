@@ -1,14 +1,14 @@
-import {DELIMITER} from "@/i18n";
+import { DELIMITER } from "@/i18n";
 
 export const truncate = (string: string, length: number = 10) => {
-  if (! string) {
+  if (!string) {
     return string;
   }
   return string.length > length ? string.substring(0, length) + "..." : string;
 }
 
 export const extractArrayValues = (array: any[]) => {
-  if (! Array.isArray(array)) {
+  if (!Array.isArray(array)) {
     return [array];
   }
   return array.map(item => {
@@ -32,7 +32,6 @@ export const pascalCase = (string: string) => {
 }
 
 export const upperAndSnakeCase = (string: string) => {
-  return string;
   return string.replaceAll(" ", "_").toUpperCase();
 }
 

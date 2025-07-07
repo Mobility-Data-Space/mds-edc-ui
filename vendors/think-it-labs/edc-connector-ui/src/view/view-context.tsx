@@ -7,6 +7,7 @@ type ViewContextType<T> = {
   isLoading: boolean;
   deleteItem: () => Promise<void>;
   managementUrl: string;
+  error: Error | null
 };
 
 function createViewContext<T>(): ViewContext<T> {
