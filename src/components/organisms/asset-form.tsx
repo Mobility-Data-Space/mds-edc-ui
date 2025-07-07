@@ -61,7 +61,6 @@ export default function AssetForm({ onClose }: AssetFormProps) {
   }
 
   const cannotSubmit = () => {
-    // return false
     return generalInfoIsNotValid() || advancedInfoIsNotValid() || dataAddressIsNotValid();
   }
 
@@ -189,7 +188,6 @@ export default function AssetForm({ onClose }: AssetFormProps) {
     if (!handled) {
       setFormError(translator("assets.new.saveFail"));
       setFormErrorDetails(message);
-      // enqueueSnackbar(message || translator("assets.new.saveFail"));
     }
   }
 
