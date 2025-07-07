@@ -1,8 +1,8 @@
-import { T } from "@/i18n";
-import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog.ts";
-import { formatDateTime } from "@/utilities/utilities.ts";
-import { ContractNegotiation } from "@think-it-labs/edc-connector-client";
-import { readValue } from "@think-it-labs/edc-connector-ui/json-ld.tsx";
+import {T} from "@/i18n";
+import {ContractNegotiation} from "@think-it-labs/edc-connector-client";
+import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
+import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog.ts";
+import {formatDateTime} from "@/utilities/date.ts";
 
 interface ContractNegotiationDetailsProps {
   contractNegotiation: ContractNegotiation;

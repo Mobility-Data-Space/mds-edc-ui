@@ -1,8 +1,8 @@
 import { FieldShowProps } from "@/components/molecules/field-show";
 import { CONTEXT_EDC, TRACTUS_X_CONTEXT } from "@/schema/context.ts";
-import { formatDateTime } from "@/utilities/utilities.ts";
 import { ContractAgreement } from "@think-it-labs/edc-connector-client";
 import { Inner } from "@think-it-labs/edc-connector-client/dist/src/inner";
+import {formatDateTime} from "@/utilities/date.ts";
 
 export const contractAgreementFieldsToShow = (contractAgreement: ContractAgreement, participantId: string, counterPartyAddress: string): FieldShowProps[] => {
   return [
