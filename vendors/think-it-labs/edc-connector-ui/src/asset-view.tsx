@@ -1,6 +1,5 @@
 import { Asset } from "@think-it-labs/edc-connector-client";
-import React from "react";
-import { PropsWithChildren, useCallback } from "react";
+import React, { PropsWithChildren, useCallback } from "react";
 import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
 import { JsonLdValue, ValueProps } from "./json-ld";
 import { useViewContext, View } from "./view";
@@ -23,7 +22,7 @@ export function AssetView(
     () => {
       if (id != undefined)
         return client.management.assets.get(id)
-      
+
       return Promise.resolve(new Asset())
     },
     [client, id],
@@ -51,6 +50,8 @@ AssetView.Id = function AssetId() {
 };
 
 AssetView.Loading = View.Loading;
+
+AssetView.Error = View.Error;
 
 AssetView.Properties = {
   Name: function AssetViewPropertiesName() {

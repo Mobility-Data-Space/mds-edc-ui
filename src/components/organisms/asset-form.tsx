@@ -1,28 +1,34 @@
-import React, {useEffect, useRef, useState} from "react";
-import {Button, Step, StepContent, StepIconProps, StepLabel, Stepper} from "@mui/material";
-import { enqueueSnackbar } from 'notistack';
+import { Button, Step, StepContent, StepIconProps, StepLabel, Stepper } from "@mui/material";
 import { AssetInput, DataAddress } from "@think-it-labs/edc-connector-client";
 import { AssetFormWrapper } from "@think-it-labs/edc-connector-ui/asset-form-wrapper";
-import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
+import { useSnackbar } from 'notistack';
+import { useEffect, useRef, useState } from "react";
 
-import {StepIcon} from "@/components/atoms/step-icon";
-import { AssetFormGeneralInfoStepContent } from "@/components/organisms/asset-form-general-info-step-content";
+import { StepIcon } from "@/components/atoms/step-icon";
 import { AssetFormAdvancedInfoStepContent } from "@/components/organisms/asset-form-advanced-step-content";
 import { AssetFormDataAddressStep } from "@/components/organisms/asset-form-data-address-step";
+import { AssetFormGeneralInfoStepContent } from "@/components/organisms/asset-form-general-info-step-content";
 
+import { Snackbar } from "@/components/molecules/snackbar";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
-import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_TITLE, ASSET_VERSION} from "@/schema/asset";
-import {fromAssetForm, generateId, defaultCreateAssetFormData, AssetProperties, validateDataAddress} from "@/utilities/asset";
+import { ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_TITLE, ASSET_VERSION } from "@/schema/asset";
+import { AssetProperties, defaultCreateAssetFormData, fromAssetForm, generateId, validateDataAddress } from "@/utilities/asset";
 
 const stepLabelSharedProps = {
   className: "w-full justify-start p-4",
   slots: { stepIcon: (props: StepIconProps) => <StepIcon {...props} /> },
 }
 
-export default function AssetForm() {
+interface AssetFormProps {
+  onClose: () => void;
+}
+
+export default function AssetForm({ onClose }: AssetFormProps) {
   const { push, connector } = useParticipantConnectorState();
   const submitButtonRef = useRef<HTMLButtonElement>(null);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const { translator } = useTranslator();
 
@@ -34,9 +40,12 @@ export default function AssetForm() {
 
   const client = useEdcConnectorClient({ management: connector.managementUrl });
 
+  const [formError, setFormError] = useState<string | null>(null);
+  const [formErrorDetails, setFormErrorDetails] = useState<string | null>(null);
+
   useEffect(() => {
     client.management.assets.queryAll({ offset: 0 })
-    .then(assets => setExistingIds(assets.map(asset => asset["@id"])));
+      .then(assets => setExistingIds(assets.map(asset => asset["@id"])));
   }, [client]);
 
   const generalInfoIsNotValid = () => {
@@ -55,7 +64,13 @@ export default function AssetForm() {
     return generalInfoIsNotValid() || advancedInfoIsNotValid() || dataAddressIsNotValid();
   }
 
+  const clearFormError = () => {
+    setFormError(null);
+    setFormErrorDetails(null);
+  };
+
   const tryGoToAdvancedStep = () => {
+    clearFormError();
     const validationErrors = validateGeneralInfo(formData.properties);
     setErrors((oldErrors) => ({ ...oldErrors, properties: validationErrors }));
     if (0 === Object.entries(validationErrors).length) {
@@ -67,6 +82,7 @@ export default function AssetForm() {
   }
 
   const tryGoingToDataSourceStep = () => {
+    clearFormError();
     const validationErrors = validateAdvancedInfo(formData.properties);
     setErrors((oldErrors) => ({ ...oldErrors, advancedInfo: validationErrors }));
     if (0 === Object.entries(validationErrors).length) {
@@ -78,6 +94,7 @@ export default function AssetForm() {
   }
 
   const onChange = (newFormData: AssetInput) => {
+    clearFormError();
     setFormData({ ...newFormData });
   }
 
@@ -106,9 +123,9 @@ export default function AssetForm() {
 
   const validateGeneralInfo = (formDataToValidate: AssetProperties) => {
     const newErrors: { [key: string]: boolean | string } = {};
-    const required_properties = [ASSET_TITLE, "@id"] ;
+    const required_properties = [ASSET_TITLE, "@id"];
     required_properties.forEach((propertyName) => {
-      if (! formDataToValidate[propertyName]) {
+      if (!formDataToValidate[propertyName]) {
         newErrors[propertyName] = true;
       }
     });
@@ -127,7 +144,7 @@ export default function AssetForm() {
     const newErrors: { [key: string]: boolean } = {};
     const requiredProperties = [ASSET_ADVANCED_INFO_DATA_CATEGORY];
     requiredProperties.forEach((propertyName) => {
-      if (! formDataToValidate[ASSET_ADVANCED_INFO_MOBILITY_THEME][propertyName]) {
+      if (!formDataToValidate[ASSET_ADVANCED_INFO_MOBILITY_THEME][propertyName]) {
         newErrors[propertyName] = true;
       }
     });
@@ -144,17 +161,34 @@ export default function AssetForm() {
 
   const onSubmit = () => {
     if (cannotSubmit()) {
+      setFormError(translator("assets.new.formHasErrors"));
+      setFormErrorDetails(null);
       setFormErrors();
       return;
     }
-
+    clearFormError();
     if (submitButtonRef.current && submitButtonRef.current.form) {
       submitButtonRef.current.form.requestSubmit();
     }
   };
 
   const onFormSubmitFail = (error: Error) => {
-    enqueueSnackbar(translator("assets.new.saveFail"));
+    let handled = false;
+    const match = /"message":"(.*?)"/.exec(error.message);
+    const message = (match && match[1]) || error.message;
+    if (/already exists|duplicate/i.test(message)) {
+      setErrors((oldErrors) => ({
+        ...oldErrors,
+        properties: { ...oldErrors.properties, ["@id"]: translator("assets.new.fieldIdAlreadyExists") || message },
+      }));
+      setFormError(translator("assets.new.duplicateId") || message);
+      setFormErrorDetails(message);
+      handled = true;
+    }
+    if (!handled) {
+      setFormError(translator("assets.new.saveFail"));
+      setFormErrorDetails(message);
+    }
   }
 
   if (!connector) {
@@ -171,7 +205,19 @@ export default function AssetForm() {
 
       <AssetFormWrapper
         managementUrl={connector.managementUrl}
-        onSuccess={() => push("/assets")}
+        onSuccess={() => {
+          enqueueSnackbar("", {
+            content: (key) => (
+              <Snackbar
+                type="success"
+                message={translator('assets.createSuccess')}
+                onClose={() => { closeSnackbar(key); }}
+              />
+            )
+          });
+          window.dispatchEvent(new Event("list-refetch"));
+          onClose()
+        }}
         formData={() => fromAssetForm(formData)}
         onFailure={onFormSubmitFail}
       >
@@ -180,7 +226,7 @@ export default function AssetForm() {
             <div className="my-2" data-testid="asset-create-general-info-step-title">
               <Button fullWidth color="secondary">
                 <StepLabel onClick={() => setActiveStep(0)} {...stepLabelSharedProps} >
-                  <T string="assets.new.generalInformation"/>
+                  <T string="assets.new.generalInformation" />
                 </StepLabel>
               </Button>
             </div>
@@ -200,7 +246,7 @@ export default function AssetForm() {
             <div className="my-2" data-testid="asset-create-advanced-info-step-title">
               <Button fullWidth color="secondary">
                 <StepLabel onClick={tryGoToAdvancedStep} {...stepLabelSharedProps}>
-                  <T string="assets.new.advancedInformation"/>
+                  <T string="assets.new.advancedInformation" />
                 </StepLabel>
               </Button>
             </div>
@@ -220,7 +266,7 @@ export default function AssetForm() {
             <div className="my-2" data-testid="asset-create-data-address-step-title">
               <Button fullWidth color="secondary">
                 <StepLabel onClick={tryGoingToDataSourceStep} {...stepLabelSharedProps}>
-                  <T string="assets.new.datasourceInformation"/>
+                  <T string="assets.new.datasourceInformation" />
                 </StepLabel>
               </Button>
             </div>
@@ -242,7 +288,7 @@ export default function AssetForm() {
             color="secondary"
             onClick={() => push("/assets")}
           >
-            <T string="common.cancel"/>
+            <T string="common.cancel" />
           </Button>
           <Button
             data-testid="asset-create-submit"
@@ -251,11 +297,21 @@ export default function AssetForm() {
             onClick={onSubmit}
             disabled={cannotSubmit()}
           >
-            <T string="common.create"/>
+            <T string="common.create" />
           </Button>
         </div>
       </AssetFormWrapper>
 
+      {formError && (
+        <div style={{ position: 'fixed', bottom: 16, right: 16, zIndex: 9999 }}>
+          <Snackbar
+            type="error"
+            message={formError}
+            details={formErrorDetails || undefined}
+            onClose={() => clearFormError()}
+          />
+        </div>
+      )}
     </div>
   );
 }

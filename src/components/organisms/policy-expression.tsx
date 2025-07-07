@@ -27,7 +27,7 @@ export default function PolicyExpression({ value, onChange, onRemove, title = ""
     result[index] = newConstraint;
     return onChange(result);
   };
-  
+
   const createOnRemove = (index: number) => () => {
     const result = [...value];
     result.splice(index, 1)

@@ -1,17 +1,17 @@
-import {
-  AssetView,
-  useAssetContext,
-} from "../../../../../src/asset-view";
 import { useRouter } from "next/router";
+import { enqueueSnackbar } from "notistack";
+import {
+  AssetView
+} from "../../../../../src/asset-view";
 
 function DeleteAsset() {
-//  const { deleteAsset } = useAssetContext();
+  //  const { deleteAsset } = useAssetContext();
   const { push } = useRouter();
 
   return (
     <button
       onClick={async () => {
-//        await deleteAsset();
+        //        await deleteAsset();
         push("/");
       }}
     >
@@ -51,6 +51,12 @@ export default function AssetPage() {
           </div>
           <DeleteAsset />
         </div>
+        <AssetView.Error>
+          {({ error }) => {
+            error && enqueueSnackbar("Failed to fetch asset", { variant: "error" });
+            return <></>
+          }}
+        </AssetView.Error>
       </AssetView>
     </div>
   );

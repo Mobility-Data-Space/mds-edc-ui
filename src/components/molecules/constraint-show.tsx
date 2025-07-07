@@ -42,7 +42,7 @@ export function ConstraintShow({ data }: ConstraintShowProps): ReactNode {
             const [tooltipTitle, computedValue] = constraintTooltipAndValue(value, index, translator);
             return (
               <Tooltip title={tooltipTitle} key={index}>
-                <Typography>
+                <Typography component="span">
                   {computedValue}
                 </Typography>
               </Tooltip>
@@ -56,7 +56,7 @@ export function ConstraintShow({ data }: ConstraintShowProps): ReactNode {
       const lastIndex = data.length - 1;
       return data.map((item, index) => (
         <ShowTreeLeaf disablePadding key={index} >
-          <div className={lastIndex === index ? "pt-2" : "pt-2"}>
+          <div className="pt-2">
             <ConstraintShow data={item} />
             {lastIndex !== index ? "" : <div className="bg-white absolute -left-1 bottom-0 size-2" />}
           </div>

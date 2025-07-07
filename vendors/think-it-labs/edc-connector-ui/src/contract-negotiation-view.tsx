@@ -1,6 +1,5 @@
-import {compact, ContractNegotiation} from "@think-it-labs/edc-connector-client";
-import React, {useEffect, useState} from "react";
-import { PropsWithChildren, useCallback } from "react";
+import { compact, ContractNegotiation } from "@think-it-labs/edc-connector-client";
+import React, { PropsWithChildren, useCallback, useEffect, useState } from "react";
 import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
 import { useViewContext, View } from "./view";
 
@@ -97,3 +96,5 @@ ContractNegotiationView.ErrorDetail =
   };
 
 ContractNegotiationView.Loading = View.Loading;
+
+ContractNegotiationView.Error = View.Error;

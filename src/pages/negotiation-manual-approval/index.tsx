@@ -1,4 +1,5 @@
 import { Table } from "@/components/atoms/table";
+import { Snackbar } from "@/components/molecules/snackbar";
 import PaginationControls from "@/components/molecules/pagination-controls";
 import ContractNegotiationDialog from "@/components/organisms/contract-negotiation-dialog";
 import SideDrawer from "@/components/organisms/side-drawer";
@@ -11,7 +12,7 @@ import { ContractNegotiationsList } from "@think-it-labs/edc-connector-ui/contra
 import { Timestamp } from "@think-it-labs/edc-connector-ui/timestamp";
 import { Search } from "lucide-react";
 import { useRouter } from "next/router";
-import { enqueueSnackbar } from "notistack";
+import { useSnackbar } from "notistack";
 import { MouseEvent, useCallback, useMemo, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
 
@@ -32,6 +33,7 @@ export default function ContractNegotiationsManualApprovalListPage() {
   const { connector } = useParticipantConnectorState();
   const { globalTranslator, translator } = useTranslator();
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const [openContractNegotiationData, setOpenContractNegotiationData] = useState({
     contractNegotiation: {} as ContractNegotiation,
@@ -99,6 +101,24 @@ export default function ContractNegotiationsManualApprovalListPage() {
         currentPage={currentPage}
         firstPage={0}
       >
+        <ContractNegotiationsList.Error>
+          {({ error }) => {
+            if (error) {
+              enqueueSnackbar(translator("common.contractNegotiationsLoadError"), {
+                variant: "error",
+                content: (key: any) => (
+                  <Snackbar
+                    type="error"
+                    message={translator('common.contractNegotiationsLoadError')}
+                    details={error.message || undefined}
+                    onClose={() => { closeSnackbar(key); }}
+                  />
+                )
+              });
+            }
+            return <></>;
+          }}
+        </ContractNegotiationsList.Error>
         <div className="flex gap-x-5">
           <div className="flex-grow">
             <label

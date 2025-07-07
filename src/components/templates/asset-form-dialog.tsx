@@ -1,6 +1,5 @@
-import React from "react";
 
-import {Dialog, DialogContent} from "@mui/material";
+import { Dialog, DialogContent } from "@mui/material";
 
 import AssetForm from "@/components/organisms/asset-form";
 
@@ -18,7 +17,7 @@ export default function AssetFormDialog({ open, onClose }: AssetFormDialogProps)
       onClose={() => onClose}
     >
       <DialogContent style={{ maxWidth: "80vw", width: "800px" }}>
-        <AssetForm />
+        <AssetForm onClose={onClose} />
       </DialogContent>
     </Dialog>
   );
