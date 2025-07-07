@@ -7,7 +7,7 @@ import {ShowTreeLeaf} from "@/components/atoms/show-tree-leaf";
 import {ShowTreeBranch} from "@/components/atoms/show-tree-branch";
 
 import {useTranslator} from "@/i18n";
-import {dateToString} from "@/utilities/date";
+import {dateToString, formatDateTime} from "@/utilities/date";
 import {operators} from "@/utilities/policy-constraints";
 import {tryTranslatingWithTooltip} from "@/utilities/utilities";
 
@@ -24,8 +24,10 @@ function constraintTooltipAndValue(value: string, index: number, translator: (ke
   }
 
   if (index === 2) {
-    const dateValue = dateToString(new Date(value));
-    return [`"${value}"`, dateValue || value];
+    const date = new Date(value);
+    const dateValue = dateToString(date);
+    const tooltip = dateValue ? formatDateTime(date.getTime()) : value;
+    return [`"${tooltip}"`, dateValue || value];
   }
 
   return tryTranslatingWithTooltip(value, "policyDefinitions.constraint", translator);
