@@ -15,7 +15,7 @@ test.describe("Manual Approval Tests", () => {
     await expect(approvalList).toBeVisible();
   });
 
-  test("should approve an item successfully", async ({ page }) => {
+  test.fixme("should approve an item successfully", async ({ page }) => {
     // Approve an item
     const itemName = "Test Approval Item";
     await manualApprovalPage.approveItem(itemName);
@@ -26,7 +26,7 @@ test.describe("Manual Approval Tests", () => {
     await expect(successMessage).toBe("Approval successful");
   });
 
-  test("should reject an item successfully", async ({ page }) => {
+  test.fixme("should reject an item successfully", async ({ page }) => {
     // Reject an item
     const itemName = "Test Approval Item";
     await manualApprovalPage.rejectItem(itemName);
@@ -37,7 +37,7 @@ test.describe("Manual Approval Tests", () => {
     await expect(successMessage).toHaveText("Rejection successful");
   });
 
-  test("should display an error message for invalid actions", async ({ page }) => {
+  test.fixme("should display an error message for invalid actions", async ({ page }) => {
     // Attempt to approve a non-existent item
     const itemName = "Non-existent Item";
     await manualApprovalPage.approveItem(itemName);

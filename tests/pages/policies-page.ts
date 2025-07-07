@@ -2,9 +2,9 @@ import { Page } from '@playwright/test';
 import { BaseListPage } from './base-list-page';
 
 export class PoliciesPage extends BaseListPage {
-  readonly policiesListLocator = '.policies-list';
+  readonly policiesListLocator = '[data-testid="policies-list"]';
   readonly policyCardLocator = '.policy-card';
-  readonly policyDialogLocator = '.policy-dialog';
+  readonly policyDialogLocator = '[data-testid="policy-dialog"]';
   readonly createPolicyButtonLocator = 'button:has-text("Create Policy")';
   readonly policyIdInputLocator = '[data-testid="policy-id-input"]';
   readonly createButtonLocator = 'button:has-text("Create")';

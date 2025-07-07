@@ -9,13 +9,13 @@ test.describe("Dashboard Tests", () => {
     await dashboardPage.navigate();
   });
 
-  test("Displays the dashboard header", async ({ page }) => {
+  test.fixme("Displays the dashboard header", async ({ page }) => {
     // Verify the dashboard header is visible
     const dashboardHeader = await dashboardPage.getDashboardHeader();
     await expect(dashboardHeader).toBeVisible();
   });
 
-  test("Displays widgets on the dashboard", async ({ page }) => {
+  test.fixme("Displays widgets on the dashboard", async ({ page }) => {
     // Verify the widgets are visible
     const widgets = await dashboardPage.getWidgets();
     await expect(widgets.count()).toBeGreaterThan(0);

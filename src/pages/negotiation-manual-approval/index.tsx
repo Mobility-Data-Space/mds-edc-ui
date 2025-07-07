@@ -158,7 +158,7 @@ export default function ContractNegotiationsManualApprovalListPage() {
             </ContractNegotiationsList.Pagination>
           </div>
         </div>
-        <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">
+        <div data-testid="approval-list" className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">
           <Table>
             <Table.Head>
               <Table.Row>
@@ -198,6 +198,7 @@ export default function ContractNegotiationsManualApprovalListPage() {
                   <Table.Row
                     key={index}
                     onClick={() => openDetailsModal(item)}
+                    data-testid="approval-item"
                   >
                     <Table.Cell>
                       <button
