@@ -39,10 +39,8 @@ export class DataOfferPage extends BaseListPage {
     await dataOfferItem.click();
   }
 
-  async verifyDataOfferDetails() {
-    const dataOfferDetails = this.page.locator(this.dataOfferDetailsLocator);
-    await dataOfferDetails.waitFor();
-    return dataOfferDetails;
+  async getDataOfferDetails() {
+    return this.page.locator(this.dataOfferDetailsLocator);
   }
 
   // List page methods
@@ -58,7 +56,7 @@ export class DataOfferPage extends BaseListPage {
     await this.page.locator(this.dataOfferCardLocator).filter({ hasText: dataOfferName }).click();
   }
 
-  async verifyDataOfferDialog() {
+  async getDataOfferDialog() {
     return this.page.locator(this.dataOfferDialogLocator);
   }
 

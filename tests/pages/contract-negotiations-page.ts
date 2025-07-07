@@ -49,7 +49,7 @@ export class ContractNegotiationsPage extends BaseListPage {
   }
 
 
-  async verifyNegotiationDetails() {
+  async getNegotiationDetails() {
     return this.page.locator(this.negotiationDetailsLocator);
   }
 }

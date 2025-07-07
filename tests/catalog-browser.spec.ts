@@ -7,42 +7,48 @@ test.describe("Catalog Browser Tests", () => {
   let catalogPage: CatalogBrowserPage;
 
   test.beforeEach(async ({ page }) => {
-    if (!COUNTER_PARTY_ADDRESS) throw new Error('EDC_PROTOCOL_URL environment variable must be set');
+    if (!COUNTER_PARTY_ADDRESS) {
+      throw new Error('EDC_PROTOCOL_URL environment variable must be set');
+    }
     catalogPage = new CatalogBrowserPage(page);
     await catalogPage.navigate();
     await catalogPage.fillCatalogUrlInput(COUNTER_PARTY_ADDRESS);
   });
 
-  test("Fills catalog URL input and loads catalog", async ({ page }) => {
-    const input = await page.locator('#catalog-url');
-    await expect(input).toHaveValue(COUNTER_PARTY_ADDRESS);
-    // Catalog list should be visible and have at least one card
-    const catalogList = await catalogPage.getCatalogList();
-    await expect(catalogList).toBeVisible();
-    const catalogCards = await catalogPage.getCatalogCards();
-    expect(await catalogCards.count()).toBeGreaterThan(0);
+  test.describe("List Functionality", () => {
+    test("Fills catalog URL input and loads catalog", async ({ page }) => {
+      const input = await page.locator('#catalog-url');
+      await expect(input).toHaveValue(COUNTER_PARTY_ADDRESS);
+      // Catalog list should be visible and have at least one card
+      const catalogList = await catalogPage.getCatalogList();
+      await expect(catalogList).toBeVisible();
+      const catalogCards = await catalogPage.getCatalogCards();
+      expect(await catalogCards.count()).toBeGreaterThan(0);
+    });
+
+    test("Displays the catalog list on the first visit", async ({ page }) => {
+      // Verify the catalog list is visible
+      const catalogList = await catalogPage.getCatalogList();
+      await expect(catalogList).toBeVisible();
+
+      // Verify there is at least one catalog card
+      const catalogCards = await catalogPage.getCatalogCards();
+      const catalogs = await catalogCards.allTextContents();
+      expect(catalogs.length).toBeGreaterThan(0);
+    });
   });
 
-  test("Displays the catalog list on the first visit", async ({ page }) => {
-    // Verify the catalog list is visible
-    const catalogList = await catalogPage.getCatalogList();
-    await expect(catalogList).toBeVisible();
+  test.describe("View Functionality", () => {
+    test("Displays catalog item details when a catalog item is selected", async ({ page }) => {
+      // Select a catalog item
+      const catalogCards = await catalogPage.getCatalogCards();
+      const catalogCard = catalogCards.first();
+      await catalogCard.click();
 
-    // Verify there is at least one catalog card
-    const catalogCards = await catalogPage.getCatalogCards();
-    const catalogs = await catalogCards.allTextContents();
-    expect(catalogs.length).toBeGreaterThan(0);
-  });
-
-  test("Displays catalog item details when a catalog item is selected", async ({ page }) => {
-    // Select a catalog item
-    const catalogCards = await catalogPage.getCatalogCards();
-    const catalogCard = catalogCards.first();
-    await catalogCard.click();
-
-    // Verify details are displayed
-    const catalogDetails = page.locator(catalogPage.catalogDialogLocator);
-    await expect(catalogDetails).toBeVisible();
+      // Verify details are displayed
+      const catalogDetails = page.locator(catalogPage.catalogDialogLocator);
+      await expect(catalogDetails).toBeVisible();
+    });
   });
 
   test.describe("Search Functionality", () => {
@@ -69,7 +75,7 @@ test.describe("Catalog Browser Tests", () => {
         await expect(searchResults).toBeVisible();
 
         const results = await searchResults.allTextContents();
-        const hasMatchingResult = results.some(result =>
+        const hasMatchingResult = results.some((result) =>
           result.toLowerCase().includes(searchTerm.toLowerCase())
         );
         expect(hasMatchingResult).toBeTruthy();

@@ -9,28 +9,141 @@ test.describe("Policy Definitions Page Tests", () => {
     await policiesPage.navigate();
   });
 
-  test.fixme("Displays the policies list on the first visit", async ({ page }) => {
-    // Verify the policies list is visible
-    const policiesList = await policiesPage.getPoliciesList();
-    await expect(policiesList).toBeVisible();
+  test.describe("List Functionality", () => {
+    test("Displays the policies list on the first visit", async ({ page }) => {
+      // Verify the policies list is visible
+      const policiesList = await policiesPage.getPoliciesList();
+      await expect(policiesList).toBeVisible();
 
-    // Verify there is at least one policy card
-    const policyCards = await policiesPage.getPolicyCards();
-    const policies = await policyCards.allTextContents();
-    expect(policies.length).toBeGreaterThan(0);
+      // Verify there is at least one policy card
+      const policyCards = await policiesPage.getPolicyCards();
+      const policies = await policyCards.allTextContents();
+      expect(policies.length).toBeGreaterThan(0);
+    });
   });
 
-  test.fixme("Displays policy details correctly", async ({ page }) => {
-    // Select a policy
-    const policyCards = await policiesPage.getPolicyCards();
-    const policyCard = policyCards.first();
-    await policyCard.click();
+  test.describe("View Functionality", () => {
+    test("Displays policy details correctly", async ({ page }) => {
+      // Select a policy
+      const policyCards = await policiesPage.getPolicyCards();
+      const policyCard = policyCards.first();
+      await policyCard.click();
 
-    // Verify details are displayed
-    const policyDetails = await policiesPage.verifyPolicyDetails();
-    await expect(policyDetails).toBeVisible();
+      // Verify details are displayed
+      const policyDialog = await policiesPage.getPolicyDialog();
+      await expect(policyDialog).toBeVisible();
+    });
   });
 
+  test.describe("Create Functionality", () => {
+    test("should allow manual date input in the DatePicker field", async ({ page }) => {
+      // Navigate to the Create Policy page
+      await policiesPage.clickCreatePolicyButton();
+
+      // Interact with the DatePicker field
+      const datePickerInput = await page.locator('[data-testid="date-picker-input"]');
+      await datePickerInput.click();
+
+      // Select a date using the calendar
+      const calendarDay = await page.locator('[data-testid="calendar-day"]').first();
+      await calendarDay.click();
+
+      // Manually edit the date in the input field
+      await datePickerInput.fill("15/07/2025");
+
+      // Verify the manually entered date is displayed correctly
+      const inputValue = await datePickerInput.inputValue();
+      expect(inputValue).toBe("15/07/2025");
+    });
+
+    test("should create a policy using the '=' operator for Consumer's Participant ID", async ({ page }) => {
+      // Navigate to the Policies page
+      await policiesPage.navigate();
+
+      // Open the Create Policy dialog
+      await policiesPage.clickCreatePolicyButton();
+
+      // Fill in the policy details
+      await policiesPage.fillPolicyId("TestPolicy003");
+      await policiesPage.clickAddExpressionButton();
+      await policiesPage.selectParticipantIdField();
+      await policiesPage.selectEqualOperator();
+      await policiesPage.fillParticipantId("ConsumerParticipant002");
+
+      // Attempt to create the policy
+      await policiesPage.clickCreateButton();
+
+      // Verify no error message is displayed
+      const errorMessage = await policiesPage.getErrorMessage();
+      expect(errorMessage).toBeNull();
+
+      // Verify the policy is created successfully
+      const policiesList = await policiesPage.getPoliciesList();
+      await expect(policiesList).toBeVisible();
+    });
+
+    test("should create a policy using the 'IN' operator for Consumer's Participant ID", async ({ page }) => {
+      // Navigate to the Policies page
+      await policiesPage.navigate();
+
+      // Open the Create Policy dialog
+      await policiesPage.clickCreatePolicyButton();
+
+      // Fill in the policy details
+      await policiesPage.fillPolicyId("TestPolicy002");
+      await policiesPage.clickAddExpressionButton();
+      await policiesPage.selectParticipantIdField();
+      await policiesPage.selectInOperator();
+      await policiesPage.fillParticipantId("ConsumerParticipant001");
+
+      // Attempt to create the policy
+      await policiesPage.clickCreateButton();
+
+      // Verify no error message is displayed
+      const errorMessage = await policiesPage.getErrorMessage();
+      expect(errorMessage).toBeNull();
+
+      // Verify the policy is created successfully
+      const policiesList = await policiesPage.getPoliciesList();
+      await expect(policiesList).toBeVisible();
+    });
+
+    test("should display a clear error message for duplicate policy ID", async ({ page }) => {
+      // Navigate to the Policies page
+      await policiesPage.navigate();
+
+      // Create a policy with a unique ID
+      await policiesPage.clickCreatePolicyButton();
+      await policiesPage.fillPolicyId("TestPolicy001");
+      await policiesPage.clickCreateButton();
+
+      // Attempt to create another policy with the same ID
+      await policiesPage.clickCreatePolicyButton();
+      await policiesPage.fillPolicyId("TestPolicy001");
+      await policiesPage.clickCreateButton();
+
+      // Verify the error message
+      const errorMessageLocator = await policiesPage.getErrorMessage();
+      const errorMessage = await errorMessageLocator.textContent();
+      expect(errorMessage).toBe("Policy 'TestPolicy001' already exists.");
+    });
+
+  });
+
+  test.describe("Delete Functionality", () => {
+    test("should display 'Delete' button in the policy details modal", async ({ page }) => {
+      // Select a policy to view details
+      const policyCards = await policiesPage.getPolicyCards();
+      const policyCard = policyCards.first();
+      await policyCard.click();
+
+      // Verify the "Delete" button is present in the policy details modal
+      const deleteButton = await policiesPage.getDeleteButton();
+      await expect(deleteButton).toBeVisible();
+    });
+
+  });
+  
   test.describe("Search Functionality", () => {
     test("should display search input and trigger button", async ({ page }) => {
       const searchInput = await policiesPage.getSearchInput();

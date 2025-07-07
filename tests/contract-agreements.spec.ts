@@ -9,26 +9,30 @@ test.describe("Contract Agreements Page Tests", () => {
     await agreementsPage.navigate();
   });
 
-  test.fixme("Displays the list of agreements", async ({ page }) => {
-    // Verify the agreements list is visible
-    const agreementsList = await agreementsPage.getAgreementsList();
-    await expect(agreementsList).toBeVisible();
+  test.describe("List Functionality", () => {
+    test("Displays the list of agreements", async ({ page }) => {
+      // Verify the agreements list is visible
+      const agreementsList = await agreementsPage.getAgreementsList();
+      await expect(agreementsList).toBeVisible();
 
-    // Verify there is at least one agreement card
-    const agreementCards = await agreementsPage.getAgreementCards();
-    const agreements = await agreementCards.allTextContents();
-    expect(agreements.length).toBeGreaterThan(0);
+      // Verify there is at least one agreement card
+      const agreementCards = await agreementsPage.getAgreementCards();
+      const agreements = await agreementCards.allTextContents();
+      expect(agreements.length).toBeGreaterThan(0);
+    });
   });
 
-  test.fixme("Displays agreement details when an agreement is selected", async ({ page }) => {
-    // Select an agreement
-    const agreementCards = await agreementsPage.getAgreementCards();
-    const agreementCard = agreementCards.first();
-    await agreementCard.click();
+  test.describe("View Functionality", () => {
+    test("Displays agreement details when an agreement is selected", async ({ page }) => {
+      // Select an agreement
+      const agreementCards = await agreementsPage.getAgreementCards();
+      const agreementCard = agreementCards.first();
+      await agreementCard.click();
 
-    // Verify the agreement details are visible
-    const agreementDetails = await agreementsPage.verifyAgreementDetails();
-    await expect(agreementDetails).toBeVisible();
+      // Verify the agreement details are visible
+      const agreementDialog = await agreementsPage.getAgreementDialog();
+      await expect(agreementDialog).toBeVisible();
+    });
   });
 
   test.describe("Search Functionality", () => {
@@ -54,14 +58,14 @@ test.describe("Contract Agreements Page Tests", () => {
         await expect(searchResults).toBeVisible();
 
         const results = await searchResults.allTextContents();
-        const hasMatchingResult = results.some(result =>
+        const hasMatchingResult = results.some((result) =>
           result.toLowerCase().includes(searchTerm.toLowerCase())
         );
         expect(hasMatchingResult).toBeTruthy();
       }
     });
 
-    test.fixme("should clear search and show all agreements", async ({ page }) => {
+    test("should clear search and show all agreements", async ({ page }) => {
       await agreementsPage.searchAgreements('test');
 
       await agreementsPage.clearAgreementSearch();
@@ -112,12 +116,12 @@ test.describe("Contract Agreements Page Tests", () => {
 
         expect(pageAfterPrev).toBe(pageAfterNext - 1);
       } else {
-        const isPrevEnabled = await agreementsPage.isPreviousPageEnabled();
-        const currentPage = await agreementsPage.getCurrentPageNumber();
+      const isPrevEnabled = await agreementsPage.isPreviousPageEnabled();
+      const currentPage = await agreementsPage.getCurrentPageNumber();
 
-        if (currentPage === 1) {
-          expect(isPrevEnabled).toBeFalsy();
-        }
+      if (currentPage === 1) {
+        expect(isPrevEnabled).toBeFalsy();
+      }
       }
     });
 
