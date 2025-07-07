@@ -28,6 +28,7 @@ export const de = {
       headingDataAddressName: "Name der Datenadresse",
       headingDataAddressType: "Datenadresstyp",
       headingDataAddressUrl: "URL der Datenadresse",
+      searchPlaceholder: "Assets suchen",
       "[id]": {
         title: "Asset anzeigen",
         dataAddress: "Datenadresse",
@@ -60,6 +61,7 @@ export const de = {
       headingId: "ID",
       headingContractPolicy: "Vertragspolitik",
       headingAccessPolicy: "Zugangsrichtlinien",
+      searchPlaceholder: "Vertragsdefinitionen suchen",
       "[id]": {
         title: "Vertragsdefinition anzeigen",
         deleteButton: "Löschen",
@@ -79,6 +81,7 @@ export const de = {
       buttonAdd: "Richtliniendefinition erstellen",
       headingId: "ID",
       headingCreatedAt: "Hergestellt in",
+      searchPlaceholder: "Richtlinien suchen",
       "[id]": {
         title: "Richtliniendefinition anzeigen",
         deleteButton: "Löschen",
@@ -116,6 +119,7 @@ export const de = {
       headingProvider: "Anbieter",
       headingAsset: "Vermögenswert",
       headingContractSigningDate: "Datum der Vertragsunterzeichnung",
+      searchPlaceholder: "Vertragsvereinbarungen suchen",
       "[id]": {
         title: "Vertragsvereinbarung ansehen",
         description: "Eine einzige Vertragsvereinbarung",
@@ -130,6 +134,7 @@ export const de = {
       headingContractAgreement: "Vertragsvereinbarung",
       headingCounterPartyAddress: "Adresse der Gegenpartei",
       headingCreatedAt: "Hergestellt in",
+      searchPlaceholder: "Vertragsverhandlungen suchen",
       "[id]": {
         title: "Vertragsverhandlung ansehen",
         description: "Eine einzige Vertragsverhandlung",
@@ -148,6 +153,7 @@ export const de = {
       headingContractAgreement: "Vertragsvereinbarung",
       headingAsset: "Vermögenswert",
       headingCorrelationId: "Korrelations-ID",
+      searchPlaceholder: "Übertragungsvorgänge suchen",
       "[id]": {
         title: "Übertragungsvorgang ansehen",
         description: "Ein einziger Übertragungsvorgang",

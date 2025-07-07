@@ -1,4 +1,4 @@
-import {pascalCase} from "@/utilities/utilities";
+import {upperAndSnakeCase} from "@/utilities/utilities";
 
 export const TRAFFIC_INFORMATION = 'Traffic Information';
 export const ROADWORKS_AND_ROAD_CONDITIONS = 'Roadworks and Road Conditions';
@@ -44,7 +44,7 @@ export const SUBCATEGORIES = {
   ],
   [WEATHER_INFORMATION]: [
     'Current Weather Conditions',
-    'Weather Forecast ',
+    'Weather Forecast',
     'Special Events or Disruptions',
   ],
   [PUBLIC_TRANSPORT_INFORMATION]: [
@@ -54,8 +54,8 @@ export const SUBCATEGORIES = {
   ],
   [SHARED_AND_ON_DEMAND_MOBILITY]: [
     'Vehicle Information ',
-    'Availability ',
-    'Location ',
+    'Availability',
+    'Location',
     'Range ',
   ],
   [INFRASTRUCTURE_AND_LOGISTICS]: [
@@ -72,21 +72,21 @@ export const SUBCATEGORIES = {
 
 export const DATA_CATEGORY_SELECT_DATA = Object.keys(SUBCATEGORIES).map(value => ({
   text: value,
-  value: `${pascalCase(value)}`,
+  value: upperAndSnakeCase(value),
 }));
 
-const _DATA_SUBCATEGORIES_DATA: { [key: string]: {text: string, value: string}[] } = {};
+const _DATA_SUBCATEGORIES_DATA: { [key: string]: { text: string, value: string }[] } = {};
 Object.entries(SUBCATEGORIES).forEach(([category, subCategories]) => {
-  _DATA_SUBCATEGORIES_DATA[`${pascalCase(category)}`] = subCategories.map(subcategory => ({
+  _DATA_SUBCATEGORIES_DATA[upperAndSnakeCase(category)] = subCategories.map(subcategory => ({
     text: subcategory,
-    value: `${pascalCase(subcategory)}`,
+    value: upperAndSnakeCase(subcategory),
   }))
 });
 export const DATA_SUBCATEGORIES_DATA = _DATA_SUBCATEGORIES_DATA;
 
 export const GEO_REFERENCE_DATA = [
-  { text: "Rail", value: `Rail` },
-  { text: "Road", value: `Road` },
-  { text: "Water", value: `Water` },
-  { text: "Air", value: `Air` },
+  { text: "Rail", value: "RAIL" },
+  { text: "Road", value: "ROAD" },
+  { text: "Water", value: "WATER" },
+  { text: "Air", value: "AIR" },
 ];

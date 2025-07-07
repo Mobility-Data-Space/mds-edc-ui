@@ -93,6 +93,8 @@ ContractAgreementsList.Search = List.Search;
 
 ContractAgreementsList.SearchTrigger = List.SearchTrigger;
 
+ContractAgreementsList.Pagination = List.Pagination
+
 interface ContractAgreementsListContractAgreementProps {
   contractAgreement?: ContractAgreement;
 }

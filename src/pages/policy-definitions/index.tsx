@@ -1,21 +1,23 @@
-import React, { useCallback, useState } from "react";
-import { ChevronLeft, ChevronRight, CirclePlus } from "lucide-react";
-import { Button as MuiButton, IconButton, Icon } from "@mui/material";
-import { PolicyDefinitionsList } from "@think-it-labs/edc-connector-ui/policy-definitions-list";
-import PolicyCard from "@/components/organisms/policy-card";
-import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
-import { T } from "@/i18n";
-import SideDrawer from "@/components/organisms/side-drawer";
-import { PolicyDefinition } from "@think-it-labs/edc-connector-client";
-import { JsonLdDialog } from "@/components/molecules/JsonLdDialog";
 import { TitleWithIcon } from "@/components/atoms/TitleWithIcon";
+import { JsonLdDialog } from "@/components/molecules/JsonLdDialog";
+import PaginationControls from "@/components/molecules/pagination-controls";
+import SearchBar from "@/components/molecules/search-bar";
+import PolicyCard from "@/components/organisms/policy-card";
+import SideDrawer from "@/components/organisms/side-drawer";
+import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
+import { T, useTranslator } from "@/i18n";
+import { Icon, Button as MuiButton } from "@mui/material";
+import { PolicyDefinition } from "@think-it-labs/edc-connector-client";
+import { PolicyDefinitionsList } from "@think-it-labs/edc-connector-ui/policy-definitions-list";
+import { CirclePlus } from "lucide-react";
 import { useRouter } from "next/router";
-import { List } from "@think-it-labs/edc-connector-ui/list";
+import { useCallback, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
 
 export default function PolicyDefinitionListPage() {
   const router = useRouter()
   const { push, connector } = useParticipantConnectorState();
+  const { translator } = useTranslator();
 
   const managementUrl = connector?.managementUrl as string;
 
@@ -61,37 +63,37 @@ export default function PolicyDefinitionListPage() {
         firstPage={0}
         managementUrl={managementUrl}
       >
-        <div className="flex gap-x-5">
-          <div className="flex items-center">
-            <div>
-              <MuiButton onClick={() => push("/policy-definitions/new")} variant="contained">
+        <div className="flex justify-between pb-6">
+          <div className="flex justify-start gap-x-5 items-center">
+            <div className="min-w-xl">
+              <SearchBar searchTarget="id" placeholder={translator("policyDefinitions.searchPlaceholder")} searchOperator="ilike" />
+            </div>
+            <div className="flex gap-x-4 py-4">
+              <MuiButton className="min-h-12" onClick={() => push("/policy-definitions/new")} variant="contained">
                 <CirclePlus fontSize="large" className="mr-2" />
                 <T string="policyDefinitions.createPolicy" />
               </MuiButton>
             </div>
           </div>
-          <div className="flex justify-end items-center flex-grow">
-            <List.Pagination>
-              {({ decrementPage, hasNext, hasPrev, incrementPage }) =>
-                <div className="inline-flex float-right gap-x-2">
-                  <IconButton
-                    onClick={decrementPage}
-                    disabled={!hasPrev}
-                  >
-                    <ChevronLeft className="size-6" />
-                  </IconButton>
-                  <IconButton
-                    onClick={incrementPage}
-                    disabled={!hasNext}
-                  >
-                    <ChevronRight className="size-6" />
-                  </IconButton>
-                </div>}
-            </List.Pagination>
+          <div className="flex justify-end items-center">
+            <PolicyDefinitionsList.Pagination>
+              {({ decrementPage, page, hasNext, hasPrev, incrementPage, itemsCount }) => (
+                <PaginationControls
+                  page={page}
+                  hasPrev={hasPrev}
+                  hasNext={hasNext}
+                  decrementPage={decrementPage}
+                  incrementPage={incrementPage}
+                  maxItems={MAX_ITEMS}
+                  dataTestIdPrefix="pagination"
+                  itemsCount={itemsCount}
+                />
+              )}
+            </PolicyDefinitionsList.Pagination>
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-4 py-4">
+        <div className="flex flex-wrap gap-4 py-4" data-testid="policies-list">
           <PolicyDefinitionsList.Items
             limit={MAX_ITEMS}
             sortOrder="DESC"
@@ -101,6 +103,7 @@ export default function PolicyDefinitionListPage() {
                 key={index}
                 policyDefinition={item}
                 onClick={() => openDetailsModal(item)}
+                data-testid="policy-card"
               />
             )}
           </PolicyDefinitionsList.Items>

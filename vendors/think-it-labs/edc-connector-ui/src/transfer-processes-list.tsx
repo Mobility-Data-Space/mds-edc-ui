@@ -67,6 +67,8 @@ TransferProcessesList.Search = List.Search;
 
 TransferProcessesList.SearchTrigger = List.SearchTrigger;
 
+TransferProcessesList.Pagination = List.Pagination;
+
 interface TransferProcessesListContractProps {
   contract?: ContractAgreement;
 }
