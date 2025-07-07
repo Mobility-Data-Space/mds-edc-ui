@@ -52,6 +52,8 @@ export const de = {
         buttonCancel: "Stornieren",
         buttonSave: "Einreichen",
       },
+      createSuccess: "Asset erfolgreich erstellt!",
+      deleteSuccess: "Asset erfolgreich gelöscht!",
     },
     "contract-definitions": {
       title: "Listen Sie alle Vertragsdefinitionen auf",

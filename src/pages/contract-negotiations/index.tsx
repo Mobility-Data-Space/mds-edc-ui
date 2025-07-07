@@ -1,5 +1,5 @@
 import { Table } from "@/components/atoms/table";
-import { ErrorSnackbar } from "@/components/molecules/error-snackbar";
+import { Snackbar } from "@/components/molecules/snackbar";
 import PaginationControls from "@/components/molecules/pagination-controls";
 import SearchBar from "@/components/molecules/search-bar";
 import ContractNegotiationDialog from "@/components/organisms/contract-negotiation-dialog";
@@ -90,7 +90,8 @@ export default function ContractNegotiationsListPage() {
               enqueueSnackbar(translator('common.contractNegotiationsLoadError'), {
                 variant: "error",
                 content: (key: any) => (
-                  <ErrorSnackbar
+                  <Snackbar
+                    type="error"
                     message={translator('common.contractNegotiationsLoadError')}
                     details={error.message || undefined}
                     onClose={() => { closeSnackbar(key); }}

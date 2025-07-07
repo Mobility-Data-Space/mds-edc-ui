@@ -1,6 +1,6 @@
 import { Input } from "@/components/atoms/input";
 import { CounterPartyAddressDialog } from "@/components/molecules/counter-party-address-dialog";
-import { ErrorSnackbar } from "@/components/molecules/error-snackbar";
+import { Snackbar } from "@/components/molecules/snackbar";
 import PaginationControls from "@/components/molecules/pagination-controls";
 import SearchBar from "@/components/molecules/search-bar";
 import DataOfferCard from "@/components/organisms/data-offer-card";
@@ -179,8 +179,9 @@ export default function CatalogPage() {
               if (error) {
                 enqueueSnackbar(translator('common.catalogLoadError'), {
                   variant: "error",
-                  content: (key) => (
-                    <ErrorSnackbar
+                  content: (key: any) => (
+                    <Snackbar
+                      type="error"
                       message={translator('common.catalogLoadError')}
                       details={error.message || undefined}
                       onClose={() => { closeSnackbar(key); }}

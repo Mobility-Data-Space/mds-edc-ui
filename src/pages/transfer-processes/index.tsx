@@ -1,5 +1,5 @@
 import { Table } from "@/components/atoms/table";
-import { ErrorSnackbar } from "@/components/molecules/error-snackbar";
+import { Snackbar } from "@/components/molecules/snackbar";
 import PaginationControls from "@/components/molecules/pagination-controls";
 import SearchBar from "@/components/molecules/search-bar";
 import SideDrawer from "@/components/organisms/side-drawer";
@@ -48,7 +48,8 @@ export default function TransferProcessesListPage() {
               enqueueSnackbar(translator("common.transferProcessesLoadError"), {
                 variant: "error",
                 content: (key: any) => (
-                  <ErrorSnackbar
+                  <Snackbar
+                    type="error"
                     message={translator("common.transferProcessesLoadError")}
                     details={error.message || undefined}
                     onClose={() => { closeSnackbar(key); }}

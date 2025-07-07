@@ -1,5 +1,5 @@
 import { Table } from "@/components/atoms/table";
-import { ErrorSnackbar } from "@/components/molecules/error-snackbar";
+import { Snackbar } from "@/components/molecules/snackbar";
 import PaginationControls from "@/components/molecules/pagination-controls";
 import ContractNegotiationDialog from "@/components/organisms/contract-negotiation-dialog";
 import SideDrawer from "@/components/organisms/side-drawer";
@@ -10,6 +10,7 @@ import { Button, Icon } from "@mui/material";
 import { ContractNegotiation, CriterionInput } from "@think-it-labs/edc-connector-client";
 import { ContractNegotiationsList } from "@think-it-labs/edc-connector-ui/contract-negotiations-list";
 import { Timestamp } from "@think-it-labs/edc-connector-ui/timestamp";
+import { Search } from "lucide-react";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { MouseEvent, useCallback, useMemo, useState } from "react";
@@ -107,11 +108,11 @@ export default function ContractNegotiationsManualApprovalListPage() {
               enqueueSnackbar(translator("common.contractNegotiationsLoadError"), {
                 variant: "error",
                 content: (key: any) => (
-                  <ErrorSnackbar
-                    message={translator("common.contractNegotiationsLoadError")}
+                  <Snackbar
+                    type="error"
+                    message={translator('common.contractNegotiationsLoadError')}
                     details={error.message || undefined}
                     onClose={() => { closeSnackbar(key); }}
-
                   />
                 )
               });

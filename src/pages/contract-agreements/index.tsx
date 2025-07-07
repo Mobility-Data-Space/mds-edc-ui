@@ -1,5 +1,5 @@
 import { LineTitle } from "@/components/atoms/line-title.tsx";
-import { ErrorSnackbar } from "@/components/molecules/error-snackbar";
+import { Snackbar } from "@/components/molecules/snackbar";
 import PaginationControls from "@/components/molecules/pagination-controls";
 import SearchBar from "@/components/molecules/search-bar";
 import ContractAgreementCard from "@/components/organisms/contract-agreement-card";
@@ -235,8 +235,9 @@ export default function ContractAgreementsListPage() {
               enqueueSnackbar(translator("common.contractAgreementsLoadError"), {
                 variant: "error",
                 content: (key: any) => (
-                  <ErrorSnackbar
-                    message={translator("common.contractAgreementsLoadError")}
+                  <Snackbar
+                    type="error"
+                    message={translator('common.contractAgreementsLoadError')}
                     details={error.message || undefined}
                     onClose={() => { closeSnackbar(key); }}
                   />
