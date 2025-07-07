@@ -88,3 +88,5 @@ function TransferProcessesListContract(
 }
 
 TransferProcessesList.Contract = TransferProcessesListContract;
+
+TransferProcessesList.Error = List.Error

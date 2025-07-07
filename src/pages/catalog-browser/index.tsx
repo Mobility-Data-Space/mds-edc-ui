@@ -1,5 +1,6 @@
 import { Input } from "@/components/atoms/input";
 import { CounterPartyAddressDialog } from "@/components/molecules/counter-party-address-dialog";
+import { Snackbar } from "@/components/molecules/snackbar";
 import PaginationControls from "@/components/molecules/pagination-controls";
 import SearchBar from "@/components/molecules/search-bar";
 import DataOfferCard from "@/components/organisms/data-offer-card";
@@ -15,6 +16,7 @@ import { Dataset } from "@think-it-labs/edc-connector-client";
 import { ContractOffersList } from "@think-it-labs/edc-connector-ui/contract-offers-list";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 import { useRouter } from "next/router";
+import { enqueueSnackbar, useSnackbar } from "notistack";
 import { useCallback, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
 
@@ -22,6 +24,7 @@ export default function CatalogPage() {
   const { query, push } = useRouter()
   const { connector } = useParticipantConnectorState();
   const { translator } = useTranslator();
+  const { closeSnackbar } = useSnackbar();
 
   const [listKey, setListKey] = useState(1);
   const [isDataOfferDialogOpen, setIsDataOfferDialogOpen] = useState(false);
@@ -171,6 +174,24 @@ export default function CatalogPage() {
               </span>
             </div>
           </ContractOffersList.Loading>
+          <ContractOffersList.Error >
+            {({ error }) => {
+              if (error) {
+                enqueueSnackbar(translator('common.catalogLoadError'), {
+                  variant: "error",
+                  content: (key: any) => (
+                    <Snackbar
+                      type="error"
+                      message={translator('common.catalogLoadError')}
+                      details={error.message || undefined}
+                      onClose={() => { closeSnackbar(key); }}
+                    />
+                  )
+                });
+              }
+              return <></>;
+            }}
+          </ContractOffersList.Error>
         </ContractOffersList>
       </SideDrawer>
     </>

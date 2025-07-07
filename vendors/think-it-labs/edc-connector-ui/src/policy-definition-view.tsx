@@ -1,6 +1,5 @@
 import { PolicyDefinition } from "@think-it-labs/edc-connector-client";
-import React from "react";
-import { PropsWithChildren, useCallback, useMemo } from "react";
+import React, { PropsWithChildren, useCallback, useMemo } from "react";
 import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
 import { Timestamp, TimestampProps } from "./timestamp";
 import { useViewContext, View } from "./view";
@@ -125,3 +124,5 @@ PolicyDefinitionView.CreatedAt = function PolicyDefinitionCreatedAt(
 };
 
 PolicyDefinitionView.Loading = View.Loading;
+
+PolicyDefinitionView.Error = View.Error;

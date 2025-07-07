@@ -125,3 +125,5 @@ function ContractDefinitionsListContractDefinition(
 
 ContractDefinitionsList.ContractDefinition =
   ContractDefinitionsListContractDefinition;
+
+ContractDefinitionsList.Error = List.Error
