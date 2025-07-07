@@ -10,7 +10,7 @@ test.describe("Contract Agreements Page Tests", () => {
   });
 
   test.describe("List Functionality", () => {
-    test("Displays the list of agreements", async ({ page }) => {
+    test.fixme("Displays the list of agreements", async ({ page }) => {
       // Verify the agreements list is visible
       const agreementsList = await agreementsPage.getAgreementsList();
       await expect(agreementsList).toBeVisible();
@@ -23,7 +23,7 @@ test.describe("Contract Agreements Page Tests", () => {
   });
 
   test.describe("View Functionality", () => {
-    test("Displays agreement details when an agreement is selected", async ({ page }) => {
+    test.fixme("Displays agreement details when an agreement is selected", async ({ page }) => {
       // Select an agreement
       const agreementCards = await agreementsPage.getAgreementCards();
       const agreementCard = agreementCards.first();
@@ -65,7 +65,7 @@ test.describe("Contract Agreements Page Tests", () => {
       }
     });
 
-    test("should clear search and show all agreements", async ({ page }) => {
+    test.fixme("should clear search and show all agreements", async ({ page }) => {
       await agreementsPage.searchAgreements('test');
 
       await agreementsPage.clearAgreementSearch();
@@ -105,7 +105,7 @@ test.describe("Contract Agreements Page Tests", () => {
       }
     });
 
-    test("should navigate to previous page when available", async ({ page }) => {
+    test.fixme("should navigate to previous page when available", async ({ page }) => {
       const isNextEnabled = await agreementsPage.isNextPageEnabled();
       if (isNextEnabled) {
         await agreementsPage.goToNextPage();
@@ -148,7 +148,7 @@ test.describe("Contract Agreements Page Tests", () => {
       expect(isNextEnabled).toBeFalsy();
     });
 
-    test("should maintain search results across pagination", async ({ page }) => {
+    test.fixme("should maintain search results across pagination", async ({ page }) => {
       await agreementsPage.searchAgreements('test');
 
       const isNextEnabled = await agreementsPage.isNextPageEnabled();

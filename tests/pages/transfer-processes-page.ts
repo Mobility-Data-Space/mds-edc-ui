@@ -2,8 +2,8 @@ import { Page } from '@playwright/test';
 import { BaseListPage } from './base-list-page';
 
 export class TransferProcessesPage extends BaseListPage {
-  readonly transferProcessesListLocator = '.transfer-processes-list';
-  readonly transferProcessRowLocator = '.transfer-process-row';
+  readonly transferProcessesListLocator = '[data-testid="transfer-processes-list"]';
+  readonly transferProcessRowLocator = '[data-testid="transfer-process-row"]';
   readonly transferProcessDialogLocator = '.transfer-process-dialog';
 
   constructor(page: Page) {

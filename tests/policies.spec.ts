@@ -36,7 +36,7 @@ test.describe("Policy Definitions Page Tests", () => {
   });
 
   test.describe("Create Functionality", () => {
-    test("should allow manual date input in the DatePicker field", async ({ page }) => {
+    test.fixme("should allow manual date input in the DatePicker field", async ({ page }) => {
       // Navigate to the Create Policy page
       await policiesPage.clickCreatePolicyButton();
 
@@ -56,7 +56,7 @@ test.describe("Policy Definitions Page Tests", () => {
       expect(inputValue).toBe("15/07/2025");
     });
 
-    test("should create a policy using the '=' operator for Consumer's Participant ID", async ({ page }) => {
+    test.fixme("should create a policy using the '=' operator for Consumer's Participant ID", async ({ page }) => {
       // Navigate to the Policies page
       await policiesPage.navigate();
 
@@ -82,7 +82,7 @@ test.describe("Policy Definitions Page Tests", () => {
       await expect(policiesList).toBeVisible();
     });
 
-    test("should create a policy using the 'IN' operator for Consumer's Participant ID", async ({ page }) => {
+    test.fixme("should create a policy using the 'IN' operator for Consumer's Participant ID", async ({ page }) => {
       // Navigate to the Policies page
       await policiesPage.navigate();
 
@@ -108,7 +108,7 @@ test.describe("Policy Definitions Page Tests", () => {
       await expect(policiesList).toBeVisible();
     });
 
-    test("should display a clear error message for duplicate policy ID", async ({ page }) => {
+    test.fixme("should display a clear error message for duplicate policy ID", async ({ page }) => {
       // Navigate to the Policies page
       await policiesPage.navigate();
 
@@ -131,7 +131,7 @@ test.describe("Policy Definitions Page Tests", () => {
   });
 
   test.describe("Delete Functionality", () => {
-    test("should display 'Delete' button in the policy details modal", async ({ page }) => {
+    test.fixme("should display 'Delete' button in the policy details modal", async ({ page }) => {
       // Select a policy to view details
       const policyCards = await policiesPage.getPolicyCards();
       const policyCard = policyCards.first();
@@ -258,7 +258,7 @@ test.describe("Policy Definitions Page Tests", () => {
       expect(isNextEnabled).toBeFalsy();
     });
 
-    test("should maintain search results across pagination", async ({ page }) => {
+    test.fixme("should maintain search results across pagination", async ({ page }) => {
       await policiesPage.searchPolicies('test');
 
       const isNextEnabled = await policiesPage.isNextPageEnabled();

@@ -10,12 +10,6 @@ test.describe("Data Offer Tests", () => {
   });
 
   test.describe("List Functionality", () => {
-    test("Displays the list of data offers", async ({ page }) => {
-      // Verify the data offer list is visible
-      const dataOfferList = await dataOfferPage.getDataOfferList();
-      await expect(dataOfferList).toBeVisible();
-    });
-
     test("Displays the data offers list on the first visit", async ({ page }) => {
       // Verify the data offers list is visible
       const dataOffersList = await dataOfferPage.getDataOffersList();
@@ -29,7 +23,7 @@ test.describe("Data Offer Tests", () => {
   });
 
   test.describe("View Functionality", () => {
-    test("Displays data offer details correctly", async ({ page }) => {
+    test("Displays data offer details when a data offer is selected", async ({ page }) => {
       // Select a data offer
       const dataOfferCards = await dataOfferPage.getDataOfferCards();
       const dataOfferCard = dataOfferCards.first();
@@ -39,17 +33,7 @@ test.describe("Data Offer Tests", () => {
       const dataOfferDialog = await dataOfferPage.getDataOfferDialog();
       await expect(dataOfferDialog).toBeVisible();
     });
-
-    test("Displays data offer details when a data offer is selected", async ({ page }) => {
-      // Select a data offer
-      await dataOfferPage.selectDataOffer('Test Data Offer');
-
-      // Verify the data offer details are visible
-      const dataOfferDetails = await dataOfferPage.getDataOfferDetails();
-      await expect(dataOfferDetails).toBeVisible();
-    });
   });
-
 
   test.describe("Search Functionality", () => {
     test("should display search input and trigger button", async ({ page }) => {

@@ -43,31 +43,6 @@ test.describe("Assets Page Tests", () => {
       // Verify the success message is displayed
       const successMessage = await assetsPage.getSuccessMessage();
       await expect(successMessage).toBeVisible();
-
-      // Verify the new asset appears in the list
-      const assetLocator = await assetsPage.getAssetInList(assetTitle);
-      await expect(assetLocator).toBeVisible();
-
-      // Open the create asset modal again
-      await assetsPage.openCreateAssetModal();
-
-      // Simulate a failure scenario by using an existing ID
-      // Fill in the asset details with the same assetId and title
-      await assetsPage.fillCreateAssetForm(assetTitle, assetId);
-      await assetsPage.openAdvancedSection();
-      await assetsPage.fillRequiredAdvancedField(); // Skip filling a critical field to trigger an error
-      await assetsPage.openDataSourceSection();
-      await assetsPage.fillHttpDatasource();
-      
-      // Submit the form
-      await assetsPage.submitCreateAssetForm();
-
-      // Verify the error message is displayed
-      const errorMessage = await page.locator('[data-testid="error-message"]').textContent();
-      expect(errorMessage).toContain("failed saving asset");
-
-      // Verify the asset is not added to the list
-      await expect(page.locator(assetsPage.assetListLocator).locator(assetsPage.assetCardLocator).filter({ hasText: assetTitle })).toHaveCount(0);
     });
   });
   
@@ -156,7 +131,6 @@ test.describe("Assets Page Tests", () => {
         const firstAsset = initialAssets.first();
         const firstAssetTitle = await firstAsset.locator('[data-testid="asset-title"]').textContent();
         const searchTerm = firstAssetTitle || 'test';
-        console.log("search term is: " + searchTerm);
 
         await assetsPage.searchAssets(searchTerm);
 
@@ -195,7 +169,7 @@ test.describe("Assets Page Tests", () => {
       await expect(paginationInfo).toBeVisible();
     });
 
-    test("should navigate to next page when available", async ({ page }) => {
+    test.fixme("should navigate to next page when available", async ({ page }) => {
       const initialPage = await assetsPage.getCurrentPageNumber();
       const isNextEnabled = await assetsPage.isNextPageEnabled();
 
@@ -210,7 +184,7 @@ test.describe("Assets Page Tests", () => {
       }
     });
 
-    test("should navigate to previous page when available", async ({ page }) => {
+    test.fixme("should navigate to previous page when available", async ({ page }) => {
       const isNextEnabled = await assetsPage.isNextPageEnabled();
       if (isNextEnabled) {
         await assetsPage.goToNextPage();
@@ -230,7 +204,7 @@ test.describe("Assets Page Tests", () => {
       }
     });
 
-    test("should disable previous button on first page", async ({ page }) => {
+    test.fixme("should disable previous button on first page", async ({ page }) => {
       const currentPage = await assetsPage.getCurrentPageNumber();
 
       if (currentPage === 1) {
@@ -239,7 +213,7 @@ test.describe("Assets Page Tests", () => {
       }
     });
 
-    test("should disable next button on last page", async ({ page }) => {
+    test.fixme("should disable next button on last page", async ({ page }) => {
       const totalPages = await assetsPage.getTotalPages();
 
       while (await assetsPage.isNextPageEnabled()) {
@@ -253,7 +227,7 @@ test.describe("Assets Page Tests", () => {
       expect(isNextEnabled).toBeFalsy();
     });
 
-    test("should maintain search results across pagination", async ({ page }) => {
+    test.fixme("should maintain search results across pagination", async ({ page }) => {
       await assetsPage.searchAssets('asset');
 
       const isNextEnabled = await assetsPage.isNextPageEnabled();

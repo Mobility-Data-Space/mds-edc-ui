@@ -51,6 +51,7 @@ export default function PolicyDefinitionListPage() {
     <SideDrawer title={<T string="policyDefinitions.title" />}>
       <JsonLdDialog
         isOpen={isDetailsModalOpen}
+        dataTestId="policy-dialog"
         jsonLdObject={openPolicyDefinitionData.policyDefinition?.policy?.permissions}
         onClose={() => setIsDetailsModalOpen(false)}
         title={<TitleWithIcon

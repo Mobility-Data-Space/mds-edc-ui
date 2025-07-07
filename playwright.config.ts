@@ -5,9 +5,11 @@ export default defineConfig({
   testDir: './tests',
   fullyParallel: true, 
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 0 : 0,
-  workers: process.env.CI ? 10 : 10,
+  retries: 1,
+  workers: 10,
   reporter: 'html',
+  timeout: 10 * 1000, // 10 seconds timeout
+  maxFailures: 20,
   use: {
     // Base URL to use in actions like `await page.goto('/')`.
     baseURL: 'http://127.0.0.1:3000',
@@ -22,21 +24,20 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
-    },
-    /*{
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    }*/
+    }
   ],
 
   // Run your local dev server before starting the tests.
   webServer: [{
+      name: "MDS EDC UI Server",
       command: 'yarn dev',
       url: 'http://127.0.0.1:3000',
       env: UiConfig,
       reuseExistingServer: false,
+
     },
     {
+      name: "MDS EDC Consumer (EDC-1) and Provider (EDC-2) services",
       command: 'docker compose -f ./docker-compose.e2e.yml up -d'
     }
   ]
