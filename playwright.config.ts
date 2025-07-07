@@ -6,7 +6,6 @@ export default defineConfig({
   fullyParallel: true, 
   forbidOnly: !!process.env.CI,
   retries: 1,
-  workers: 10,
   reporter: 'html',
   timeout: 10 * 1000, // 10 seconds timeout
   maxFailures: 10,
@@ -34,7 +33,6 @@ export default defineConfig({
       url: 'http://127.0.0.1:3000',
       env: UiConfig,
       reuseExistingServer: false,
-
     },
     {
       name: "MDS EDC E2E Services",
