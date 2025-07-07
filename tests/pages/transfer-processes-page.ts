@@ -27,7 +27,7 @@ export class TransferProcessesPage extends BaseListPage {
     await this.page.locator(this.transferProcessRowLocator).filter({ hasText: transferProcessName }).click();
   }
 
-  async verifyTransferProcessDetails() {
+  async getTransferProcessDetails() {
     return this.page.locator(this.transferProcessDialogLocator);
   }
 

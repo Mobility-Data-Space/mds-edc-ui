@@ -5,9 +5,14 @@ export class ContractAgreementsPage extends BaseListPage {
   readonly agreementsListLocator = '.contract-agreements-list';
   readonly agreementCardLocator = '.contract-agreement-card';
   readonly agreementDialogLocator = '.contract-agreement-dialog';
+  readonly errorMessageLocator = '[data-testid="error-message"]';
 
   constructor(page: Page) {
     super(page);
+  }
+
+  getErrorMessage() {
+    return this.page.locator(this.errorMessageLocator);
   }
 
   async navigate() {
@@ -27,7 +32,7 @@ export class ContractAgreementsPage extends BaseListPage {
     await this.page.locator(this.agreementCardLocator).filter({ hasText: agreementName }).click();
   }
 
-  async verifyAgreementDetails() {
+  async getAgreementDialog() {
     return this.page.locator(this.agreementDialogLocator);
   }
 

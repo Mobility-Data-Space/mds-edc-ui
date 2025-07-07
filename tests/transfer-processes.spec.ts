@@ -9,23 +9,27 @@ test.describe("Transfer Processes Page Tests", () => {
     await transferProcessesPage.navigate();
   });
 
-  test.fixme("Displays the transfer processes list on the first visit", async ({ page }) => {
-    // Verify the transfer processes list is visible
-    const transferProcessesList = await transferProcessesPage.getTransferProcessesList();
-    await expect(transferProcessesList).toBeVisible();
+  test.describe("List Functionality", () => {
+    test("Displays the transfer processes list on the first visit", async ({ page }) => {
+      // Verify the transfer processes list is visible
+      const transferProcessesList = await transferProcessesPage.getTransferProcessesList();
+      await expect(transferProcessesList).toBeVisible();
 
-    const transferProcessRows = await transferProcessesPage.getTransferProcessRows();
-    const transferProcesses = await transferProcessRows.allTextContents();
-    expect(transferProcesses.length).toBeGreaterThan(0);
+      const transferProcessRows = await transferProcessesPage.getTransferProcessRows();
+      const transferProcesses = await transferProcessRows.allTextContents();
+      expect(transferProcesses.length).toBeGreaterThan(0);
+    });
   });
 
-  test.fixme("Displays transfer process details correctly", async ({ page }) => {
-    const transferProcessRows = await transferProcessesPage.getTransferProcessRows();
-    const transferProcessRow = transferProcessRows.first();
-    await transferProcessRow.click();
+  test.describe("View Functionality", () => {
+    test("Displays transfer process details correctly", async ({ page }) => {
+      const transferProcessRows = await transferProcessesPage.getTransferProcessRows();
+      const transferProcessRow = transferProcessRows.first();
+      await transferProcessRow.click();
 
-    const transferProcessDetails = await transferProcessesPage.verifyTransferProcessDetails();
-    await expect(transferProcessDetails).toBeVisible();
+      const transferProcessDetails = await transferProcessesPage.getTransferProcessDetails();
+      await expect(transferProcessDetails).toBeVisible();
+    });
   });
 
   test.describe("Search Functionality", () => {
@@ -59,18 +63,16 @@ test.describe("Transfer Processes Page Tests", () => {
     });
 
     // seed is missing transfer processes
-    test.fixme("should clear search and show all transfer processes", async ({ page }) => {
+    test("should clear search and show all transfer processes", async ({ page }) => {
       await transferProcessesPage.searchTransferProcesses('test');
-
       await transferProcessesPage.clearTransferProcessSearch();
-
       const allTransferProcesses = await transferProcessesPage.getTransferProcessRows();
+
       await expect(allTransferProcesses.first()).toBeVisible();
     });
 
     test("should handle empty search results", async ({ page }) => {
       await transferProcessesPage.searchTransferProcesses('nonexistenttransferprocess12345');
-
       const searchResults = await transferProcessesPage.getTransferProcessRows();
       const resultCount = await searchResults.count();
 
