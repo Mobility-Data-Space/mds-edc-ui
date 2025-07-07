@@ -1,5 +1,6 @@
 import PaginationControls from "@/components/molecules/pagination-controls";
 import SearchBar from "@/components/molecules/search-bar";
+import { Snackbar } from "@/components/molecules/snackbar";
 import AssetCard from "@/components/organisms/asset-card";
 import AssetDialog from "@/components/organisms/asset-dialog";
 import SideDrawer from "@/components/organisms/side-drawer";
@@ -11,6 +12,7 @@ import { Asset } from "@think-it-labs/edc-connector-client";
 import { AssetsList } from "@think-it-labs/edc-connector-ui/assets-list";
 import { PlusCircle } from "lucide-react";
 import { useRouter } from "next/router";
+import { useSnackbar } from "notistack";
 import { useCallback, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
 
@@ -18,6 +20,7 @@ export default function AssetListPage() {
   const router = useRouter();
   const { translator } = useTranslator();
   const { connector } = useParticipantConnectorState();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
@@ -60,7 +63,17 @@ export default function AssetListPage() {
         participantId={connector.id}
         connectorEndpoint={connector.protocolUrl}
         contentStyle={{ maxWidth: "90vw", width: "1000px" }}
-        onDeleteSuccess={() => router.reload()}
+        onDeleteSuccess={() => {
+          enqueueSnackbar("", {
+            content: (key) => (
+              <Snackbar
+                type="success"
+                message={translator('assets.deleteSuccess')}
+                onClose={() => { closeSnackbar(key); }}
+              />
+            )
+          });
+        }}
       />
 
       <SideDrawer title={<T string="assets.title" />}>
@@ -71,6 +84,24 @@ export default function AssetListPage() {
           currentPage={parseInt(router.query.page as string) || 0}
           firstPage={0}
         >
+          <AssetsList.Error>
+            {({ error }) => {
+              if (error) {
+                enqueueSnackbar(translator('common.assetsLoadError'), {
+                  variant: "error",
+                  content: (key: any) => (
+                    <Snackbar
+                      type="error"
+                      message={translator('common.assetsLoadError')}
+                      details={error.message || undefined}
+                      onClose={() => { closeSnackbar(key); }}
+                    />
+                  )
+                });
+              }
+              return <></>;
+            }}
+          </AssetsList.Error>
           <div className="flex justify-between pb-6">
             <div className="flex justify-start gap-x-5 items-center">
               <div className="min-w-xl">

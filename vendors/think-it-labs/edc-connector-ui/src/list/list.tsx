@@ -52,6 +52,7 @@ export function List<T>({
     setSearchSpec,
     triggerSearch,
     deleteItem,
+    error,
   } = useList<T>({
     delete: del,
     queryAll,
@@ -63,6 +64,7 @@ export function List<T>({
     <ListContext.Provider
       value={{
         isLoading,
+        error,
         items,
         setQuerySpec,
         searchSpec,
@@ -145,6 +147,23 @@ List.Items = function ListItems<T,>({
     });
   }, [limit, offset, setQuerySpec, filterExpression, sortField, sortOrder]);
 
+  // Global refetch event listener
+  useEffect(() => {
+    function handleRefetch() {
+      setQuerySpec({
+        limit,
+        offset,
+        filterExpression,
+        sortField,
+        sortOrder,
+      });
+    }
+    window.addEventListener("list-refetch", handleRefetch);
+    return () => {
+      window.removeEventListener("list-refetch", handleRefetch);
+    };
+  }, [limit, offset, filterExpression, sortField, sortOrder, setQuerySpec]);
+
   const Item = useMemo(() => {
     return function Item(props: ListItemProps<T>) {
       return <>{children(props)}</>;
@@ -161,7 +180,16 @@ List.Items = function ListItems<T,>({
             <Item
               key={getId(item)}
               item={item}
-              deleteItem={async () => deleteItem(getId(item))}
+              deleteItem={async () => {
+                await deleteItem(getId(item));
+                setQuerySpec({
+                  limit,
+                  offset,
+                  filterExpression,
+                  sortField,
+                  sortOrder,
+                });
+              }}
               index={index}
             />
           ))}
@@ -178,7 +206,16 @@ List.Items = function ListItems<T,>({
         <Item
           key={getId(item)}
           item={item}
-          deleteItem={async () => deleteItem(getId(item))}
+          deleteItem={async () => {
+            await deleteItem(getId(item));
+            setQuerySpec({
+              limit,
+              offset,
+              filterExpression,
+              sortField,
+              sortOrder,
+            });
+          }}
           index={index}
         />
       ))}
@@ -291,4 +328,18 @@ List.Pagination = function Pagination({
     decrementPage={pagination.decrementPage}
     incrementPage={pagination.incrementPage}
   />
+}
+
+List.Error = function ListError({ children }: {
+  children: (props: { error: Error | null }) => JSX.Element;
+}) {
+  const { error } = useListContext()
+
+  const ErrorComponent = useMemo(() => {
+    return function (props: { error: Error | null }) {
+      return <>{children(props)}</>;
+    };
+  }, [children]);
+
+  return <ErrorComponent error={error} />
 }

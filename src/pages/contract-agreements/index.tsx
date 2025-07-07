@@ -1,4 +1,5 @@
 import { LineTitle } from "@/components/atoms/line-title.tsx";
+import { Snackbar } from "@/components/molecules/snackbar";
 import PaginationControls from "@/components/molecules/pagination-controls";
 import SearchBar from "@/components/molecules/search-bar";
 import ContractAgreementCard from "@/components/organisms/contract-agreement-card";
@@ -15,7 +16,7 @@ import { ContractAgreement, TransferProcessStates } from "@think-it-labs/edc-con
 import { ContractAgreementsList } from "@think-it-labs/edc-connector-ui/contract-agreements-list";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 import { useRouter } from "next/router";
-import { enqueueSnackbar } from "notistack";
+import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
 
@@ -139,6 +140,8 @@ export default function ContractAgreementsListPage() {
     populateRetired();
   }, [edcClient]);
 
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
   if (!connector) {
     return "No connector";
   }
@@ -226,7 +229,26 @@ export default function ContractAgreementsListPage() {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-4 py-4" data-testid="contract-agreements-list">
+        <ContractAgreementsList.Error>
+          {({ error }) => {
+            if (error) {
+              enqueueSnackbar(translator("common.contractAgreementsLoadError"), {
+                variant: "error",
+                content: (key: any) => (
+                  <Snackbar
+                    type="error"
+                    message={translator('common.contractAgreementsLoadError')}
+                    details={error.message || undefined}
+                    onClose={() => { closeSnackbar(key); }}
+                  />
+                )
+              });
+            }
+            return <></>;
+          }}
+        </ContractAgreementsList.Error>
+
+        <div className="flex flex-col flex-wrap gap-4 py-4" data-testid="contract-agreements-list">
           <ContractAgreementsList.Items
             limit={MAX_ITEMS}
             sortOrder="DESC"

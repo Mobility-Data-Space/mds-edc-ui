@@ -1,16 +1,17 @@
-import React, {useState} from "react";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton} from "@mui/material";
+import { AssetIcon } from "@/components/atoms/asset-icon";
+import { TitleWithIcon } from "@/components/atoms/TitleWithIcon";
+import { DeleteDialog } from "@/components/molecules/delete-dialog";
+import { Snackbar } from "@/components/molecules/snackbar";
+import AssetDetails from "@/components/organisms/asset-details";
+import { T } from "@/i18n";
+import { ASSET_TITLE } from "@/schema/asset";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { enqueueSnackbar } from 'notistack';
-import {Asset} from "@think-it-labs/edc-connector-client";
-import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
-import {AssetIcon} from "@/components/atoms/asset-icon";
-import AssetDetails from "@/components/organisms/asset-details";
-import {DeleteDialog} from "@/components/molecules/delete-dialog";
-import { T } from "@/i18n";
-import {ASSET_TITLE} from "@/schema/asset";
-import {TitleWithIcon} from "@/components/atoms/TitleWithIcon";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from "@mui/material";
+import { Asset } from "@think-it-labs/edc-connector-client";
+import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
+import { enqueueSnackbar, useSnackbar } from 'notistack';
+import { useState } from "react";
 
 interface AssetDialogProps {
   asset: Asset;
@@ -29,6 +30,7 @@ export default function AssetDialog({ open, onClose, asset, onEditClick, deleteE
   const id = asset["@id"];
   const title = readValue(asset.properties, ASSET_TITLE) || "";
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const { closeSnackbar } = useSnackbar();
 
   const onDeleteConfirm = async () => {
     try {
@@ -39,7 +41,15 @@ export default function AssetDialog({ open, onClose, asset, onEditClick, deleteE
       }
     } catch (error) {
       /* TODO: translate */
-      enqueueSnackbar(`Failed deleting asset ${id}`);
+      enqueueSnackbar("", {
+        content: (key) => (
+          <Snackbar
+            type="error"
+            message={`Failed deleting asset ${id}`}
+            onClose={() => { closeSnackbar(key); }}
+          />
+        )
+      });
     }
   };
 
@@ -61,17 +71,17 @@ export default function AssetDialog({ open, onClose, asset, onEditClick, deleteE
       >
         <DialogTitle>
           <div className="flex flex-row justify-between">
-            <TitleWithIcon icon={<AssetIcon asset={asset} fontSize="large"/>} title={title} subtitle={id} />
+            <TitleWithIcon icon={<AssetIcon asset={asset} fontSize="large" />} title={title} subtitle={id} />
 
             <div>
-            {onEditClick &&
+              {onEditClick &&
                 <IconButton onClick={onEditClick}>
-                  <EditIcon color="secondary"/>
+                  <EditIcon color="secondary" />
                 </IconButton>
               }
               {deleteEnabled &&
                 <IconButton onClick={() => setDeleteDialogOpen(true)}>
-                  <DeleteIcon color="secondary"/>
+                  <DeleteIcon color="secondary" />
                 </IconButton>
               }
             </div>
@@ -82,7 +92,7 @@ export default function AssetDialog({ open, onClose, asset, onEditClick, deleteE
         </DialogContent>
         <DialogActions>
           <Button color="secondary" onClick={onClose}>
-            <T string="common.close"/>
+            <T string="common.close" />
           </Button>
         </DialogActions>
       </Dialog>

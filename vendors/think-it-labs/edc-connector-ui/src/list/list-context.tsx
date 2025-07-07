@@ -8,6 +8,7 @@ export type ListContext<T> = Context<ListContextType<T>>;
 export type ListContextType<T> = {
   items: T[];
   isLoading: boolean;
+  error: Error | null
   setQuerySpec: (querySpec: QuerySpec) => void;
   searchSpec: SearchSpec;
   setSearchSpec: (searchSpec: Partial<SearchSpec>) => void;

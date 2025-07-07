@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-@tailwind components;
 @tailwind utilities;
 /* noinspection CssInvalidAtRule */
 @plugin "@tailwindcss/typography";
