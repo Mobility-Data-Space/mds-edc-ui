@@ -8,7 +8,7 @@ import {ShowTreeBranch} from "@/components/atoms/show-tree-branch";
 
 import {useTranslator} from "@/i18n";
 import {dateToString, formatDateTime} from "@/utilities/date";
-import {tryTranslatingWithTooltip} from "@/utilities/utilities";
+import {isDate, tryTranslatingWithTooltip} from "@/utilities/utilities";
 import { operators } from "@/utilities/policy-operators";
 
 interface ConstraintShowProps {
@@ -17,17 +17,23 @@ interface ConstraintShowProps {
 
 function constraintTooltipAndValue(value: string, index: number, translator: (key: string) => string) {
   if (index === 1) {
-    const operator = operators.find(operator => operator.value === value);
-    if (operator) {
-      return [operator.tooltip, operator.text];
-    }
+    const valueToLower = value.toLowerCase();
+    const operator = operators.find(
+      operator => operator.value.toLowerCase() === valueToLower
+    );
+    return operator ? [operator.tooltip, operator.text] : [value, value];
   }
 
   if (index === 2) {
+    const trimmedValue = value.trim();
+    if (! isDate(value)) {
+      return [`"${trimmedValue}"`, trimmedValue];
+    }
+
     const date = new Date(value);
     const dateValue = dateToString(date);
-    const tooltip = dateValue ? formatDateTime(date.getTime()) : value;
-    return [`"${tooltip}"`, dateValue || value];
+    const tooltip = dateValue ? formatDateTime(date.getTime()) : trimmedValue;
+    return [`"${tooltip}"`, dateValue || trimmedValue];
   }
 
   return tryTranslatingWithTooltip(value, "policyDefinitions.constraint", translator);

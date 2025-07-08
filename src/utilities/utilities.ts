@@ -53,3 +53,7 @@ export const isUrl = (url: string) => {
 export const isEmail = (email: string) => {
   return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email);
 }
+
+export const isDate = (date: string) => {
+  return /^\d{1,2}[./-]\d{1,2}[./-]\d{4}$/.test(date);
+}
