@@ -79,4 +79,4 @@ export const consumerParticipantIdOperators = [operatorEqual, operatorIn];
 export const timeRestrictionLeft = 'POLICY_EVALUATION_TIME';
 export const timeRestrictionOperators = [ operatorGreaterThanOrEqual, operatorGreaterThan, operatorLessThanOrEqual, operatorLessThan]
 
-export const operators = [ operatorEqual, operatorNotEqual, operatorGreaterThanOrEqual, operatorGreaterThan, operatorLessThanOrEqual, operatorLessThan, operatorHasPart, operatorIsA, operatorIsAnyOf, operatorIsAllOf ];
+export const operators = [ operatorEqual, operatorNotEqual, operatorIn, operatorGreaterThanOrEqual, operatorLessThan, operatorLessThanOrEqual, operatorGreaterThan, operatorHasPart, operatorIsA, operatorIsAnyOf, operatorIsAllOf, operatorIsNoneOf ];
