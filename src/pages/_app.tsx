@@ -8,10 +8,9 @@ import { JsonLdContextProvider } from "@think-it-labs/edc-connector-ui/json-ld-c
 import type { AppProps } from "next/app";
 import { SnackbarProvider } from 'notistack';
 
-export default function App({ Component, pageProps }: AppProps) {
+TimeAgo.addDefaultLocale(en);
 
-  TimeAgo.addDefaultLocale(en);
-  
+export default function App({ Component, pageProps }: AppProps) {
   return (
     <TranslatorProvider>
       <JsonLdContextProvider
