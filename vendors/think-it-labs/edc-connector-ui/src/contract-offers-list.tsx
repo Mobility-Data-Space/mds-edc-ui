@@ -22,6 +22,7 @@ export function ContractOffersList({
   children,
   managementUrl,
   counterPartyAddress,
+  shouldFetch = true,
   ...props
 }: PropsWithChildren<ContractOffersListProps>) {
   const client = useEdcConnectorClient({
@@ -49,6 +50,7 @@ export function ContractOffersList({
         page={props.currentPage}
         usePagination={props.usePagination}
         firstPage={props.firstPage}
+        shouldFetch={shouldFetch}
       >
         {children}
       </List>)
@@ -59,6 +61,7 @@ export function ContractOffersList({
       queryAll={queryAll}
       getId={(dataset: Dataset) => dataset.id}
       managementUrl={managementUrl}
+      shouldFetch={shouldFetch}
     >
       {children}
     </List>

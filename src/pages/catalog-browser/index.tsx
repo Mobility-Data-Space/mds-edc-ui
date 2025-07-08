@@ -1,8 +1,8 @@
 import { Input } from "@/components/atoms/input";
 import { CounterPartyAddressDialog } from "@/components/molecules/counter-party-address-dialog";
-import { Snackbar } from "@/components/molecules/snackbar";
 import PaginationControls from "@/components/molecules/pagination-controls";
 import SearchBar from "@/components/molecules/search-bar";
+import { Snackbar } from "@/components/molecules/snackbar";
 import DataOfferCard from "@/components/organisms/data-offer-card";
 import DataOfferDialog from "@/components/organisms/data-offer-dialog";
 import SideDrawer from "@/components/organisms/side-drawer";
@@ -15,16 +15,15 @@ import { IconButton, Tooltip } from "@mui/material";
 import { Dataset } from "@think-it-labs/edc-connector-client";
 import { ContractOffersList } from "@think-it-labs/edc-connector-ui/contract-offers-list";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
-import { useRouter } from "next/router";
 import { enqueueSnackbar, useSnackbar } from "notistack";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
 
 export default function CatalogPage() {
-  const { query, push } = useRouter()
   const { connector } = useParticipantConnectorState();
   const { translator } = useTranslator();
   const { closeSnackbar } = useSnackbar();
+  const [currentPage, setCurrentPage] = useState(0)
 
   const [listKey, setListKey] = useState(1);
   const [isDataOfferDialogOpen, setIsDataOfferDialogOpen] = useState(false);
@@ -57,19 +56,6 @@ export default function CatalogPage() {
     setDatasetToNegotiate(dataset);
   };
 
-  const navigate = useCallback((newPage: number) => {
-    push(
-      {
-        href: window.location.href,
-        query: {
-          ...query,
-          page: newPage,
-        },
-      },
-    );
-
-  }, [push, query])
-
   return (
     <>
       <DataOfferDialog
@@ -94,9 +80,10 @@ export default function CatalogPage() {
           managementUrl={connector.managementUrl}
           counterPartyAddress={counterPartyAddressToSearch}
           usePagination
-          navigate={navigate}
-          currentPage={parseInt(query.page as string) || 0}
+          navigate={setCurrentPage}
+          currentPage={currentPage}
           firstPage={0}
+          shouldFetch={!!counterPartyAddressToSearch}
         >
           <div className="w-full grid grid-rows-1 grid-cols-5 gap-x-3.5 py-4 items-center">
             <div className="col-span-2">
@@ -146,7 +133,7 @@ export default function CatalogPage() {
           </div>
 
           <div className="flex flex-wrap gap-2.5" data-testid="catalog-list">
-            <ContractOffersList.Items
+            {counterPartyAddressToSearch && <ContractOffersList.Items
               key={listKey}
               limit={MAX_ITEMS}
               sortOrder="DESC"
@@ -160,7 +147,7 @@ export default function CatalogPage() {
                   dataTestId="catalog-item"
                 />
               )}
-            </ContractOffersList.Items>
+            </ContractOffersList.Items>}
           </div>
 
           <ContractOffersList.Loading>

@@ -20,6 +20,7 @@ type ListProps<T> = {
     condition: (item: T) => boolean;
     containerClassName?: string;
   }[]
+  shouldFetch?: boolean
 }
 
 export interface ListProviderProps {
@@ -43,6 +44,7 @@ export function List<T>({
   navigate,
   firstPage,
   sections,
+  shouldFetch = true
 }: PropsWithChildren<ListProps<T>>) {
   const {
     items,
@@ -54,6 +56,7 @@ export function List<T>({
     deleteItem,
     error,
   } = useList<T>({
+    shouldFetch,
     delete: del,
     queryAll,
   });

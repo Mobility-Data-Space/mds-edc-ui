@@ -91,17 +91,17 @@ test.describe("Contract Agreements Page Tests", () => {
     });
 
     test.fixme("should navigate to next page when available", async ({ page }) => {
-      const initialPage = await agreementsPage.getCurrentPageNumber();
+      const initialLastIndex = await agreementsPage.getLastElementIndex();
       const isNextEnabled = await agreementsPage.isNextPageEnabled();
 
       if (isNextEnabled) {
         await agreementsPage.goToNextPage();
 
-        const newPage = await agreementsPage.getCurrentPageNumber();
-        expect(newPage).toBe(initialPage + 1);
+        const newFirstIndex = await agreementsPage.getFirstElementIndex();
+        expect(newFirstIndex).toBe(initialLastIndex + 1);
       } else {
-        const totalPages = await agreementsPage.getTotalPages();
-        expect(initialPage).toBe(totalPages);
+        const totalLastIndex = await agreementsPage.getLastElementIndex();
+        expect(initialLastIndex).toBe(totalLastIndex);
       }
     });
 
@@ -109,40 +109,40 @@ test.describe("Contract Agreements Page Tests", () => {
       const isNextEnabled = await agreementsPage.isNextPageEnabled();
       if (isNextEnabled) {
         await agreementsPage.goToNextPage();
-        const pageAfterNext = await agreementsPage.getCurrentPageNumber();
+        const pageAfterNextFirstIndex = await agreementsPage.getFirstElementIndex();
 
         await agreementsPage.goToPreviousPage();
-        const pageAfterPrev = await agreementsPage.getCurrentPageNumber();
+        const pageAfterPrevFirstIndex = await agreementsPage.getFirstElementIndex();
 
-        expect(pageAfterPrev).toBe(pageAfterNext - 1);
+        expect(pageAfterPrevFirstIndex).toBe(pageAfterNextFirstIndex - 1);
       } else {
-      const isPrevEnabled = await agreementsPage.isPreviousPageEnabled();
-      const currentPage = await agreementsPage.getCurrentPageNumber();
+        const isPrevEnabled = await agreementsPage.isPreviousPageEnabled();
+        const currentFirstIndex = await agreementsPage.getFirstElementIndex();
 
-      if (currentPage === 1) {
-        expect(isPrevEnabled).toBeFalsy();
-      }
+        if (currentFirstIndex === 1) {
+          expect(isPrevEnabled).toBeFalsy();
+        }
       }
     });
 
     test.fixme("should disable previous button on first page", async ({ page }) => {
-      const currentPage = await agreementsPage.getCurrentPageNumber();
+      const currentFirstIndex = await agreementsPage.getFirstElementIndex();
 
-      if (currentPage === 1) {
+      if (currentFirstIndex === 1) {
         const isPrevEnabled = await agreementsPage.isPreviousPageEnabled();
         expect(isPrevEnabled).toBeFalsy();
       }
     });
 
     test.fixme("should disable next button on last page", async ({ page }) => {
-      const totalPages = await agreementsPage.getTotalPages();
+      const totalLastIndex = await agreementsPage.getLastElementIndex();
 
       while (await agreementsPage.isNextPageEnabled()) {
         await agreementsPage.goToNextPage();
       }
 
-      const currentPage = await agreementsPage.getCurrentPageNumber();
-      expect(currentPage).toBe(totalPages);
+      const currentLastIndex = await agreementsPage.getLastElementIndex();
+      expect(currentLastIndex).toBe(totalLastIndex);
 
       const isNextEnabled = await agreementsPage.isNextPageEnabled();
       expect(isNextEnabled).toBeFalsy();
