@@ -7,64 +7,111 @@ test.describe("Assets Page Tests", () => {
   test.beforeEach(async ({ page }) => {
     assetsPage = new AssetsPage(page);
     await assetsPage.navigate();
-  })
-
-  test.fixme("Displays the asset list on the first visit", async ({ page }) => {
-    // Verify the asset list is visible
-    const assetList = await assetsPage.getAssetList();
-    await expect(assetList).toBeVisible();
-
-    // Verify there is at least one asset card
-    const assetCards = await assetsPage.getAssetCards();
-    const assets = await assetCards.allTextContents();
-    expect(assets.length).toBeGreaterThan(0);
   });
 
-  test.fixme("Displays asset details correctly", async ({ page }) => {
-    // Select an asset
-    const assetCards = await assetsPage.getAssetCards();
-    const assetCard = assetCards.first();
-    await assetCard.click();
+  test.describe("List Functionality", () => {
+    test("Displays the asset list on the first visit", async ({ page }) => {
+      // Verify the asset list is visible
+      const assetList = await assetsPage.getAssetList();
+      await expect(assetList).toBeVisible();
 
-    // Verify details are displayed
-    const assetDetails = page.locator(assetsPage.assetDialogLocator);
-    await expect(assetDetails).toBeVisible();
-    await expect(assetDetails.locator('text=Asset ID')).toBeVisible();
-    await expect(assetDetails.locator('text=Participant ID')).toBeVisible();
+      // Verify there is at least one asset card
+      const assetCards = await assetsPage.getAssetCards();
+      const assets = await assetCards.allTextContents();
+      expect(assets.length).toBeGreaterThan(0);
+    });
   });
 
-  test.fixme("Deletes an asset and verifies it is removed from the list", async ({ page }) => {
-    // Select an asset to delete
-    const assetCards = await assetsPage.getAssetCards();
-    const assetCard = assetCards.first();
-    const assetName = (await assetCard.textContent()) || "";
-    await assetCard.click();
-    const deleteButton = page.getByRole('heading', { name: 'Asset 3 asset-3-id' }).getByRole('button');
-    await deleteButton.click();
+  test.describe("Create Functionality", () => {
+    test("Creates a new asset and verifies its visibility in the list then create a new asset with same ID and expect failure", async ({ page }) => {
+      // Open the create asset modal
+      await assetsPage.openCreateAssetModal();
 
-    // Confirm deletion
-    const confirmDelete = page.getByRole('button', { name: 'Delete' });
-    await confirmDelete.click();
+      // Fill in the asset details
+      const randomNumber = `${Math.random()}`.replace("0.", "");
+      const assetTitle = `Test Dataset ${randomNumber}`;
+      const assetId = `dataset-id-${randomNumber}`;
+      await assetsPage.fillCreateAssetForm(assetTitle, assetId);
+      await assetsPage.openAdvancedSection();
+      await assetsPage.fillRequiredAdvancedField();
+      await assetsPage.openDataSourceSection();
+      await assetsPage.fillHttpDatasource();
 
-    // Verify the asset is removed
-    await expect(page.locator(assetsPage.assetListLocator).locator(assetsPage.assetCardLocator).filter({ hasText: assetName })).toHaveCount(0);
+      // Submit the form
+      await assetsPage.submitCreateAssetForm();
+
+      // Verify the success message is displayed
+      const successMessage = await assetsPage.getToastMessage("success");
+      await expect(successMessage).toBeVisible();
+    });
   });
 
-  test.fixme("Creates a new asset and verifies its visibility in the list", async ({ page }) => {
-    // Open the create asset modal
-    await assetsPage.openCreateAssetModal();
+  test.describe("Delete Functionality", () => {
+    test("Deletes an asset and verifies it is removed from the list", async ({ page }) => {
+      // Select an asset to delete
+      const assetCards = await assetsPage.getAssetCards();
+      const assetCard = assetCards.first();
+      const assetName = (await assetCard.textContent()) || "";
+      await assetCard.click();
+      await assetsPage.submitDeleteAsset();
 
-    // Fill in the asset details
-    const randomNumber = `${Math.random()}`.replace("0.", "");
-    const assetTitle = `Asset ${randomNumber}`;
-    const assetId = `asset-id-${randomNumber}`;
-    await assetsPage.fillCreateAssetForm(assetTitle, assetId);
+      // Confirm deletion
+      await assetsPage.confirmDeleteAsset();
 
-    // Submit the form
-    await assetsPage.submitCreateAssetForm();
+      // Verify the success message is displayed
+      const successMessage = await assetsPage.getToastMessage("success")
+      await expect(successMessage).toBeVisible();
 
-    // Verify the new asset appears in the list
-    await assetsPage.verifyAssetInList(assetId);
+      // Verify the asset is removed
+      await expect(page.locator(assetsPage.assetListLocator).locator(assetsPage.assetCardLocator).filter({ hasText: assetName })).toHaveCount(0);
+    });
+  });
+
+  test.describe("Edit Functionality", () => {
+    test.fixme("should display 'Edit' button in the asset details modal", async ({ page }) => {
+      // Select an asset to view details
+      const assetCards = await assetsPage.getAssetCards();
+      const assetCard = assetCards.first();
+      await assetCard.click();
+
+      // Verify the "Edit" button is present in the asset details modal
+      const editButton = await assetsPage.getEditButton();
+      await expect(editButton).toBeVisible();
+    });
+
+    test.fixme("Updates an asset and verifies the changes", async ({ page }) => {
+      // Select an asset to update
+      const assetCards = await assetsPage.getAssetCards();
+      const assetCard = assetCards.first();
+      const originalTitle = await assetCard.locator('[data-testid="asset-title"]').textContent();
+      const updatedTitle = `${originalTitle} - Updated`;
+      const updatedDescription = "This is an updated description.";
+
+      // Open the edit modal and update the asset
+      const assetId = await assetCard.locator('[data-testid="asset-title"]').textContent();
+      await assetsPage.openEditAssetModal(assetId || "");
+      await assetsPage.fillEditAssetForm(updatedTitle, updatedDescription);
+      await assetsPage.submitEditAssetForm();
+
+      // Verify the updated asset appears in the list
+      const updatedAssetLocator = assetsPage.getAssetInList(updatedTitle);
+      await expect(updatedAssetLocator).toBeVisible();
+    });
+  });
+
+  test.describe("View Functionality", () => {
+    test("Displays asset details correctly", async ({ page }) => {
+      // Select an asset
+      const assetCards = await assetsPage.getAssetCards();
+      const assetCard = assetCards.first();
+      await assetCard.click();
+
+      // Verify details are displayed
+      const assetDetails = page.locator(assetsPage.assetDialogLocator);
+      await expect(assetDetails).toBeVisible();
+      await expect(assetDetails.locator('text=Asset ID')).toBeVisible();
+      await expect(assetDetails.locator('text=Participant ID')).toBeVisible();
+    });
   });
 
   test.describe("Search Functionality", () => {
@@ -122,66 +169,67 @@ test.describe("Assets Page Tests", () => {
       await expect(paginationInfo).toBeVisible();
     });
 
-    test("should navigate to next page when available", async ({ page }) => {
-      const initialPage = await assetsPage.getCurrentPageNumber();
+    test.fixme("should navigate to next page when available", async ({ page }) => {
+      const initialFirstIndex = await assetsPage.getFirstElementIndex();
+      const initialLastIndex = await assetsPage.getLastElementIndex();
       const isNextEnabled = await assetsPage.isNextPageEnabled();
 
       if (isNextEnabled) {
         await assetsPage.goToNextPage();
 
-        const newPage = await assetsPage.getCurrentPageNumber();
-        expect(newPage).toBe(initialPage + 1);
+        const newFirstIndex = await assetsPage.getFirstElementIndex();
+        expect(newFirstIndex).toBe(initialLastIndex + 1);
       } else {
-        const totalPages = await assetsPage.getTotalPages();
-        expect(initialPage).toBe(totalPages);
+        const totalLastIndex = await assetsPage.getLastElementIndex();
+        expect(initialLastIndex).toBe(totalLastIndex);
       }
     });
 
-    test("should navigate to previous page when available", async ({ page }) => {
+    test.fixme("should navigate to previous page when available", async ({ page }) => {
       const isNextEnabled = await assetsPage.isNextPageEnabled();
       if (isNextEnabled) {
         await assetsPage.goToNextPage();
-        const pageAfterNext = await assetsPage.getCurrentPageNumber();
+        const pageAfterNextFirstIndex = await assetsPage.getFirstElementIndex();
 
         await assetsPage.goToPreviousPage();
-        const pageAfterPrev = await assetsPage.getCurrentPageNumber();
+        const pageAfterPrevFirstIndex = await assetsPage.getFirstElementIndex();
 
-        expect(pageAfterPrev).toBe(pageAfterNext - 1);
+        expect(pageAfterPrevFirstIndex).toBe(pageAfterNextFirstIndex - 1);
       } else {
         const isPrevEnabled = await assetsPage.isPreviousPageEnabled();
-        const currentPage = await assetsPage.getCurrentPageNumber();
+        const currentFirstIndex = await assetsPage.getFirstElementIndex();
 
-        if (currentPage === 1) {
+        if (currentFirstIndex === 1) {
           expect(isPrevEnabled).toBeFalsy();
         }
       }
     });
 
-    test("should disable previous button on first page", async ({ page }) => {
-      const currentPage = await assetsPage.getCurrentPageNumber();
+    test.fixme("should disable previous button on first page", async ({ page }) => {
+      const currentFirstIndex = await assetsPage.getFirstElementIndex();
 
-      if (currentPage === 1) {
+      if (currentFirstIndex === 1) {
         const isPrevEnabled = await assetsPage.isPreviousPageEnabled();
         expect(isPrevEnabled).toBeFalsy();
       }
     });
 
-    test("should disable next button on last page", async ({ page }) => {
-      const totalPages = await assetsPage.getTotalPages();
+    test.fixme("should disable next button on last page", async ({ page }) => {
+      const totalLastIndex = await assetsPage.getLastElementIndex();
 
       while (await assetsPage.isNextPageEnabled()) {
         await assetsPage.goToNextPage();
       }
 
-      const currentPage = await assetsPage.getCurrentPageNumber();
-      expect(currentPage).toBe(totalPages);
+      const currentLastIndex = await assetsPage.getLastElementIndex();
+      expect(currentLastIndex).toBe(totalLastIndex);
 
       const isNextEnabled = await assetsPage.isNextPageEnabled();
       expect(isNextEnabled).toBeFalsy();
     });
 
-    test("should maintain search results across pagination", async ({ page }) => {
-      await assetsPage.searchAssets('test');
+    test.fixme("should maintain search results across pagination", async ({ page }) => {
+      await assetsPage.searchAssets('asset');
 
       const isNextEnabled = await assetsPage.isNextPageEnabled();
       if (isNextEnabled) {

@@ -27,7 +27,7 @@ export class ContractAgreementsPage extends BaseListPage {
     await this.page.locator(this.agreementCardLocator).filter({ hasText: agreementName }).click();
   }
 
-  async verifyAgreementDetails() {
+  async getAgreementDialog() {
     return this.page.locator(this.agreementDialogLocator);
   }
 

@@ -31,7 +31,6 @@ const CounterPartyAddress = ({ item }: { item: ContractNegotiation }) => {
 export default function ContractNegotiationsManualApprovalListPage() {
   const { query, push } = useRouter()
   const { connector } = useParticipantConnectorState();
-  const managementUrl = connector?.managementUrl as string;
   const { globalTranslator, translator } = useTranslator();
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -40,7 +39,7 @@ export default function ContractNegotiationsManualApprovalListPage() {
     contractNegotiation: {} as ContractNegotiation,
   });
 
-  const mdsManualApprovalController = useMemo(() => new MDSManualApprovalController(connector.managementUrl), [connector.managementUrl]);
+  const mdsManualApprovalController = useMemo(() => new MDSManualApprovalController(connector.managementUrl), [connector]);
 
   const openDetailsModal = (contractNegotiation: ContractNegotiation) => {
     setIsDetailsModalOpen(true);
@@ -83,7 +82,7 @@ export default function ContractNegotiationsManualApprovalListPage() {
         },
       },
     );
-  }, [])
+  }, [push, query])
 
   return (
     <SideDrawer title={<T string="contractNegotiations.title" />}>
@@ -96,7 +95,7 @@ export default function ContractNegotiationsManualApprovalListPage() {
         translator={translator}
       />
       <ContractNegotiationsList
-        managementUrl={managementUrl}
+        managementUrl={connector.managementUrl}
         usePagination
         navigate={navigate}
         currentPage={currentPage}
@@ -159,7 +158,7 @@ export default function ContractNegotiationsManualApprovalListPage() {
             </ContractNegotiationsList.Pagination>
           </div>
         </div>
-        <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">
+        <div data-testid="approval-list" className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">
           <Table>
             <Table.Head>
               <Table.Row>
@@ -199,6 +198,7 @@ export default function ContractNegotiationsManualApprovalListPage() {
                   <Table.Row
                     key={index}
                     onClick={() => openDetailsModal(item)}
+                    data-testid="approval-item"
                   >
                     <Table.Cell>
                       <button
