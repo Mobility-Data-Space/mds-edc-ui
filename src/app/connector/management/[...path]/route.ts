@@ -37,7 +37,7 @@ const handleGet = async (req: NextRequest): Promise<NextResponse> => {
 // Handler for POST requests
 const handlePost = async (req: NextRequest): Promise<NextResponse> => {
   const url = buildUrl(req);
-  const requestBody = await req.json();
+  const requestBody = await req.text();
 
   const proxy = await fetchProxy(url, {
     method: "POST",
@@ -46,10 +46,10 @@ const handlePost = async (req: NextRequest): Promise<NextResponse> => {
       "x-api-key": connectorApiKey(),
     },
     credentials: "same-origin",
-    body: requestBody ? JSON.stringify(requestBody) : undefined,
+    body: requestBody && requestBody !== "{}" ? requestBody : undefined,
   });
 
-  
+
   const readableStream = proxy.body;
   const response = new NextResponse(readableStream, { status: proxy.status });
   setResponseHeaders(proxy, response);

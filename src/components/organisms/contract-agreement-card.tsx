@@ -1,10 +1,10 @@
-import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
-import { T } from "@/i18n";
-import { formatDateTimeAgo } from "@/utilities/utilities.ts";
-import { Card, CardContent, Icon, LinearProgress } from "@mui/material";
+import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
+import {T} from "@/i18n";
+import {formatDateTimeAgo} from "@/utilities/date.ts";
+import {Card, CardContent, Icon, LinearProgress} from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { ContractAgreement } from "@think-it-labs/edc-connector-client";
-import { ContractAgreementView } from "@think-it-labs/edc-connector-ui/contract-agreement-view";
+import {ContractAgreement} from "@think-it-labs/edc-connector-client";
+import {ContractAgreementView} from "@think-it-labs/edc-connector-ui/contract-agreement-view";
 
 export interface ContractAgreementCard {
   contractAgreement: ContractAgreement;

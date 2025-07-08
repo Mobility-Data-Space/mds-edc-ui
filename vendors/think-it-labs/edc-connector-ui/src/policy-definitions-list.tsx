@@ -75,6 +75,8 @@ PolicyDefinitionsList.SearchTrigger = List.SearchTrigger;
 
 PolicyDefinitionsList.Pagination = List.Pagination;
 
+PolicyDefinitionsList.Error = List.Error;
+
 interface PolicyDefinitionsListPolicyDefinitionProps {
   policyDefinition?: PolicyDefinition;
 }

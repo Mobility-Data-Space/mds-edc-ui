@@ -1,11 +1,11 @@
 import React from "react";
 
-import {MuiSelect} from "@/components/atoms/mui-select";
+import { MuiSelect } from "@/components/atoms/mui-select";
 
-import {T} from "@/i18n";
-import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME} from "@/schema/asset";
-import {DATA_CATEGORY_SELECT_DATA, DATA_SUBCATEGORIES_DATA, TYPE_DATA_CATEGORY} from "@/constants/data-category";
-import {AssetProperties} from "@/utilities/asset";
+import { T } from "@/i18n";
+import { ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME } from "@/schema/asset";
+import { DATA_CATEGORY_SELECT_DATA, DATA_SUBCATEGORIES_DATA, TYPE_DATA_CATEGORY } from "@/constants/data-category";
+import { AssetProperties } from "@/utilities/asset";
 
 export interface AssetDataCategoryAndSubcategoryProps {
   translator: (key: string) => string;
@@ -24,7 +24,7 @@ export function AssetDataCategoryAndSubcategory({ translator, formData, onChange
           htmlFor="advanced-info-data-category"
           className={`block text-sm mb-1 ${labelColor}`}
         >
-          <T string="assets.new.fieldAdvancedInfoDataCategory"/>
+          <T string="assets.new.fieldAdvancedInfoDataCategory" />
           {"*"}
         </label>
         <MuiSelect
@@ -50,7 +50,7 @@ export function AssetDataCategoryAndSubcategory({ translator, formData, onChange
           htmlFor="advanced-info-data-category"
           className="block text-sm text-gray-800 mb-1"
         >
-          <T string="assets.new.fieldAdvancedInfoDataSubcategory"/>
+          <T string="assets.new.fieldAdvancedInfoDataSubcategory" />
         </label>
         <MuiSelect
           name={ASSET_ADVANCED_INFO_DATA_SUBCATEGORY}

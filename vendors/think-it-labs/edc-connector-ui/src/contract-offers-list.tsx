@@ -75,6 +75,8 @@ ContractOffersList.SearchTrigger = List.SearchTrigger;
 
 ContractOffersList.Pagination = List.Pagination
 
+ContractOffersList.Error = List.Error;
+
 interface ContractOffersListOfferContextType {
   offer: Offer;
 }

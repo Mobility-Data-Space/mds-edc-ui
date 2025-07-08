@@ -1,19 +1,21 @@
 import { Table } from "@/components/atoms/table";
+import { Snackbar } from "@/components/molecules/snackbar";
 import PaginationControls from "@/components/molecules/pagination-controls";
 import SearchBar from "@/components/molecules/search-bar";
 import ContractNegotiationDialog from "@/components/organisms/contract-negotiation-dialog";
 import SideDrawer from "@/components/organisms/side-drawer";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
-import { formatDateTime, formatDateTimeAgo } from "@/utilities/utilities.ts";
-import { Tooltip } from "@mui/material";
 import { ContractNegotiation } from "@think-it-labs/edc-connector-client";
+import { Tooltip } from "@mui/material";
 import { ContractAgreementView } from "@think-it-labs/edc-connector-ui/contract-agreement-view";
 import { ContractNegotiationsList } from "@think-it-labs/edc-connector-ui/contract-negotiations-list";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld.tsx";
 import { useRouter } from "next/router";
+import { useSnackbar } from "notistack";
 import { useCallback, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
+import {formatDateTime, formatDateTimeAgo} from "@/utilities/date.ts";
 
 const CreatedAt = ({ item }: { item: ContractNegotiation }) => {
   const createdAtValue = readValue(item, "https://w3id.org/edc/v0.0.1/ns/createdAt");
@@ -39,6 +41,7 @@ export default function ContractNegotiationsListPage() {
   const { connector } = useParticipantConnectorState();
   const managementUrl = connector?.managementUrl as string;
   const { translator } = useTranslator();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
   const [openContractNegotiationData, setOpenContractNegotiationData] = useState({
@@ -81,6 +84,24 @@ export default function ContractNegotiationsListPage() {
         currentPage={currentPage}
         firstPage={0}
       >
+        <ContractNegotiationsList.Error>
+          {({ error }) => {
+            if (error) {
+              enqueueSnackbar(translator('common.contractNegotiationsLoadError'), {
+                variant: "error",
+                content: (key: any) => (
+                  <Snackbar
+                    type="error"
+                    message={translator('common.contractNegotiationsLoadError')}
+                    details={error.message || undefined}
+                    onClose={() => { closeSnackbar(key); }}
+                  />
+                )
+              });
+            }
+            return <></>;
+          }}
+        </ContractNegotiationsList.Error>
         <div className="flex justify-between pb-6">
           <div className="flex justify-start gap-x-5 items-center">
             <div className="min-w-xl">
@@ -194,6 +215,6 @@ export default function ContractNegotiationsListPage() {
           </div>
         </ContractNegotiationsList.Loading>
       </ContractNegotiationsList>
-    </SideDrawer>
+    </SideDrawer >
   );
 }
