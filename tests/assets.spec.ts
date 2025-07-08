@@ -45,7 +45,7 @@ test.describe("Assets Page Tests", () => {
       await expect(successMessage).toBeVisible();
     });
   });
-  
+
   test.describe("Delete Functionality", () => {
     test("Deletes an asset and verifies it is removed from the list", async ({ page }) => {
       // Select an asset to delete
@@ -66,7 +66,7 @@ test.describe("Assets Page Tests", () => {
       await expect(page.locator(assetsPage.assetListLocator).locator(assetsPage.assetCardLocator).filter({ hasText: assetName })).toHaveCount(0);
     });
   });
-  
+
   test.describe("Edit Functionality", () => {
     test.fixme("should display 'Edit' button in the asset details modal", async ({ page }) => {
       // Select an asset to view details
@@ -170,17 +170,18 @@ test.describe("Assets Page Tests", () => {
     });
 
     test.fixme("should navigate to next page when available", async ({ page }) => {
-      const initialPage = await assetsPage.getCurrentPageNumber();
+      const initialFirstIndex = await assetsPage.getFirstElementIndex();
+      const initialLastIndex = await assetsPage.getLastElementIndex();
       const isNextEnabled = await assetsPage.isNextPageEnabled();
 
       if (isNextEnabled) {
         await assetsPage.goToNextPage();
 
-        const newPage = await assetsPage.getCurrentPageNumber();
-        expect(newPage).toBe(initialPage + 1);
+        const newFirstIndex = await assetsPage.getFirstElementIndex();
+        expect(newFirstIndex).toBe(initialLastIndex + 1);
       } else {
-        const totalPages = await assetsPage.getTotalPages();
-        expect(initialPage).toBe(totalPages);
+        const totalLastIndex = await assetsPage.getLastElementIndex();
+        expect(initialLastIndex).toBe(totalLastIndex);
       }
     });
 
@@ -188,40 +189,40 @@ test.describe("Assets Page Tests", () => {
       const isNextEnabled = await assetsPage.isNextPageEnabled();
       if (isNextEnabled) {
         await assetsPage.goToNextPage();
-        const pageAfterNext = await assetsPage.getCurrentPageNumber();
+        const pageAfterNextFirstIndex = await assetsPage.getFirstElementIndex();
 
         await assetsPage.goToPreviousPage();
-        const pageAfterPrev = await assetsPage.getCurrentPageNumber();
+        const pageAfterPrevFirstIndex = await assetsPage.getFirstElementIndex();
 
-        expect(pageAfterPrev).toBe(pageAfterNext - 1);
+        expect(pageAfterPrevFirstIndex).toBe(pageAfterNextFirstIndex - 1);
       } else {
         const isPrevEnabled = await assetsPage.isPreviousPageEnabled();
-        const currentPage = await assetsPage.getCurrentPageNumber();
+        const currentFirstIndex = await assetsPage.getFirstElementIndex();
 
-        if (currentPage === 1) {
+        if (currentFirstIndex === 1) {
           expect(isPrevEnabled).toBeFalsy();
         }
       }
     });
 
     test.fixme("should disable previous button on first page", async ({ page }) => {
-      const currentPage = await assetsPage.getCurrentPageNumber();
+      const currentFirstIndex = await assetsPage.getFirstElementIndex();
 
-      if (currentPage === 1) {
+      if (currentFirstIndex === 1) {
         const isPrevEnabled = await assetsPage.isPreviousPageEnabled();
         expect(isPrevEnabled).toBeFalsy();
       }
     });
 
     test.fixme("should disable next button on last page", async ({ page }) => {
-      const totalPages = await assetsPage.getTotalPages();
+      const totalLastIndex = await assetsPage.getLastElementIndex();
 
       while (await assetsPage.isNextPageEnabled()) {
         await assetsPage.goToNextPage();
       }
 
-      const currentPage = await assetsPage.getCurrentPageNumber();
-      expect(currentPage).toBe(totalPages);
+      const currentLastIndex = await assetsPage.getLastElementIndex();
+      expect(currentLastIndex).toBe(totalLastIndex);
 
       const isNextEnabled = await assetsPage.isNextPageEnabled();
       expect(isNextEnabled).toBeFalsy();

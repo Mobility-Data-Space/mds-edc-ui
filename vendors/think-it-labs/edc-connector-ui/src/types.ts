@@ -1,4 +1,5 @@
 interface ListPropsBase {
+  shouldFetch?: boolean
 }
 
 interface ListPropsWithoutPagination extends ListPropsBase {
