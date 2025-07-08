@@ -55,7 +55,7 @@ test.describe("Data Offer Tests", () => {
 
       // Verify contract offer was added
       const dataOfferCards = await dataOfferPage.getDataOfferCards();
-      const dataOffersCount = await dataOfferCards.count() ;
+      const dataOffersCount = await dataOfferCards.count();
       expect(dataOffersCount).toBeGreaterThan(1);
     });
 
@@ -78,14 +78,14 @@ test.describe("Data Offer Tests", () => {
 
       // Verify contract offer was added
       const dataOfferCards = await dataOfferPage.getDataOfferCards();
-      const dataOffersCount = await dataOfferCards.count() ;
+      const dataOffersCount = await dataOfferCards.count();
       expect(dataOffersCount).toBeGreaterThan(2);
     });
   });
 
   test.describe("Search Functionality", () => {
     test("should display search input and trigger button", async ({ page }) => {
-        const searchInput = await dataOfferPage.getSearchInput();
+      const searchInput = await dataOfferPage.getSearchInput();
       const searchTrigger = await dataOfferPage.getSearchTrigger();
 
       await expect(searchInput).toBeVisible();
@@ -93,7 +93,7 @@ test.describe("Data Offer Tests", () => {
     });
 
     test("should search for data offers by ID", async ({ page }) => {
-        const initialDataOffers = await dataOfferPage.getDataOfferCards();
+      const initialDataOffers = await dataOfferPage.getDataOfferCards();
       const initialCount = await initialDataOffers.count();
 
       if (initialCount > 0) {
@@ -114,7 +114,7 @@ test.describe("Data Offer Tests", () => {
     });
 
     test("should clear search and show all data offers", async ({ page }) => {
-        await dataOfferPage.searchDataOffers('test');
+      await dataOfferPage.searchDataOffers('test');
 
       await dataOfferPage.clearDataOfferSearch();
 
@@ -123,7 +123,7 @@ test.describe("Data Offer Tests", () => {
     });
 
     test("should handle empty search results", async ({ page }) => {
-        await dataOfferPage.searchDataOffers('nonexistentdataoffer12345');
+      await dataOfferPage.searchDataOffers('nonexistentdataoffer12345');
 
       const searchResults = await dataOfferPage.getDataOfferCards();
       const resultCount = await searchResults.count();
@@ -134,63 +134,63 @@ test.describe("Data Offer Tests", () => {
 
   test.describe("Pagination Functionality", () => {
     test("should display pagination controls", async ({ page }) => {
-        const paginationInfo = await dataOfferPage.getPaginationInfo();
+      const paginationInfo = await dataOfferPage.getPaginationInfo();
       await expect(paginationInfo).toBeVisible();
     });
 
     test("should navigate to next page when available", async ({ page }) => {
-        const initialPage = await dataOfferPage.getCurrentPageNumber();
+      const initialLastIndex = await dataOfferPage.getLastElementIndex();
       const isNextEnabled = await dataOfferPage.isNextPageEnabled();
 
       if (isNextEnabled) {
         await dataOfferPage.goToNextPage();
 
-        const newPage = await dataOfferPage.getCurrentPageNumber();
-        expect(newPage).toBe(initialPage + 1);
+        const newFirstIndex = await dataOfferPage.getFirstElementIndex();
+        expect(newFirstIndex).toBe(initialLastIndex + 1);
       } else {
-        const totalPages = await dataOfferPage.getTotalPages();
-        expect(initialPage).toBe(totalPages);
+        const totalLastIndex = await dataOfferPage.getLastElementIndex();
+        expect(initialLastIndex).toBe(totalLastIndex);
       }
     });
 
     test("should navigate to previous page when available", async ({ page }) => {
-        const isNextEnabled = await dataOfferPage.isNextPageEnabled();
+      const isNextEnabled = await dataOfferPage.isNextPageEnabled();
       if (isNextEnabled) {
         await dataOfferPage.goToNextPage();
-        const pageAfterNext = await dataOfferPage.getCurrentPageNumber();
+        const pageAfterNextFirstIndex = await dataOfferPage.getFirstElementIndex();
 
         await dataOfferPage.goToPreviousPage();
-        const pageAfterPrev = await dataOfferPage.getCurrentPageNumber();
+        const pageAfterPrevFirstIndex = await dataOfferPage.getFirstElementIndex();
 
-        expect(pageAfterPrev).toBe(pageAfterNext - 1);
+        expect(pageAfterPrevFirstIndex).toBe(pageAfterNextFirstIndex - 1);
       } else {
         const isPrevEnabled = await dataOfferPage.isPreviousPageEnabled();
-        const currentPage = await dataOfferPage.getCurrentPageNumber();
+        const currentFirstIndex = await dataOfferPage.getFirstElementIndex();
 
-        if (currentPage === 1) {
+        if (currentFirstIndex === 1) {
           expect(isPrevEnabled).toBeFalsy();
         }
       }
     });
 
     test("should disable previous button on first page", async ({ page }) => {
-        const currentPage = await dataOfferPage.getCurrentPageNumber();
+      const currentFirstIndex = await dataOfferPage.getFirstElementIndex();
 
-      if (currentPage === 1) {
+      if (currentFirstIndex === 1) {
         const isPrevEnabled = await dataOfferPage.isPreviousPageEnabled();
         expect(isPrevEnabled).toBeFalsy();
       }
     });
 
     test("should disable next button on last page", async ({ page }) => {
-        const totalPages = await dataOfferPage.getTotalPages();
+      const totalLastIndex = await dataOfferPage.getLastElementIndex();
 
       while (await dataOfferPage.isNextPageEnabled()) {
         await dataOfferPage.goToNextPage();
       }
 
-      const currentPage = await dataOfferPage.getCurrentPageNumber();
-      expect(currentPage).toBe(totalPages);
+      const currentLastIndex = await dataOfferPage.getLastElementIndex();
+      expect(currentLastIndex).toBe(totalLastIndex);
 
       const isNextEnabled = await dataOfferPage.isNextPageEnabled();
       expect(isNextEnabled).toBeFalsy();

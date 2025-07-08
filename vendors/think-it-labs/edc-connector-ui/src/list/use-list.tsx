@@ -1,4 +1,4 @@
-import { QuerySpec } from "@think-it-labs/edc-connector-client";
+import { CriterionInput, QuerySpec } from "@think-it-labs/edc-connector-client";
 import { useCallback, useEffect, useState } from "react";
 import { SearchSpec } from "../types";
 
@@ -16,10 +16,11 @@ interface ListHook<T> {
 interface UseListOptions<T> {
   queryAll: (querySpec: QuerySpec) => Promise<T[]>;
   delete: (id: string) => Promise<void>;
+  shouldFetch?: boolean
 }
 
 export function useList<T>(
-  { queryAll, delete: del }: UseListOptions<T>,
+  { queryAll, delete: del, shouldFetch = true }: UseListOptions<T>,
 ): ListHook<T> {
   const [querySpec, setQuerySpec] = useState<QuerySpec>({});
   const [searchSpec, setSearchSpec] = useState<SearchSpec>({
@@ -40,6 +41,9 @@ export function useList<T>(
   );
 
   useEffect(() => {
+    if (!shouldFetch) {
+      return
+    }
     (
       async function () {
         try {
@@ -65,7 +69,6 @@ export function useList<T>(
 
         try {
           setLoading(true);
-
           const response = await queryAll(querySpec);
           setItems(response);
         } catch (err) {
@@ -82,30 +85,36 @@ export function useList<T>(
     setSearchSpec((state) => ({ ...state, ...searchSpec }))
   }, [])
 
+  const _setQuerySpec = useCallback((querySpec: QuerySpec) => {
+    setQuerySpec({ ...querySpec, filterExpression: mergeFilterExpressions(querySpec.filterExpression, searchSpec) })
+  }, [searchSpec])
+
   const triggerSearch = useCallback(() => {
-    const shouldWrap = searchSpec.operandRight && searchSpec.operator === "ilike" || searchSpec.operator === "like";
-    const operandRight = shouldWrap
-      ? `%${searchSpec.operandRight}%`
-      : searchSpec.operandRight;
-
-    setQuerySpec({
-      ...querySpec,
-      filterExpression: searchSpec.operandRight
-        ? [{ ...searchSpec, operandRight }]
-        : [],
-    });
-
+    setQuerySpec(querySpec);
     setShouldSearch(true);
-  }, [searchSpec, querySpec])
+  }, [querySpec])
 
   return {
     items,
     error,
     isLoading,
-    setQuerySpec,
+    setQuerySpec: _setQuerySpec,
     searchSpec,
     setSearchSpec: _setSearchSpec,
     deleteItem,
     triggerSearch,
   };
+}
+
+const mergeFilterExpressions = (filterExpression: CriterionInput[] | undefined, searchSpec: CriterionInput) => {
+  filterExpression ||= []
+  if (searchSpec.operandRight) {
+    const shouldWrap = searchSpec.operandRight && searchSpec.operator === "ilike" || searchSpec.operator === "like";
+    const operandRight = shouldWrap
+      ? `%${searchSpec.operandRight}%`
+      : searchSpec.operandRight;
+
+    filterExpression.push({ ...searchSpec, operandRight })
+  }
+  return filterExpression
 }

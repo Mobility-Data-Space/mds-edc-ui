@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { MAX_ITEMS } from '../src/constants/lists';
 import { TransferProcessesPage } from './pages/transfer-processes-page';
 
 test.describe("Transfer Processes Page Tests", () => {
@@ -87,16 +88,16 @@ test.describe("Transfer Processes Page Tests", () => {
     });
 
     test.fixme("should navigate to next page when available", async ({ page }) => {
-      const initialPage = await transferProcessesPage.getCurrentPageNumber();
+      const initialPage = await transferProcessesPage.getFirstElementIndex();
       const isNextEnabled = await transferProcessesPage.isNextPageEnabled();
 
       if (isNextEnabled) {
         await transferProcessesPage.goToNextPage();
 
-        const newPage = await transferProcessesPage.getCurrentPageNumber();
-        expect(newPage).toBe(initialPage + 1);
+        const newPage = await transferProcessesPage.getFirstElementIndex();
+        expect(newPage).toBe(initialPage + MAX_ITEMS);
       } else {
-        const totalPages = await transferProcessesPage.getTotalPages();
+        const totalPages = await transferProcessesPage.getLastElementIndex();
         expect(initialPage).toBe(totalPages);
       }
     });
@@ -105,40 +106,40 @@ test.describe("Transfer Processes Page Tests", () => {
       const isNextEnabled = await transferProcessesPage.isNextPageEnabled();
       if (isNextEnabled) {
         await transferProcessesPage.goToNextPage();
-        const pageAfterNext = await transferProcessesPage.getCurrentPageNumber();
+        const pageAfterNextFirstIndex = await transferProcessesPage.getFirstElementIndex();
 
         await transferProcessesPage.goToPreviousPage();
-        const pageAfterPrev = await transferProcessesPage.getCurrentPageNumber();
+        const pageAfterPrevFirstIndex = await transferProcessesPage.getFirstElementIndex();
 
-        expect(pageAfterPrev).toBe(pageAfterNext - 1);
+        expect(pageAfterPrevFirstIndex).toBe(pageAfterNextFirstIndex - MAX_ITEMS);
       } else {
         const isPrevEnabled = await transferProcessesPage.isPreviousPageEnabled();
-        const currentPage = await transferProcessesPage.getCurrentPageNumber();
+        const currentFirstIndex = await transferProcessesPage.getFirstElementIndex();
 
-        if (currentPage === 1) {
+        if (currentFirstIndex === 1) {
           expect(isPrevEnabled).toBeFalsy();
         }
       }
     });
 
     test.fixme("should disable previous button on first page", async ({ page }) => {
-      const currentPage = await transferProcessesPage.getCurrentPageNumber();
+      const currentFirstIndex = await transferProcessesPage.getFirstElementIndex();
 
-      if (currentPage === 1) {
+      if (currentFirstIndex === 1) {
         const isPrevEnabled = await transferProcessesPage.isPreviousPageEnabled();
         expect(isPrevEnabled).toBeFalsy();
       }
     });
 
     test.fixme("should disable next button on last page", async ({ page }) => {
-      const totalPages = await transferProcessesPage.getTotalPages();
+      const totalLastIndex = await transferProcessesPage.getLastElementIndex();
 
       while (await transferProcessesPage.isNextPageEnabled()) {
         await transferProcessesPage.goToNextPage();
       }
 
-      const currentPage = await transferProcessesPage.getCurrentPageNumber();
-      expect(currentPage).toBe(totalPages);
+      const currentLastIndex = await transferProcessesPage.getLastElementIndex();
+      expect(currentLastIndex).toBe(totalLastIndex);
 
       const isNextEnabled = await transferProcessesPage.isNextPageEnabled();
       expect(isNextEnabled).toBeFalsy();

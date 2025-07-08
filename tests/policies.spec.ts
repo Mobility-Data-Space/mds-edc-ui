@@ -188,17 +188,18 @@ test.describe("Policy Definitions Page Tests", () => {
     });
 
     test("should navigate to next page when available", async ({ page }) => {
-      const initialPage = await policiesPage.getCurrentPageNumber();
+      const initialFirstIndex = await policiesPage.getFirstElementIndex();
+      const initialLastIndex = await policiesPage.getLastElementIndex();
       const isNextEnabled = await policiesPage.isNextPageEnabled();
 
       if (isNextEnabled) {
         await policiesPage.goToNextPage();
 
-        const newPage = await policiesPage.getCurrentPageNumber();
-        expect(newPage).toBe(initialPage + 1);
+        const newFirstIndex = await policiesPage.getFirstElementIndex();
+        expect(newFirstIndex).toBe(initialLastIndex + 1);
       } else {
-        const totalPages = await policiesPage.getTotalPages();
-        expect(initialPage).toBe(totalPages);
+        const totalLastIndex = await policiesPage.getLastElementIndex();
+        expect(initialLastIndex).toBe(totalLastIndex);
       }
     });
 
@@ -206,40 +207,40 @@ test.describe("Policy Definitions Page Tests", () => {
       const isNextEnabled = await policiesPage.isNextPageEnabled();
       if (isNextEnabled) {
         await policiesPage.goToNextPage();
-        const pageAfterNext = await policiesPage.getCurrentPageNumber();
+        const pageAfterNextFirstIndex = await policiesPage.getFirstElementIndex();
 
         await policiesPage.goToPreviousPage();
-        const pageAfterPrev = await policiesPage.getCurrentPageNumber();
+        const pageAfterPrevFirstIndex = await policiesPage.getFirstElementIndex();
 
-        expect(pageAfterPrev).toBe(pageAfterNext - 1);
+        expect(pageAfterPrevFirstIndex).toBe(pageAfterNextFirstIndex - 1);
       } else {
         const isPrevEnabled = await policiesPage.isPreviousPageEnabled();
-        const currentPage = await policiesPage.getCurrentPageNumber();
+        const currentFirstIndex = await policiesPage.getFirstElementIndex();
 
-        if (currentPage === 1) {
+        if (currentFirstIndex === 1) {
           expect(isPrevEnabled).toBeFalsy();
         }
       }
     });
 
     test("should disable previous button on first page", async ({ page }) => {
-      const currentPage = await policiesPage.getCurrentPageNumber();
+      const currentFirstIndex = await policiesPage.getFirstElementIndex();
 
-      if (currentPage === 1) {
+      if (currentFirstIndex === 1) {
         const isPrevEnabled = await policiesPage.isPreviousPageEnabled();
         expect(isPrevEnabled).toBeFalsy();
       }
     });
 
     test("should disable next button on last page", async ({ page }) => {
-      const totalPages = await policiesPage.getTotalPages();
+      const totalLastIndex = await policiesPage.getLastElementIndex();
 
       while (await policiesPage.isNextPageEnabled()) {
         await policiesPage.goToNextPage();
       }
 
-      const currentPage = await policiesPage.getCurrentPageNumber();
-      expect(currentPage).toBe(totalPages);
+      const currentLastIndex = await policiesPage.getLastElementIndex();
+      expect(currentLastIndex).toBe(totalLastIndex);
 
       const isNextEnabled = await policiesPage.isNextPageEnabled();
       expect(isNextEnabled).toBeFalsy();

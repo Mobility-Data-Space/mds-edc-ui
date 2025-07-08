@@ -69,12 +69,12 @@ const getIcon = (type: SnackbarType) => {
 };
 
 const getTestDataId = (t: SnackbarType) => {
-    switch(t) {
-        case "success": 
+    switch (t) {
+        case "success":
             return "toast-success-message"
-        case "error": 
+        case "error":
             return "toast-error-message"
-        default: 
+        case "info":
             return "toast-info-message"
     }
 }
