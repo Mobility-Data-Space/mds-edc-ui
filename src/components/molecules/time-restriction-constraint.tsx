@@ -3,19 +3,19 @@ import { Minus } from "lucide-react";
 import { IconButton } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
+import {MuiSelect} from "@/components/atoms/mui-select";
+import {DatePicker} from "@/components/atoms/date-picker";
+import {ConstraintProps} from "@/components/molecules/constraint";
+import {T, useTranslator} from "@/i18n";
 import { DATE_FORMAT, DEFAULT_DATE_FORMAT } from "@/utilities/date.ts";
-import { T, useTranslator } from "@/i18n";
 import dayjs from "dayjs";
-import { MuiSelect } from "@/components/atoms/mui-select";
-import { DatePicker } from "@/components/atoms/date-picker";
-import { ConstraintProps } from "@/components/molecules/constraint";
-import { timeRestrictionOperators } from "@/utilities/policy-constraints";
+import { timeRestrictionOperators } from "@/utilities/policy-operators";
 
 export function TimeRestrictionConstraint({ value, onChange, onRemove }: ConstraintProps) {
   value = value as AtomicConstraint
   const dayJsDate = dayjs(value.rightOperand, DEFAULT_DATE_FORMAT);
   const dateIsNotValid = !dayJsDate.isValid();
-  const { translator } = useTranslator()
+  const { translator } = useTranslator() ;
 
   return (
     <div className="flex flex-row gap-4">

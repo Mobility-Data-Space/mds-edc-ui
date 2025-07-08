@@ -68,7 +68,7 @@ export default function CreatePolicyDefinitionPage() {
                     required
                     name="policy-id"
                     id="policy-id"
-                    data-testid="policy-id"
+                    data-testid="policy-id-input"
                     type="text"
                     placeholder={translator("policyDefinitions.new.policyId")}
                     value={policyId}

@@ -68,6 +68,17 @@ const getIcon = (type: SnackbarType) => {
     }
 };
 
+const getTestDataId = (t: SnackbarType) => {
+    switch (t) {
+        case "success":
+            return "toast-success-message"
+        case "error":
+            return "toast-error-message"
+        case "info":
+            return "toast-info-message"
+    }
+}
+
 export const Snackbar = forwardRef<HTMLDivElement, SnackbarProps>(
     ({ type, message, details, onClose, action, showDetails = true }, ref) => {
         const [expanded, setExpanded] = useState(false);
@@ -75,6 +86,7 @@ export const Snackbar = forwardRef<HTMLDivElement, SnackbarProps>(
         return (
             <SnackbarContent
                 ref={ref}
+                data-testid={getTestDataId(type)}
                 sx={getSnackbarStyles(type)}
                 message={
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 4, width: '100%' }}>

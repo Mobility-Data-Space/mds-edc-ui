@@ -5,12 +5,8 @@ import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
 import {ConsumerParticipantIdConstraint} from "@/components/molecules/consumer-participant-id-constraint";
 import {TimeRestrictionConstraint} from "@/components/molecules/time-restriction-constraint";
 import {RestrictionConstraint} from "@/components/molecules/restriction-constraint";
-
-import {
-  consumerParticipantIdLeft,
-  MultiplicityConstraint,
-  timeRestrictionLeft
-} from "@/utilities/policy-constraints";
+import { MultiplicityConstraint } from "@/utilities/policy-constraints";
+import { consumerParticipantIdLeft, timeRestrictionLeft } from "@/utilities/policy-operators";
 
 
 export interface ConstraintProps {

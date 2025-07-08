@@ -34,7 +34,7 @@ export default function DataOfferCard({ dataset, participantId, dataTestId, onCl
         <div className="flex flex-row gap-x-4 items-start">
           <AssetIcon asset={datasetToAsset(dataset)} fontSize="large" />
           <div className="flex flex-col">
-            <Typography variant="h4" className="!leading-none hover:underline cursor-pointer">
+            <Typography variant="h4" className="title !leading-none hover:underline cursor-pointer" data-testid="asset-title">
               {assetTitle}
             </Typography>
             <Typography variant="body1" color="textSecondary">
@@ -55,6 +55,6 @@ export default function DataOfferCard({ dataset, participantId, dataTestId, onCl
           {remainingKeywordsCount <= 0 ? "" : <Chip className="font-medium text-sm !cursor-default" clickable label={`+${remainingKeywordsCount}`} key={slicedKeywords.length} />}
         </div>
       </CardContent>
-    </Card>
+    </Card >
   );
 }

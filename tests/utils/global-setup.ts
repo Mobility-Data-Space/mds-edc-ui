@@ -17,11 +17,10 @@ const checkInitStatus = (serviceName: string): boolean => {
 
 async function globalSetup() {  
   const serviceName = 'seed_dataspace';
-  const maxRetries = 30;
   const interval = 5000; // 5 seconds
 
   console.log(`Checking status of service: ${serviceName}`);
-  for (let attempt = 0; attempt < maxRetries; attempt++) {
+  while(!checkInitStatus(serviceName)){
     if (checkInitStatus(serviceName)) {
       console.log(`Service ${serviceName} completed execution.`);
       break;

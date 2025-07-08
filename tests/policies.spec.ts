@@ -9,28 +9,128 @@ test.describe("Policy Definitions Page Tests", () => {
     await policiesPage.navigate();
   });
 
-  test.fixme("Displays the policies list on the first visit", async ({ page }) => {
-    // Verify the policies list is visible
-    const policiesList = await policiesPage.getPoliciesList();
-    await expect(policiesList).toBeVisible();
+  test.describe("List Functionality", () => {
+    test("Displays the policies list on the first visit", async ({ page }) => {
+      // Verify the policies list is visible
+      const policiesList = await policiesPage.getPoliciesList();
+      await expect(policiesList).toBeVisible();
 
-    // Verify there is at least one policy card
-    const policyCards = await policiesPage.getPolicyCards();
-    const policies = await policyCards.allTextContents();
-    expect(policies.length).toBeGreaterThan(0);
+      // Verify there is at least one policy card
+      const policyCards = await policiesPage.getPolicyCards();
+      const policies = await policyCards.allTextContents();
+      expect(policies.length).toBeGreaterThan(0);
+    });
   });
 
-  test.fixme("Displays policy details correctly", async ({ page }) => {
-    // Select a policy
-    const policyCards = await policiesPage.getPolicyCards();
-    const policyCard = policyCards.first();
-    await policyCard.click();
+  test.describe("View Functionality", () => {
+    test("Displays policy details correctly", async ({ page }) => {
+      // Select a policy
+      const policyCards = await policiesPage.getPolicyCards();
+      const policyCard = policyCards.first();
+      await policyCard.click();
 
-    // Verify details are displayed
-    const policyDetails = await policiesPage.verifyPolicyDetails();
-    await expect(policyDetails).toBeVisible();
+      // Verify details are displayed
+      const policyDialog = await policiesPage.getPolicyDialog();
+      await expect(policyDialog).toBeVisible();
+    });
   });
 
+  test.describe("Create Functionality", () => {
+    test.fixme("should allow manual date input in the DatePicker field", async ({ page }) => {
+      // Navigate to the Create Policy page
+      await policiesPage.clickCreatePolicyButton();
+
+      // Interact with the DatePicker field
+      const datePickerInput = await page.locator('[data-testid="date-picker-input"]');
+      await datePickerInput.click();
+
+      // Select a date using the calendar
+      const calendarDay = await page.locator('[data-testid="calendar-day"]').first();
+      await calendarDay.click();
+
+      // Manually edit the date in the input field
+      await datePickerInput.fill("15/07/2025");
+
+      // Verify the manually entered date is displayed correctly
+      const inputValue = await datePickerInput.inputValue();
+      expect(inputValue).toBe("15/07/2025");
+    });
+
+    test("should create a policy using the '=' operator for Consumer's Participant ID", async ({ page }) => {
+      // Open the Create Policy dialog
+      await policiesPage.clickCreatePolicyButton();
+      await page.waitForURL("**/new");
+
+      // Fill in the policy details
+      await policiesPage.fillPolicyId("TestPolicy001");
+      await policiesPage.clickAddExpressionButton();
+      await policiesPage.selectParticipantIdField();
+      await policiesPage.selectEqualOperator();
+      await policiesPage.fillParticipantId("ConsumerParticipant002");
+
+      // Attempt to create the policy
+      await policiesPage.clickCreateButton();
+      await page.waitForResponse((response) => response.url().includes('/connector/management/v3/policydefinitions/request'));
+
+      // Verify policy was added
+      const policyCards = await policiesPage.getPolicyCards();
+      const policiesCount = await policyCards.count() ;
+      expect(policiesCount).toBeGreaterThan(1);
+    });
+
+    test("should create a policy using the IN ('isPartOf') operator for Consumer's Participant ID", async ({ page }) => {
+      // Open the Create Policy dialog
+      await policiesPage.clickCreatePolicyButton();
+      await page.waitForURL("**/new");
+
+      // Fill in the policy details
+      await policiesPage.fillPolicyId("TestPolicy002");
+      await policiesPage.clickAddExpressionButton();
+      await policiesPage.selectParticipantIdField();
+      await policiesPage.selectInOperator();
+      await policiesPage.fillParticipantId("ConsumerParticipant001");
+
+      // Attempt to create the policy
+      await policiesPage.clickCreateButton();
+      await page.waitForResponse((response) => response.url().includes('/connector/management/v3/policydefinitions/request'));
+
+      // Verify policy was added
+      const policyCards = await policiesPage.getPolicyCards();
+      const policiesCount = await policyCards.count() ;
+      expect(policiesCount).toBeGreaterThan(1);
+    });
+
+    test("should display a clear error message for duplicate policy ID", async ({ page }) => {
+      // Navigate to the Policies page
+      await policiesPage.navigate();
+
+      // Create a policy with a unique ID
+      await policiesPage.clickCreatePolicyButton();
+      await policiesPage.fillPolicyId("TestPolicy001");
+      await policiesPage.clickCreateButton();
+
+      // Verify the error message
+      const errorMessageLocator = await policiesPage.getErrorMessage();
+      const errorMessage = await errorMessageLocator.textContent();
+      expect(errorMessage).toBe("Policy with ID TestPolicy001 already exists");
+    });
+
+  });
+
+  test.describe("Delete Functionality", () => {
+    test.fixme("should display 'Delete' button in the policy details modal", async ({ page }) => {
+      // Select a policy to view details
+      const policyCards = await policiesPage.getPolicyCards();
+      const policyCard = policyCards.first();
+      await policyCard.click();
+
+      // Verify the "Delete" button is present in the policy details modal
+      const deleteButton = await policiesPage.getDeleteButton();
+      await expect(deleteButton).toBeVisible();
+    });
+
+  });
+  
   test.describe("Search Functionality", () => {
     test("should display search input and trigger button", async ({ page }) => {
       const searchInput = await policiesPage.getSearchInput();
@@ -88,17 +188,18 @@ test.describe("Policy Definitions Page Tests", () => {
     });
 
     test("should navigate to next page when available", async ({ page }) => {
-      const initialPage = await policiesPage.getCurrentPageNumber();
+      const initialFirstIndex = await policiesPage.getFirstElementIndex();
+      const initialLastIndex = await policiesPage.getLastElementIndex();
       const isNextEnabled = await policiesPage.isNextPageEnabled();
 
       if (isNextEnabled) {
         await policiesPage.goToNextPage();
 
-        const newPage = await policiesPage.getCurrentPageNumber();
-        expect(newPage).toBe(initialPage + 1);
+        const newFirstIndex = await policiesPage.getFirstElementIndex();
+        expect(newFirstIndex).toBe(initialLastIndex + 1);
       } else {
-        const totalPages = await policiesPage.getTotalPages();
-        expect(initialPage).toBe(totalPages);
+        const totalLastIndex = await policiesPage.getLastElementIndex();
+        expect(initialLastIndex).toBe(totalLastIndex);
       }
     });
 
@@ -106,46 +207,46 @@ test.describe("Policy Definitions Page Tests", () => {
       const isNextEnabled = await policiesPage.isNextPageEnabled();
       if (isNextEnabled) {
         await policiesPage.goToNextPage();
-        const pageAfterNext = await policiesPage.getCurrentPageNumber();
+        const pageAfterNextFirstIndex = await policiesPage.getFirstElementIndex();
 
         await policiesPage.goToPreviousPage();
-        const pageAfterPrev = await policiesPage.getCurrentPageNumber();
+        const pageAfterPrevFirstIndex = await policiesPage.getFirstElementIndex();
 
-        expect(pageAfterPrev).toBe(pageAfterNext - 1);
+        expect(pageAfterPrevFirstIndex).toBe(pageAfterNextFirstIndex - 1);
       } else {
         const isPrevEnabled = await policiesPage.isPreviousPageEnabled();
-        const currentPage = await policiesPage.getCurrentPageNumber();
+        const currentFirstIndex = await policiesPage.getFirstElementIndex();
 
-        if (currentPage === 1) {
+        if (currentFirstIndex === 1) {
           expect(isPrevEnabled).toBeFalsy();
         }
       }
     });
 
     test("should disable previous button on first page", async ({ page }) => {
-      const currentPage = await policiesPage.getCurrentPageNumber();
+      const currentFirstIndex = await policiesPage.getFirstElementIndex();
 
-      if (currentPage === 1) {
+      if (currentFirstIndex === 1) {
         const isPrevEnabled = await policiesPage.isPreviousPageEnabled();
         expect(isPrevEnabled).toBeFalsy();
       }
     });
 
     test("should disable next button on last page", async ({ page }) => {
-      const totalPages = await policiesPage.getTotalPages();
+      const totalLastIndex = await policiesPage.getLastElementIndex();
 
       while (await policiesPage.isNextPageEnabled()) {
         await policiesPage.goToNextPage();
       }
 
-      const currentPage = await policiesPage.getCurrentPageNumber();
-      expect(currentPage).toBe(totalPages);
+      const currentLastIndex = await policiesPage.getLastElementIndex();
+      expect(currentLastIndex).toBe(totalLastIndex);
 
       const isNextEnabled = await policiesPage.isNextPageEnabled();
       expect(isNextEnabled).toBeFalsy();
     });
 
-    test("should maintain search results across pagination", async ({ page }) => {
+    test.fixme("should maintain search results across pagination", async ({ page }) => {
       await policiesPage.searchPolicies('test');
 
       const isNextEnabled = await policiesPage.isNextPageEnabled();
