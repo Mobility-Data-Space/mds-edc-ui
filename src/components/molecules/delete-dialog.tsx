@@ -38,7 +38,7 @@ export function DeleteDialog({ open, onClose, title = "", content = "", onConfir
         <Button color="secondary" onClick={onClose}>
           <T string="common.close"/>
         </Button>
-        <Button color="error" variant="contained" onClick={onConfirmAndClose}>
+        <Button test-dataid="confirm-delete-btn" color="error" variant="contained" onClick={onConfirmAndClose}>
           <T string="common.delete"/>
         </Button>
       </DialogActions>

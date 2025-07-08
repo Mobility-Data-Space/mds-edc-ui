@@ -2,14 +2,11 @@ import { Page } from '@playwright/test';
 import { BaseListPage } from './base-list-page';
 
 export class DataOfferPage extends BaseListPage {
-  // Single data offer selectors
-  readonly dataOfferListLocator = '#data-offer-list';
-  readonly dataOfferItemLocator = '.data-offer-item';
-  readonly dataOfferDetailsLocator = '#data-offer-details';
-
+  
   // List page selectors
   readonly dataOffersListLocator = '[data-testid="data-offers-list"]';
   readonly dataOfferCardLocator = '.data-offer-card';
+  readonly createDataOfferDialogLocator = '[data-testid="create-data-offer-dialog"]';
   readonly dataOfferDialogLocator = '[data-testid="data-offer-dialog"]';
   readonly createDataOfferButtonLocator = 'button:has-text("Publish Data Offer")';
 
@@ -17,10 +14,45 @@ export class DataOfferPage extends BaseListPage {
     super(page);
   }
 
-  // Single data offer page navigation
-  async navigateToSingle() {
-    await this.page.goto('/data-offer');
-    await this.page.waitForLoadState('networkidle');
+  async openCreateDataOfferDialog() {
+    await this.page.click(this.createDataOfferButtonLocator);
+    await this.page.waitForSelector(this.createDataOfferDialogLocator);
+  }
+
+  async fillContractId(contractId: string) {
+    await this.page.getByRole('textbox', { name: 'ID' }).fill(contractId);
+  }
+
+  async pickContractPolicy() {
+    await this.page.getByRole('combobox', { name: 'Contract Policy' }).click();
+    await this.page.getByRole('option', { name: 'always-true' }).click();
+  }
+
+  async pickAccessPolicy() {
+    await this.page.getByRole('combobox', { name: 'Access Policy' }).click();
+    await this.page.getByRole('option', { name: 'always-true' }).click();
+  }
+
+  async selectAsset(multiple: boolean = false) {
+    await this.page.getByRole('combobox', { name: 'Assets' }).click();
+    await this.page.getByRole('option', { name: 'asset-1-id' }).click();
+
+    if (multiple) {
+      await this.page.getByRole('option', { name: 'asset-2-id' }).click();
+    }
+  }
+
+  async closeAssetSelector() {
+    await this.page.locator('body').click({
+        position: {
+          x: 0,
+          y: 0
+        }
+      });
+  }
+
+  async submitCreateDataOfferForm() {
+    await this.page.click('[data-testid="create-button"]');
   }
 
   // List page navigation
@@ -29,23 +61,6 @@ export class DataOfferPage extends BaseListPage {
     await this.page.waitForResponse((response) => response.url().includes('/connector/management/v3/contractdefinitions'));
   }
 
-  // Single data offer methods
-  async getDataOfferList() {
-    return this.page.locator(this.dataOfferListLocator);
-  }
-
-  async selectDataOfferFromList(dataOfferName: string) {
-    const dataOfferItem = this.page.locator(this.dataOfferItemLocator).filter({ hasText: dataOfferName });
-    await dataOfferItem.click();
-  }
-
-  async verifyDataOfferDetails() {
-    const dataOfferDetails = this.page.locator(this.dataOfferDetailsLocator);
-    await dataOfferDetails.waitFor();
-    return dataOfferDetails;
-  }
-
-  // List page methods
   async getDataOffersList() {
     return this.page.locator(this.dataOffersListLocator);
   }
@@ -54,13 +69,14 @@ export class DataOfferPage extends BaseListPage {
     return this.page.locator(this.dataOfferCardLocator);
   }
 
-  async selectDataOffer(dataOfferName: string) {
-    await this.page.locator(this.dataOfferCardLocator).filter({ hasText: dataOfferName }).click();
+  async getCreateDataOfferDialog() {
+    return this.page.locator(this.createDataOfferDialogLocator);
   }
 
-  async verifyDataOfferDialog() {
-    return this.page.locator(this.dataOfferDialogLocator);
+  async getDataOfferDialog() {
+    return this.page.locator(this.dataOfferDialogLocator) ;
   }
+
 
   async searchDataOffers(searchTerm: string) {
     await this.searchItems(searchTerm, '/connector/management/v3/contractdefinitions');

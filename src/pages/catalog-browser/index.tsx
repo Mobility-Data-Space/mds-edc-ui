@@ -68,7 +68,7 @@ export default function CatalogPage() {
       },
     );
 
-  }, [])
+  }, [push, query])
 
   return (
     <>

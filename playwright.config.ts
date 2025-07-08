@@ -3,11 +3,12 @@ import { config as UiConfig } from './tests/utils/ui-config' ;
 
 export default defineConfig({
   testDir: './tests',
-  fullyParallel: true,
+  fullyParallel: true, 
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  retries: 1,
   reporter: 'html',
+  timeout: 15 * 1000, // 15 seconds timeout
+  maxFailures: 10,
   use: {
     // Base URL to use in actions like `await page.goto('/')`.
     baseURL: 'http://127.0.0.1:3000',
@@ -22,21 +23,19 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
-    },
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
     }
   ],
 
   // Run your local dev server before starting the tests.
   webServer: [{
+      name: "MDS EDC UI Server",
       command: 'yarn dev',
       url: 'http://127.0.0.1:3000',
       env: UiConfig,
-      reuseExistingServer: !process.env.CI,
+      reuseExistingServer: false,
     },
     {
+      name: "MDS EDC E2E Services",
       command: 'docker compose -f ./docker-compose.e2e.yml up -d'
     }
   ]

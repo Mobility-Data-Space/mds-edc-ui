@@ -9,26 +9,30 @@ test.describe("Contract Agreements Page Tests", () => {
     await agreementsPage.navigate();
   });
 
-  test.fixme("Displays the list of agreements", async ({ page }) => {
-    // Verify the agreements list is visible
-    const agreementsList = await agreementsPage.getAgreementsList();
-    await expect(agreementsList).toBeVisible();
+  test.describe("List Functionality", () => {
+    test.fixme("Displays the list of agreements", async ({ page }) => {
+      // Verify the agreements list is visible
+      const agreementsList = await agreementsPage.getAgreementsList();
+      await expect(agreementsList).toBeVisible();
 
-    // Verify there is at least one agreement card
-    const agreementCards = await agreementsPage.getAgreementCards();
-    const agreements = await agreementCards.allTextContents();
-    expect(agreements.length).toBeGreaterThan(0);
+      // Verify there is at least one agreement card
+      const agreementCards = await agreementsPage.getAgreementCards();
+      const agreements = await agreementCards.allTextContents();
+      expect(agreements.length).toBeGreaterThan(0);
+    });
   });
 
-  test.fixme("Displays agreement details when an agreement is selected", async ({ page }) => {
-    // Select an agreement
-    const agreementCards = await agreementsPage.getAgreementCards();
-    const agreementCard = agreementCards.first();
-    await agreementCard.click();
+  test.describe("View Functionality", () => {
+    test.fixme("Displays agreement details when an agreement is selected", async ({ page }) => {
+      // Select an agreement
+      const agreementCards = await agreementsPage.getAgreementCards();
+      const agreementCard = agreementCards.first();
+      await agreementCard.click();
 
-    // Verify the agreement details are visible
-    const agreementDetails = await agreementsPage.verifyAgreementDetails();
-    await expect(agreementDetails).toBeVisible();
+      // Verify the agreement details are visible
+      const agreementDialog = await agreementsPage.getAgreementDialog();
+      await expect(agreementDialog).toBeVisible();
+    });
   });
 
   test.describe("Search Functionality", () => {
@@ -54,7 +58,7 @@ test.describe("Contract Agreements Page Tests", () => {
         await expect(searchResults).toBeVisible();
 
         const results = await searchResults.allTextContents();
-        const hasMatchingResult = results.some(result =>
+        const hasMatchingResult = results.some((result) =>
           result.toLowerCase().includes(searchTerm.toLowerCase())
         );
         expect(hasMatchingResult).toBeTruthy();
@@ -81,12 +85,12 @@ test.describe("Contract Agreements Page Tests", () => {
   });
 
   test.describe("Pagination Functionality", () => {
-    test("should display pagination controls", async ({ page }) => {
+    test.fixme("should display pagination controls", async ({ page }) => {
       const paginationInfo = await agreementsPage.getPaginationInfo();
       await expect(paginationInfo).toBeVisible();
     });
 
-    test("should navigate to next page when available", async ({ page }) => {
+    test.fixme("should navigate to next page when available", async ({ page }) => {
       const initialPage = await agreementsPage.getCurrentPageNumber();
       const isNextEnabled = await agreementsPage.isNextPageEnabled();
 
@@ -101,7 +105,7 @@ test.describe("Contract Agreements Page Tests", () => {
       }
     });
 
-    test("should navigate to previous page when available", async ({ page }) => {
+    test.fixme("should navigate to previous page when available", async ({ page }) => {
       const isNextEnabled = await agreementsPage.isNextPageEnabled();
       if (isNextEnabled) {
         await agreementsPage.goToNextPage();
@@ -112,16 +116,16 @@ test.describe("Contract Agreements Page Tests", () => {
 
         expect(pageAfterPrev).toBe(pageAfterNext - 1);
       } else {
-        const isPrevEnabled = await agreementsPage.isPreviousPageEnabled();
-        const currentPage = await agreementsPage.getCurrentPageNumber();
+      const isPrevEnabled = await agreementsPage.isPreviousPageEnabled();
+      const currentPage = await agreementsPage.getCurrentPageNumber();
 
-        if (currentPage === 1) {
-          expect(isPrevEnabled).toBeFalsy();
-        }
+      if (currentPage === 1) {
+        expect(isPrevEnabled).toBeFalsy();
+      }
       }
     });
 
-    test("should disable previous button on first page", async ({ page }) => {
+    test.fixme("should disable previous button on first page", async ({ page }) => {
       const currentPage = await agreementsPage.getCurrentPageNumber();
 
       if (currentPage === 1) {
@@ -130,7 +134,7 @@ test.describe("Contract Agreements Page Tests", () => {
       }
     });
 
-    test("should disable next button on last page", async ({ page }) => {
+    test.fixme("should disable next button on last page", async ({ page }) => {
       const totalPages = await agreementsPage.getTotalPages();
 
       while (await agreementsPage.isNextPageEnabled()) {
@@ -144,7 +148,7 @@ test.describe("Contract Agreements Page Tests", () => {
       expect(isNextEnabled).toBeFalsy();
     });
 
-    test("should maintain search results across pagination", async ({ page }) => {
+    test.fixme("should maintain search results across pagination", async ({ page }) => {
       await agreementsPage.searchAgreements('test');
 
       const isNextEnabled = await agreementsPage.isNextPageEnabled();

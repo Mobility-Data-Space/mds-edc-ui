@@ -9,46 +9,83 @@ test.describe("Data Offer Tests", () => {
     await dataOfferPage.navigate();
   });
 
-  test.fixme("Displays the list of data offers", async ({ page }) => {
-    // Verify the data offer list is visible
-    const dataOfferList = await dataOfferPage.getDataOfferList();
-    await expect(dataOfferList).toBeVisible();
+  test.describe("List Functionality", () => {
+    test("Displays the data offers list on the first visit", async ({ page }) => {
+      // Verify the data offers list is visible
+      const dataOffersList = await dataOfferPage.getDataOffersList();
+      await expect(dataOffersList).toBeVisible();
+
+      // Verify there is at least one data offer card
+      const dataOfferCards = await dataOfferPage.getDataOfferCards();
+      const dataOffers = await dataOfferCards.allTextContents();
+      expect(dataOffers.length).toBeGreaterThan(0);
+    });
   });
 
-  test.fixme("Displays data offer details when a data offer is selected", async ({ page }) => {
-    // Select a data offer
-    await dataOfferPage.selectDataOffer('Test Data Offer');
+  test.describe("View Functionality", () => {
+    test("Displays data offer details when a data offer is selected", async ({ page }) => {
+      // Select a data offer
+      const dataOfferCards = await dataOfferPage.getDataOfferCards();
+      const dataOfferCard = dataOfferCards.first();
+      await dataOfferCard.click();
 
-    // Verify the data offer details are visible
-    const dataOfferDetails = await dataOfferPage.verifyDataOfferDetails();
-    await expect(dataOfferDetails).toBeVisible();
+      // Verify details are displayed
+      const dataOfferDialog = await dataOfferPage.getDataOfferDialog();
+      await expect(dataOfferDialog).toBeVisible();
+    });
   });
 
-  test("Displays the data offers list on the first visit", async ({ page }) => {
-    // Verify the data offers list is visible
-    const dataOffersList = await dataOfferPage.getDataOffersList();
-    await expect(dataOffersList).toBeVisible();
+  test.describe("Create Functionality", () => {
+    test("Creates a new data offer for 1 asset and verifies its visibility", async ({ page }) => {
+      // Open the create data offer dialog
+      await dataOfferPage.openCreateDataOfferDialog();
 
-    // Verify there is at least one data offer card
-    const dataOfferCards = await dataOfferPage.getDataOfferCards();
-    const dataOffers = await dataOfferCards.allTextContents();
-    expect(dataOffers.length).toBeGreaterThan(0);
-  });
+      // Fill in the data offer details
+      const randomId = `data-offer-${Math.random().toString(36).substring(2, 15)}`;
+      await dataOfferPage.fillContractId(randomId);
+      await dataOfferPage.pickContractPolicy();
+      await dataOfferPage.pickAccessPolicy();
+      await dataOfferPage.selectAsset();
 
-  test("Displays data offer details correctly", async ({ page }) => {
-    // Select a data offer
-    const dataOfferCards = await dataOfferPage.getDataOfferCards();
-    const dataOfferCard = dataOfferCards.first();
-    await dataOfferCard.click();
+      await dataOfferPage.closeAssetSelector();
 
-    // Verify details are displayed
-    const dataOfferDetails = await dataOfferPage.verifyDataOfferDialog();
-    await expect(dataOfferDetails).toBeVisible();
+      // Submit the form
+      await dataOfferPage.submitCreateDataOfferForm();
+      await page.waitForResponse((response) => response.url().includes('/connector/management/v3/contractdefinitions/request'));
+
+      // Verify contract offer was added
+      const dataOfferCards = await dataOfferPage.getDataOfferCards();
+      const dataOffersCount = await dataOfferCards.count() ;
+      expect(dataOffersCount).toBeGreaterThan(1);
+    });
+
+    test("Creates a new data offer for 2 assets and verifies its visibility", async ({ page }) => {
+      // Open the create data offer dialog
+      await dataOfferPage.openCreateDataOfferDialog();
+
+      // Fill in the data offer details
+      const randomId = `data-offer-${Math.random().toString(36).substring(2, 15)}`;
+      await dataOfferPage.fillContractId(randomId);
+      await dataOfferPage.pickContractPolicy();
+      await dataOfferPage.pickAccessPolicy();
+      await dataOfferPage.selectAsset(true);
+
+      await dataOfferPage.closeAssetSelector();
+
+      // Submit the form
+      await dataOfferPage.submitCreateDataOfferForm();
+      await page.waitForResponse((response) => response.url().includes('/connector/management/v3/contractdefinitions/request'));
+
+      // Verify contract offer was added
+      const dataOfferCards = await dataOfferPage.getDataOfferCards();
+      const dataOffersCount = await dataOfferCards.count() ;
+      expect(dataOffersCount).toBeGreaterThan(2);
+    });
   });
 
   test.describe("Search Functionality", () => {
     test("should display search input and trigger button", async ({ page }) => {
-      const searchInput = await dataOfferPage.getSearchInput();
+        const searchInput = await dataOfferPage.getSearchInput();
       const searchTrigger = await dataOfferPage.getSearchTrigger();
 
       await expect(searchInput).toBeVisible();
@@ -56,7 +93,7 @@ test.describe("Data Offer Tests", () => {
     });
 
     test("should search for data offers by ID", async ({ page }) => {
-      const initialDataOffers = await dataOfferPage.getDataOfferCards();
+        const initialDataOffers = await dataOfferPage.getDataOfferCards();
       const initialCount = await initialDataOffers.count();
 
       if (initialCount > 0) {
@@ -77,7 +114,7 @@ test.describe("Data Offer Tests", () => {
     });
 
     test("should clear search and show all data offers", async ({ page }) => {
-      await dataOfferPage.searchDataOffers('test');
+        await dataOfferPage.searchDataOffers('test');
 
       await dataOfferPage.clearDataOfferSearch();
 
@@ -86,7 +123,7 @@ test.describe("Data Offer Tests", () => {
     });
 
     test("should handle empty search results", async ({ page }) => {
-      await dataOfferPage.searchDataOffers('nonexistentdataoffer12345');
+        await dataOfferPage.searchDataOffers('nonexistentdataoffer12345');
 
       const searchResults = await dataOfferPage.getDataOfferCards();
       const resultCount = await searchResults.count();
@@ -97,12 +134,12 @@ test.describe("Data Offer Tests", () => {
 
   test.describe("Pagination Functionality", () => {
     test("should display pagination controls", async ({ page }) => {
-      const paginationInfo = await dataOfferPage.getPaginationInfo();
+        const paginationInfo = await dataOfferPage.getPaginationInfo();
       await expect(paginationInfo).toBeVisible();
     });
 
     test("should navigate to next page when available", async ({ page }) => {
-      const initialPage = await dataOfferPage.getCurrentPageNumber();
+        const initialPage = await dataOfferPage.getCurrentPageNumber();
       const isNextEnabled = await dataOfferPage.isNextPageEnabled();
 
       if (isNextEnabled) {
@@ -117,7 +154,7 @@ test.describe("Data Offer Tests", () => {
     });
 
     test("should navigate to previous page when available", async ({ page }) => {
-      const isNextEnabled = await dataOfferPage.isNextPageEnabled();
+        const isNextEnabled = await dataOfferPage.isNextPageEnabled();
       if (isNextEnabled) {
         await dataOfferPage.goToNextPage();
         const pageAfterNext = await dataOfferPage.getCurrentPageNumber();
@@ -137,7 +174,7 @@ test.describe("Data Offer Tests", () => {
     });
 
     test("should disable previous button on first page", async ({ page }) => {
-      const currentPage = await dataOfferPage.getCurrentPageNumber();
+        const currentPage = await dataOfferPage.getCurrentPageNumber();
 
       if (currentPage === 1) {
         const isPrevEnabled = await dataOfferPage.isPreviousPageEnabled();
@@ -146,7 +183,7 @@ test.describe("Data Offer Tests", () => {
     });
 
     test("should disable next button on last page", async ({ page }) => {
-      const totalPages = await dataOfferPage.getTotalPages();
+        const totalPages = await dataOfferPage.getTotalPages();
 
       while (await dataOfferPage.isNextPageEnabled()) {
         await dataOfferPage.goToNextPage();
@@ -159,8 +196,8 @@ test.describe("Data Offer Tests", () => {
       expect(isNextEnabled).toBeFalsy();
     });
 
-    test.fixme("should maintain search results across pagination", async ({ page }) => {
-      await dataOfferPage.searchDataOffers('test');
+    test("should maintain search results across pagination", async ({ page }) => {
+      await dataOfferPage.searchDataOffers('services-offer');
 
       const isNextEnabled = await dataOfferPage.isNextPageEnabled();
       if (isNextEnabled) {
@@ -168,7 +205,7 @@ test.describe("Data Offer Tests", () => {
 
         const searchInput = await dataOfferPage.getSearchInput();
         const searchValue = await searchInput.inputValue();
-        expect(searchValue).toBe('test');
+        expect(searchValue).toBe('services-offer');
       }
     });
   });

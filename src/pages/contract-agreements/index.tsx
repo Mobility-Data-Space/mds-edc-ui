@@ -10,7 +10,6 @@ import { useParticipantConnectorState } from "@/hooks/use-participant-connector-
 import { T, useTranslator } from "@/i18n";
 import { theme } from "@/theme/ThemeProvider.tsx";
 import { AGREEMENT_RETIREMENT_DATE, AGREEMENT_RETIREMENT_REASON, AgreementsRetirementController, RetiredContractAgreement } from "@/utilities/contract-agreement";
-import { operatorEquals, operatorIn } from "@/utilities/policy-constraints.ts";
 import { Button, ButtonGroup } from "@mui/material";
 import { ContractAgreement, TransferProcessStates } from "@think-it-labs/edc-connector-client";
 import { ContractAgreementsList } from "@think-it-labs/edc-connector-ui/contract-agreements-list";
@@ -19,6 +18,7 @@ import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
+import { operatorEqual, operatorIn } from "@/utilities/policy-operators";
 
 enum TypeFilter {
   Consuming = "Consuming",
@@ -43,7 +43,6 @@ interface ContractAgreementInfo {
 
 export default function ContractAgreementsListPage() {
   const { connector } = useParticipantConnectorState();
-  const managementUrl = connector?.managementUrl as string;
   const [retiredContractAgreementIds, setRetiredContractAgreementIds] = useState<string[]>([]);
   const [contractAgreementInfo, setContractAgreementInfo] = useState<ContractAgreementInfo>({});
 
@@ -54,12 +53,12 @@ export default function ContractAgreementsListPage() {
   const typeFilterExpression = useMemo(() => ({
     [TypeFilter.Consuming]: [{
       operandLeft: "consumerId",
-      operator: operatorEquals.value,
+      operator: operatorEqual.value,
       operandRight: connector.id
     }],
     [TypeFilter.Providing]: [{
       operandLeft: "providerId",
-      operator: operatorEquals.value,
+      operator: operatorEqual.value,
       operandRight: connector.id
     }],
   }), [connector.id]);
@@ -71,9 +70,11 @@ export default function ContractAgreementsListPage() {
       operator: operatorIn.value,
       operandRight: retiredContractAgreementIds,
     }],
-  }), [contractAgreementInfo]);
+  }), [retiredContractAgreementIds]);
 
   const { push, query } = useRouter()
+
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const navigate = useCallback((newPage: number) => {
     push(
@@ -86,7 +87,7 @@ export default function ContractAgreementsListPage() {
       },
     );
 
-  }, [])
+  }, [push, query])
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
@@ -99,10 +100,10 @@ export default function ContractAgreementsListPage() {
     setOpenContractAgreementData({ contractAgreement });
   };
 
-  const edcClient = useEdcConnectorClient({ management: managementUrl });
+  const edcClient = useEdcConnectorClient({ management: connector.managementUrl });
 
-  const populateRetired = () => {
-    const controller = new AgreementsRetirementController(managementUrl)
+  const populateRetired = useCallback(() => {
+    const controller = new AgreementsRetirementController(connector.managementUrl)
     controller.retiredAgreementsRequest().then(retiredAgreements => {
       setRetiredContractAgreementIds(retiredAgreements.map(contractAgreement => contractAgreement.agreementId as string));
       const retiredContractAgreementsToSave: { [key: string]: RetiredContractAgreement } = {};
@@ -134,13 +135,13 @@ export default function ContractAgreementsListPage() {
         setContractAgreementInfo(contractAgreementInfoToSave);
       });
     }).catch(error => enqueueSnackbar("contractAgreements.retiredFetchError"));
-  };
+  }, [edcClient, connector, enqueueSnackbar]);
 
   useEffect(() => {
     populateRetired();
-  }, [edcClient]);
+  }, [populateRetired, edcClient]);
 
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  
 
   if (!connector) {
     return "No connector";
@@ -168,7 +169,7 @@ export default function ContractAgreementsListPage() {
       />
 
       <ContractAgreementsList
-        managementUrl={managementUrl}
+        managementUrl={connector.managementUrl}
         usePagination={true}
         navigate={navigate}
         currentPage={parseInt(query.page as string) || 0}

@@ -45,7 +45,7 @@ export default function AssetListPage() {
         },
       },
     );
-  }, [])
+  }, [router])
 
   return (
     <>

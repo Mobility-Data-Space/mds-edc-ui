@@ -25,7 +25,7 @@ jobs:
       run: yarn install --frozen-lockfile
 
     - name: Install Playwright Browsers
-      run: yarn playwright install --with-deps
+      run: yarn playwright install --with-deps chromium
     
     - name: Log in to GitHub Container Registry
       uses: docker/login-action@v3

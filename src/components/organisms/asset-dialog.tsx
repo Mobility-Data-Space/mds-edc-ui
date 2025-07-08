@@ -80,8 +80,8 @@ export default function AssetDialog({ open, onClose, asset, onEditClick, deleteE
                 </IconButton>
               }
               {deleteEnabled &&
-                <IconButton onClick={() => setDeleteDialogOpen(true)}>
-                  <DeleteIcon color="secondary" />
+                <IconButton data-testid="delete-asset-modal-btn" onClick={() => setDeleteDialogOpen(true)}>
+                  <DeleteIcon color="secondary"/>
                 </IconButton>
               }
             </div>

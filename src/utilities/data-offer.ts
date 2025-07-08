@@ -1,10 +1,29 @@
 import {CriterionInput} from "@think-it-labs/edc-connector-client";
-import {operatorIn} from "@/utilities/policy-constraints";
+
+const EDC_ID_FIELD = "https://w3id.org/edc/v0.0.1/ns/id"
+
+export const operatorEqual = {
+  value: '=',
+  text: 'Equal',
+  tooltip: 'Equal',
+};
+
+export const operatorLike = {
+  value: 'like',
+  text: 'Like',
+  tooltip: 'Like',
+};
+
+export const operatorIn = {
+  value: 'in',
+  text: 'In',
+  tooltip: 'In',
+};
 
 export const idSelector = (id: string): CriterionInput[] => {
   return [
     {
-      operandLeft: "@id",
+      operandLeft: EDC_ID_FIELD,
       operator: operatorIn.value,
       operandRight: id
     }
@@ -12,17 +31,19 @@ export const idSelector = (id: string): CriterionInput[] => {
 };
 
 export const idMultipleSelector = (ids: string[]): CriterionInput[] => {
-  return ids.map(id => ({
-    operandLeft: "@id",
-    operator: operatorIn.value,
-    operandRight: id
-  }));
+  return [
+    {
+      operandLeft: EDC_ID_FIELD,
+      operator: operatorIn.value,
+      operandRight: transformIdsToString(ids)
+    }
+  ]
 };
 
-export const idReader = (criteria: CriterionInput[]) => {
-  return criteria[0]?.operandRight || "";
-}
+export const transformIdsToString = (ids: string[]): string => {
+  return ids.join(",");
+};
 
-export const idMultipleReader = (criteria: CriterionInput[]) => {
-  return criteria.map(value => value?.operandRight || "");
+export const idMultipleReader = (criteria: CriterionInput[]): string[] => {
+  return criteria?.at(0)?.operandRight.split(",") || [];
 }

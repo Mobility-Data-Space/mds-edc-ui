@@ -111,6 +111,7 @@ export default function DataOfferCreateDialog({ open, onClose, managementUrl, co
         maxWidth="lg"
         className="my-7"
         onClose={onClose}
+        data-testid="create-data-offer-dialog"
       >
         <ContractDefinitionFormWrapper
           managementUrl={managementUrl}
@@ -133,7 +134,7 @@ export default function DataOfferCreateDialog({ open, onClose, managementUrl, co
                   required
                   name="contract-definition-id"
                   id="contract-definition-id"
-                  data-testid="contract-definition-id"
+                  data-testid="contract-definition-id-input"
                   label={translator("contractDefinitions.new.id")}
                   value={formData["@id"]}
                   error={idError}
@@ -214,6 +215,7 @@ export default function DataOfferCreateDialog({ open, onClose, managementUrl, co
                 variant="contained"
                 color="primary"
                 onClick={onSubmit}
+                data-testid="create-button"
               >
                 <T string="common.create"/>
               </Button>
