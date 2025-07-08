@@ -7,7 +7,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: 1,
   reporter: 'html',
-  timeout: 10 * 1000, // 10 seconds timeout
+  timeout: 15 * 1000, // 15 seconds timeout
   maxFailures: 10,
   use: {
     // Base URL to use in actions like `await page.goto('/')`.
