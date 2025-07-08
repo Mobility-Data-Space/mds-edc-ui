@@ -9,7 +9,6 @@ export default defineConfig({
   reporter: 'html',
   timeout: 10 * 1000, // 10 seconds timeout
   maxFailures: 10,
-  workers: 2,
   use: {
     // Base URL to use in actions like `await page.goto('/')`.
     baseURL: 'http://127.0.0.1:3000',
