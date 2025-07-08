@@ -1,4 +1,4 @@
-import {upperAndSnakeCase} from "@/utilities/utilities";
+import { upperAndSnakeCase } from "@/utilities/utilities";
 
 export const TRAFFIC_INFORMATION = 'Traffic Information';
 export const ROADWORKS_AND_ROAD_CONDITIONS = 'Roadworks and Road Conditions';

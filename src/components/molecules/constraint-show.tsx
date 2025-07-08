@@ -7,7 +7,7 @@ import {ShowTreeLeaf} from "@/components/atoms/show-tree-leaf";
 import {ShowTreeBranch} from "@/components/atoms/show-tree-branch";
 
 import {useTranslator} from "@/i18n";
-import {dateToString} from "@/utilities/date";
+import {dateToString, formatDateTime} from "@/utilities/date";
 import {operators} from "@/utilities/policy-constraints";
 import {tryTranslatingWithTooltip} from "@/utilities/utilities";
 
@@ -24,8 +24,10 @@ function constraintTooltipAndValue(value: string, index: number, translator: (ke
   }
 
   if (index === 2) {
-    const dateValue = dateToString(new Date(value));
-    return [`"${value}"`, dateValue || value];
+    const date = new Date(value);
+    const dateValue = dateToString(date);
+    const tooltip = dateValue ? formatDateTime(date.getTime()) : value;
+    return [`"${tooltip}"`, dateValue || value];
   }
 
   return tryTranslatingWithTooltip(value, "policyDefinitions.constraint", translator);
@@ -40,7 +42,7 @@ export function ConstraintShow({ data }: ConstraintShowProps): ReactNode {
             const [tooltipTitle, computedValue] = constraintTooltipAndValue(value, index, translator);
             return (
               <Tooltip title={tooltipTitle} key={index}>
-                <Typography>
+                <Typography component="span">
                   {computedValue}
                 </Typography>
               </Tooltip>
@@ -54,7 +56,7 @@ export function ConstraintShow({ data }: ConstraintShowProps): ReactNode {
       const lastIndex = data.length - 1;
       return data.map((item, index) => (
         <ShowTreeLeaf disablePadding key={index} >
-          <div className={lastIndex === index ? "pt-2" : "pt-2"}>
+          <div className="pt-2">
             <ConstraintShow data={item} />
             {lastIndex !== index ? "" : <div className="bg-white absolute -left-1 bottom-0 size-2" />}
           </div>

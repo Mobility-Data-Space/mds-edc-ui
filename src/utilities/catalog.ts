@@ -1,5 +1,6 @@
 import {Asset, ContractDefinition, Dataset, JsonLdObject} from "@think-it-labs/edc-connector-client";
 import {contextPrefixes} from "@/schema/context";
+import {formatDateTime} from "@/utilities/date.ts";
 
 export const HAS_POLICY = "http://www.w3.org/ns/odrl/2/hasPolicy";
 
@@ -90,14 +91,17 @@ function extractValue(value: any) {
   }
 
   const result = (value[0] && (value[0]["@id"] || value[0]["@value"])) || "";
+  if (! result.startsWith("http")) {
+    return result;
+  }
+
   const regex = /[/#]?([^/#]+)$/;
   const match = regex.exec(result);
-
   if (match && match[1]) {
     return match[1];
   }
-  return result;
 
+  return result;
 }
 
 export function replaceUrlPrefixes(jsonObject: JsonLdObject) {

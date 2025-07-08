@@ -16,7 +16,7 @@ export function View<T>({
   },
   managementUrl,
 }: PropsWithChildren<ViewProps<T>>) {
-  const { item, deleteAsset, isLoading } = useView({
+  const { item, deleteAsset, isLoading, error } = useView({
     get,
     delete: del,
   });
@@ -25,6 +25,7 @@ export function View<T>({
     <ViewContext.Provider
       value={{
         item,
+        error,
         isLoading,
         deleteItem: deleteAsset,
         managementUrl,
@@ -41,3 +42,17 @@ View.Loading = function ViewLoading(
   const { isLoading } = useViewContext();
   return isLoading ? children : null;
 };
+
+View.Error = function ViewError({ children }: {
+  children: (props: { error: Error | null }) => JSX.Element;
+}) {
+  const { error } = useViewContext();
+
+  const ErrorComponent = React.useMemo(() => {
+    return function (props: { error: Error | null }) {
+      return <>{children(props)}</>;
+    };
+  }, [children]);
+
+  return <ErrorComponent error={error} />
+}

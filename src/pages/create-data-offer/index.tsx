@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import {Button, Checkbox, FormControlLabel, Divider, Typography} from "@mui/material";
 import {enqueueSnackbar} from "notistack";
-import { AssetInput, AtomicConstraint, CriterionInput, DataAddress, PolicyDefinitionInput } from "@think-it-labs/edc-connector-client";
+import {AssetInput, AtomicConstraint, DataAddress, PolicyDefinitionInput} from "@think-it-labs/edc-connector-client";
 import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
 import {T, useTranslator} from "@/i18n";
@@ -30,14 +30,14 @@ import {AssetConditionsForUse} from "@/components/molecules/asset-conditions-for
 import {AssetTemporalCoverage} from "@/components/molecules/asset-temporal-coverage";
 import PolicyExpression from "@/components/organisms/policy-expression";
 import SideDrawer from "@/components/organisms/side-drawer";
-import { AssetFormDataAddressStep } from "@/components/organisms/asset-form-data-address-step";
-import { defaultCreatePolicyFormData, fromPolicyDefinitionForm } from "@/utilities/policy";
-import { defaultCreateContractDefinitionFormData, fromContractDefinitionForm, MdsContractDefinitionInput } from "@/utilities/contract-definition";
+import {AssetFormDataAddressStep} from "@/components/organisms/asset-form-data-address-step";
+import {defaultCreatePolicyFormData, fromPolicyDefinitionForm} from "@/utilities/policy";
+import {defaultCreateContractDefinitionFormData, fromContractDefinitionForm, MdsContractDefinitionInput} from "@/utilities/contract-definition";
 import {PUBLISH_MODE_DO_NOT_PUBLISH, PUBLISH_MODES} from "@/constants/data-address-types";
-import { MultiplicityConstraint, operatorIn } from "@/utilities/policy-constraints";
+import {MultiplicityConstraint} from "@/utilities/policy-constraints";
 import {UNRESTRICTED_POLICY_ID} from "@/schema/policy";
 import {defaultCreateAssetFormData, AssetProperties, generateId, fromAssetForm, validateDataAddress} from "@/utilities/asset"
-import {ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_TITLE} from "@/schema/asset";
+import { ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_TITLE, ASSET_VERSION} from "@/schema/asset";
 import {PUBLISH_MODE_PUBLISH_RESTRICTED, PUBLISH_MODE_PUBLISH_UNRESTRICTED} from "@/constants/data-address-types";
 import {idSelector} from "@/utilities/data-offer.ts";
 
@@ -95,9 +95,9 @@ export default function CreateDataOfferPage() {
   const generalInfoFormOnChange = (generalInfoFormData: AssetProperties) => {
     setErrors((oldErrors) => ({ ...oldErrors, properties: validateGeneralInfo(generalInfoFormData) }));
 
-    const generatedOldId = generateId(formData.asset.properties[ASSET_TITLE] as string);
+    const generatedOldId = generateId(formData.asset.properties[ASSET_TITLE] as string, formData.asset.properties[ASSET_VERSION] as string);
     if (generatedOldId === generalInfoFormData["@id"]) {
-      generalInfoFormData["@id"] = generateId(generalInfoFormData[ASSET_TITLE] as string);
+      generalInfoFormData["@id"] = generateId(generalInfoFormData[ASSET_TITLE] as string, generalInfoFormData[ASSET_VERSION] as string);
     }
 
     return onChange({ ...formData, asset: { ...formData.asset, properties: generalInfoFormData, ["@id"]: generalInfoFormData["@id"] }});
@@ -134,6 +134,7 @@ export default function CreateDataOfferPage() {
     } else if (idAlreadyExist) {
       newErrors["@id"] = translator('assets.new.fieldIdAlreadyExists');
     }
+
     return newErrors;
   };
 
@@ -217,10 +218,7 @@ export default function CreateDataOfferPage() {
           <div className="flex flex-col gap-y-5 ">
             <div className="grid sm:grid-cols-3 gap-2 sm:gap-6">
               <div className="sm:col-span-1">
-                <label
-                  htmlFor="id"
-                  className="inline-block text-sm text-black mt-2.5"
-                >
+                <label className="inline-block text-sm text-black mt-2.5" >
                   <Typography variant="h6">
                     <T string="dataOffer.new.dataOfferTypeTitle"/>
                   </Typography>
@@ -260,7 +258,7 @@ export default function CreateDataOfferPage() {
                     htmlFor="properties-title"
                     className="inline-block text-sm text-black font-medium mb-2"
                   >
-                    <T string="assets.new.fieldTitle"/>
+                    <T string="assets.new.fieldTitle"/> *
                   </label>
                   <AssetTitle
                     hideLabel
@@ -276,7 +274,7 @@ export default function CreateDataOfferPage() {
                     htmlFor="properties-id"
                     className="inline-block text-sm text-black font-medium mb-2"
                   >
-                    <T string="assets.new.fieldId"/>
+                    <T string="assets.new.fieldId" /> *
                   </label>
                   <AssetId
                     hideLabel

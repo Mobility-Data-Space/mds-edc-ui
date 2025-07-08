@@ -29,10 +29,14 @@ const temporalCoverageValue = ([start, end]: [string, string]) => {
 }
 
 export const fromAssetForm = (formData: AssetInput) => {
-  formData["@id"] = formData.properties["@id"];
-  formData.properties["@id"] = "" ;
-
-  const cleanFormDataObject = removeEmptyFields(formData);
+  const cleanFormDataObject = removeEmptyFields({
+    ...formData,
+    "@id": formData.properties["@id"],
+    properties: {
+      ...formData.properties,
+      "@id": ""
+    }
+  });
 
   return {
     "@type": "https://w3id.org/edc/v0.0.1/ns/Asset",
