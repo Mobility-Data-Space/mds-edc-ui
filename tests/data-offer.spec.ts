@@ -35,6 +35,54 @@ test.describe("Data Offer Tests", () => {
     });
   });
 
+  test.describe("Create Functionality", () => {
+    test("Creates a new data offer for 1 asset and verifies its visibility", async ({ page }) => {
+      // Open the create data offer dialog
+      await dataOfferPage.openCreateDataOfferDialog();
+
+      // Fill in the data offer details
+      const randomId = `data-offer-${Math.random().toString(36).substring(2, 15)}`;
+      await dataOfferPage.fillContractId(randomId);
+      await dataOfferPage.pickContractPolicy();
+      await dataOfferPage.pickAccessPolicy();
+      await dataOfferPage.selectAsset();
+
+      await dataOfferPage.closeAssetSelector();
+
+      // Submit the form
+      await dataOfferPage.submitCreateDataOfferForm();
+      await page.waitForResponse((response) => response.url().includes('/connector/management/v3/contractdefinitions/request'));
+
+      // Verify contract offer was added
+      const dataOfferCards = await dataOfferPage.getDataOfferCards();
+      const dataOffersCount = await dataOfferCards.count() ;
+      expect(dataOffersCount).toBeGreaterThan(1);
+    });
+
+    test("Creates a new data offer for 2 assets and verifies its visibility", async ({ page }) => {
+      // Open the create data offer dialog
+      await dataOfferPage.openCreateDataOfferDialog();
+
+      // Fill in the data offer details
+      const randomId = `data-offer-${Math.random().toString(36).substring(2, 15)}`;
+      await dataOfferPage.fillContractId(randomId);
+      await dataOfferPage.pickContractPolicy();
+      await dataOfferPage.pickAccessPolicy();
+      await dataOfferPage.selectAsset(true);
+
+      await dataOfferPage.closeAssetSelector();
+
+      // Submit the form
+      await dataOfferPage.submitCreateDataOfferForm();
+      await page.waitForResponse((response) => response.url().includes('/connector/management/v3/contractdefinitions/request'));
+
+      // Verify contract offer was added
+      const dataOfferCards = await dataOfferPage.getDataOfferCards();
+      const dataOffersCount = await dataOfferCards.count() ;
+      expect(dataOffersCount).toBeGreaterThan(2);
+    });
+  });
+
   test.describe("Search Functionality", () => {
     test("should display search input and trigger button", async ({ page }) => {
         const searchInput = await dataOfferPage.getSearchInput();
@@ -149,7 +197,7 @@ test.describe("Data Offer Tests", () => {
     });
 
     test("should maintain search results across pagination", async ({ page }) => {
-        await dataOfferPage.searchDataOffers('test');
+      await dataOfferPage.searchDataOffers('services-offer');
 
       const isNextEnabled = await dataOfferPage.isNextPageEnabled();
       if (isNextEnabled) {
@@ -157,7 +205,7 @@ test.describe("Data Offer Tests", () => {
 
         const searchInput = await dataOfferPage.getSearchInput();
         const searchValue = await searchInput.inputValue();
-        expect(searchValue).toBe('test');
+        expect(searchValue).toBe('services-offer');
       }
     });
   });

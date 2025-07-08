@@ -8,13 +8,14 @@ export class PoliciesPage extends BaseListPage {
   readonly createPolicyButtonLocator = 'button:has-text("Create Policy")';
   readonly policyIdInputLocator = '[data-testid="policy-id-input"]';
   readonly createButtonLocator = 'button:has-text("Create")';
-  readonly errorMessageLocator = '[data-testid="error-message"]';
+  readonly errorMessageLocator = '[data-testid="toast-error-message"]';
   readonly deleteButtonLocator = '[data-testid="delete-policy-button"]';
   readonly addExpressionButtonLocator = '[data-testid="add-expression-button"]';
+  readonly participantIdExpressionLocator = '[data-testid="participant-id-expression"]';
   readonly participantIdFieldLocator = '[data-testid="participant-id-field"]';
-  readonly operatorDropdownLocator = '[data-testid="operator-dropdown"]';
-  readonly inOperatorOptionLocator = '[data-testid="operator-in-option"]';
-  readonly equalOperatorOptionLocator = '[data-testid="operator-equal-option"]';
+  readonly operatorDropdownLocator = '[data-testid="ArrowDropDownIcon"]';
+  readonly inOperatorOptionLocator = '[data-testid="referring-connector-operator-in-option"]';
+  readonly equalOperatorOptionLocator = '[data-testid="referring-connector-operator-equal-option"]';
 
   constructor(page: Page) {
     super(page);
@@ -29,33 +30,34 @@ export class PoliciesPage extends BaseListPage {
   }
 
   async selectParticipantIdField() {
-    await this.page.locator(this.participantIdFieldLocator).click();
+    await this.page.locator(this.participantIdExpressionLocator).click();
   }
 
   async selectInOperator() {
-    await this.page.locator(this.operatorDropdownLocator).click();
-    await this.page.locator(this.inOperatorOptionLocator).click();
+    await this.page.getByRole('combobox').click();
+    await this.page.getByRole('option', {name: "is Part Of"}).click();
   }
 
   async selectEqualOperator() {
-    await this.page.locator(this.operatorDropdownLocator).click();
-    await this.page.locator(this.equalOperatorOptionLocator).click();
+    await this.page.getByRole('combobox').click();
+    await this.page.getByRole('option', {name: "="}).click();
   }
 
   async fillParticipantId(participantId: string) {
-    await this.page.locator(this.participantIdFieldLocator).fill(participantId);
+    await this.page.locator(this.participantIdFieldLocator).locator('input').fill(participantId);
   }
 
   async fillPolicyId(policyId: string) {
-    await this.page.locator(this.policyIdInputLocator).fill(policyId);
+    await this.page.getByRole('textbox', { name: 'Policy ID' }).fill(policyId);
   }
 
   async clickCreateButton() {
     await this.page.locator(this.createButtonLocator).click();
+    await this.page.waitForResponse((response) => response.url().includes('/connector/management/v3/policydefinitions'));
   }
 
   async getErrorMessage() {
-    return this.page.locator(this.errorMessageLocator);
+    return this.page.getByRole('alert').filter({ hasText: 'Policy with ID' });
   }
 
   async clickCreatePolicyButton() {

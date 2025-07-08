@@ -15,7 +15,7 @@ export const operatorNotEqual = {
 
 export const operatorIn = {
   value: 'isPartOf',
-  text: 'is Part Of',
+  text: 'IN',
   tooltip: 'In',
 };
 
@@ -26,7 +26,7 @@ export const operatorLessThan = {
 };
 
 export const operatorLessThanOrEqual = {
-  value: 'lteq',
+  value: 'leq',
   text: '<=',
   tooltip: '<=',
 };
@@ -38,45 +38,37 @@ export const operatorGreaterThan = {
 };
 
 export const operatorGreaterThanOrEqual = {
-  value: 'gteq',
+  value: 'gte',
   text: '>=',
   tooltip: '>=',
 };
 
 export const operatorHasPart = {
   value: 'hasPart',
-  text: 'Has Part',
+  text: 'HAS PART',
   tooltip: 'Has Part',
 };
 
 export const operatorIsA = {
   value: 'isA',
-  text: 'Is a',
+  text: 'IS A',
   tooltip: 'Is a',
 };
 
 export const operatorIsAnyOf = {
   value: 'isAnyOf',
-  text: 'Is any of',
+  text: 'IS ANY OF',
   tooltip: 'Is any of',
 };
 
 export const operatorIsAllOf = {
   value: 'isAllOf',
-  text: 'IS all of',
+  text: 'IS ALL OF',
   tooltip: 'Is all of',
 };
 
 export const operatorIsNoneOf = {
   value: 'isNoneOf',
-  text: 'IS none of',
+  text: 'IS NONE OF',
   tooltip: 'Is none of',
 };
-
-export const consumerParticipantIdLeft = 'REFERRING_CONNECTOR';
-export const consumerParticipantIdOperators = [operatorEqual, operatorIn];
-
-export const timeRestrictionLeft = 'POLICY_EVALUATION_TIME';
-export const timeRestrictionOperators = [ operatorGreaterThanOrEqual, operatorGreaterThan, operatorLessThanOrEqual, operatorLessThan]
-
-export const operators = [ operatorEqual, operatorNotEqual, operatorIn, operatorGreaterThanOrEqual, operatorLessThan, operatorLessThanOrEqual, operatorGreaterThan, operatorHasPart, operatorIsA, operatorIsAnyOf, operatorIsAllOf, operatorIsNoneOf ];

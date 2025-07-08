@@ -56,15 +56,13 @@ test.describe("Policy Definitions Page Tests", () => {
       expect(inputValue).toBe("15/07/2025");
     });
 
-    test.fixme("should create a policy using the '=' operator for Consumer's Participant ID", async ({ page }) => {
-      // Navigate to the Policies page
-      await policiesPage.navigate();
-
+    test("should create a policy using the '=' operator for Consumer's Participant ID", async ({ page }) => {
       // Open the Create Policy dialog
       await policiesPage.clickCreatePolicyButton();
+      await page.waitForURL("**/new");
 
       // Fill in the policy details
-      await policiesPage.fillPolicyId("TestPolicy003");
+      await policiesPage.fillPolicyId("TestPolicy001");
       await policiesPage.clickAddExpressionButton();
       await policiesPage.selectParticipantIdField();
       await policiesPage.selectEqualOperator();
@@ -72,22 +70,18 @@ test.describe("Policy Definitions Page Tests", () => {
 
       // Attempt to create the policy
       await policiesPage.clickCreateButton();
+      await page.waitForResponse((response) => response.url().includes('/connector/management/v3/policydefinitions/request'));
 
-      // Verify no error message is displayed
-      const errorMessage = await policiesPage.getErrorMessage();
-      expect(errorMessage).toBeNull();
-
-      // Verify the policy is created successfully
-      const policiesList = await policiesPage.getPoliciesList();
-      await expect(policiesList).toBeVisible();
+      // Verify policy was added
+      const policyCards = await policiesPage.getPolicyCards();
+      const policiesCount = await policyCards.count() ;
+      expect(policiesCount).toBeGreaterThan(1);
     });
 
-    test.fixme("should create a policy using the 'IN' operator for Consumer's Participant ID", async ({ page }) => {
-      // Navigate to the Policies page
-      await policiesPage.navigate();
-
+    test("should create a policy using the IN ('isPartOf') operator for Consumer's Participant ID", async ({ page }) => {
       // Open the Create Policy dialog
       await policiesPage.clickCreatePolicyButton();
+      await page.waitForURL("**/new");
 
       // Fill in the policy details
       await policiesPage.fillPolicyId("TestPolicy002");
@@ -98,17 +92,15 @@ test.describe("Policy Definitions Page Tests", () => {
 
       // Attempt to create the policy
       await policiesPage.clickCreateButton();
+      await page.waitForResponse((response) => response.url().includes('/connector/management/v3/policydefinitions/request'));
 
-      // Verify no error message is displayed
-      const errorMessage = await policiesPage.getErrorMessage();
-      expect(errorMessage).toBeNull();
-
-      // Verify the policy is created successfully
-      const policiesList = await policiesPage.getPoliciesList();
-      await expect(policiesList).toBeVisible();
+      // Verify policy was added
+      const policyCards = await policiesPage.getPolicyCards();
+      const policiesCount = await policyCards.count() ;
+      expect(policiesCount).toBeGreaterThan(1);
     });
 
-    test.fixme("should display a clear error message for duplicate policy ID", async ({ page }) => {
+    test("should display a clear error message for duplicate policy ID", async ({ page }) => {
       // Navigate to the Policies page
       await policiesPage.navigate();
 
@@ -117,15 +109,10 @@ test.describe("Policy Definitions Page Tests", () => {
       await policiesPage.fillPolicyId("TestPolicy001");
       await policiesPage.clickCreateButton();
 
-      // Attempt to create another policy with the same ID
-      await policiesPage.clickCreatePolicyButton();
-      await policiesPage.fillPolicyId("TestPolicy001");
-      await policiesPage.clickCreateButton();
-
       // Verify the error message
       const errorMessageLocator = await policiesPage.getErrorMessage();
       const errorMessage = await errorMessageLocator.textContent();
-      expect(errorMessage).toBe("Policy 'TestPolicy001' already exists.");
+      expect(errorMessage).toBe("Policy with ID TestPolicy001 already exists");
     });
 
   });
