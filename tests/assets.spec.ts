@@ -29,8 +29,8 @@ test.describe("Assets Page Tests", () => {
 
       // Fill in the asset details
       const randomNumber = `${Math.random()}`.replace("0.", "");
-      const assetTitle = `Asset ${randomNumber}`;
-      const assetId = `asset-id-${randomNumber}`;
+      const assetTitle = `Test Dataset ${randomNumber}`;
+      const assetId = `dataset-id-${randomNumber}`;
       await assetsPage.fillCreateAssetForm(assetTitle, assetId);
       await assetsPage.openAdvancedSection();
       await assetsPage.fillRequiredAdvancedField();

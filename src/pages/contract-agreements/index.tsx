@@ -43,7 +43,6 @@ interface ContractAgreementInfo {
 
 export default function ContractAgreementsListPage() {
   const { connector } = useParticipantConnectorState();
-  const managementUrl = connector?.managementUrl as string;
   const [retiredContractAgreementIds, setRetiredContractAgreementIds] = useState<string[]>([]);
   const [contractAgreementInfo, setContractAgreementInfo] = useState<ContractAgreementInfo>({});
 
@@ -75,6 +74,8 @@ export default function ContractAgreementsListPage() {
 
   const { push, query } = useRouter()
 
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
   const navigate = useCallback((newPage: number) => {
     push(
       {
@@ -99,10 +100,10 @@ export default function ContractAgreementsListPage() {
     setOpenContractAgreementData({ contractAgreement });
   };
 
-  const edcClient = useEdcConnectorClient({ management: managementUrl });
+  const edcClient = useEdcConnectorClient({ management: connector.managementUrl });
 
   const populateRetired = useCallback(() => {
-    const controller = new AgreementsRetirementController(managementUrl)
+    const controller = new AgreementsRetirementController(connector.managementUrl)
     controller.retiredAgreementsRequest().then(retiredAgreements => {
       setRetiredContractAgreementIds(retiredAgreements.map(contractAgreement => contractAgreement.agreementId as string));
       const retiredContractAgreementsToSave: { [key: string]: RetiredContractAgreement } = {};
@@ -134,13 +135,13 @@ export default function ContractAgreementsListPage() {
         setContractAgreementInfo(contractAgreementInfoToSave);
       });
     }).catch(error => enqueueSnackbar("contractAgreements.retiredFetchError"));
-  }, [edcClient, managementUrl]);
+  }, [edcClient, connector, enqueueSnackbar]);
 
   useEffect(() => {
     populateRetired();
-  }, [populateRetired, edcClient, managementUrl]);
+  }, [populateRetired, edcClient]);
 
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  
 
   if (!connector) {
     return "No connector";
@@ -168,7 +169,7 @@ export default function ContractAgreementsListPage() {
       />
 
       <ContractAgreementsList
-        managementUrl={managementUrl}
+        managementUrl={connector.managementUrl}
         usePagination={true}
         navigate={navigate}
         currentPage={parseInt(query.page as string) || 0}

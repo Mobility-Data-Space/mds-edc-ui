@@ -21,7 +21,7 @@ export function ConsumerParticipantIdConstraint({value, onChange, onRemove}: Con
       </Typography>
       <MuiSelect label="participant-id" options={consumerParticipantIdOperators} value={value.operator}
                  onChange={(event) => onChange({...value, operator: event.target.value})}/>
-      <Input value={value.rightOperand} onChange={(event) => onChange({...value, rightOperand: event.target.value})}/>
+      <Input data-testid="participant-id-field" value={value.rightOperand} onChange={(event) => onChange({...value, rightOperand: event.target.value})}/>
       <div className="flex items-center">
         <IconButton
           size="large"

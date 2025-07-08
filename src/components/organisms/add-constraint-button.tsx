@@ -85,8 +85,9 @@ export function AddConstraintButton({showAddButton = false, onClick}: AddConstra
       onClick={handleClick}
       className="gap-x-2 font-medium"
       color="secondary"
+
     >
-      <Plus className="size-6"/>
+      <Plus data-testid="add-expression-button" className="size-6"/>
     </IconButton>
   );
 
@@ -153,7 +154,7 @@ export function AddConstraintButton({showAddButton = false, onClick}: AddConstra
       >
         <div className="flex flex-col z-10">
           <Tooltip {...tooltipProps} title={translator("dataOffer.new.policyExpressionConsumerParticipantIdTooltip")}>
-            <Button variant="text" color="secondary" onClick={() => onAddWithClose(createParticipantIdConstraint())}
+            <Button data-testid="participant-id-expression" variant="text" color="secondary" onClick={() => onAddWithClose(createParticipantIdConstraint())}
                     onMouseOver={onMouseLeave}>
               <Typography align="left" variant="body2" className="w-full p-2">
                 <T string="dataOffer.new.policyExpressionConsumerParticipantId"/>
