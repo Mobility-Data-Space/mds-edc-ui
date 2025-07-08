@@ -135,13 +135,11 @@ export default function ContractAgreementsListPage() {
         setContractAgreementInfo(contractAgreementInfoToSave);
       });
     }).catch(error => enqueueSnackbar("contractAgreements.retiredFetchError"));
-  }, [edcClient, connector, enqueueSnackbar]);
+  }, [edcClient, enqueueSnackbar]);
 
   useEffect(() => {
     populateRetired();
   }, [populateRetired, edcClient]);
-
-  
 
   if (!connector) {
     return "No connector";
