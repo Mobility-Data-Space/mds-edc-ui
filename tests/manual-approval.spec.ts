@@ -23,7 +23,7 @@ test.describe("Manual Approval Tests", () => {
     // Verify success message
     const successMessageLocator = await manualApprovalPage.getSuccessMessage();
     const successMessage = await successMessageLocator.textContent();
-    await expect(successMessage).toBe("Approval successful");
+    expect(successMessage).toBe("Approval successful");
   });
 
   test.fixme("should reject an item successfully", async ({ page }) => {

@@ -41,7 +41,7 @@ test.describe("Assets Page Tests", () => {
       await assetsPage.submitCreateAssetForm();
 
       // Verify the success message is displayed
-      const successMessage = await assetsPage.getSuccessMessage();
+      const successMessage = await assetsPage.getToastMessage("success");
       await expect(successMessage).toBeVisible();
     });
   });
@@ -59,7 +59,7 @@ test.describe("Assets Page Tests", () => {
       await assetsPage.confirmDeleteAsset();
 
       // Verify the success message is displayed
-      const successMessage = await assetsPage.getSuccessMessage();
+      const successMessage = await assetsPage.getToastMessage("success")
       await expect(successMessage).toBeVisible();
 
       // Verify the asset is removed
@@ -94,7 +94,7 @@ test.describe("Assets Page Tests", () => {
       await assetsPage.submitEditAssetForm();
 
       // Verify the updated asset appears in the list
-      const updatedAssetLocator = await assetsPage.getAssetInList(updatedTitle);
+      const updatedAssetLocator = assetsPage.getAssetInList(updatedTitle);
       await expect(updatedAssetLocator).toBeVisible();
     });
   });

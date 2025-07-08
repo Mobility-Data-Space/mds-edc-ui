@@ -9,7 +9,6 @@ export class AssetsPage extends BaseListPage {
   readonly createAssetModalLocator = '.create-asset-form';
   readonly editButtonLocator = '[data-testid="edit-asset-button"]';
   readonly deleteAssetButtonLocator = '[data-testid=delete-asset-modal-btn]';
-  readonly successMessageLocator = '[data-testid="toast-success-message"]';
   readonly assetsAdvancedSectionLocator = '[data-testid=asset-create-advanced-info-step-title]'
   readonly assetsDataSourceSectionLocator = '[data-testid=asset-create-data-address-step-title]';
   readonly createAssetOnlyOptionLocator = '[data-testid="create-asset-only-option"]';
@@ -17,10 +16,6 @@ export class AssetsPage extends BaseListPage {
 
   constructor(page: Page) {
     super(page);
-  }
-
-  async getSuccessMessage() {
-    return this.page.locator(this.successMessageLocator);
   }
 
   async getEditButton() {
@@ -59,18 +54,18 @@ export class AssetsPage extends BaseListPage {
   }
 
   async openAdvancedSection() {
-    await this.page.locator(this.assetsAdvancedSectionLocator).click() ;
+    await this.page.locator(this.assetsAdvancedSectionLocator).click();
   }
 
   async fillRequiredAdvancedField() {
-    await this.page.getByRole('combobox').filter({ hasText: 'Select data category' }).click() ;
-    await this.page.getByRole('option', { name: 'Traffic Information' }).click() ;
+    await this.page.getByRole('combobox').filter({ hasText: 'Select data category' }).click();
+    await this.page.getByRole('option', { name: 'Traffic Information' }).click();
   }
   async openDataSourceSection() {
-    await this.page.locator(this.assetsDataSourceSectionLocator).click() ;
+    await this.page.locator(this.assetsDataSourceSectionLocator).click();
   }
   async fillHttpDatasource() {
-    await this.page.getByRole('textbox', { name: 'URL URL' }).fill("https://google.com") ;
+    await this.page.getByRole('textbox', { name: 'URL URL' }).fill("https://google.com");
   }
 
   async submitDeleteAsset() {
@@ -94,9 +89,9 @@ export class AssetsPage extends BaseListPage {
   }
 
   async confirmDeleteAsset() {
-    await this.page.getByRole('button', { name: 'Delete' }).click() ;
+    await this.page.getByRole('button', { name: 'Delete' }).click();
   }
-  
+
   async submitCreateAssetForm() {
     await this.page.getByTestId('asset-create-submit').click();
   }
