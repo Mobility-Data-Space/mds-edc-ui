@@ -28,6 +28,11 @@ export function useList<T>(
     operator: "=",
     operandRight: "",
   });
+  const [commitedSearchSpec, setCommitedSearchSpec] = useState<SearchSpec>({
+    operandLeft: "edc:name",
+    operator: "=",
+    operandRight: "",
+  });
   const [items, setItems] = useState<T[]>([]);
   const [error, setError] = useState<Error | null>(null);
   const [isLoading, setLoading] = useState(false);
@@ -86,13 +91,14 @@ export function useList<T>(
   }, [])
 
   const _setQuerySpec = useCallback((querySpec: QuerySpec) => {
-    setQuerySpec({ ...querySpec, filterExpression: mergeFilterExpressions(querySpec.filterExpression, searchSpec) })
-  }, [searchSpec])
+    setQuerySpec({ ...querySpec, filterExpression: mergeFilterExpressions(querySpec.filterExpression, commitedSearchSpec) })
+  }, [commitedSearchSpec])
 
   const triggerSearch = useCallback(() => {
+    setCommitedSearchSpec(searchSpec)
     setQuerySpec(querySpec);
     setShouldSearch(true);
-  }, [querySpec])
+  }, [querySpec, searchSpec])
 
   return {
     items,
