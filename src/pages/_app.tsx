@@ -1,11 +1,19 @@
+import "@/styles/globals.css";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en";
 import { TranslatorProvider } from "@/i18n";
 import "@/styles/globals.css";
 import ThemeProvider from "@/theme/ThemeProvider";
 import { JsonLdContextProvider } from "@think-it-labs/edc-connector-ui/json-ld-context-provider";
 import type { AppProps } from "next/app";
 import { SnackbarProvider } from 'notistack';
+import { useEffect, useRef } from "react";
 
 export default function App({ Component, pageProps }: AppProps) {
+  useEffect(() => {
+    TimeAgo.addDefaultLocale(en);
+  }, []);
+  
   return (
     <TranslatorProvider>
       <JsonLdContextProvider

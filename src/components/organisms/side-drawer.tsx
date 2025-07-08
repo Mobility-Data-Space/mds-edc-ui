@@ -152,7 +152,7 @@ export default function SideDrawer(props: Props) {
           height={0}
           width={0}
           className="m-2"
-          priority
+          fetchPriority="high"
           style={{ height: "57px", width: "70%" }}
         />
 
