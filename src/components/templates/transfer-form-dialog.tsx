@@ -91,12 +91,14 @@ export function TransferFormDialog({ contractAgreementLd, open, onClose, onSucce
         </form>
       </DialogContent>
       <DialogActions>
-        <Button color="secondary" onClick={onClose}>
-          <T string="common.close"/>
-        </Button>
-        <Button color="primary" variant="contained" onClick={() => formRef.current && formRef.current.requestSubmit()}>
-          <T string="transferProcesses.new.initiateTransfer"/>
-        </Button>
+        <div className="flex justify-end flex-grow gap-x-3 p-3">
+          <Button color="secondary" onClick={onClose}>
+            <T string="common.close"/>
+          </Button>
+          <Button color="primary" variant="contained" onClick={() => formRef.current && formRef.current.requestSubmit()}>
+            <T string="transferProcesses.new.initiateTransfer"/>
+          </Button>
+        </div>
       </DialogActions>
     </Dialog>
   );
