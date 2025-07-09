@@ -22,8 +22,6 @@ export interface AssetDataAddressFormStepProps {
 }
 
 export function AssetFormDataAddressStep({ formData, errors, onChange, translator, methodAlwaysShowing = false, customDataSourceConfigRows = 2, isDestination = false }: AssetDataAddressFormStepProps): JSX.Element {
-  const [isPull, setIsPull] = useState(false);
-
   return (
     <div className="flex flex-col gap-y-5">
       <div className="flex flex-col gap-y-5 items-start">
@@ -94,8 +92,8 @@ export function AssetFormDataAddressStep({ formData, errors, onChange, translato
         {isDestination &&
           <Checkbox
             label={<T string="assets.new.isPull" />}
-            value={isPull}
-            onChange={(event) => setIsPull(event.target.checked)}
+            value={formData.isPull}
+            onChange={(event) => onChange({ ...formData, isPull: event.target.checked })}
           />
         }
         <AssetFormDataAddressHttp
@@ -104,7 +102,8 @@ export function AssetFormDataAddressStep({ formData, errors, onChange, translato
           onChange={onChange}
           errors={errors}
           methodAlwaysShowing={methodAlwaysShowing}
-          isPull={isPull}
+          isDestination={isDestination}
+          isPull={formData.isPull}
         />
       </>}
     </div>

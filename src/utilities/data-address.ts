@@ -41,9 +41,15 @@ export interface AzureBlobDataAddress extends BaseDataAddress {
   objectPrefix?: string
 }
 
-export const defaultHttpDataAddress: HttpDataAddress = {
+export const defaultHttpSourceDataAddress: HttpDataAddress = {
   type: DataAddressTypes.HttpData,
-  method: "GET"
+  method: "GET",
+};
+
+export const defaultHttpDestinationDataAddress: HttpDataAddress = {
+  type: DataAddressTypes.HttpData,
+  method: "POST",
+  isPull: false,
 };
 
 export const defaultOnRequestDataAddress: OnRequestDataAddress = {
