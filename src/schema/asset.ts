@@ -41,3 +41,8 @@ export const ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS = `${CONTEXT_ADMS.value}sample
 // Replaced by DCAT Organization
 const ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME = `${CONTEXT_DCT.value}rightsHolder`;
 
+
+export const ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_SELECT_OPTIONS = [
+  { value: "Vault-Secret", text: "assets.new.fieldHttpAuthHeaderTypeWithVaultSecret" },
+  { value: "Vault", text: "assets.new.fieldHttpAuthHeaderTypeWithValue" }
+]
