@@ -441,7 +441,7 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
   }
 
   if (formDataToTransform.type === DataAddressTypes.HttpData) {
-    return {
+    return removeEmptyFields({
       type: DataAddressTypes.HttpData,
       method: formDataToTransform?.method,
       name: formDataToTransform?.name,
@@ -455,7 +455,7 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
       proxyQueryParams: formDataToTransform?.proxyQueryParams,
       proxyMethod: formDataToTransform?.proxyMethod,
       contentType: formDataToTransform?.contentType,
-    };
+    });
   }
 
   if (formDataToTransform.type === DataAddressTypes.MDSOnRequestOffer) {

@@ -5,17 +5,11 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import {ContractAgreement, DataAddress} from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
-import {Input} from "@/components/atoms/input";
-import {MuiSelect} from "@/components/atoms/mui-select";
 import {T} from "@/i18n";
-import { DATA_ADDRESS_SELECT_DATA } from "@/constants/data-address-types";
-import {theme} from "@/theme/ThemeProvider";
 import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
 import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
 import {DataAddressTypes, defaultHttpDestinationDataAddress} from "@/utilities/data-address";
 import {createTransferProcessRequest} from "@/utilities/transfer-process";
-import {AssetContactEmailAndSubject} from "@/components/molecules/asset-contact-email-and-subject.tsx";
-import {AssetFormDataAddressAmazonS3} from "@/components/organisms/asset-form-data-address-amazon-s3.tsx";
 import {AssetFormDataAddressStep} from "@/components/organisms/asset-form-data-address-step.tsx";
 import {validateDataAddress} from "@/utilities/asset.ts";
 
@@ -33,7 +27,7 @@ export function TransferFormDialog({ contractAgreementLd, open, onClose, onSucce
   const [errors, setErrors] = useState({});
   const contractAgreement = removeJsonLdSchemaFromProperties(contractAgreementLd);
   const { connector } = useParticipantConnectorState();
-  const edcClient = useEdcConnectorClient({management: connector.managementUrl});
+  const edcClient = useEdcConnectorClient({ management: connector.managementUrl });
   const formRef = useRef<HTMLFormElement>(null);
 
   const onSubmit = () => {
@@ -43,7 +37,7 @@ export function TransferFormDialog({ contractAgreementLd, open, onClose, onSucce
       consumerId: contractAgreement?.consumerId[0] && contractAgreement?.consumerId[0]["@value"],
       contractId: contractAgreement["@id"],
     };
-    const transfer = createTransferProcessRequest(agreement as ContractAgreement, DataAddressTypes.HttpData, formData, connector.protocolUrl);
+    const transfer = createTransferProcessRequest(agreement as ContractAgreement, formData, connector.protocolUrl);
     edcClient.management.transferProcesses.initiate(transfer)
       .then(() => {
         enqueueSnackbar(translator("transferProcesses.new.success"));
