@@ -12,7 +12,7 @@ import { DATA_ADDRESS_SELECT_DATA } from "@/constants/data-address-types";
 import {theme} from "@/theme/ThemeProvider";
 import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
 import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
-import { DataAddressTypes, defaultHttpDataAddress } from "@/utilities/data-address";
+import {DataAddressTypes, defaultHttpDestinationDataAddress} from "@/utilities/data-address";
 import {createTransferProcessRequest} from "@/utilities/transfer-process";
 import {AssetContactEmailAndSubject} from "@/components/molecules/asset-contact-email-and-subject.tsx";
 import {AssetFormDataAddressAmazonS3} from "@/components/organisms/asset-form-data-address-amazon-s3.tsx";
@@ -28,7 +28,7 @@ export interface TransferFormDialogProps {
 }
 
 export function TransferFormDialog({ contractAgreementLd, open, onClose, onSuccess = () => {}, translator }: TransferFormDialogProps): JSX.Element {
-  const [formData, setFormData] = useState<DataAddress>(defaultHttpDataAddress);
+  const [formData, setFormData] = useState<DataAddress>(defaultHttpDestinationDataAddress);
 
   const [errors, setErrors] = useState({});
   const contractAgreement = removeJsonLdSchemaFromProperties(contractAgreementLd);
