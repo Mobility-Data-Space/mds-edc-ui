@@ -203,6 +203,13 @@ export const en = {
         fieldDataAddressHttpProxyPathHelper: "The consuming side must provide a Custom HTTP Subpath with method parameterization is enabled. The Custom HTTP Subpath will be appended to the base path.",
         fieldDataAddressHttpProxyPathTrue: "Disable Proxy Path",
         fieldDataAddressHttpProxyPathFalse: "Enable Proxy Path",
+        fieldDataAddressQueryParamsAddText: "Add Query Param",
+        fieldDataAddressQueryParams: "Query Params",
+        fieldDataAddressDefaultQueryParams: "Default Query Params",
+        fieldDataAddressQueryParamsHelper: "With query param parameterization enabled, the default query params and the query params provided by the consumer will be merged.",
+        fieldDataAddressQueryParamsKeyLabel: "Query Param Name",
+        fieldDataAddressQueryParamsKeyPlaceholder: "Key",
+        fieldDataAddressQueryParamsValueLabel: "Value",
 
         fieldBucketName: "Bucket Name",
         fieldRegion: "Region",
