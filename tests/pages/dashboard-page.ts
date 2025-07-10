@@ -3,7 +3,7 @@ import { Page } from '@playwright/test';
 export class DashboardPage {
   readonly page: Page;
   readonly dashboardHeaderLocator = '#dashboard-header';
-  readonly widgetLocator = '.dashboard-widget';
+  readonly widgetLocator = 'dashboard-widget';
 
   constructor(page: Page) {
     this.page = page;
@@ -15,7 +15,7 @@ export class DashboardPage {
   }
 
   async getDashboardHeader() {
-    return this.page.locator(this.dashboardHeaderLocator);
+    return this.page.getByTestId(this.dashboardHeaderLocator);
   }
 
   async getWidgets() {
