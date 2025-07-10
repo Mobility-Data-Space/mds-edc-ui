@@ -48,7 +48,7 @@ export default function ConnectorPage() {
           <EdcInfoCard
             name={connector.name}
             description={connector.description}
-            managementUrl={connector.managementUrl}
+            managementUrl={connector.connectorManagementUrl}
             protocolUrl={connector.protocolUrl}
             translator={translator}
           />

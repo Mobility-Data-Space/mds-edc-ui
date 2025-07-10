@@ -20,5 +20,10 @@ export function participantConfig() {
 }
 
 export async function readEnvironment(): Promise<Participant> {
+  if (typeof window !== "undefined") {
+    const response = await fetch("/connector/config");
+    return response.json();
+  }
+
   return participantConfig();
 }
