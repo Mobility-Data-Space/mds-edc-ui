@@ -28,14 +28,16 @@ export default function ConnectorPage() {
 
   return (
     <SideDrawer title={<T string="dashboard.title" />}>
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-5" data-testid="dashboard-widget" >
         <div className="flex flex-col gap-y-3 xl:col-span-2">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             <TransferProcessStatusChartCard
+              data-testid="dashboard-incoming-data"
               title="dashboard.incomingData"
               transferProcesses={transferProcesses.filter(transferProcess => transferProcess.type === "CONSUMER")}
             />
             <TransferProcessStatusChartCard
+              data-testid="dashboard-outgoing-data"
               title="dashboard.outgoingData"
               transferProcesses={transferProcesses.filter(transferProcess => transferProcess.type === "PROVIDER")}
             />

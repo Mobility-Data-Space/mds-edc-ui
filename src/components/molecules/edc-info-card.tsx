@@ -31,12 +31,14 @@ export function EdcInfoCard({ name, description = "", managementUrl, protocolUrl
         </Typography>
 
         <EdcInfoDisplayInput
+          data-testid="dashboard-connector-endpoint"
           label={<T string="dashboard.connectorEndpoint" />}
           value={protocolUrl}
           translator={translator}
         />
 
         <EdcInfoDisplayInput
+          data-testid="dashboard-management-api-url"
           label={<T string="dashboard.managementApiUrl" />}
           value={managementUrl}
           translator={translator}

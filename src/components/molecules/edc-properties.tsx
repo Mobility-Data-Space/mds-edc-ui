@@ -11,7 +11,7 @@ export interface EdcPropertiesProps {
 
 export function EdcProperties({ fields }: EdcPropertiesProps ): JSX.Element {
   return (
-    <Card>
+    <Card data-testid="dashboard-edc-properties" >
       <CardContent className="flex flex-col gap-y-4">
         <TitleWithIcon
           title={<T string="dashboard.connectorProperties"/>}

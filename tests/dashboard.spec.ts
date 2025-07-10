@@ -15,9 +15,14 @@ test.describe("Dashboard Tests", () => {
     await expect(dashboardHeader).toBeVisible();
   });
 
-  test.fixme("Displays widgets on the dashboard", async ({ page }) => {
+  test("Displays widgets on the dashboard", async ({ page }) => {
     // Verify the widgets are visible
     const widgets = await dashboardPage.getWidgets();
-    await expect(widgets.count()).toBeGreaterThan(0);
+//    await expect(widgets.count()).toBeGreaterThan(0);
+
+    await expect(page.getByTestId('dashboard-your-data-offers').locator('h2')).toContainText('1');
+    await expect(page.getByTestId('dashboard-your-assets').locator('h2')).toContainText('8');
+    await expect(page.getByTestId('dashboard-your-policies').locator('h2')).toContainText('1');
+    await expect(page.getByTestId('dashboard-edc-properties')).toContainText('http://localhost:8183/api/management');
   });
 });
