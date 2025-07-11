@@ -23,12 +23,40 @@ export const createTimespanAndConstraint = ([startDate, endDate]: [string, strin
 });
 
 export interface OrConstraint extends Constraint {
-  or: Constraint[]
+  or: (AtomicConstraint | MultiplicityConstraint)[]
 }
 export interface AndConstraint extends Constraint {
-  and: Constraint[]
+  and: (AtomicConstraint | MultiplicityConstraint)[]
 }
 export interface XoneConstraint extends Constraint {
-  xone: Constraint[]
+  xone: (AtomicConstraint | MultiplicityConstraint)[]
 }
-export type MultiplicityConstraint = OrConstraint | AndConstraint | XoneConstraint ;
+export type MultiplicityConstraint = OrConstraint | AndConstraint | XoneConstraint;
+
+export function isAtomicConstraint(constraint: Constraint): constraint is AtomicConstraint {
+  return (
+    typeof (constraint as AtomicConstraint).leftOperand === 'string' &&
+    typeof (constraint as AtomicConstraint).operator === 'string' &&
+    typeof (constraint as AtomicConstraint).rightOperand === 'string'
+  );
+}
+
+export function isMultiplicityConstraint(constraint: Constraint): constraint is MultiplicityConstraint {
+  return (
+    (Array.isArray((constraint as OrConstraint).or)) ||
+    (Array.isArray((constraint as AndConstraint).and)) ||
+    (Array.isArray((constraint as XoneConstraint).xone))
+  );
+}
+
+export function isOrConstraint(constraint: MultiplicityConstraint): constraint is OrConstraint {
+  return Array.isArray((constraint as OrConstraint).or);
+}
+
+export function isAndConstraint(constraint: MultiplicityConstraint): constraint is AndConstraint {
+  return Array.isArray((constraint as AndConstraint).and);
+}
+
+export function isXoneConstraint(constraint: MultiplicityConstraint): constraint is XoneConstraint {
+  return Array.isArray((constraint as XoneConstraint).xone);
+}

@@ -1,14 +1,6 @@
-import * as React from "react";
-import {Plus} from "lucide-react";
-import {Button as MuiButton, IconButton, Tooltip, TooltipProps} from "@mui/material";
-import Modal from "@mui/material/Modal";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Popover from "@mui/material/Popover";
-import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
-import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
 import DateRangePicker from "@/components/molecules/date-range-picker";
+import { T, useTranslator } from "@/i18n";
+import { DATE_FORMAT } from "@/utilities/date";
 import {
   AndConstraint,
   createParticipantIdConstraint,
@@ -18,23 +10,31 @@ import {
   OrConstraint,
   XoneConstraint
 } from "@/utilities/policy-constraints";
-import {T, useTranslator} from "@/i18n";
-import {DATE_FORMAT} from "@/utilities/date";
+import { IconButton, Button as MuiButton, Tooltip, TooltipProps } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import Modal from "@mui/material/Modal";
+import Popover from "@mui/material/Popover";
+import Typography from "@mui/material/Typography";
+import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
+import { Plus } from "lucide-react";
+import * as React from "react";
 
 export interface AddConstraintButtonProps {
   showAddButton?: boolean;
   isFirstLevel?: boolean;
-  onClick: (constraint: AtomicConstraint|MultiplicityConstraint) => void;
+  onClick: (constraint: AtomicConstraint | MultiplicityConstraint) => void;
 }
 
-export function AddConstraintButton({showAddButton = false, onClick}: AddConstraintButtonProps) {
-  const {translator} = useTranslator();
+export function AddConstraintButton({ showAddButton = false, onClick }: AddConstraintButtonProps) {
+  const { translator } = useTranslator();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const [subAnchorEl, setSubAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const [dateRangeModalIsOpen, setDateRangeModalIsOpen] = React.useState(false);
   const [dateRangeModalValue, setDateRangeModalValue] = React.useState<[string, string]>(["", ""]);
 
-  const onAddWithClose = (constraint: AtomicConstraint|MultiplicityConstraint) => {
+  const onAddWithClose = (constraint: AtomicConstraint | MultiplicityConstraint) => {
     onClick(constraint);
     handleClose();
     setDateRangeModalIsOpen(false);
@@ -87,7 +87,7 @@ export function AddConstraintButton({showAddButton = false, onClick}: AddConstra
       color="secondary"
 
     >
-      <Plus data-testid="add-expression-button" className="size-6"/>
+      <Plus data-testid="add-expression-button" className="size-6" />
     </IconButton>
   );
 
@@ -110,10 +110,10 @@ export function AddConstraintButton({showAddButton = false, onClick}: AddConstra
           p: 4,
         }}>
           <Typography variant="h6" component="h2" className="!mb-4">
-            <T string="dataOffer.new.dataOfferTimespanRestriction"/>
+            <T string="dataOffer.new.dataOfferTimespanRestriction" />
           </Typography>
           <DateRangePicker
-            label={<T string="dataOffer.new.dataOfferDateRange"/>}
+            label={<T string="dataOffer.new.dataOfferDateRange" />}
             helperText={`${DATE_FORMAT} - ${DATE_FORMAT}`}
             value={dateRangeModalValue}
             onChange={(newValue) => setDateRangeModalValue(newValue)}
@@ -123,7 +123,7 @@ export function AddConstraintButton({showAddButton = false, onClick}: AddConstra
               color="secondary"
               onClick={() => setDateRangeModalIsOpen(false)}
             >
-              <T string="common.cancel"/>
+              <T string="common.cancel" />
             </MuiButton>
             <MuiButton
               data-testid="asset-create-submit"
@@ -131,7 +131,7 @@ export function AddConstraintButton({showAddButton = false, onClick}: AddConstra
               disabled={dateRangeModalValue[0] === "" || dateRangeModalValue[1] === ""}
               onClick={() => onAddWithClose(createTimespanAndConstraint(dateRangeModalValue))}
             >
-              <T string="common.add"/>
+              <T string="common.add" />
             </MuiButton>
           </div>
         </Box>
@@ -155,35 +155,35 @@ export function AddConstraintButton({showAddButton = false, onClick}: AddConstra
         <div className="flex flex-col z-10">
           <Tooltip {...tooltipProps} title={translator("dataOffer.new.policyExpressionConsumerParticipantIdTooltip")}>
             <Button data-testid="participant-id-expression" variant="text" color="secondary" onClick={() => onAddWithClose(createParticipantIdConstraint())}
-                    onMouseOver={onMouseLeave}>
+              onMouseOver={onMouseLeave}>
               <Typography align="left" variant="body2" className="w-full p-2">
-                <T string="dataOffer.new.policyExpressionConsumerParticipantId"/>
+                <T string="dataOffer.new.policyExpressionConsumerParticipantId" />
               </Typography>
             </Button>
           </Tooltip>
           <Tooltip {...tooltipProps} title={translator("dataOffer.new.policyExpressionTimeRestrictionTooltip")}>
             <Button variant="text" color="secondary" onClick={() => onAddWithClose(createTimeRestrictionConstraint())}
-                    onMouseOver={onMouseLeave}>
+              onMouseOver={onMouseLeave}>
               <Typography align="left" variant="body2" className="w-full p-2">
-                <T string="dataOffer.new.policyExpressionTimeRestriction"/>
+                <T string="dataOffer.new.policyExpressionTimeRestriction" />
               </Typography>
             </Button>
           </Tooltip>
-          <Divider/>
+          <Divider />
           <Tooltip {...tooltipProps} title={translator("dataOffer.new.policyExpressionTimeSpanRestrictionTooltip")}>
             <Button variant="text" color="secondary" onMouseOver={onMouseLeave} onClick={() => {
               setDateRangeModalIsOpen(true);
               handleClose();
             }}>
               <Typography align="left" variant="body2" className="w-full p-2">
-                <T string="dataOffer.new.policyExpressionTimeSpanRestriction"/>
+                <T string="dataOffer.new.policyExpressionTimeSpanRestriction" />
               </Typography>
             </Button>
           </Tooltip>
-          <Divider/>
+          <Divider />
           <Button variant="text" color="secondary" onMouseOver={onMouseEnter}>
             <Typography align="left" variant="body2" className="w-full p-2 flex flex-row justify-between items-center">
-              <T string="dataOffer.new.policyExpressionCombine"/>
+              <T string="dataOffer.new.policyExpressionCombine" />
               <svg viewBox="0 0 5 10" focusable="false" className="size-3">
                 <polygon points="0,0 5,5 0,10"></polygon>
               </svg>
@@ -206,23 +206,23 @@ export function AddConstraintButton({showAddButton = false, onClick}: AddConstra
         >
           <div className="flex flex-col">
             <Tooltip {...tooltipProps} title={translator("dataOffer.new.policyExpressionAndTooltip")}>
-              <Button variant="text" color="secondary" onClick={() => onAddWithClose({ and: []} as AndConstraint)}>
+              <Button variant="text" color="secondary" onClick={() => onAddWithClose({ and: [] } as AndConstraint)}>
                 <Typography align="left" variant="body2" className="w-full p-2">
-                  <T string="dataOffer.new.policyExpressionAnd"/>
+                  <T string="dataOffer.new.policyExpressionAnd" />
                 </Typography>
               </Button>
             </Tooltip>
             <Tooltip {...tooltipProps} title={translator("dataOffer.new.policyExpressionOrTooltip")}>
-              <Button variant="text" color="secondary" onClick={() => onAddWithClose({ or: []} as OrConstraint)}>
+              <Button variant="text" color="secondary" onClick={() => onAddWithClose({ or: [] } as OrConstraint)}>
                 <Typography align="left" variant="body2" className="w-full p-2">
-                  <T string="dataOffer.new.policyExpressionOr"/>
+                  <T string="dataOffer.new.policyExpressionOr" />
                 </Typography>
               </Button>
             </Tooltip>
             <Tooltip {...tooltipProps} title={translator("dataOffer.new.policyExpressionXoneTooltip")}>
-              <Button variant="text" color="secondary" onClick={() => onAddWithClose({ xone: []} as XoneConstraint)}>
+              <Button variant="text" color="secondary" onClick={() => onAddWithClose({ xone: [] } as XoneConstraint)}>
                 <Typography align="left" variant="body2" className="w-full p-2">
-                  <T string="dataOffer.new.policyExpressionXone"/>
+                  <T string="dataOffer.new.policyExpressionXone" />
                 </Typography>
               </Button>
             </Tooltip>

@@ -53,6 +53,11 @@ export const cn = {
       createSuccess: "资产创建成功！",
       deleteSuccess: "资产删除成功！",
     },
+    dataOffer: {
+      new: {
+        dataOfferCreateError: "创建数据产品失败，请稍后再试。"
+      }
+    },
     "contract-definitions": {
       title: "列出所有合约定义",
       description:
