@@ -115,7 +115,7 @@ export function useList<T>({ queryAll, delete: del, shouldFetch = true }: UseLis
       .catch((err) => {
         dispatch({ type: "SEARCH_ERROR", payload: err as Error });
       });
-  }, [state.querySpecBase, state.committedSearchSpec, shouldFetch]);
+  }, [queryAll, state.querySpecBase, state.committedSearchSpec, shouldFetch]);
 
   useEffect(() => {
     if (!state.shouldSearch) return;
