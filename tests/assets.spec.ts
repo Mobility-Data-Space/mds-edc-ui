@@ -44,6 +44,75 @@ test.describe("Assets Page Tests", () => {
       const successMessage = await assetsPage.getToastMessage("success");
       await expect(successMessage).toBeVisible();
     });
+
+    test("Creates a new HTTP asset and verifies its visibility in the list", async ({ page }) => {
+      // Open the create asset modal
+      await assetsPage.openCreateAssetModal();
+
+      // Fill in the asset details
+      const randomNumber = `${Math.random()}`.replace("0.", "");
+      const assetTitle = `Test HTTP Dataset ${randomNumber}`;
+      const assetId = `dataset-http-id-${randomNumber}`;
+      await assetsPage.fillCreateAssetForm(assetTitle, assetId);
+      await assetsPage.openAdvancedSection();
+      await assetsPage.fillRequiredAdvancedField();
+      await assetsPage.openDataSourceSection();
+
+      await assetsPage.fillHttpDatasource();
+
+      // Submit the form
+      await assetsPage.submitCreateAssetForm();
+
+      // Verify the success message is displayed
+      const successMessage = await assetsPage.getToastMessage("success");
+      await expect(successMessage).toBeVisible();
+    });
+
+    test("Creates a new S3 asset and verifies its visibility in the list", async ({ page }) => {
+      // Open the create asset modal
+      await assetsPage.openCreateAssetModal();
+
+      // Fill in the asset details
+      const randomNumber = `${Math.random()}`.replace("0.", "");
+      const assetTitle = `Test S3 Dataset ${randomNumber}`;
+      const assetId = `dataset-s3-id-${randomNumber}`;
+      await assetsPage.fillCreateAssetForm(assetTitle, assetId);
+      await assetsPage.openAdvancedSection();
+      await assetsPage.fillRequiredAdvancedField();
+      await assetsPage.openDataSourceSection();
+      
+      await assetsPage.selectS3Type() ;
+      await assetsPage.fillRequiredS3Datasource();
+
+      // Submit the form
+      await assetsPage.submitCreateAssetForm();
+
+      // Verify the success message is displayed
+      const successMessage = await assetsPage.getToastMessage("success");
+      await expect(successMessage).toBeVisible();
+
+      // Open the create asset modal
+      await assetsPage.openCreateAssetModal();
+
+      // Fill in the asset details
+      const randomNumber2 = `${Math.random()}`.replace("0.", "");
+      const assetTitle2 = `Test S3 Dataset 2 - ${randomNumber}`;
+      const assetId2 = `dataset-s3-2-id-${randomNumber}`;
+      await assetsPage.fillCreateAssetForm(assetTitle, assetId);
+      await assetsPage.openAdvancedSection();
+      await assetsPage.fillRequiredAdvancedField();
+      await assetsPage.openDataSourceSection();
+      
+      await assetsPage.selectS3Type() ;
+      await assetsPage.fillRequiredS3Datasource();
+      await assetsPage.fillOptionalS3Datasource();
+
+      // Submit the form
+      await assetsPage.submitCreateAssetForm();
+
+      // Verify the success message is displayed
+      await expect(successMessage).toBeVisible();
+    });
   });
 
   test.describe("Delete Functionality", () => {
@@ -94,7 +163,7 @@ test.describe("Assets Page Tests", () => {
       await assetsPage.submitEditAssetForm();
 
       // Verify the updated asset appears in the list
-      const updatedAssetLocator = assetsPage.getAssetInList(updatedTitle);
+      const updatedAssetLocator = await assetsPage.getAssetInList(updatedTitle);
       await expect(updatedAssetLocator).toBeVisible();
     });
   });
