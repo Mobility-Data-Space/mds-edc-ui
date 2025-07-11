@@ -287,6 +287,9 @@ export const en = {
         policyExpressionXoneTooltip: "XONE operation. Evaluates to true if and only if exactly one child expression is true",
         dataOfferTimespanRestriction: "Timespan Restriction",
         dataOfferDateRange: "Date Range",
+        assetCreateSuccess: "Asset was created successfully!",
+        dataOfferCreateSuccess: "Data offer was published successfully!",
+        dataOfferCreateError: "Failed to create data offer. Please try again later."
       },
     },
     contractDefinitions: {
