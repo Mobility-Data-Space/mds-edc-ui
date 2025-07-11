@@ -61,11 +61,29 @@ export class AssetsPage extends BaseListPage {
     await this.page.getByRole('combobox').filter({ hasText: 'Select data category' }).click();
     await this.page.getByRole('option', { name: 'Traffic Information' }).click();
   }
+
   async openDataSourceSection() {
     await this.page.locator(this.assetsDataSourceSectionLocator).click();
   }
+
   async fillHttpDatasource() {
     await this.page.getByRole('textbox', { name: 'URL URL' }).fill("https://google.com");
+  }
+
+  async selectS3Type() {
+    await this.page.getByRole('combobox').filter({ hasText: 'REST-API Endpoint' }).click();
+    await this.page.getByRole('option', { name: 'Amazon S3' }).click();
+  }
+
+  async fillRequiredS3Datasource() {
+    await this.page.getByRole('textbox', { name: 'Bucket Name' }).fill("mys3bucket");
+    await this.page.getByRole('textbox', { name: 'Region' }).fill("eu-west-1");
+
+    await this.page.getByRole('textbox', { name: 'Object Name' }).fill("mys3objectname");
+  }
+
+  async fillOptionalS3Datasource() {
+    await this.page.getByRole('textbox', { name: 'Keyname' }).fill("mys3keyname");
   }
 
   async submitDeleteAsset() {
@@ -96,7 +114,7 @@ export class AssetsPage extends BaseListPage {
     await this.page.getByTestId('asset-create-submit').click();
   }
 
-  getAssetInList(assetId: string) {
+  async getAssetInList(assetId: string) {
     return this.page.locator(this.assetListLocator).locator(this.assetCardLocator).filter({ hasText: assetId });
   }
 
