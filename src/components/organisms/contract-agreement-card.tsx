@@ -19,7 +19,7 @@ export default function ContractAgreementCard({ contractAgreement, onClick, isTe
 
   return (
     <ContractAgreementView id={contractAgreement.id} managementUrl={connector.managementUrl}>
-      <Card className="contract-agreement-card w-[300px]" onClick={onClick}>
+      <Card className="contract-agreement-card w-full max-w-[300px]" onClick={onClick}>
         <CardContent className="flex flex-col gap-y-3">
           <div>
             <div className="flex gap-x-4">
@@ -32,7 +32,7 @@ export default function ContractAgreementCard({ contractAgreement, onClick, isTe
                 </Icon>
               </div>
               <div>
-                <Typography data-testid="asset-id" variant="h4" className="!leading-none hover:underline cursor-pointer">
+                <Typography data-testid="asset-id" variant="h4" className="!leading-none hover:underline cursor-pointer [word-break:break-word]">
                   <ContractAgreementView.AssetId />
                 </Typography>
                 <Typography variant="body1" color="textSecondary">
