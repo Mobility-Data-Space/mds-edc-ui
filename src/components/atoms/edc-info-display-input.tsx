@@ -6,14 +6,20 @@ import { InfoOutlined } from "@mui/icons-material";
 import {T} from "@/i18n";
 import LinkIcon from "@mui/icons-material/Link";
 
-export function EdcInfoDisplayInput({ translator, label, value, ...rest }: Omit<TextFieldProps, "error"> & { value: string, translator: (key: string) => string }): JSX.Element {
+export interface EdcInfoDisplayInputProps {
+  value: string,
+  translator: (key: string) => string,
+  "data-testid"?: string,
+}
 
+export function EdcInfoDisplayInput({ translator, label, value, "data-testid": dataTestId, ...rest }: Omit<TextFieldProps, "error"> & EdcInfoDisplayInputProps): JSX.Element {
   return (
 
     <Input
       fullWidth
       label={label}
       value={value}
+      data-testid={dataTestId}
       slotProps={{
         input: {
           classes: { root: "flex-grow" },
