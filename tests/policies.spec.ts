@@ -41,11 +41,11 @@ test.describe("Policy Definitions Page Tests", () => {
       await policiesPage.clickCreatePolicyButton();
 
       // Interact with the DatePicker field
-      const datePickerInput = await page.locator('[data-testid="date-picker-input"]');
+      const datePickerInput = page.locator('[data-testid="date-picker-input"]');
       await datePickerInput.click();
 
       // Select a date using the calendar
-      const calendarDay = await page.locator('[data-testid="calendar-day"]').first();
+      const calendarDay = page.locator('[data-testid="calendar-day"]').first();
       await calendarDay.click();
 
       // Manually edit the date in the input field
@@ -62,7 +62,7 @@ test.describe("Policy Definitions Page Tests", () => {
       await page.waitForURL("**/new");
 
       // Fill in the policy details
-      await policiesPage.fillPolicyId("TestPolicy001");
+      await policiesPage.fillPolicyId(`TestPolicy001-${Date.now()}`);
       await policiesPage.clickAddExpressionButton();
       await policiesPage.selectParticipantIdField();
       await policiesPage.selectEqualOperator();
@@ -74,7 +74,7 @@ test.describe("Policy Definitions Page Tests", () => {
 
       // Verify policy was added
       const policyCards = await policiesPage.getPolicyCards();
-      const policiesCount = await policyCards.count() ;
+      const policiesCount = await policyCards.count();
       expect(policiesCount).toBeGreaterThan(1);
     });
 
@@ -84,7 +84,7 @@ test.describe("Policy Definitions Page Tests", () => {
       await page.waitForURL("**/new");
 
       // Fill in the policy details
-      await policiesPage.fillPolicyId("TestPolicy002");
+      await policiesPage.fillPolicyId(`TestPolicy002-${Date.now()}`);
       await policiesPage.clickAddExpressionButton();
       await policiesPage.selectParticipantIdField();
       await policiesPage.selectInOperator();
@@ -96,7 +96,7 @@ test.describe("Policy Definitions Page Tests", () => {
 
       // Verify policy was added
       const policyCards = await policiesPage.getPolicyCards();
-      const policiesCount = await policyCards.count() ;
+      const policiesCount = await policyCards.count();
       expect(policiesCount).toBeGreaterThan(1);
     });
 
@@ -104,15 +104,21 @@ test.describe("Policy Definitions Page Tests", () => {
       // Navigate to the Policies page
       await policiesPage.navigate();
 
-      // Create a policy with a unique ID
+      // Get the first policy's ID
+      const policyCards = await policiesPage.getPolicyCards();
+      const firstPolicy = policyCards.first();
+      const policyId = await firstPolicy.locator('[data-testid="policy-id"]').textContent();
+      expect(policyId).toBeTruthy();
+
+      // Try to create a policy with the same ID
       await policiesPage.clickCreatePolicyButton();
-      await policiesPage.fillPolicyId("TestPolicy001");
+      await policiesPage.fillPolicyId(policyId || "");
       await policiesPage.clickCreateButton();
 
       // Verify the error message
       const errorMessageLocator = await policiesPage.getErrorMessage();
       const errorMessage = await errorMessageLocator.textContent();
-      expect(errorMessage).toBe("Policy with ID TestPolicy001 already exists");
+      expect(errorMessage).toBe(`Policy with ID ${policyId} already exists`);
     });
 
   });
@@ -130,7 +136,7 @@ test.describe("Policy Definitions Page Tests", () => {
     });
 
   });
-  
+
   test.describe("Search Functionality", () => {
     test("should display search input and trigger button", async ({ page }) => {
       const searchInput = await policiesPage.getSearchInput();

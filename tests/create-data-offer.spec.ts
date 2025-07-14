@@ -37,7 +37,7 @@ test.describe('Create Data Offer Tests', () => {
 
     await page.click('[data-testid="add-expression-button"]');
     await page.click('[data-testid="participant-id-expression"]');
-    await page.locator("#participant-id-field").fill('test-participant')
+    await createDataOfferPage.fillParticipantId('test-participant')
 
     await createDataOfferPage.submitButton().click();
 
@@ -95,7 +95,7 @@ test.describe('Create Data Offer Tests', () => {
     await page.click('[data-testid="participant-id-expression"]');
 
     await expect(submitButton).toBeDisabled();
-    await page.locator("#participant-id-field").fill('test-participant')
+    await createDataOfferPage.fillParticipantId('test-participant')
 
     await expect(submitButton).toBeEnabled();
   });
