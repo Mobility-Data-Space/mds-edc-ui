@@ -42,7 +42,7 @@ services:
       timeout: 3s
       retries: 3
       start_period: 20s
-  
+
   edc-2:
     image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:1.0.0-rc.3
     environment:

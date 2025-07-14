@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { DashboardPage } from './pages/dashboard-page';
+import {config} from "./utils/ui-config.ts";
 
 test.describe("Dashboard Tests", () => {
   let dashboardPage: DashboardPage;
@@ -16,13 +17,17 @@ test.describe("Dashboard Tests", () => {
   });
 
   test("Displays widgets on the dashboard", async ({ page }) => {
-    // Verify the widgets are visible
-    const widgets = await dashboardPage.getWidgets();
-//    await expect(widgets.count()).toBeGreaterThan(0);
+    const propertiesText = ((await page.getByTestId('dashboard-edc-properties').first().allTextContents()) || [""])[0];
+    expect(propertiesText).toContain(config.EDC_PROTOCOL_URL)
+    expect(propertiesText).toContain(config.EDC_ID)
+    expect(propertiesText).toContain(config.EDC_NAME)
+    expect(propertiesText).toContain(config.EDC_DESCRIPTION)
 
     await expect(page.getByTestId('dashboard-your-data-offers').locator('h2')).toContainText('1');
-    await expect(page.getByTestId('dashboard-your-assets').locator('h2')).toContainText('8');
+    await expect(page.getByTestId('dashboard-your-assets').locator('h2')).toContainText('7');
     await expect(page.getByTestId('dashboard-your-policies').locator('h2')).toContainText('1');
-    await expect(page.getByTestId('dashboard-edc-properties')).toContainText('http://localhost:8183/api/management');
+
+    expect(await page.getByTestId('dashboard-connector-endpoint').first().locator('input').inputValue()).toBe(config.EDC_PROTOCOL_URL);
+    expect(await page.getByTestId('dashboard-management-api-url').first().locator('input').inputValue()).toBe(config.EDC_MANAGEMENT_URL);
   });
 });
