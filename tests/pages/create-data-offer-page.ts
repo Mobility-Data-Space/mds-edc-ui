@@ -14,6 +14,7 @@ export class CreateDataOfferPage {
   private readonly submitButtonLocatorStr = '[data-testid="data-offer-create-submit"]';
   private readonly successMessageLocatorStr = '[data-testid="toast-success-message"]';
   private readonly errorMessageLocatorStr = '[data-testid="toast-error-message"]';
+  readonly participantIdFieldLocator = '[data-testid="participant-id-field"]';
 
   constructor(page: Page) {
     this.page = page;
@@ -80,4 +81,9 @@ export class CreateDataOfferPage {
   getDataOfferPublishMode(mode: typeof PUBLISH_MODES[number]["value"]) {
     return this.page.locator(`[data-testid="offer-publish-mode-${mode}"]`);
   }
+
+  async fillParticipantId(participantId: string) {
+    await this.page.locator(this.participantIdFieldLocator).locator('input').fill(participantId);
+  }
+
 }
