@@ -4,11 +4,12 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoIcon from "@mui/icons-material/Info";
 import { Collapse, IconButton, SnackbarContent } from "@mui/material";
+import { SnackbarContentProps } from "notistack";
 import React, { forwardRef, useState } from "react";
 
 export type SnackbarType = 'success' | 'info' | 'error';
 
-export interface SnackbarProps {
+export interface SnackbarProps extends SnackbarContentProps {
     type: SnackbarType;
     message: string;
     details?: string;
@@ -80,7 +81,7 @@ const getTestDataId = (t: SnackbarType) => {
 }
 
 export const Snackbar = forwardRef<HTMLDivElement, SnackbarProps>(
-    ({ type, message, details, onClose, action, showDetails = true }, ref) => {
+    ({ type, message, details, onClose, action, showDetails = true, ...props }, ref) => {
         const [expanded, setExpanded] = useState(false);
 
         return (
@@ -135,6 +136,7 @@ export const Snackbar = forwardRef<HTMLDivElement, SnackbarProps>(
                     </div>
                 }
                 action={action}
+                {...props}
             />
         );
     }

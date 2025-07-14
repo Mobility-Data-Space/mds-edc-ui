@@ -1,17 +1,17 @@
-import React, {ReactNode} from "react";
-import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
-import Typography from "@mui/material/Typography";
-import {IconButton} from "@mui/material";
-import {Minus} from "lucide-react";
-import {TreeBranch} from "@/components/atoms/tree-branch";
-import {TreeLeaf} from "@/components/atoms/tree-leaf";
-import {Constraint} from "@/components/molecules/constraint";
-import {AddConstraintButton} from "@/components/organisms/add-constraint-button";
+import { TreeBranch } from "@/components/atoms/tree-branch";
+import { TreeLeaf } from "@/components/atoms/tree-leaf";
+import { Constraint } from "@/components/molecules/constraint";
+import { AddConstraintButton } from "@/components/organisms/add-constraint-button";
 import { MultiplicityConstraint } from "@/utilities/policy-constraints";
+import { IconButton } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
+import { Minus } from "lucide-react";
+import { ReactNode } from "react";
 
 export interface PolicyExpressionProps {
-  value: (AtomicConstraint|MultiplicityConstraint)[];
-  onChange: (newValue: (AtomicConstraint|MultiplicityConstraint)[]) => void;
+  value: (AtomicConstraint | MultiplicityConstraint)[];
+  onChange: (newValue: (AtomicConstraint | MultiplicityConstraint)[]) => void;
   onRemove?: () => void;
   title?: ReactNode;
   isFirstLevel?: boolean;
@@ -22,7 +22,7 @@ export default function PolicyExpression({ value, onChange, onRemove, title = ""
   const resolvedShowAddButton = showAddButton || (isFirstLevel && value.length === 0);
   const hideVerticalAndHorizontalLine = isFirstLevel && value.length <= 1;
 
-  const createOnChange = (index: number) => (newConstraint: AtomicConstraint|MultiplicityConstraint) => {
+  const createOnChange = (index: number) => (newConstraint: AtomicConstraint | MultiplicityConstraint) => {
     const result = [...value];
     result[index] = newConstraint;
     return onChange(result);
@@ -34,7 +34,7 @@ export default function PolicyExpression({ value, onChange, onRemove, title = ""
     return onChange(result);
   };
 
-  const onAdd = (newConstraint: AtomicConstraint|MultiplicityConstraint) => onChange([...value, newConstraint]);
+  const onAdd = (newConstraint: AtomicConstraint | MultiplicityConstraint) => onChange([...value, newConstraint]);
 
   return (
     <div>
@@ -50,7 +50,7 @@ export default function PolicyExpression({ value, onChange, onRemove, title = ""
             className="gap-x-2 font-medium float-right"
             color="secondary"
           >
-            <Minus className="size-6"/>
+            <Minus className="size-6" />
           </IconButton>
         </div>
       }
@@ -69,7 +69,7 @@ export default function PolicyExpression({ value, onChange, onRemove, title = ""
 
         {!resolvedShowAddButton ? "" :
           <TreeLeaf hidden={hideVerticalAndHorizontalLine}>
-            <AddConstraintButton onClick={onAdd} showAddButton={resolvedShowAddButton}/>
+            <AddConstraintButton onClick={onAdd} showAddButton={resolvedShowAddButton} />
           </TreeLeaf>
         }
       </TreeBranch>

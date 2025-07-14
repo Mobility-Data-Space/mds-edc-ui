@@ -54,18 +54,18 @@ export const PUBLISH_MODE_PUBLISH_UNRESTRICTED = {
   text: "Publish unrestricted",
   value: "PUBLISH_UNRESTRICTED",
   tooltip: "Your data offer is published and can be accessed by everyone.",
-};
+} as const;
 
 export const PUBLISH_MODE_PUBLISH_RESTRICTED = {
   text: "Publish restricted",
   value: "PUBLISH_RESTRICTED",
   tooltip: "Your data offer is published with restrictions of your choice.",
-};
+} as const;
 
 export const PUBLISH_MODE_DO_NOT_PUBLISH = {
   text: "Create asset only (without data offer)",
   value: "DO_NOT_PUBLISH",
   tooltip: "Create the asset but do not publish your data offer. You can do it later.",
-};
+} as const;
 
 export const PUBLISH_MODES = [PUBLISH_MODE_PUBLISH_UNRESTRICTED, PUBLISH_MODE_PUBLISH_RESTRICTED, PUBLISH_MODE_DO_NOT_PUBLISH];
