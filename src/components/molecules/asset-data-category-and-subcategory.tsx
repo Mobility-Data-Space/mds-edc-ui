@@ -1,10 +1,9 @@
-import React from "react";
 
 import { MuiSelect } from "@/components/atoms/mui-select";
 
+import { DATA_CATEGORY_SELECT_DATA, DATA_SUBCATEGORIES_DATA, TYPE_DATA_CATEGORY } from "@/constants/data-category";
 import { T } from "@/i18n";
 import { ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME } from "@/schema/asset";
-import { DATA_CATEGORY_SELECT_DATA, DATA_SUBCATEGORIES_DATA, TYPE_DATA_CATEGORY } from "@/constants/data-category";
 import { AssetProperties } from "@/utilities/asset";
 
 export interface AssetDataCategoryAndSubcategoryProps {
@@ -47,7 +46,7 @@ export function AssetDataCategoryAndSubcategory({ translator, formData, onChange
 
       <div>
         <label
-          htmlFor="advanced-info-data-category"
+          htmlFor="advanced-info-data-subcategory"
           className="block text-sm text-gray-800 mb-1"
         >
           <T string="assets.new.fieldAdvancedInfoDataSubcategory" />

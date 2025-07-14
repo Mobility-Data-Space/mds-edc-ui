@@ -27,12 +27,12 @@ export default function AssetCard({ asset, participantId, onClick = () => { } }:
   const version = readValue(asset.properties, ASSET_VERSION);
 
   return (
-    <Card className="asset-card w-[300px]" onClick={onClick}>
+    <Card className="asset-card w-full max-w-[300px]" onClick={onClick}>
       <CardContent className="flex flex-col gap-y-3">
         <div className="flex flex-row gap-x-4 items-start">
           <AssetIcon asset={asset} fontSize="large" />
           <div className="flex flex-col">
-            <Typography variant="h4" className="!leading-none hover:underline cursor-pointer" data-testid="asset-title">
+            <Typography variant="h4" className="!leading-none hover:underline cursor-pointer [word-break:break-word]" data-testid="asset-title">
               {title}
             </Typography>
             <Typography variant="body1" color="textSecondary">

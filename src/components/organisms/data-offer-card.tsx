@@ -29,12 +29,12 @@ export default function DataOfferCard({ dataset, participantId, dataTestId, onCl
   const version = readValue(dataset, ASSET_VERSION);
 
   return (
-    <Card className="w-[300px]" onClick={onClick} data-testid={dataTestId}>
+    <Card className="w-full max-w-[300px]" onClick={onClick} data-testid={dataTestId}>
       <CardContent className="flex flex-col gap-y-3">
         <div className="flex flex-row gap-x-4 items-start">
           <AssetIcon asset={datasetToAsset(dataset)} fontSize="large" />
           <div className="flex flex-col">
-            <Typography variant="h4" className="title !leading-none hover:underline cursor-pointer" data-testid="asset-title">
+            <Typography variant="h4" className="title !leading-none hover:underline cursor-pointer [word-break:break-word]" data-testid="asset-title">
               {assetTitle}
             </Typography>
             <Typography variant="body1" color="textSecondary">

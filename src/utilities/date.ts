@@ -3,8 +3,6 @@ import TimeAgo from "javascript-time-ago";
 import en from 'javascript-time-ago/locale/en'
 import {TIME_LOCALE} from "@/constants/time-locale.ts";
 
-TimeAgo.addDefaultLocale(en);
-
 export type DateType = Dayjs | Date | null;
 
 export const browserLanguage = () => {
