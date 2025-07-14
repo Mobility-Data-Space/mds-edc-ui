@@ -23,35 +23,31 @@ function getConstraintData(policyDefinition: PolicyDefinition) {
 }
 
 export default function PolicyCard({ policyDefinition, onClick }: PolicyCardProps) {
-  const { connector } = useParticipantConnectorState()
-
   return (
-    <ContractAgreementView id={policyDefinition.id} managementUrl={connector.managementUrl}>
-      <Card className="policy-card w-[400px]" onClick={onClick}>
-        <CardContent className="flex flex-col gap-y-3">
-          <div>
-            <div className="flex gap-x-4">
-              <div className="flex items-center">
-                <Icon fontSize="large">policy</Icon>
-              </div>
-              <div>
-                <Typography variant="h5" className="!leading-none hover:underline cursor-pointer" data-testid="policy-id">
-                  {policyDefinition.id}
-                </Typography>
-              </div>
+    <Card className="policy-card w-full max-w-[400px]" onClick={onClick}>
+      <CardContent className="flex flex-col gap-y-3">
+        <div>
+          <div className="flex gap-x-4">
+            <div className="flex items-center">
+              <Icon fontSize="large">policy</Icon>
             </div>
             <div>
-              <Typography variant="body2" color="textDisabled">
-                <T string="policyDefinitions.headingCreatedAt" />
-              </Typography>
-              <Typography variant="body2">
-                <Timestamp seconds={policyDefinition.createdAt} />
+              <Typography variant="h5" className="!leading-none hover:underline cursor-pointer [word-break:break-word]" data-testid="policy-id">
+                {policyDefinition.id}
               </Typography>
             </div>
           </div>
-          <ConstraintShow data={getConstraintData(policyDefinition)} />
-        </CardContent>
-      </Card>
-    </ContractAgreementView>
+          <div>
+            <Typography variant="body2" color="textDisabled">
+              <T string="policyDefinitions.headingCreatedAt" />
+            </Typography>
+            <Typography variant="body2">
+              <Timestamp seconds={policyDefinition.createdAt} />
+            </Typography>
+          </div>
+        </div>
+        <ConstraintShow data={getConstraintData(policyDefinition)} />
+      </CardContent>
+    </Card>
   );
 }
