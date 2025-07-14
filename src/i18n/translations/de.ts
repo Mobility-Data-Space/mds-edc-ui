@@ -55,6 +55,11 @@ export const de = {
       createSuccess: "Asset erfolgreich erstellt!",
       deleteSuccess: "Asset erfolgreich gelöscht!",
     },
+    dataOffer: {
+      new: {
+        dataOfferCreateError: "Datenangebot konnte nicht erstellt werden. Bitte versuchen Sie es später erneut."
+      }
+    },
     "contract-definitions": {
       title: "Listen Sie alle Vertragsdefinitionen auf",
       description:

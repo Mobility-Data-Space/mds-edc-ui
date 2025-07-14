@@ -34,7 +34,7 @@ export default function ContractDefinitionCard({ contractDefinition, onClick }: 
 
   return (
     <ContractDefinitionView id={contractDefinition.id} managementUrl={connector.managementUrl}>
-      <Card className="data-offer-card w-[368px]" onClick={onClick}>
+      <Card className="data-offer-card w-full max-w-[368px]" onClick={onClick}>
         <CardContent className="flex flex-col gap-y-3">
           <div>
             <div className="flex gap-x-4">
@@ -42,7 +42,7 @@ export default function ContractDefinitionCard({ contractDefinition, onClick }: 
                 <Icon fontSize="large">policy</Icon>
               </div>
               <div>
-                <Typography variant="h4" className="!leading-none hover:underline cursor-pointer" data-testid="contract-definition-id">
+                <Typography variant="h4" className="!leading-none hover:underline cursor-pointer [word-break:break-word]" data-testid="contract-definition-id">
                   {contractDefinition.id}
                 </Typography>
                 <Typography variant="body1" color="textSecondary">

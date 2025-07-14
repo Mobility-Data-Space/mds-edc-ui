@@ -11,26 +11,31 @@ export function EdcEntitiesCountGrid({ entitiesCount }: EdcEntitiesCountProps): 
   return (
     <div className="flex flex-row flex-wrap gap-2.5">
       <EdcEntityCount
+        data-testid="dashboard-your-data-offers"
         label="dashboard.yourDataOffers"
         count={entitiesCount.dataOffers}
         className={cardClassName}
       />
       <EdcEntityCount
+        data-testid="dashboard-your-assets"
         label="dashboard.yourAssets"
         count={entitiesCount.assets}
         className={cardClassName}
       />
       <EdcEntityCount
+        data-testid="dashboard-your-policies"
         label="dashboard.yourPolicies"
         count={entitiesCount.policies}
         className={cardClassName}
       />
       <EdcEntityCount
+        data-testid="dashboard-preconfigured-catalogs"
         label="dashboard.preconfiguredCatalogs"
         count={entitiesCount.preconfiguredCatalogs}
         className={cardClassName}
       />
       <EdcEntityCount
+        data-testid="dashboard-contract-agreements"
         label="dashboard.contractAgreements"
         count={entitiesCount.contractAgreements}
         className={cardClassName}

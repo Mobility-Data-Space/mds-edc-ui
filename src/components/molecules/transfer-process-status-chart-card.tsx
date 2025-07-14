@@ -11,6 +11,7 @@ import {theme} from "@/theme/ThemeProvider.tsx";
 interface TransferProcessStatusChartCardProps {
   title: string;
   transferProcesses: TransferProcess[];
+  "data-testid"?: string;
 }
 
 interface Entry {
@@ -91,7 +92,7 @@ function HoverEntry({ isHovered, entry, mousePosition, onHoverEnd }: HoverEntryP
   );
 }
 
-export function TransferProcessStatusChartCard({ title, transferProcesses }: TransferProcessStatusChartCardProps) {
+export function TransferProcessStatusChartCard({ title, transferProcesses, "data-testid": dataTestId }: TransferProcessStatusChartCardProps) {
   const [mousePosition, setMousePosition] = useState<MousePosition>({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
   const [hoveredEntry, setHoveredEntry] = useState<Entry>({});
@@ -123,7 +124,7 @@ export function TransferProcessStatusChartCard({ title, transferProcesses }: Tra
   };
 
   return (
-    <Card>
+    <Card data-testid={dataTestId} >
       <CardContent className="flex flex-col gap-y-4">
         <TitleWithIcon
           title={<T string={title}/>}

@@ -1,45 +1,45 @@
-import React, {useEffect, useRef, useState} from "react";
-import {Button, Checkbox, FormControlLabel, Divider, Typography} from "@mui/material";
-import {enqueueSnackbar} from "notistack";
-import {AssetInput, AtomicConstraint, DataAddress, PolicyDefinitionInput} from "@think-it-labs/edc-connector-client";
-import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
-import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
-import {T, useTranslator} from "@/i18n";
 import RadioButtonsGroup from "@/components/atoms/radio-group";
-import {AssetDataCategoryAndSubcategory} from "@/components/molecules/asset-data-category-and-subcategory";
-import {AssetTitle} from "@/components/molecules/asset-title";
-import {AssetId} from "@/components/molecules/asset-id";
-import {AssetDescription} from "@/components/molecules/asset-description";
-import {AssetKeywords} from "@/components/molecules/asset-keywords";
-import {AssetLanguage} from "@/components/molecules/asset-language";
-import {AssetVersion} from "@/components/molecules/asset-version";
-import {AssetTransportMode} from "@/components/molecules/asset-transport-mode";
-import {AssetDataModel} from "@/components/molecules/asset-data-model";
-import {AssetContentType} from "@/components/molecules/asset-content-type";
-import {AssetEndpointDocumentation} from "@/components/molecules/asset-endpoint-documentation";
-import {AssetDataSamples} from "@/components/molecules/asset-data-samples";
-import {AssetReferenceFileUrls} from "@/components/molecules/asset-reference-file-urls";
-import {AssetDataUpdateFrequency} from "@/components/molecules/asset-data-update-frequency";
-import {AssetGeoReferenceMethod} from "@/components/molecules/asset-geo-reference-method";
-import {AssetGeoLocations} from "@/components/molecules/asset-geo-locations";
-import {AssetNutsLocations} from "@/components/molecules/asset-nuts-locations";
-import {AssetSovereignLegalName} from "@/components/molecules/asset-sovereign-legal-name";
-import {AssetPublisher} from "@/components/molecules/asset-publisher";
-import {AssetStandardLicense} from "@/components/molecules/asset-standard-license";
-import {AssetConditionsForUse} from "@/components/molecules/asset-conditions-for-use";
-import {AssetTemporalCoverage} from "@/components/molecules/asset-temporal-coverage";
+import { AssetConditionsForUse } from "@/components/molecules/asset-conditions-for-use";
+import { AssetContentType } from "@/components/molecules/asset-content-type";
+import { AssetDataCategoryAndSubcategory } from "@/components/molecules/asset-data-category-and-subcategory";
+import { AssetDataModel } from "@/components/molecules/asset-data-model";
+import { AssetDataSamples } from "@/components/molecules/asset-data-samples";
+import { AssetDataUpdateFrequency } from "@/components/molecules/asset-data-update-frequency";
+import { AssetDescription } from "@/components/molecules/asset-description";
+import { AssetEndpointDocumentation } from "@/components/molecules/asset-endpoint-documentation";
+import { AssetGeoLocations } from "@/components/molecules/asset-geo-locations";
+import { AssetGeoReferenceMethod } from "@/components/molecules/asset-geo-reference-method";
+import { AssetId } from "@/components/molecules/asset-id";
+import { AssetKeywords } from "@/components/molecules/asset-keywords";
+import { AssetLanguage } from "@/components/molecules/asset-language";
+import { AssetNutsLocations } from "@/components/molecules/asset-nuts-locations";
+import { AssetPublisher } from "@/components/molecules/asset-publisher";
+import { AssetReferenceFileUrls } from "@/components/molecules/asset-reference-file-urls";
+import { AssetSovereignLegalName } from "@/components/molecules/asset-sovereign-legal-name";
+import { AssetStandardLicense } from "@/components/molecules/asset-standard-license";
+import { AssetTemporalCoverage } from "@/components/molecules/asset-temporal-coverage";
+import { AssetTitle } from "@/components/molecules/asset-title";
+import { AssetTransportMode } from "@/components/molecules/asset-transport-mode";
+import { AssetVersion } from "@/components/molecules/asset-version";
+import { Snackbar } from "@/components/molecules/snackbar";
+import { AssetFormDataAddressStep } from "@/components/organisms/asset-form-data-address-step";
 import PolicyExpression from "@/components/organisms/policy-expression";
 import SideDrawer from "@/components/organisms/side-drawer";
-import {AssetFormDataAddressStep} from "@/components/organisms/asset-form-data-address-step";
-import {defaultCreatePolicyFormData, fromPolicyDefinitionForm} from "@/utilities/policy";
-import {defaultCreateContractDefinitionFormData, fromContractDefinitionForm, MdsContractDefinitionInput} from "@/utilities/contract-definition";
-import {PUBLISH_MODE_DO_NOT_PUBLISH, PUBLISH_MODES} from "@/constants/data-address-types";
-import { MultiplicityConstraint } from "@/utilities/policy-constraints";
-import {UNRESTRICTED_POLICY_ID} from "@/schema/policy";
-import {defaultCreateAssetFormData, AssetProperties, generateId, fromAssetForm, validateDataAddress} from "@/utilities/asset"
-import { ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_TITLE, ASSET_VERSION} from "@/schema/asset";
-import {PUBLISH_MODE_PUBLISH_RESTRICTED, PUBLISH_MODE_PUBLISH_UNRESTRICTED} from "@/constants/data-address-types";
-import {idSelector} from "@/utilities/data-offer.ts";
+import { PUBLISH_MODE_DO_NOT_PUBLISH, PUBLISH_MODE_PUBLISH_RESTRICTED, PUBLISH_MODE_PUBLISH_UNRESTRICTED, PUBLISH_MODES } from "@/constants/data-address-types";
+import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
+import { T, useTranslator } from "@/i18n";
+import { ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_TITLE, ASSET_VERSION } from "@/schema/asset";
+import { UNRESTRICTED_POLICY_ID } from "@/schema/policy";
+import { AssetProperties, defaultCreateAssetFormData, fromAssetForm, generateId, validateDataAddress } from "@/utilities/asset";
+import { defaultCreateContractDefinitionFormData, fromContractDefinitionForm, MdsContractDefinitionInput } from "@/utilities/contract-definition";
+import { idSelector } from "@/utilities/data-offer.ts";
+import { defaultCreatePolicyFormData, fromPolicyDefinitionForm } from "@/utilities/policy";
+import { isAndConstraint, isAtomicConstraint, isOrConstraint, isXoneConstraint, MultiplicityConstraint } from "@/utilities/policy-constraints";
+import { Button, Checkbox, Divider, FormControlLabel, Typography } from "@mui/material";
+import { AssetInput, AtomicConstraint, DataAddress, PolicyDefinitionInput } from "@think-it-labs/edc-connector-client";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
+import { useSnackbar } from "notistack";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface DataOffer {
   asset: AssetInput,
@@ -49,6 +49,7 @@ interface DataOffer {
 
 export default function CreateDataOfferPage() {
   const { push, connector } = useParticipantConnectorState();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const [showAdvancedFields, setShowAdvancedFields] = useState(false);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
@@ -60,7 +61,7 @@ export default function CreateDataOfferPage() {
     policy: defaultCreatePolicyFormData,
     contract: defaultCreateContractDefinitionFormData
   });
-  const [policyExpression, setPolicyExpression] = useState<(AtomicConstraint|MultiplicityConstraint)[]>([]);
+  const [policyExpression, setPolicyExpression] = useState<(AtomicConstraint | MultiplicityConstraint)[]>([]);
   const [publishMode, setPublishMode] = useState("")
 
   const [errors, setErrors] = useState({ properties: {}, advancedInfo: {}, dataAddress: {} });
@@ -69,7 +70,7 @@ export default function CreateDataOfferPage() {
   const client = useEdcConnectorClient({ management: connector.managementUrl });
   useEffect(() => {
     client.management.assets.queryAll({ offset: 0 })
-    .then(assets => setExistingIds(assets.map(asset => asset["@id"])));
+      .then(assets => setExistingIds(assets.map(asset => asset["@id"])));
   }, [client]);
 
   const generalInfoIsNotValid = () => {
@@ -84,8 +85,35 @@ export default function CreateDataOfferPage() {
     return 0 < Object.entries(validateDataAddress(formData.asset.dataAddress, translator)).length
   }
 
+  const policyExpressionIsNotValid = useCallback((policyExpression: (AtomicConstraint | MultiplicityConstraint)[]) => {
+    console.log({ publishMode, policyExpression })
+    if (publishMode !== PUBLISH_MODE_PUBLISH_RESTRICTED.value) {
+      return false
+    }
+
+    return policyExpression.some((policy): boolean => {
+      if (isAtomicConstraint(policy)) {
+        return !policy.rightOperand
+      }
+
+      if (isOrConstraint(policy)) {
+        return !policy.or.length || policyExpressionIsNotValid(policy.or)
+      }
+
+      if (isAndConstraint(policy)) {
+        return !policy.and.length || policyExpressionIsNotValid(policy.and)
+      }
+
+      if (isXoneConstraint(policy)) {
+        return !policy.xone.length || policyExpressionIsNotValid(policy.xone)
+      }
+
+      return false
+    })
+  }, [publishMode])
+
   const cannotSubmit = () => {
-    return generalInfoIsNotValid() || advancedInfoIsNotValid() || dataAddressIsNotValid();
+    return generalInfoIsNotValid() || advancedInfoIsNotValid() || dataAddressIsNotValid() || policyExpressionIsNotValid(policyExpression)
   }
 
   const onChange = (newFormData: DataOffer) => {
@@ -100,19 +128,19 @@ export default function CreateDataOfferPage() {
       generalInfoFormData["@id"] = generateId(generalInfoFormData[ASSET_TITLE] as string, generalInfoFormData[ASSET_VERSION] as string);
     }
 
-    return onChange({ ...formData, asset: { ...formData.asset, properties: generalInfoFormData, ["@id"]: generalInfoFormData["@id"] }});
+    return onChange({ ...formData, asset: { ...formData.asset, properties: generalInfoFormData, ["@id"]: generalInfoFormData["@id"] } });
   };
 
   const dataAddressFormOnChange = (dataAddressFormData: DataAddress) => {
     setErrors((oldErrors) => ({ ...oldErrors, dataAddress: validateDataAddress(dataAddressFormData, translator) }));
 
-    return onChange({ ...formData, asset: {...formData.asset, dataAddress: dataAddressFormData }});
+    return onChange({ ...formData, asset: { ...formData.asset, dataAddress: dataAddressFormData } });
   };
 
   const advancedInfoFormOnChange = (advancedInfoFormData: AssetProperties) => {
     setErrors((oldErrors) => ({ ...oldErrors, advancedInfo: validateAdvancedInfo(advancedInfoFormData) }));
 
-    return onChange({ ...formData, asset: { ...formData.asset, properties: advancedInfoFormData }});
+    return onChange({ ...formData, asset: { ...formData.asset, properties: advancedInfoFormData } });
   };
 
   const policyExpressionFormOnChange = (policy: (AtomicConstraint | MultiplicityConstraint)[]) => {
@@ -121,9 +149,9 @@ export default function CreateDataOfferPage() {
 
   const validateGeneralInfo = (formDataToValidate: AssetProperties) => {
     const newErrors: { [key: string]: boolean | string } = {};
-    const required_properties = [ASSET_TITLE, "@id"] ;
+    const required_properties = [ASSET_TITLE, "@id"];
     required_properties.forEach((propertyName) => {
-      if (! formDataToValidate[propertyName]) {
+      if (!formDataToValidate[propertyName]) {
         newErrors[propertyName] = true;
       }
     });
@@ -140,9 +168,9 @@ export default function CreateDataOfferPage() {
 
   const validateAdvancedInfo = (formDataToValidate: AssetProperties) => {
     const newErrors: { [key: string]: boolean } = {};
-    const required_properties = [ASSET_ADVANCED_INFO_DATA_CATEGORY] ;
+    const required_properties = [ASSET_ADVANCED_INFO_DATA_CATEGORY];
     required_properties.forEach((propertyName) => {
-      if (! formDataToValidate[ASSET_ADVANCED_INFO_MOBILITY_THEME][propertyName]) {
+      if (!formDataToValidate[ASSET_ADVANCED_INFO_MOBILITY_THEME][propertyName]) {
         newErrors[propertyName] = true;
       }
     });
@@ -183,9 +211,6 @@ export default function CreateDataOfferPage() {
 
               // create contract
               client.management.contractDefinitions.create(fromContractDefinitionForm(formData.contract))
-                .then(() => {
-                  push("/data-offers")
-                })
                 .catch(error => enqueueSnackbar(translator("common.errorOccurred")));
             })
             .catch(error => enqueueSnackbar(translator("common.errorOccurred")));
@@ -195,13 +220,27 @@ export default function CreateDataOfferPage() {
 
           // create contract
           client.management.contractDefinitions.create(fromContractDefinitionForm(formData.contract))
-            .then(() => {
-              push("/data-offers")
-            })
             .catch(error => enqueueSnackbar(translator("common.errorOccurred")));
         }
+      }).then(() => {
+        enqueueSnackbar("", {
+          content: (key) => <Snackbar
+            type="success"
+            message={publishMode === PUBLISH_MODE_DO_NOT_PUBLISH.value ? translator('dataOffer.new.assetCreateSuccess') : translator('dataOffer.new.dataOfferCreateSuccess')}
+            onClose={() => { closeSnackbar(key) }}
+          />
+        })
+        setTimeout(() => push(publishMode === PUBLISH_MODE_DO_NOT_PUBLISH.value ? "/assets" : "/data-offers"), 2000)
       })
-      .catch(error => enqueueSnackbar(translator("common.errorOccurred")));
+      .catch(() =>
+        enqueueSnackbar("", {
+          content: (key) => <Snackbar
+            type="error"
+            message={translator('dataOffer.new.dataOfferCreateError')}
+            onClose={() => { closeSnackbar(key) }}
+          />
+        })
+      );
   };
 
   if (!connector) {
@@ -220,10 +259,10 @@ export default function CreateDataOfferPage() {
               <div className="sm:col-span-1">
                 <label className="inline-block text-sm text-black mt-2.5" >
                   <Typography variant="h6">
-                    <T string="dataOffer.new.dataOfferTypeTitle"/>
+                    <T string="dataOffer.new.dataOfferTypeTitle" />
                   </Typography>
                   <Typography variant="body2" color="textSecondary">
-                    <T string="dataOffer.new.dataOfferTypeDescription"/>
+                    <T string="dataOffer.new.dataOfferTypeDescription" />
                   </Typography>
                 </label>
               </div>
@@ -239,16 +278,16 @@ export default function CreateDataOfferPage() {
               </div>
             </div>
 
-            <Divider/>
+            <Divider />
 
             <div className="grid sm:grid-cols-3 gap-2 sm:gap-6">
               <div className="sm:col-span-1">
                 <label className="inline-block text-sm text-black mt-2.5">
                   <Typography variant="h6">
-                    <T string="dataOffer.new.dataOfferGeneralInfoTitle"/>
+                    <T string="dataOffer.new.dataOfferGeneralInfoTitle" />
                   </Typography>
                   <Typography variant="body2" color="textSecondary">
-                    <T string="dataOffer.new.dataOfferGeneralInfoDescription"/>
+                    <T string="dataOffer.new.dataOfferGeneralInfoDescription" />
                   </Typography>
                 </label>
               </div>
@@ -258,7 +297,7 @@ export default function CreateDataOfferPage() {
                     htmlFor="properties-title"
                     className="inline-block text-sm text-black font-medium mb-2"
                   >
-                    <T string="assets.new.fieldTitle"/> *
+                    <T string="assets.new.fieldTitle" /> *
                   </label>
                   <AssetTitle
                     hideLabel
@@ -268,7 +307,6 @@ export default function CreateDataOfferPage() {
                     translator={translator}
                   />
                 </div>
-
                 <div>
                   <label
                     htmlFor="properties-id"
@@ -290,13 +328,14 @@ export default function CreateDataOfferPage() {
                     htmlFor="properties-description"
                     className="inline-block text-sm text-black font-medium mb-2"
                   >
-                    <T string="assets.new.fieldDescription"/>
+                    <T string="assets.new.fieldDescription" />
                   </label>
                   <AssetDescription
                     formData={formData.asset.properties}
                     errors={errors.properties}
                     onChange={generalInfoFormOnChange}
                     translator={translator}
+                    data-testid="asset-description"
                   />
                 </div>
 
@@ -305,7 +344,7 @@ export default function CreateDataOfferPage() {
                     htmlFor="properties-keywords"
                     className="inline-block text-sm text-black font-medium mb-2"
                   >
-                    <T string="assets.new.fieldKeywords"/>
+                    <T string="assets.new.fieldKeywords" />
                   </label>
                   <AssetKeywords
                     formData={formData.asset.properties}
@@ -316,7 +355,7 @@ export default function CreateDataOfferPage() {
                 </div>
 
                 <FormControlLabel
-                  label={<T string="dataOffer.new.showAdvancedFields"/>}
+                  label={<T string="dataOffer.new.showAdvancedFields" />}
                   control={
                     <Checkbox
                       color="secondary"
@@ -332,7 +371,7 @@ export default function CreateDataOfferPage() {
                       htmlFor="properties-version"
                       className="inline-block text-sm text-black font-medium mb-2"
                     >
-                      <T string="assets.new.fieldVersion"/>
+                      <T string="assets.new.fieldVersion" />
                     </label>
                     <AssetVersion
                       hideLabel
@@ -347,7 +386,7 @@ export default function CreateDataOfferPage() {
                       htmlFor="properties-language"
                       className="inline-block text-sm text-black font-medium mb-2"
                     >
-                      <T string="assets.new.fieldLanguage"/>
+                      <T string="assets.new.fieldLanguage" />
                     </label>
                     <AssetLanguage
                       formData={formData.asset.properties}
@@ -359,7 +398,7 @@ export default function CreateDataOfferPage() {
               </div>
             </div>
 
-            <Divider/>
+            <Divider />
 
             <div className="grid sm:grid-cols-3 gap-2 sm:gap-6">
               <div className="sm:col-span-1">
@@ -368,10 +407,10 @@ export default function CreateDataOfferPage() {
                   className="inline-block text-sm text-black mt-2.5"
                 >
                   <Typography variant="h6">
-                    <T string="dataOffer.new.dataOfferMobilityInfoTitle"/>
+                    <T string="dataOffer.new.dataOfferMobilityInfoTitle" />
                   </Typography>
                   <Typography variant="body2" color="textSecondary">
-                    <T string="dataOffer.new.dataOfferMobilityInfoDescription"/>
+                    <T string="dataOffer.new.dataOfferMobilityInfoDescription" />
                   </Typography>
                 </label>
               </div>
@@ -383,13 +422,13 @@ export default function CreateDataOfferPage() {
                   errors={errors.advancedInfo}
                 />
 
-                {! showAdvancedFields ? "" : <>
+                {!showAdvancedFields ? "" : <>
                   <div>
                     <label
                       htmlFor="advanced-info-geo-reference-method"
                       className="inline-block text-sm text-black font-medium mb-2"
                     >
-                      <T string="assets.new.fieldAdvancedInfoTransportMode"/>
+                      <T string="assets.new.fieldAdvancedInfoTransportMode" />
                     </label>
                     <AssetTransportMode
                       translator={translator}
@@ -403,7 +442,7 @@ export default function CreateDataOfferPage() {
                       htmlFor="advanced-data-model"
                       className="inline-block text-sm text-black font-medium mb-2"
                     >
-                      <T string="assets.new.fieldAdvancedInfoDataModel"/>
+                      <T string="assets.new.fieldAdvancedInfoDataModel" />
                     </label>
                     <AssetDataModel
                       translator={translator}
@@ -417,7 +456,7 @@ export default function CreateDataOfferPage() {
             </div>
 
             {!showAdvancedFields ? "" : <>
-              <Divider/>
+              <Divider />
 
               <div className="grid sm:grid-cols-3 gap-2 sm:gap-6">
                 <div className="sm:col-span-1">
@@ -426,10 +465,10 @@ export default function CreateDataOfferPage() {
                     className="inline-block text-sm text-black mt-2.5"
                   >
                     <Typography variant="h6">
-                      <T string="dataOffer.new.dataOfferDocumentationTitle"/>
+                      <T string="dataOffer.new.dataOfferDocumentationTitle" />
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
-                      <T string="dataOffer.new.dataOfferDocumentationDescription"/>
+                      <T string="dataOffer.new.dataOfferDocumentationDescription" />
                     </Typography>
                   </label>
                 </div>
@@ -439,7 +478,7 @@ export default function CreateDataOfferPage() {
                       htmlFor="advanced-data-model"
                       className="inline-block text-sm text-black font-medium mb-2"
                     >
-                      <T string="assets.new.fieldAdvancedInfoDataModel"/>
+                      <T string="assets.new.fieldAdvancedInfoDataModel" />
                     </label>
                     <AssetEndpointDocumentation
                       formData={formData.asset.properties}
@@ -477,7 +516,7 @@ export default function CreateDataOfferPage() {
                 </div>
               </div>
 
-              <Divider/>
+              <Divider />
 
               <div className="grid sm:grid-cols-3 gap-2 sm:gap-6">
                 <div className="sm:col-span-1">
@@ -486,10 +525,10 @@ export default function CreateDataOfferPage() {
                     className="inline-block text-sm text-black mt-2.5"
                   >
                     <Typography variant="h6">
-                    <T string="dataOffer.new.dataOfferLocationTimeTitle"/>
+                      <T string="dataOffer.new.dataOfferLocationTimeTitle" />
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
-                      <T string="dataOffer.new.dataOfferLocationTimeDescription"/>
+                      <T string="dataOffer.new.dataOfferLocationTimeDescription" />
                     </Typography>
                   </label>
                 </div>
@@ -506,7 +545,7 @@ export default function CreateDataOfferPage() {
                       htmlFor="advanced-data-update-frequency"
                       className="inline-block text-sm text-black font-medium mb-2"
                     >
-                      <T string="assets.new.fieldAdvancedDataUpdateFrequency"/>
+                      <T string="assets.new.fieldAdvancedDataUpdateFrequency" />
                     </label>
                     <AssetDataUpdateFrequency
                       translator={translator}
@@ -521,7 +560,7 @@ export default function CreateDataOfferPage() {
                       htmlFor="advanced-data-update-frequency"
                       className="inline-block text-sm text-black font-medium mb-2"
                     >
-                      <T string="assets.new.fieldAdvancedInfoGeoReferenceMethod"/>
+                      <T string="assets.new.fieldAdvancedInfoGeoReferenceMethod" />
                     </label>
                     <AssetGeoReferenceMethod
                       translator={translator}
@@ -536,7 +575,7 @@ export default function CreateDataOfferPage() {
                       htmlFor="advanced-geo-location"
                       className="inline-block text-sm text-black font-medium mb-2"
                     >
-                      <T string="assets.new.fieldAdvancedGeoLocation"/>
+                      <T string="assets.new.fieldAdvancedGeoLocation" />
                     </label>
                     <AssetGeoLocations
                       translator={translator}
@@ -557,7 +596,7 @@ export default function CreateDataOfferPage() {
                 </div>
               </div>
 
-              <Divider/>
+              <Divider />
 
               <div className="grid sm:grid-cols-3 gap-2 sm:gap-6">
                 <div className="sm:col-span-1">
@@ -566,10 +605,10 @@ export default function CreateDataOfferPage() {
                     className="inline-block text-sm text-black mt-2.5"
                   >
                     <Typography variant="h6">
-                      <T string="dataOffer.new.dataOfferLegalInfoTitle"/>
+                      <T string="dataOffer.new.dataOfferLegalInfoTitle" />
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
-                      <T string="dataOffer.new.dataOfferLegalInfoDescription"/>
+                      <T string="dataOffer.new.dataOfferLegalInfoDescription" />
                     </Typography>
                   </label>
                 </div>
@@ -579,7 +618,7 @@ export default function CreateDataOfferPage() {
                       htmlFor="advanced-geo-location"
                       className="inline-block text-sm text-black font-medium mb-2"
                     >
-                      <T string="assets.new.fieldAdvancedInfoSovereignLegalName"/>
+                      <T string="assets.new.fieldAdvancedInfoSovereignLegalName" />
                     </label>
                     <AssetSovereignLegalName
                       translator={translator}
@@ -594,7 +633,7 @@ export default function CreateDataOfferPage() {
                       htmlFor="advanced-geo-location"
                       className="inline-block text-sm text-black font-medium mb-2"
                     >
-                      <T string="assets.new.fieldPublisher"/>
+                      <T string="assets.new.fieldPublisher" />
                     </label>
                     <AssetPublisher
                       translator={translator}
@@ -609,7 +648,7 @@ export default function CreateDataOfferPage() {
                       htmlFor="advanced-geo-location"
                       className="inline-block text-sm text-black font-medium mb-2"
                     >
-                      <T string="assets.new.fieldStandardLicense"/>
+                      <T string="assets.new.fieldStandardLicense" />
                     </label>
                     <AssetStandardLicense
                       translator={translator}
@@ -624,7 +663,7 @@ export default function CreateDataOfferPage() {
                       htmlFor="advanced-geo-location"
                       className="inline-block text-sm text-black font-medium mb-2"
                     >
-                      <T string="assets.new.fieldAdvancedInfoConditionsForUse"/>
+                      <T string="assets.new.fieldAdvancedInfoConditionsForUse" />
                     </label>
                     <AssetConditionsForUse
                       translator={translator}
@@ -637,7 +676,7 @@ export default function CreateDataOfferPage() {
               </div>
             </>}
 
-            <Divider/>
+            <Divider />
 
             <div className="grid sm:grid-cols-3 gap-2 sm:gap-6">
               <div className="sm:col-span-1">
@@ -646,18 +685,17 @@ export default function CreateDataOfferPage() {
                   className="inline-block text-sm text-black mt-2.5"
                 >
                   <Typography variant="h6">
-                    <T string="dataOffer.new.dataOfferPublishingTitle"/>
+                    <T string="dataOffer.new.dataOfferPublishingTitle" />
                   </Typography>
                   <Typography variant="body2" color="textSecondary">
-                    <T string="dataOffer.new.dataOfferPublishingDescription"/>
+                    <T string="dataOffer.new.dataOfferPublishingDescription" />
                   </Typography>
                 </label>
               </div>
               <div className="sm:col-span-2 flex flex-col gap-6">
                 <RadioButtonsGroup
                   name="data-offer-type"
-                  id="data-offer-type"
-                  label={<T string="dataOffer.new.type"/>}
+                  label={<T string="dataOffer.new.type" />}
                   defaultValue={PUBLISH_MODE_PUBLISH_UNRESTRICTED.value}
                   options={PUBLISH_MODES}
                   onChange={(value) => {
@@ -668,7 +706,7 @@ export default function CreateDataOfferPage() {
                   <label
                     className="inline-block text-sm text-black font-medium mb-2"
                   >
-                    <T string="dataOffer.new.policyExpression"/>
+                    <T string="dataOffer.new.policyExpression" />
                   </label>
                   <PolicyExpression
                     value={policyExpression}
@@ -690,7 +728,7 @@ export default function CreateDataOfferPage() {
               onClick={onSubmit}
               disabled={cannotSubmit()}
             >
-              <T string="dataOffer.new.publish"/>
+              <T string="dataOffer.new.publish" />
             </Button>
           </div>
         </div>
