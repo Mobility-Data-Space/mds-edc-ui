@@ -6,7 +6,7 @@ import SideDrawer from "@/components/organisms/side-drawer";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
 import { MDSManualApprovalController } from "@/utilities/contract-negotiations";
-import { Button, Icon } from "@mui/material";
+import {Button, Icon, Tooltip} from "@mui/material";
 import { ContractNegotiation, CriterionInput } from "@think-it-labs/edc-connector-client";
 import { ContractNegotiationsList } from "@think-it-labs/edc-connector-ui/contract-negotiations-list";
 import { Timestamp } from "@think-it-labs/edc-connector-ui/timestamp";
@@ -15,11 +15,16 @@ import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { MouseEvent, useCallback, useMemo, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
+import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
+import {formatDateTime, formatDateTimeAgo} from "@/utilities/date.ts";
 
 const CreatedAt = ({ item }: { item: ContractNegotiation }) => {
-  const createdAt = item && item["https://w3id.org/edc/v0.0.1/ns/createdAt"];
-  const createdAtValue = createdAt && createdAt[0] && createdAt[0]["@value"];
-  return <Timestamp milliseconds={createdAtValue} />
+  const createdAtValue = readValue(item, "https://w3id.org/edc/v0.0.1/ns/createdAt");
+  return <Tooltip title={formatDateTime(createdAtValue, { showSeconds: true, showDayOfWeek: true })}>
+    <span>
+      {formatDateTimeAgo(createdAtValue)}
+    </span>
+  </Tooltip>;
 }
 
 const CounterPartyAddress = ({ item }: { item: ContractNegotiation }) => {
