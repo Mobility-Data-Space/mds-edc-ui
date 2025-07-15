@@ -116,7 +116,6 @@ export function AssetFormDataAddressHttp({ formData, errors, onChange, translato
             name="data-address-content-type"
             id="data-address-content-type"
             data-testid="data-address-content-type"
-            required
             placeholder="application/json"
             label={translator("assets.headingContentType")}
             error={errors.contentType}

@@ -80,7 +80,7 @@ test.describe("Assets Page Tests", () => {
       await assetsPage.openAdvancedSection();
       await assetsPage.fillRequiredAdvancedField();
       await assetsPage.openDataSourceSection();
-      
+
       await assetsPage.selectS3Type() ;
       await assetsPage.fillRequiredS3Datasource();
 
@@ -102,11 +102,10 @@ test.describe("Assets Page Tests", () => {
       await assetsPage.openAdvancedSection();
       await assetsPage.fillRequiredAdvancedField();
       await assetsPage.openDataSourceSection();
-      
+
       await assetsPage.selectS3Type() ;
       await assetsPage.fillRequiredS3Datasource();
       await assetsPage.fillOptionalS3Datasource();
-
       // Submit the form
       await assetsPage.submitCreateAssetForm();
 
