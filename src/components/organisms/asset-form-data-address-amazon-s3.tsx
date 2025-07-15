@@ -62,7 +62,7 @@ export function AssetFormDataAddressAmazonS3({ formData, errors, onChange, trans
           htmlFor="data-keyname-Keyname"
           className="inline-block text-sm text-black font-medium mb-2"
         >
-          <T string="assets.new.fieldKeyname"/> *
+          <T string="assets.new.fieldKeyname"/>
         </label>
         <Input
           name="keyname"
@@ -106,7 +106,6 @@ export function AssetFormDataAddressAmazonS3({ formData, errors, onChange, trans
             className="inline-block text-sm text-black font-medium mb-2"
           >
             <T string="assets.new.fieldFolderName"/>
-            {formData.objectName ? "" : " *"}
           </label>
           <Input
             name="folderName"

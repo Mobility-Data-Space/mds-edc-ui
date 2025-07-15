@@ -403,6 +403,10 @@ export const validateDataAddress = (formDataToValidate: DataAddress, translator:
       }
     });
 
+    if (! formDataToValidate.objectPrefix && ! formDataToValidate.objectName) {
+      errors.objectName = true;
+    }
+
     return errors;
   }
 
