@@ -7,13 +7,13 @@ export type DataAddressErrors<T> = {
 export enum DataAddressTypes {
   MDSOnRequestOffer = "MDSOnRequestOffer",
   AmazonS3 = "AmazonS3",
-  AzureBlob = "AzureBlob",
+  AzureStorage = "AzureStorage",
   HttpData = "HttpData",
   CustomJson = "CustomJson"
 }
 
 export const remoteTypes = [
-  DataAddressTypes.AzureBlob,
+  DataAddressTypes.AzureStorage,
   DataAddressTypes.AmazonS3
 ];
 
@@ -23,17 +23,18 @@ export interface OnRequestDataAddress extends BaseDataAddress {
   preferred_email_subject?: string
 }
 
-export interface S3DataAddress extends BaseDataAddress {
+export interface AmazonS3DataAddress extends BaseDataAddress {
   type: DataAddressTypes.AmazonS3,
   bucketName: string,
   region: string,
   keyname: string,
   objectName?: string,
   objectPrefix?: string
+  folderName?: string
 }
 
 export interface AzureBlobDataAddress extends BaseDataAddress {
-  type: DataAddressTypes.AzureBlob,
+  type: DataAddressTypes.AzureStorage,
   bucketName: string,
   region: string,
   keyname: string,
