@@ -6,7 +6,7 @@ import {ENGLISH_SELECT_DATA, LANGUAGES} from "@/constants/languages";
 import {DELIMITER} from "@/i18n";
 import {extractArrayValues, isEmail, isUrl} from "@/utilities/utilities";
 import {ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE, ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_MODEL_ID, ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA, ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY, ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY, ASSET_ADVANCED_INFO_GEO_LOCATION, ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL, ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS, ASSET_ADVANCED_INFO_GEO_REFERENCE_METHOD, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION, ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START, ASSET_ADVANCED_INFO_TRANSPORT_MODE, ASSET_CONTENT_TYPE, ASSET_DESCRIPTION, ASSET_ENDPOINT_DOCUMENTATION, ASSET_KEYWORDS, ASSET_LANGUAGE, ASSET_ORGANIZATION, ASSET_PUBLISHER, ASSET_STANDARD_LICENSE, ASSET_TITLE, ASSET_VERSION} from "@/schema/asset";
-import {AzureBlobDataAddress, DataAddressErrors, DataAddressTypes, defaultHttpSourceDataAddress, OnRequestDataAddress, S3DataAddress} from "./data-address";
+import {AzureBlobDataAddress, DataAddressErrors, DataAddressTypes, defaultHttpSourceDataAddress, OnRequestDataAddress, AmazonS3DataAddress} from "./data-address";
 import {CONTEXT_DCAT} from "@/schema/context.ts";
 import {HttpDataAddress} from "@think-it-labs/edc-connector-client/dist/src/entities/data-address";
 import {dataCategoryValueToText, dataSubCategoryValueToText} from "@/utilities/data-category.ts";
@@ -395,23 +395,18 @@ export const validateDataAddress = (formDataToValidate: DataAddress, translator:
   }
 
   if (formDataToValidate.type === DataAddressTypes.AmazonS3) {
-    const requiredProperties = ["bucketName", "region", "keyname"];
-    const errors : DataAddressErrors<S3DataAddress> = {}
+    const requiredProperties = ["bucketName", "region"];
+    const errors : DataAddressErrors<AmazonS3DataAddress> = {}
     requiredProperties.forEach((propertyName) => {
       if (! formDataToValidate[propertyName]) {
         errors[propertyName] = true;
       }
     });
 
-    if (! isDestination && ! formDataToValidate.objectPrefix && ! formDataToValidate.objectName) {
-      errors.objectName = true;
-      errors.objectPrefix = true;
-    }
-
     return errors;
   }
 
-  if (formDataToValidate.type === DataAddressTypes.AzureBlob) {
+  if (formDataToValidate.type === DataAddressTypes.AzureStorage) {
     const requiredProperties = ["bucketName", "region", "keyname"];
     const errors : DataAddressErrors<AzureBlobDataAddress> = {}
     requiredProperties.forEach((propertyName) => {
@@ -419,11 +414,6 @@ export const validateDataAddress = (formDataToValidate: DataAddress, translator:
         errors[propertyName] = true;
       }
     });
-
-    if (! isDestination && ! formDataToValidate.objectPrefix && ! formDataToValidate.objectName) {
-      errors.objectName = true;
-      errors.objectPrefix = true;
-    }
 
     return errors;
   }
@@ -441,6 +431,10 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
   }
 
   if (formDataToTransform.type === DataAddressTypes.HttpData) {
+    const headers = (formDataToTransform.authHeaders || []).map(
+      (value : { input: { key: string, value: string } }) => `${value?.input?.key}:${value?.input?.value}`
+    ).join(";");
+    console.log("asset submit before transform : ", formDataToTransform);
     return removeEmptyFields({
       type: DataAddressTypes.HttpData,
       method: formDataToTransform?.method,
@@ -455,6 +449,7 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
       proxyQueryParams: formDataToTransform?.proxyQueryParams,
       proxyMethod: formDataToTransform?.proxyMethod,
       contentType: formDataToTransform?.contentType,
+      headers,
     });
   }
 
@@ -477,15 +472,16 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
     };
   }
 
-  if (formDataToTransform.type === DataAddressTypes.AzureBlob) {
-    return {
-      type: DataAddressTypes.AzureBlob,
-      bucketName: formDataToTransform.bucketName,
-      region: formDataToTransform.region,
+  if (formDataToTransform.type === DataAddressTypes.AzureStorage) {
+    return removeEmptyFields({
+      type: DataAddressTypes.AzureStorage,
+      container: formDataToTransform.container,
+      account: formDataToTransform.account,
+      folderName: formDataToTransform?.folderName,
+      blobName: formDataToTransform?.blobName,
+      blobPrefix: formDataToTransform?.blobPrefix,
       keyname: formDataToTransform.keyname,
-      objectName: formDataToTransform?.objectName,
-      objectPrefix: formDataToTransform?.objectPrefix,
-    };
+    });
   }
 
   return formDataToTransform;

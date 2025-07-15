@@ -31,9 +31,7 @@ export function DataAddressHttpHeaders({ translator, formData, onChange, errors 
       <KeyValuePairInputList
         label={translator("assets.new.fieldDataAddressHttpHeaders")}
         addText={translator("assets.new.fieldDataAddressHttpHeadersAddText")}
-        keyLabel={translator("assets.new.fieldDataAddressHttpHeaderName")}
         keyPlaceholder={translator("assets.new.fieldDataAddressHttpHeaderNamePlaceholder")}
-        valueLabel={translator("assets.new.fieldDataAddressHttpHeaderValue")}
         valuePlaceholder={"..."}
         name="authHeaders"
         id="data-address-http-headers"

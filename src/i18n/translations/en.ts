@@ -217,6 +217,7 @@ export const en = {
         fieldDataAddressQueryParamsValueLabel: "Value",
         fieldDataAddressQueryParameterizationTrue: "Disable Query Param Parameterization",
         fieldDataAddressQueryParameterizationFalse: "Enable Query Param Parameterization",
+        fieldDataAddressQueryParameterizationDescription: "With query param parameterization enabled, the default query params and the query params provided by the consumer will be merged.",
         fieldDataAddressHeaderAuth:  "Authentication",
         fieldDataAddressHeaderTypeTrue:  "Remove Authentication",
         fieldDataAddressHeaderTypeFalse:  "Add Authentication",
@@ -235,6 +236,14 @@ export const en = {
         fieldDataAddressProxyPath: "Custom Subpath",
         fieldDataAddressContentType: "Custom Request Body Content Type",
         fieldDataAddressProxyBody: "Custom Request Body",
+        fieldEnableProxyBody: "Request Body",
+        fieldEnableProxyBodyDescription: "The request body can only be set from the consumer side, if parameterization is enabled.",
+
+        fieldContainer: "Container",
+        fieldAccount: "Account",
+        fieldFolderName: "Folder Name",
+        fieldBlobName: "Blob Name",
+        fieldBlobPrefix: "Blob Prefix",
 
         fieldBucketName: "Bucket Name",
         fieldRegion: "Region",

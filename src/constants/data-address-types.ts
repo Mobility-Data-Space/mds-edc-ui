@@ -11,7 +11,7 @@ export const DATA_ADDRESS_TYPE_S3 = {
 };
 
 export const DATA_ADDRESS_TYPE_AZURE = {
-  value: DataAddressTypes.AzureBlob,
+  value: DataAddressTypes.AzureStorage,
   text: 'Azure Blob Storage',
 };
 

@@ -10,6 +10,7 @@ import {AssetFormDataAddressAmazonS3} from "@/components/organisms/asset-form-da
 import {AssetContactEmailAndSubject} from "@/components/molecules/asset-contact-email-and-subject.tsx";
 import {AssetFormDataAddressHttp} from "@/components/organisms/asset-form-data-address-http";
 import {Checkbox} from "@/components/atoms/checkbox.tsx";
+import {AssetFormDataAddressAzure} from "@/components/organisms/asset-form-data-address-azure.tsx";
 
 export interface AssetDataAddressFormStepProps {
   translator: (key: string) => string,
@@ -61,8 +62,8 @@ export function AssetFormDataAddressStep({ formData, errors, onChange, translato
         />
       }
 
-      {formData.type === DataAddressTypes.AzureBlob &&
-        <AssetFormDataAddressAmazonS3
+      {formData.type === DataAddressTypes.AzureStorage &&
+        <AssetFormDataAddressAzure
           translator={translator}
           formData={formData}
           onChange={onChange}
