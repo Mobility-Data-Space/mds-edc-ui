@@ -97,8 +97,8 @@ export default function AssetListPage() {
           }}
         </ContractDefinitionsList.Error>
         <div className="flex justify-between pb-6">
-          <div className="flex justify-start gap-x-5 items-center">
-            <div className="min-w-xl">
+          <div className="flex justify-start gap-x-5">
+            <div className="min-w-xl h-full">
               <SearchBar searchTarget="id" placeholder={translator("contractDefinitions.searchPlaceholder")} searchOperator="ilike" />
             </div>
             <div className="flex gap-x-4">

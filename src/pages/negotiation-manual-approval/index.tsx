@@ -9,7 +9,6 @@ import { MDSManualApprovalController } from "@/utilities/contract-negotiations";
 import {Button, Icon, Tooltip} from "@mui/material";
 import { ContractNegotiation, CriterionInput } from "@think-it-labs/edc-connector-client";
 import { ContractNegotiationsList } from "@think-it-labs/edc-connector-ui/contract-negotiations-list";
-import { Timestamp } from "@think-it-labs/edc-connector-ui/timestamp";
 import { Search } from "lucide-react";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";

@@ -1,7 +1,10 @@
 import { T } from "@/i18n";
-import { Search } from "lucide-react";
-import { List } from "../../../vendors/think-it-labs/edc-connector-ui/src/list";
+import {Input} from "@/components/atoms/input";
+import {List, useListContext} from "../../../vendors/think-it-labs/edc-connector-ui/src/list";
 import { SearchSpec } from "../../../vendors/think-it-labs/edc-connector-ui/src/types";
+import {Button, Icon, IconButton, Tooltip} from "@mui/material";
+import React, {useEffect} from "react";
+import {InfoOutlined} from "@mui/icons-material";
 
 interface SearchBarProps {
     placeholder: string;
@@ -10,23 +13,45 @@ interface SearchBarProps {
 }
 
 export default function SearchBar({ placeholder, searchTarget, searchOperator }: SearchBarProps) {
+  const { searchSpec, setSearchSpec, triggerSearch } = useListContext();
+
+  useEffect(() => {
+    setSearchSpec({ operator: searchOperator, operandLeft: searchTarget })
+  }, [searchTarget, searchOperator])
+
     return (
-        <div className="relative flex rounded-lg shadow-sm">
-            <List.Search
-                data-testid="search-input"
-                className="py-[15px] px-4 ps-11 block w-full border border-black/25 hover:border-black rounded-s-sm text-md focus:z-10 focus:outline-black focus:ring-black disabled:opacity-50 disabled:pointer-events-none"
-                placeholder={placeholder}
-                searchOperation={searchOperator}
-                searchTarget={searchTarget}
-            />
-            <div className="absolute inset-y-0 start-0 flex items-center pointer-events-none z-20 ps-4">
-                <Search className="size-5" />
-            </div>
-            <List.SearchTrigger
+      <div className="relative flex rounded-lg h-full" >
+        <Input
+          className="!pr-0 rounded"
+          placeholder={placeholder}
+          value={searchSpec.operandRight}
+          onChange={(event) => setSearchSpec({operandRight: event.currentTarget.value})}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              triggerSearch();
+            }
+          }}
+          slotProps={{
+            input: {
+              className: "!pr-0 h-full",
+              startAdornment: <Icon className="size-5">search</Icon>,
+              endAdornment: <Button
                 data-testid="search-trigger"
-                className="py-3 px-4 inline-flex justify-center items-center gap-x-2 text-black bg-[#ffff26] text-sm font-semibold rounded-e-md border border-transparent  hover:bg-yellow-300 disabled:opacity-50 disabled:pointer-events-none">
-                <T global string="search" />
-            </List.SearchTrigger>
-        </div>
+                variant="contained"
+                className="gap-x-2 font-medium h-full hover:cursor-pointer"
+                style={{
+                  borderTopRightRadius: 4,
+                  borderBottomRightRadius: 4,
+                  boxShadow: "0px 0px 1px -2px rgba(0,0,0,0.2),0px 0px 2px 0px rgba(0,0,0,0.14),0px 0px 5px 0px rgba(0,0,0,0.12)",
+                }}
+              >
+                <List.SearchTrigger>
+                  <T global string="search"/>
+                </List.SearchTrigger>
+              </Button>
+            },
+          }}
+        />
+      </div>
     );
 }

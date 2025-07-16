@@ -103,10 +103,10 @@ export default function AssetListPage() {
           </AssetsList.Error>
           <div className="flex justify-between pb-6">
             <div className="flex justify-start gap-x-5 items-center">
-              <div className="min-w-xl">
+              <div className="min-w-xl h-full">
                 <SearchBar searchTarget="http://purl.org/dc/terms/title" placeholder={translator("assets.searchPlaceholder")} searchOperator="ilike" />
               </div>
-              <div className="flex gap-x-4 py-4">
+              <div className="flex gap-x-4">
                 <MuiButton
                   data-testid="create-asset-modal-opener"
                   variant="contained"
