@@ -13,18 +13,10 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import MenuIcon from '@mui/icons-material/Menu';
-import DataUsageIcon from '@mui/icons-material/DataUsage';
-import SimCardIcon from '@mui/icons-material/SimCard';
-import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import UploadIcon from '@mui/icons-material/Upload';
-import PolicyIcon from '@mui/icons-material/Policy';
-import RuleIcon from '@mui/icons-material/Rule';
+import {Icon} from "@mui/material";
+import MenuIcon from '@mui/icons-material/MenuSharp';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import {ReceiptText} from "lucide-react";
-import PostAddIcon from '@mui/icons-material/PostAdd';
 import {SvgIconProps} from "@mui/material";
 import {useTranslator} from "@/i18n";
 
@@ -44,7 +36,9 @@ const RouteNode = ({ href, title, icon, className = "" }: RouteProps) => {
       <ListItemButton>
         <Link href={href} className="flex flex-row items-center w-full pl-1 gap-x-5" >
           <ListItemIcon className="!min-w-6">
-            {icon}
+            <Icon className="size-7" color="secondary">
+              {icon}
+            </Icon>
           </ListItemIcon>
           <ListItemText primary={translator(title)} classes={{ primary: "!font-medium" }} />
         </Link>
@@ -59,26 +53,26 @@ const routes: ReactNode[] = [
     key="dashboard"
     href="/dashboard"
     title="Dashboard"
-    icon={<DataUsageIcon {...iconsProps} />}
+    icon="data_usage"
   />,
   <RouteNode
     key="catalog"
     href="/catalog-browser"
     title="Catalog Browser"
-    icon={<SimCardIcon {...iconsProps} />}
+    icon="sim_card"
   />,
   <RouteNode
     key="contract-agreements"
     href="/contract-agreements"
     title="Contract Agreements"
-    icon={<AssignmentTurnedInIcon {...iconsProps} />}
+    icon="assignment_turned_in"
   />,
 
   <RouteNode
     key="transfer-processes"
     href="/transfer-processes"
     title="Transfer Processes"
-    icon={<AssignmentIcon {...iconsProps} />}
+    icon="assignment"
   />,
   // TODO: translate
   <h3 key="devider-1" className="mt-8 mx-5 mb-3 text-xs font-semibold text-gray-500 uppercase" >
@@ -88,37 +82,37 @@ const routes: ReactNode[] = [
     key="create-offer"
     href="/create-data-offer"
     title="Create Data Offer"
-    icon={<PostAddIcon {...iconsProps} />}
+    icon="post_add"
   />,
   <RouteNode
     key="assets"
     href="/assets"
     title="Assets"
-    icon={<UploadIcon {...iconsProps} />}
+    icon="upload"
   />,
   <RouteNode
     key="policy-definitions"
     href="/policy-definitions"
     title="Policies"
-    icon={<PolicyIcon {...iconsProps} />}
+    icon="policy"
   />,
   <RouteNode
     key="data-offers"
     href="/data-offers"
     title="Data offers"
-    icon={<RuleIcon {...iconsProps} />}
+    icon="rule"
   />,
   <RouteNode
     key="contract-negotiations"
     href="/contract-negotiations"
     title="Contract negotiations"
-    icon={<ReceiptText className="size-6" />}
+    icon="receipt"
   />,
   <RouteNode
     key="negotiation-manual-approval"
     href="/negotiation-manual-approval"
     title="Manual Approvals"
-    icon={<ReceiptText className="size-6" />}
+    icon="receipt"
   />,
 ];
 

@@ -1,16 +1,8 @@
 import DateRangePicker from "@/components/molecules/date-range-picker";
 import { T, useTranslator } from "@/i18n";
 import { DATE_FORMAT } from "@/utilities/date";
-import {
-  AndConstraint,
-  createParticipantIdConstraint,
-  createTimeRestrictionConstraint,
-  createTimespanAndConstraint,
-  MultiplicityConstraint,
-  OrConstraint,
-  XoneConstraint
-} from "@/utilities/policy-constraints";
-import { IconButton, Button as MuiButton, Tooltip, TooltipProps } from "@mui/material";
+import {AndConstraint, createParticipantIdConstraint, createTimeRestrictionConstraint, createTimespanAndConstraint, MultiplicityConstraint, OrConstraint, XoneConstraint} from "@/utilities/policy-constraints";
+import {IconButton, Button as MuiButton, Tooltip, TooltipProps, Icon} from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
@@ -18,7 +10,6 @@ import Modal from "@mui/material/Modal";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
-import { Plus } from "lucide-react";
 import * as React from "react";
 
 export interface AddConstraintButtonProps {
@@ -85,9 +76,8 @@ export function AddConstraintButton({ showAddButton = false, onClick }: AddConst
       onClick={handleClick}
       className="gap-x-2 font-medium"
       color="secondary"
-
     >
-      <Plus data-testid="add-expression-button" className="size-6" />
+      <Icon data-testid="add-expression-button" style={{ fontSize: "28px" }} >add</Icon>
     </IconButton>
   );
 

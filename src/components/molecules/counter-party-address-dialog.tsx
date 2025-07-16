@@ -1,8 +1,7 @@
 import React, {ReactNode} from "react";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon} from "@mui/material";
 import Typography from "@mui/material/Typography";
-import ViewTimelineIcon from "@mui/icons-material/ViewTimeline";
-
+import ViewTimelineIcon from "@mui/icons-material/ViewTimelineSharp";
 import {T} from "@/i18n";
 
 interface CounterPartyAddressDialogProps {

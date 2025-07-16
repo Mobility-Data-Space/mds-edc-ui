@@ -3,11 +3,11 @@ import { TreeLeaf } from "@/components/atoms/tree-leaf";
 import { Constraint } from "@/components/molecules/constraint";
 import { AddConstraintButton } from "@/components/organisms/add-constraint-button";
 import { MultiplicityConstraint } from "@/utilities/policy-constraints";
-import { IconButton } from "@mui/material";
+import {Icon, IconButton} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
-import { Minus } from "lucide-react";
 import { ReactNode } from "react";
+import * as React from "react";
 
 export interface PolicyExpressionProps {
   value: (AtomicConstraint | MultiplicityConstraint)[];
@@ -50,7 +50,7 @@ export default function PolicyExpression({ value, onChange, onRemove, title = ""
             className="gap-x-2 font-medium float-right"
             color="secondary"
           >
-            <Minus className="size-6" />
+            <Icon data-testid="add-expression-button" style={{ fontSize: "28px" }} >remove</Icon>
           </IconButton>
         </div>
       }

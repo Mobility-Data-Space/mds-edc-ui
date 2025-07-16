@@ -5,9 +5,7 @@ import { Snackbar } from "@/components/molecules/snackbar";
 import AssetDetails from "@/components/organisms/asset-details";
 import { T } from "@/i18n";
 import { ASSET_TITLE } from "@/schema/asset";
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from "@mui/material";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton} from "@mui/material";
 import { Asset } from "@think-it-labs/edc-connector-client";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
 import { enqueueSnackbar, useSnackbar } from 'notistack';
@@ -76,12 +74,12 @@ export default function AssetDialog({ open, onClose, asset, onEditClick, deleteE
             <div>
               {onEditClick &&
                 <IconButton onClick={onEditClick}>
-                  <EditIcon color="secondary" />
+                  <Icon color="secondary" >edit</Icon>
                 </IconButton>
               }
               {deleteEnabled &&
                 <IconButton data-testid="delete-asset-modal-btn" onClick={() => setDeleteDialogOpen(true)}>
-                  <DeleteIcon color="secondary"/>
+                  <Icon color="secondary" >delete</Icon>
                 </IconButton>
               }
             </div>

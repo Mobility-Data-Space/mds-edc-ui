@@ -7,10 +7,9 @@ import SideDrawer from "@/components/organisms/side-drawer";
 import AssetFormDialog from "@/components/templates/asset-form-dialog";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
-import { Button as MuiButton } from '@mui/material';
+import {Button as MuiButton, Icon} from '@mui/material';
 import { Asset } from "@think-it-labs/edc-connector-client";
 import { AssetsList } from "@think-it-labs/edc-connector-ui/assets-list";
-import { PlusCircle } from "lucide-react";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useCallback, useState } from "react";
@@ -114,7 +113,7 @@ export default function AssetListPage() {
                   className="gap-x-2 font-medium min-h-14"
                   onClick={() => setIsCreateModalOpen(true)}
                 >
-                  <PlusCircle className="h-4 w-4" />
+                  <Icon fontSize="medium" className="mr-2">add_circle_outline</Icon>
                   <T string="assets.buttonAdd" />
                 </MuiButton>
               </div>

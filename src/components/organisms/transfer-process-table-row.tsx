@@ -13,6 +13,8 @@ import AssetDialog from "@/components/organisms/asset-dialog.tsx";
 import {JsonLdDialog} from "@/components/molecules/JsonLdDialog.tsx";
 import {useTransferProcessJsonLd} from "@/hooks/use-transfer-process-json-ld.ts";
 import {formatDateTime, formatDateTimeAgo} from "@/utilities/date.ts";
+import {StateChip} from "@/components/atoms/state-chip.tsx";
+import {theme} from "@/theme/ThemeProvider.tsx";
 
 interface AssetDetailsProps {
   transferProcess: TransferProcess;
@@ -105,8 +107,7 @@ export default function TransferProcessTableRow({ transferProcess, managementUrl
 
         <Table.Cell>
           <div className="flex gap-x-1 items-center">
-            <span>{transferProcess.state}</span>
-            <TransferProcessStateIcon transferProcess={transferProcess} />
+            <StateChip state={transferProcess.state} icon={<TransferProcessStateIcon transferProcess={transferProcess} />} />
           </div>
         </Table.Cell>
 
