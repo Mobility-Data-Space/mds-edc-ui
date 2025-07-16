@@ -1,10 +1,7 @@
 import React from "react";
-import {TextField, Tooltip, IconButton, Icon} from "@mui/material";
+import {Tooltip, IconButton, Icon} from "@mui/material";
 import {Input} from "@/components/atoms/input";
 import { TextFieldProps } from "@mui/material/TextField";
-import { InfoOutlined } from "@mui/icons-material";
-import {T} from "@/i18n";
-import LinkIcon from "@mui/icons-material/Link";
 
 export interface EdcInfoDisplayInputProps {
   value: string,
@@ -23,7 +20,7 @@ export function EdcInfoDisplayInput({ translator, label, value, "data-testid": d
       slotProps={{
         input: {
           classes: { root: "flex-grow" },
-          startAdornment: <LinkIcon className="mr-2" />,
+          startAdornment: <Icon className="mr-2">link</Icon>,
           endAdornment: <Tooltip title={translator("common.copyToClipboard")}>
             <IconButton color="secondary" onClick={() => navigator.clipboard.writeText(value)}>
               <Icon>content_copy</Icon>

@@ -59,6 +59,7 @@ export const en = {
       miwUrl: "MIW URL",
       miwTokenUrl: "MIW Token URL",
       maintainerUrl: "Maintainer URL",
+      maintainerName: "Maintainer Organization Name",
       connectorEndpoint: "Connector Endpoint",
       managementApiUrl: "Management API URL",
       connectorProperties: "Connector Properties",

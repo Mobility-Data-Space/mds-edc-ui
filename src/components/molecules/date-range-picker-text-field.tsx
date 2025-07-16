@@ -1,6 +1,5 @@
 import React, {Ref} from "react";
-import {IconButton, TextField} from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import {Icon, IconButton, TextField} from "@mui/material";
 import {TextFieldProps} from "@mui/material/TextField";
 
 export type DateRangePickerTextFieldSlotProps = TextFieldProps & {
@@ -34,7 +33,7 @@ export const DateRangePickerTextFieldSlot = React.forwardRef(
                 aria-label="close"
                 onClick={props.onClearClicked}
               >
-                <CloseIcon/>
+                <Icon>close</Icon>
               </IconButton>}
               {props.InputProps.endAdornment}
             </>,

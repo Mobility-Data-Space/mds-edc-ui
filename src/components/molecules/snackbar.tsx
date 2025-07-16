@@ -1,9 +1,7 @@
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import ErrorIcon from "@mui/icons-material/Error";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import InfoIcon from "@mui/icons-material/Info";
-import { Collapse, IconButton, SnackbarContent } from "@mui/material";
+import CheckCircleIcon from "@mui/icons-material/CheckCircleSharp";
+import ErrorIcon from "@mui/icons-material/ErrorSharp";
+import InfoIcon from "@mui/icons-material/InfoSharp";
+import {Collapse, Icon, IconButton, SnackbarContent} from "@mui/material";
 import { SnackbarContentProps } from "notistack";
 import React, { forwardRef, useState } from "react";
 
@@ -103,7 +101,7 @@ export const Snackbar = forwardRef<HTMLDivElement, SnackbarProps>(
                                         onClick={() => setExpanded(e => !e)}
                                         sx={{ marginLeft: 1 }}
                                     >
-                                        {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                                        <Icon>{`expand_${expanded ? "less" : "more"}`}</Icon>
                                     </IconButton>
                                 )}
                                 <IconButton size="small" aria-label="close" color="inherit" onClick={onClose}>

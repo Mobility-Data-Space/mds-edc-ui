@@ -1,6 +1,5 @@
 import * as React from "react";
-import { Minus } from "lucide-react";
-import { IconButton } from "@mui/material";
+import {Icon, IconButton} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
 import {MuiSelect} from "@/components/atoms/mui-select";
@@ -42,7 +41,7 @@ export function TimeRestrictionConstraint({ value, onChange, onRemove }: Constra
           className="font-medium !-mt-5"
           color="secondary"
         >
-          <Minus className="size-6" />
+          <Icon style={{ fontSize: "28px" }} >remove</Icon>
         </IconButton>
       </div>
     </div>
