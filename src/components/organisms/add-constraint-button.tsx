@@ -71,13 +71,14 @@ export function AddConstraintButton({ showAddButton = false, onClick }: AddConst
 
   const addButton = (
     <IconButton
+      data-testid="add-expression-button"
       size="large"
       aria-describedby={id}
       onClick={handleClick}
       className="gap-x-2 font-medium"
       color="secondary"
     >
-      <Icon data-testid="add-expression-button" style={{ fontSize: "28px" }} >add</Icon>
+      <Icon style={{ fontSize: "28px" }} >add</Icon>
     </IconButton>
   );
 
