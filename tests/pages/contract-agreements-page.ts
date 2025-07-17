@@ -2,7 +2,7 @@ import { Page } from '@playwright/test';
 import { BaseListPage } from './base-list-page';
 
 export class ContractAgreementsPage extends BaseListPage {
-  readonly agreementsListLocator = '.contract-agreements-list';
+  readonly agreementsListLocator = 'contract-agreements-list';
   readonly agreementCardLocator = '.contract-agreement-card';
   readonly agreementDialogLocator = '.contract-agreement-dialog';
 
@@ -12,11 +12,12 @@ export class ContractAgreementsPage extends BaseListPage {
 
   async navigate() {
     await this.page.goto('/contract-agreements');
-    await this.page.waitForResponse((response) => response.url().includes('/connector/management/v3/contractagreements'));
+    await this.page.waitForLoadState("networkidle")
+    // await this.page.waitForResponse((response) => response.url().includes('/connector/management/v3/contractagreements'));
   }
 
   async getAgreementsList() {
-    return this.page.locator(this.agreementsListLocator);
+    return this.page.getByTestId(this.agreementsListLocator);
   }
 
   async getAgreementCards() {

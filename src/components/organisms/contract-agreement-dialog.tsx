@@ -1,19 +1,19 @@
-import React, {useEffect, useState, useCallback} from "react";
-import { T } from "@/i18n";
-import {Asset, ContractAgreement, Dataset, TransferProcessStates} from "@think-it-labs/edc-connector-client";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, LinearProgress} from "@mui/material";
-import {TitleWithIcon} from "@/components/atoms/TitleWithIcon";
-import {TransferFormDialog} from "@/components/templates/transfer-form-dialog";
+import { TitleWithIcon } from "@/components/atoms/TitleWithIcon";
 import ContractAgreementDetails from "@/components/organisms/contract-agreement-details";
 import ContractAgreementTerminateDialog from "@/components/organisms/contract-agreement-terminate-dialog";
-import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
-import {enqueueSnackbar} from "notistack";
-import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/entities";
-import {TERMINATION_REASON_BY_USER} from "@/constants/contract-agreement.ts";
+import { TransferFormDialog } from "@/components/templates/transfer-form-dialog";
+import { TERMINATION_REASON_BY_USER } from "@/constants/contract-agreement.ts";
+import { T } from "@/i18n";
+import { datasetToAsset, removeJsonLdSchemaFromProperties } from "@/utilities/catalog";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, LinearProgress } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import {datasetToAsset, removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
-import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
-import {Timestamp} from "@think-it-labs/edc-connector-ui/timestamp";
+import { Asset, ContractAgreement, Dataset } from "@think-it-labs/edc-connector-client";
+import { TransferProcess } from "@think-it-labs/edc-connector-client/dist/src/entities";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
+import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
+import { Timestamp } from "@think-it-labs/edc-connector-ui/timestamp";
+import { enqueueSnackbar } from "notistack";
+import { useCallback, useEffect, useState } from "react";
 
 interface ContractAgreementDialogProps {
   contractAgreement: ContractAgreement;
@@ -31,7 +31,7 @@ interface ContractAgreementDialogProps {
   onTerminateSuccess?: () => void;
 }
 
-export default function ContractAgreementDialog({ open, onClose, contractAgreement, participantId, managementUrl, connectorEndpoint, contentStyle = {}, translator, retirementReason = "", isTerminated = false, isRunning = false, isTerminatedAt = 0, onTerminateSuccess = () => {} }: ContractAgreementDialogProps) {
+export default function ContractAgreementDialog({ open, onClose, contractAgreement, participantId, managementUrl, connectorEndpoint, contentStyle = {}, translator, retirementReason = "", isTerminated = false, isRunning = false, isTerminatedAt = 0, onTerminateSuccess = () => { } }: ContractAgreementDialogProps) {
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [isTerminateModalOpen, setIsTerminateModalOpen] = useState(false);
 
@@ -41,17 +41,17 @@ export default function ContractAgreementDialog({ open, onClose, contractAgreeme
 
   const edcClient = useEdcConnectorClient({ management: managementUrl });
   useEffect(() => {
-    if (! contractAgreement.assetId) {
+    if (!contractAgreement.assetId) {
       return;
     }
 
     if (contractAgreement.providerId === participantId) {
       edcClient.management.assets.get(contractAgreement.assetId)
-      .then((fetchedAsset) => {
-        setAsset(fetchedAsset);
-        setCounterPartyAddress(connectorEndpoint);
-      })
-      .catch(error => enqueueSnackbar(translator('assets.[id].fetchError')))
+        .then((fetchedAsset) => {
+          setAsset(fetchedAsset);
+          setCounterPartyAddress(connectorEndpoint);
+        })
+        .catch(error => enqueueSnackbar(translator('assets.[id].fetchError')))
     } else {
       edcClient.management.contractAgreements.getNegotiation(contractAgreement.id)
         .then(negotiation => {
@@ -70,7 +70,7 @@ export default function ContractAgreementDialog({ open, onClose, contractAgreeme
   }, [edcClient, contractAgreement, participantId, connectorEndpoint, translator]);
 
   const populateTransferProcesses = useCallback(() => {
-    if (! contractAgreement.id) {
+    if (!contractAgreement.id) {
       return;
     }
     edcClient.management.transferProcesses.queryAll({
@@ -108,7 +108,7 @@ export default function ContractAgreementDialog({ open, onClose, contractAgreeme
       <Dialog
         open={open}
         maxWidth="lg"
-        className="my-7"
+        className="contract-agreement-dialog my-7"
         onClose={onClose}
       >
         <DialogTitle>
@@ -163,18 +163,18 @@ export default function ContractAgreementDialog({ open, onClose, contractAgreeme
               color="error"
               onClick={() => setIsTerminateModalOpen(true)}
             >
-              <T string="common.terminate"/>
+              <T string="common.terminate" />
             </Button>}
             <div className="flex flex-grow justify-end gap-x-3">
               <Button color="secondary" onClick={onClose} className="self-end">
-                <T string="common.close"/>
+                <T string="common.close" />
               </Button>
               {!isTerminated && <Button
                 data-testid="transfer-process-submit"
                 variant="contained"
                 onClick={() => setIsTransferModalOpen(true)}
               >
-                <T string="common.transfer"/>
+                <T string="common.transfer" />
               </Button>}
             </div>
           </div>
