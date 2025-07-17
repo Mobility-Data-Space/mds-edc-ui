@@ -184,7 +184,7 @@ List.Items = function ListItems<T,>({
               key={getId(item)}
               item={item}
               deleteItem={async () => {
-                await deleteItem(getId(item));
+                deleteItem(getId(item));
                 setQuerySpec({
                   limit,
                   offset,

@@ -10,7 +10,7 @@ test.describe("Contract Agreements Page Tests", () => {
   });
 
   test.describe("List Functionality", () => {
-    test.fixme("Displays the list of agreements", async ({ page }) => {
+    test("Displays the list of agreements", async ({ page }) => {
       // Verify the agreements list is visible
       const agreementsList = await agreementsPage.getAgreementsList();
       await expect(agreementsList).toBeVisible();
@@ -23,7 +23,7 @@ test.describe("Contract Agreements Page Tests", () => {
   });
 
   test.describe("View Functionality", () => {
-    test.fixme("Displays agreement details when an agreement is selected", async ({ page }) => {
+    test("Displays agreement details when an agreement is selected", async ({ page }) => {
       // Select an agreement
       const agreementCards = await agreementsPage.getAgreementCards();
       const agreementCard = agreementCards.first();
@@ -65,7 +65,7 @@ test.describe("Contract Agreements Page Tests", () => {
       }
     });
 
-    test.fixme("should clear search and show all agreements", async ({ page }) => {
+    test("should clear search and show all agreements", async ({ page }) => {
       await agreementsPage.searchAgreements('test');
 
       await agreementsPage.clearAgreementSearch();
@@ -85,12 +85,12 @@ test.describe("Contract Agreements Page Tests", () => {
   });
 
   test.describe("Pagination Functionality", () => {
-    test.fixme("should display pagination controls", async ({ page }) => {
+    test("should display pagination controls", async ({ page }) => {
       const paginationInfo = await agreementsPage.getPaginationInfo();
       await expect(paginationInfo).toBeVisible();
     });
 
-    test.fixme("should navigate to next page when available", async ({ page }) => {
+    test("should navigate to next page when available", async ({ page }) => {
       const initialLastIndex = await agreementsPage.getLastElementIndex();
       const isNextEnabled = await agreementsPage.isNextPageEnabled();
 
@@ -105,7 +105,7 @@ test.describe("Contract Agreements Page Tests", () => {
       }
     });
 
-    test.fixme("should navigate to previous page when available", async ({ page }) => {
+    test("should navigate to previous page when available", async ({ page }) => {
       const isNextEnabled = await agreementsPage.isNextPageEnabled();
       if (isNextEnabled) {
         await agreementsPage.goToNextPage();
@@ -125,7 +125,7 @@ test.describe("Contract Agreements Page Tests", () => {
       }
     });
 
-    test.fixme("should disable previous button on first page", async ({ page }) => {
+    test("should disable previous button on first page", async ({ page }) => {
       const currentFirstIndex = await agreementsPage.getFirstElementIndex();
 
       if (currentFirstIndex === 1) {
@@ -134,7 +134,7 @@ test.describe("Contract Agreements Page Tests", () => {
       }
     });
 
-    test.fixme("should disable next button on last page", async ({ page }) => {
+    test("should disable next button on last page", async ({ page }) => {
       const totalLastIndex = await agreementsPage.getLastElementIndex();
 
       while (await agreementsPage.isNextPageEnabled()) {
@@ -148,7 +148,7 @@ test.describe("Contract Agreements Page Tests", () => {
       expect(isNextEnabled).toBeFalsy();
     });
 
-    test.fixme("should maintain search results across pagination", async ({ page }) => {
+    test("should maintain search results across pagination", async ({ page }) => {
       await agreementsPage.searchAgreements('test');
 
       const isNextEnabled = await agreementsPage.isNextPageEnabled();
@@ -159,6 +159,60 @@ test.describe("Contract Agreements Page Tests", () => {
         const searchValue = await searchInput.inputValue();
         expect(searchValue).toBe('test');
       }
+    });
+  });
+
+  test.describe("Status Filter Functionality", () => {
+    test("Navigates to active contracts and checks all are active", async ({ page }) => {
+      await page.getByRole('button', { name: /Active Contracts/i }).click();
+      await page.waitForTimeout(500); // adjust if needed for debounce
+      const agreementCards = await agreementsPage.getAgreementCards();
+      const count = await agreementCards.count();
+      for (let i = 0; i < count; i++) {
+        const card = agreementCards.nth(i);
+        await expect(card.getByText('Active')).toBeVisible();
+        await expect(card.getByText('Terminated')).not.toBeVisible();
+      }
+    });
+
+    test("Navigates to terminated contracts and checks all are terminated", async ({ page }) => {
+      await page.getByRole('button', { name: /Terminated Contracts/i }).click();
+      await page.waitForTimeout(500); // adjust if needed for debounce
+      const agreementCards = await agreementsPage.getAgreementCards();
+      const count = await agreementCards.count();
+      for (let i = 0; i < count; i++) {
+        const card = agreementCards.nth(i);
+        await expect(card.getByText('Terminated')).toBeVisible();
+      }
+    });
+  });
+
+  test.describe("Terminate Contract Functionality", () => {
+    test("Terminates a contract, shows success message, and closes modal", async ({ page }) => {
+      await page.getByRole('button', { name: /Active Contracts/i }).click();
+      await page.waitForTimeout(500);
+      const agreementCards = await agreementsPage.getAgreementCards();
+      const count = await agreementCards.count();
+      if (count === 0) {
+        test.skip(); // No active contracts to terminate
+      }
+      const firstCard = agreementCards.first();
+      await firstCard.click();
+      const agreementDialog = await agreementsPage.getAgreementDialog();
+      await expect(agreementDialog).toBeVisible();
+      const terminateBtn = agreementDialog.getByTestId('transfer-process-terminate');
+      await terminateBtn.click();
+      const terminateDialog = page.getByRole('dialog', { name: /Terminate Contract Agreement/i });
+      await expect(terminateDialog).toBeVisible();
+      const detailedReasonInput = terminateDialog.getByPlaceholder('You can enter a detailed explanation here');
+      await detailedReasonInput.fill('Test termination reason');
+      const confirmCheckbox = terminateDialog.getByLabel('I understand the consequences of terminating a contract.');
+      await confirmCheckbox.check();
+      const confirmTerminateBtn = terminateDialog.getByTestId('transfer-process-submit');
+      await expect(confirmTerminateBtn).toBeEnabled();
+      await confirmTerminateBtn.click();
+      await expect(page.getByText('Contract terminated successful')).toBeVisible();
+      await expect(agreementDialog).not.toBeVisible();
     });
   });
 });

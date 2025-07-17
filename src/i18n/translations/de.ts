@@ -127,6 +127,7 @@ export const de = {
       headingAsset: "Vermögenswert",
       headingContractSigningDate: "Datum der Vertragsunterzeichnung",
       searchPlaceholder: "Vertragsvereinbarungen suchen",
+      terminationSuccess: "Vertrag erfolgreich beendet",
       "[id]": {
         title: "Vertragsvereinbarung ansehen",
         description: "Eine einzige Vertragsvereinbarung",

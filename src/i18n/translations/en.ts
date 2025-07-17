@@ -411,6 +411,7 @@ export const en = {
       otherConnector: "Other Connector",
       retiredFetchError: "Error while fetching retired contract agreements",
       searchPlaceholder: "Search Contract Agreements",
+      terminationSuccess: "Contract terminated successful",
       "[id]": {
         title: "View contract agreement",
         description: "A single contract agreement",
