@@ -1,7 +1,7 @@
 import { LineTitle } from "@/components/atoms/line-title.tsx";
-import { Snackbar } from "@/components/molecules/snackbar";
 import PaginationControls from "@/components/molecules/pagination-controls";
 import SearchBar from "@/components/molecules/search-bar";
+import { Snackbar } from "@/components/molecules/snackbar";
 import ContractAgreementCard from "@/components/organisms/contract-agreement-card";
 import ContractAgreementDialog from "@/components/organisms/contract-agreement-dialog";
 import SideDrawer from "@/components/organisms/side-drawer";
@@ -10,15 +10,15 @@ import { useParticipantConnectorState } from "@/hooks/use-participant-connector-
 import { T, useTranslator } from "@/i18n";
 import { theme } from "@/theme/ThemeProvider.tsx";
 import { AGREEMENT_RETIREMENT_DATE, AGREEMENT_RETIREMENT_REASON, AgreementsRetirementController, RetiredContractAgreement } from "@/utilities/contract-agreement";
+import { operatorEqual, operatorIn } from "@/utilities/data-offer";
 import { Button, ButtonGroup } from "@mui/material";
 import { ContractAgreement, TransferProcessStates } from "@think-it-labs/edc-connector-client";
 import { ContractAgreementsList } from "@think-it-labs/edc-connector-ui/contract-agreements-list";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 import { useRouter } from "next/router";
-import { useSnackbar } from "notistack";
+import { SnackbarKey, useSnackbar } from "notistack";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
-import { operatorEqual, operatorIn } from "@/utilities/policy-operators";
 
 enum TypeFilter {
   Consuming = "Consuming",
@@ -42,14 +42,16 @@ interface ContractAgreementInfo {
 }
 
 export default function ContractAgreementsListPage() {
+  const { push, query } = useRouter()
   const { connector } = useParticipantConnectorState();
   const [retiredContractAgreementIds, setRetiredContractAgreementIds] = useState<string[]>([]);
   const [contractAgreementInfo, setContractAgreementInfo] = useState<ContractAgreementInfo>({});
 
+
   const { translator } = useTranslator();
 
   const [selectedTypeFilter, setSelectedTypeFilter] = useState<TypeFilter>(TypeFilter.Consuming);
-  const [selectedStatusFilter, setSelectedStatusFilter] = useState<StatusFilter>(StatusFilter.All);
+  const selectedStatusFilter: StatusFilter = query.status as StatusFilter || StatusFilter.All
   const typeFilterExpression = useMemo(() => ({
     [TypeFilter.Consuming]: [{
       operandLeft: "consumerId",
@@ -65,14 +67,12 @@ export default function ContractAgreementsListPage() {
   const statusFilterExpression = useMemo(() => ({
     [StatusFilter.All]: [],
     [StatusFilter.Active]: [],
-    [StatusFilter.Terminated]: [{
+    [StatusFilter.Terminated]: retiredContractAgreementIds.length ? [{
       operandLeft: "id",
       operator: operatorIn.value,
       operandRight: retiredContractAgreementIds,
-    }],
+    }] : [],
   }), [retiredContractAgreementIds]);
-
-  const { push, query } = useRouter()
 
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
@@ -88,6 +88,18 @@ export default function ContractAgreementsListPage() {
     );
 
   }, [push, query])
+
+  const setSelectedStatusFilter = useCallback((statusFilter: StatusFilter) => {
+    push(
+      {
+        href: window.location.href,
+        query: {
+          ...query,
+          status: statusFilter
+        }
+      }
+    )
+  }, [])
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
@@ -134,7 +146,17 @@ export default function ContractAgreementsListPage() {
         });
         setContractAgreementInfo(contractAgreementInfoToSave);
       });
-    }).catch(error => enqueueSnackbar("contractAgreements.retiredFetchError"));
+    }).catch((error) => enqueueSnackbar(translator("contractAgreements.retiredFetchError"),
+      {
+        variant: "error",
+        content: (key: SnackbarKey) =>
+          <Snackbar
+            type="error"
+            message={translator('contractAgreements.retiredFetchError')}
+            content={error}
+            onClose={() => { closeSnackbar(key); }}
+          />
+      }));
   }, [edcClient, enqueueSnackbar]);
 
   useEffect(() => {
@@ -158,7 +180,20 @@ export default function ContractAgreementsListPage() {
         isTerminatedAt={openContractAgreementInfo?.isTerminatedAt}
         isRunning={openContractAgreementInfo?.isRunning}
         onClose={() => setIsDetailsModalOpen(false)}
-        onTerminateSuccess={populateRetired}
+        onTerminateSuccess={() => {
+          populateRetired()
+          enqueueSnackbar(translator('contractAgreements.terminationSuccess'), {
+            variant: "success",
+            content: (key: SnackbarKey) => (
+              <Snackbar
+                type="success"
+                message={translator('contractAgreements.terminationSuccess')}
+                onClose={() => { closeSnackbar(key); }}
+              />
+            )
+          });
+          setIsDetailsModalOpen(false)
+        }}
         participantId={connector.id}
         connectorEndpoint={connector.protocolUrl}
         managementUrl={connector.managementUrl}
@@ -251,18 +286,20 @@ export default function ContractAgreementsListPage() {
           <ContractAgreementsList.Items
             limit={MAX_ITEMS}
             sortOrder="DESC"
+            filterExpression={statusFilterExpression[selectedStatusFilter]}
           >
-            {({ item, index }) => (
-              <ContractAgreementCard
+            {({ item, index }) => {
+              if (selectedStatusFilter === StatusFilter.Active && retiredContractAgreementIds.includes(item.id)) { return <></> }
+              return <ContractAgreementCard
                 key={index}
                 contractAgreement={item}
                 onClick={() => openDetailsModal(item)}
-                isTerminated={contractAgreementInfo[item.id]?.isTerminated}
+                isTerminated={retiredContractAgreementIds.includes(item.id)}
                 isRunning={contractAgreementInfo[item.id]?.isRunning}
                 transferCount={contractAgreementInfo[item.id]?.transfersCount}
                 data-testid="contract-agreement-card"
               />
-            )}
+            }}
           </ContractAgreementsList.Items>
         </div>
 

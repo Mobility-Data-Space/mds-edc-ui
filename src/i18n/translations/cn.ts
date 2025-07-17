@@ -123,6 +123,7 @@ export const cn = {
       headingAsset: "资产",
       headingContractSigningDate: "合同签订日期",
       searchPlaceholder: "搜索合同协议",
+      terminationSuccess: "合同终止成功",
       "[id]": {
         title: "查看合同协议",
         description: "单一合同协议",
