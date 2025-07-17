@@ -1,5 +1,4 @@
-import { IconButton } from '@mui/material';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import {Icon, IconButton} from '@mui/material';
 import React from 'react';
 
 interface PaginationControlsProps {
@@ -42,7 +41,7 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
                     data-testid={`${dataTestIdPrefix}-prev`}
                     aria-label="Previous page"
                 >
-                    <ChevronLeft className="size-6" />
+                    <Icon style={{ fontSize: "28px" }} >chevron_left</Icon>
                 </IconButton>
                 <IconButton
                     onClick={incrementPage}
@@ -50,7 +49,7 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
                     data-testid={`${dataTestIdPrefix}-next`}
                     aria-label="Next page"
                 >
-                    <ChevronRight className="size-6" />
+                    <Icon style={{ fontSize: "28px" }} >chevron_right</Icon>
                 </IconButton>
             </div>
         </div>

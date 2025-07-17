@@ -3,6 +3,9 @@ import {ContractNegotiation} from "@think-it-labs/edc-connector-client";
 import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
 import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog.ts";
 import {formatDateTime} from "@/utilities/date.ts";
+import {Chip} from "@mui/material";
+import {transferProcessStateColor} from "@/utilities/transfer-process.ts";
+import {StateChip} from "@/components/atoms/state-chip.tsx";
 
 interface ContractNegotiationDetailsProps {
   contractNegotiation: ContractNegotiation;
@@ -44,7 +47,8 @@ export default function ContractNegotiationDetails({ contractNegotiation }: Cont
       </li>
       <li className="mt-2">
         <span className="font-bold"><T
-          string="contractNegotiations.[id].fieldState" /></span>: {contractNegotiation.state}
+          string="contractNegotiations.[id].fieldState"
+        /></span>: <StateChip state={contractNegotiation.state} />
       </li>
       <li className="mt-2">
         <span className="font-bold"><T

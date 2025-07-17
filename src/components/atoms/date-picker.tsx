@@ -5,6 +5,8 @@ import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import {DATE_FORMAT, dateToString} from "@/utilities/date";
 import {DatePickerDaySlot} from "@/components/atoms/date-picker-day-slot";
+import {Icon} from "@mui/material";
+import DateRangeSharpIcon from '@mui/icons-material/DateRangeSharp';
 
 export type DatePickerPros = Partial<MuiDatePickerProps<any>> & {
   name?: string,
@@ -33,7 +35,10 @@ export function DatePicker({ name = "", id = "", label = "", onChange, value, er
           setIsOpen(false);
         }}
         closeOnSelect={false}
-        slots={{ day: DatePickerDaySlot as any }}
+        slots={{
+          day: DatePickerDaySlot as any,
+          openPickerIcon: DateRangeSharpIcon
+        }}
         slotProps={{
           textField: {
             id,

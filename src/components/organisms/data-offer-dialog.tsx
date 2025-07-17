@@ -6,9 +6,7 @@ import DataOfferDetails from "@/components/organisms/data-offer-details";
 import { T } from "@/i18n";
 import { ASSET_TITLE } from "@/schema/asset";
 import { datasetToAsset } from "@/utilities/catalog";
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from "@mui/material";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { Dataset } from "@think-it-labs/edc-connector-client";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
@@ -84,12 +82,12 @@ export default function DataOfferDialog({ open, onClose, dataset, onEditClick, d
             <div>
               {onEditClick &&
                 <IconButton onClick={onEditClick}>
-                  <EditIcon color="secondary" />
+                  <Icon color="secondary" >edit</Icon>
                 </IconButton>
               }
               {deleteEnabled &&
                 <IconButton onClick={() => setDeleteDialogOpen(true)}>
-                  <DeleteIcon color="secondary" />
+                  <Icon color="secondary" >delete</Icon>
                 </IconButton>
               }
             </div>

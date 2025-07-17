@@ -10,7 +10,6 @@ import { T, useTranslator } from "@/i18n";
 import { Icon, Button as MuiButton } from "@mui/material";
 import { PolicyDefinition } from "@think-it-labs/edc-connector-client";
 import { PolicyDefinitionsList } from "@think-it-labs/edc-connector-ui/policy-definitions-list";
-import { CirclePlus } from "lucide-react";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useCallback, useState } from "react";
@@ -68,13 +67,13 @@ export default function PolicyDefinitionListPage() {
         managementUrl={managementUrl}
       >
         <div className="flex justify-between pb-6">
-          <div className="flex justify-start gap-x-5 items-center">
-            <div className="min-w-xl">
+          <div className="flex justify-start gap-x-5">
+            <div className="min-w-xl h-full">
               <SearchBar searchTarget="id" placeholder={translator("policyDefinitions.searchPlaceholder")} searchOperator="ilike" />
             </div>
-            <div className="flex gap-x-4 py-4">
+            <div className="flex gap-x-4">
               <MuiButton className="min-h-12" onClick={() => push("/policy-definitions/new")} variant="contained">
-                <CirclePlus fontSize="large" className="mr-2" />
+                <Icon fontSize="medium" className="mr-2">add_circle_outline</Icon>
                 <T string="policyDefinitions.createPolicy" />
               </MuiButton>
             </div>

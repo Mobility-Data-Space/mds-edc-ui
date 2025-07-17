@@ -16,6 +16,9 @@ export const theme = createTheme({
   },
   palette: {
     primary: {
+      main: "#FFFF00",
+      light: "#FFFFCC",
+      dark: "#E0E000",
       50: "#ffffe0",
       100: "#ffffb3",
       200: "#ffff80",
@@ -50,18 +53,37 @@ export const theme = createTheme({
       A700: "#000000",
     },
     info: {
-      50: "#e0e0e0",
-      100: "#e0e0e0",
-      200: "#e0e0e0",
-      300: "#e0e0e0",
-      400: "#e0e0e0",
-      500: "#e0e0e0",
-      600: "#e0e0e0",
-      700: "#e0e0e0",
-      800: "#e0e0e0",
-      900: "#e0e0e0",
-    }
+      main: "#6E7378",
+      light: "#5A5E62",
+      dark: "#5A5E62",
+    },
+    error: {
+      main: "#B91C1C",
+      dark: "#A11818",
+    },
+    success: {
+      main: "#96D200",
+      dark: "#87BD00",
+    },
   },
+  components: {
+    mergeClassNameAndStyle: true,
+    MuiChip: {
+      defaultProps: {
+        style: { borderRadius: 16 }
+      }
+    },
+    MuiButtonBase: {
+      defaultProps: {
+        style: { borderRadius: 0 },
+      }
+    },
+    MuiCard: {
+      defaultProps: {
+        style: { borderRadius: 0 },
+      }
+    },
+  }
 });
 
 export default function ThemeProvider({ children }: PropsWithChildren) {

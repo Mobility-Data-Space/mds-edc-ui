@@ -283,13 +283,12 @@ List.SearchTrigger = function ListSearchTrigger(
   const { triggerSearch } = useListContext();
 
   return (
-    <button
-      type="button"
+    <span
       className={className}
       onClick={() => triggerSearch()}
     >
       {children}
-    </button>
+    </span>
   );
 };
 

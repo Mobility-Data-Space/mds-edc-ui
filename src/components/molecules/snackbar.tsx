@@ -1,9 +1,7 @@
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import ErrorIcon from "@mui/icons-material/Error";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import InfoIcon from "@mui/icons-material/Info";
-import { Collapse, IconButton, SnackbarContent } from "@mui/material";
+import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
+import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { Collapse, Icon, IconButton, SnackbarContent } from "@mui/material";
 import { SnackbarContentProps } from "notistack";
 import React, { forwardRef, useState } from "react";
 
@@ -20,15 +18,11 @@ export interface SnackbarProps extends SnackbarContentProps {
 
 const getSnackbarStyles = (type: SnackbarType) => {
     const baseStyles = {
-        borderRadius: 2,
-        boxShadow: 3,
         fontFamily: 'Sans',
         minWidth: 350,
-        maxWidth: 500,
+        maxWidth: 1500,
         display: 'flex',
         alignItems: 'flex-start',
-        padding: 2,
-        minHeight: 56,
         maxHeight: 300,
     };
 
@@ -36,8 +30,8 @@ const getSnackbarStyles = (type: SnackbarType) => {
         case 'success':
             return {
                 ...baseStyles,
-                backgroundColor: "#4caf50",
-                color: "#fff",
+                backgroundColor: "#96D200",
+                color: "#000"
             };
         case 'info':
             return {
@@ -48,8 +42,8 @@ const getSnackbarStyles = (type: SnackbarType) => {
         case 'error':
             return {
                 ...baseStyles,
-                backgroundColor: "#e53935",
-                color: "#fff",
+                backgroundColor: "#B91C1C",
+                color: "#000",
             };
         default:
             return baseStyles;
@@ -59,11 +53,11 @@ const getSnackbarStyles = (type: SnackbarType) => {
 const getIcon = (type: SnackbarType) => {
     switch (type) {
         case 'success':
-            return <CheckCircleIcon sx={{ fontSize: 28, marginRight: 1, color: '#fff' }} />;
+            return <CheckCircleOutlineOutlinedIcon sx={{ fontSize: 28, marginRight: 1 }} />;
         case 'info':
-            return <InfoIcon sx={{ fontSize: 28, marginRight: 1, color: '#fff' }} />;
+            return <InfoOutlinedIcon sx={{ fontSize: 28, marginRight: 1 }} />;
         case 'error':
-            return <ErrorIcon sx={{ fontSize: 28, marginRight: 1, color: '#fff' }} />;
+            return <ErrorOutlineOutlinedIcon sx={{ fontSize: 28, marginRight: 1 }} />;
         default:
             return null;
     }
@@ -103,13 +97,13 @@ export const Snackbar = forwardRef<HTMLDivElement, SnackbarProps>(
                                         onClick={() => setExpanded(e => !e)}
                                         sx={{ marginLeft: 1 }}
                                     >
-                                        {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                                        <Icon>{`expand_${expanded ? "less" : "more"}`}</Icon>
                                     </IconButton>
                                 )}
                                 <IconButton size="small" aria-label="close" color="inherit" onClick={onClose}>
                                     <span className="sr-only">Close</span>
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M15 5L5 15M5 5L15 15" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                        <path d="M15 5L5 15M5 5L15 15" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
                                 </IconButton>
                             </div>
@@ -123,7 +117,6 @@ export const Snackbar = forwardRef<HTMLDivElement, SnackbarProps>(
                                     background: 'rgba(0,0,0,0.08)',
                                     borderRadius: 4,
                                     padding: '6px 10px',
-                                    color: '#fff',
                                     maxHeight: 120,
                                     overflowY: 'auto',
                                     wordBreak: 'break-all',
