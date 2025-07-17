@@ -1,7 +1,5 @@
-import React, {useState, useRef, useEffect} from "react";
-import {Button} from "@mui/material";
-import KeyboardDoubleArrowDown from '@mui/icons-material/KeyboardDoubleArrowDown';
-import KeyboardDoubleArrowUp from '@mui/icons-material/KeyboardDoubleArrowUp';
+import React, {useState, useRef, useLayoutEffect} from "react";
+import {Button, Icon} from "@mui/material";
 
 import {MarkdownText} from "@/components/atoms/markdown-text";
 import {T} from "@/i18n";
@@ -11,13 +9,14 @@ interface MarkdowCollapsableTextProps {
   data: string;
   collapsableHeight?: number;
 }
+
 export function MarkdownCollapsableText({ data, collapsableHeight = COLLAPSABLE_HEIGHT_DEFAULT }: MarkdowCollapsableTextProps): JSX.Element {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [textHeight, setTextHeight] = useState(0);
   const markdownTextRef = useRef<HTMLDivElement>(null);
   const textShouldBeCollapsable = textHeight > collapsableHeight;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setTextHeight((markdownTextRef?.current?.offsetHeight || 0));
   }, []);
 
@@ -36,7 +35,7 @@ export function MarkdownCollapsableText({ data, collapsableHeight = COLLAPSABLE_
       </div>
       {textShouldBeCollapsable && <Button fullWidth color="secondary" onClick={() => setIsCollapsed((oldIsCollapsed) => !oldIsCollapsed)}>
         <div className="flex items-center gap-1 justify-center">
-          {isCollapsed ? <KeyboardDoubleArrowDown /> : <KeyboardDoubleArrowUp />}
+          {isCollapsed ? <Icon>keyboard_double_arrow_down</Icon> : <Icon>keyboard_double_arrow_up</Icon>}
           <T string={isCollapsed ? "common.showMore" : "common.showLess"} />
         </div>
       </Button>}

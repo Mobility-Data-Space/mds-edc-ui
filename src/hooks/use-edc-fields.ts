@@ -36,12 +36,12 @@ export const useEdcFields = (): FieldShowProps[] => {
       icon: 'title',
     },
     {
-      label: "dashboard.curatorUrl",
+      label: "dashboard.maintainerOrganizationName",
       value: "",
       icon: 'contact_support',
     },
     {
-      label: "dashboard.maintainerOrganizationName",
+      label: "dashboard.maintainerOrganizationUrl",
       value: "",
       icon: 'contact_support',
     },

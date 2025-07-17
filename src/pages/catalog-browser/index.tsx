@@ -9,9 +9,7 @@ import SideDrawer from "@/components/organisms/side-drawer";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
-import InfoIcon from "@mui/icons-material/Info";
-import LinkIcon from "@mui/icons-material/Link";
-import { IconButton, Tooltip } from "@mui/material";
+import {Icon, IconButton, Tooltip} from "@mui/material";
 import { Dataset } from "@think-it-labs/edc-connector-client";
 import { ContractOffersList } from "@think-it-labs/edc-connector-ui/contract-offers-list";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
@@ -99,10 +97,10 @@ export default function CatalogPage() {
                   slotProps={{
                     input: {
                       classes: { root: "flex-grow" },
-                      startAdornment: <LinkIcon className="mr-2" />,
+                      startAdornment: <Icon className="mr-2">link</Icon>,
                       endAdornment: <Tooltip title={translator("catalog.clickForDetails")}>
                         <IconButton onClick={() => setIsCounterPartyAddressDialogOpen(true)}>
-                          <InfoIcon color="primary" />
+                          <Icon color="primary">info</Icon>
                         </IconButton>
                       </Tooltip>
                     }
