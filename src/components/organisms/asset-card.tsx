@@ -48,7 +48,7 @@ export default function AssetCard({ asset, participantId, onClick = () => { } }:
         <div className="flex flex-wrap gap-2">
           {version && <Chip className="font-medium text-sm !cursor-default" clickable label={version} key={-1} color="primary" />}
           {slicedKeywords.map((keyword: { "@value": string }, index: number) =>
-            <Chip className="font-medium text-sm !cursor-default" clickable label={keyword["@value"]} key={index} />
+            <Chip className="font-medium text-sm !cursor-default" color="info" clickable label={keyword["@value"]} key={index} />
           )}
           {remainingKeywordsCount <= 0 ? "" : <Chip className="font-medium text-sm !cursor-default" clickable label={`+${remainingKeywordsCount}`} key={slicedKeywords.length} />}
         </div>

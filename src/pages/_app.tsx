@@ -1,19 +1,18 @@
-import "@/styles/globals.css";
-import TimeAgo from "javascript-time-ago";
-import en from "javascript-time-ago/locale/en";
 import { TranslatorProvider } from "@/i18n";
 import "@/styles/globals.css";
 import ThemeProvider from "@/theme/ThemeProvider";
 import { JsonLdContextProvider } from "@think-it-labs/edc-connector-ui/json-ld-context-provider";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en";
 import type { AppProps } from "next/app";
 import { SnackbarProvider } from 'notistack';
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     TimeAgo.addDefaultLocale(en);
   }, []);
-  
+
   return (
     <TranslatorProvider>
       <JsonLdContextProvider
@@ -23,7 +22,7 @@ export default function App({ Component, pageProps }: AppProps) {
         }}
       >
         <ThemeProvider>
-          <SnackbarProvider autoHideDuration={5000} anchorOrigin={{ vertical: "bottom", horizontal: "right" }} >
+          <SnackbarProvider autoHideDuration={5000} anchorOrigin={{ vertical: "top", horizontal: "right" }} >
             <Component {...pageProps} />
           </SnackbarProvider>
         </ThemeProvider>
