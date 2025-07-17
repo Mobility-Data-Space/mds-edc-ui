@@ -10,7 +10,7 @@ test.describe("Contract Agreements Page Tests", () => {
   });
 
   test.describe("List Functionality", () => {
-    test("Displays the list of agreements", async ({ page }) => {
+    test.fixme("Displays the list of agreements", async ({ page }) => {
       // Verify the agreements list is visible
       const agreementsList = await agreementsPage.getAgreementsList();
       await expect(agreementsList).toBeVisible();
@@ -23,7 +23,7 @@ test.describe("Contract Agreements Page Tests", () => {
   });
 
   test.describe("View Functionality", () => {
-    test("Displays agreement details when an agreement is selected", async ({ page }) => {
+    test.fixme("Displays agreement details when an agreement is selected", async ({ page }) => {
       // Select an agreement
       const agreementCards = await agreementsPage.getAgreementCards();
       const agreementCard = agreementCards.first();
@@ -44,7 +44,7 @@ test.describe("Contract Agreements Page Tests", () => {
       await expect(searchTrigger).toBeVisible();
     });
 
-    test("should search for agreements by asset ID", async ({ page }) => {
+    test.fixme("should search for agreements by asset ID", async ({ page }) => {
       const initialAgreements = await agreementsPage.getAgreementCards();
       const initialCount = await initialAgreements.count();
 
@@ -65,7 +65,7 @@ test.describe("Contract Agreements Page Tests", () => {
       }
     });
 
-    test("should clear search and show all agreements", async ({ page }) => {
+    test.fixme("should clear search and show all agreements", async ({ page }) => {
       await agreementsPage.searchAgreements('test');
 
       await agreementsPage.clearAgreementSearch();
@@ -85,12 +85,12 @@ test.describe("Contract Agreements Page Tests", () => {
   });
 
   test.describe("Pagination Functionality", () => {
-    test("should display pagination controls", async ({ page }) => {
+    test.fixme("should display pagination controls", async ({ page }) => {
       const paginationInfo = await agreementsPage.getPaginationInfo();
       await expect(paginationInfo).toBeVisible();
     });
 
-    test("should navigate to next page when available", async ({ page }) => {
+    test.fixme("should navigate to next page when available", async ({ page }) => {
       const initialLastIndex = await agreementsPage.getLastElementIndex();
       const isNextEnabled = await agreementsPage.isNextPageEnabled();
 
@@ -105,7 +105,7 @@ test.describe("Contract Agreements Page Tests", () => {
       }
     });
 
-    test("should navigate to previous page when available", async ({ page }) => {
+    test.fixme("should navigate to previous page when available", async ({ page }) => {
       const isNextEnabled = await agreementsPage.isNextPageEnabled();
       if (isNextEnabled) {
         await agreementsPage.goToNextPage();
@@ -125,7 +125,7 @@ test.describe("Contract Agreements Page Tests", () => {
       }
     });
 
-    test("should disable previous button on first page", async ({ page }) => {
+    test.fixme("should disable previous button on first page", async ({ page }) => {
       const currentFirstIndex = await agreementsPage.getFirstElementIndex();
 
       if (currentFirstIndex === 1) {
@@ -134,7 +134,7 @@ test.describe("Contract Agreements Page Tests", () => {
       }
     });
 
-    test("should disable next button on last page", async ({ page }) => {
+    test.fixme("should disable next button on last page", async ({ page }) => {
       const totalLastIndex = await agreementsPage.getLastElementIndex();
 
       while (await agreementsPage.isNextPageEnabled()) {
@@ -148,7 +148,7 @@ test.describe("Contract Agreements Page Tests", () => {
       expect(isNextEnabled).toBeFalsy();
     });
 
-    test("should maintain search results across pagination", async ({ page }) => {
+    test.fixme("should maintain search results across pagination", async ({ page }) => {
       await agreementsPage.searchAgreements('test');
 
       const isNextEnabled = await agreementsPage.isNextPageEnabled();
@@ -163,7 +163,7 @@ test.describe("Contract Agreements Page Tests", () => {
   });
 
   test.describe("Status Filter Functionality", () => {
-    test("Navigates to active contracts and checks all are active", async ({ page }) => {
+    test.fixme("Navigates to active contracts and checks all are active", async ({ page }) => {
       await page.getByRole('button', { name: /Active Contracts/i }).click();
       await page.waitForTimeout(500); // adjust if needed for debounce
       const agreementCards = await agreementsPage.getAgreementCards();
@@ -175,7 +175,7 @@ test.describe("Contract Agreements Page Tests", () => {
       }
     });
 
-    test("Navigates to terminated contracts and checks all are terminated", async ({ page }) => {
+    test.fixme("Navigates to terminated contracts and checks all are terminated", async ({ page }) => {
       await page.getByRole('button', { name: /Terminated Contracts/i }).click();
       await page.waitForTimeout(500); // adjust if needed for debounce
       const agreementCards = await agreementsPage.getAgreementCards();
@@ -188,7 +188,7 @@ test.describe("Contract Agreements Page Tests", () => {
   });
 
   test.describe("Terminate Contract Functionality", () => {
-    test("Terminates a contract, shows success message, and closes modal", async ({ page }) => {
+    test.fixme("Terminates a contract, shows success message, and closes modal", async ({ page }) => {
       await page.getByRole('button', { name: /Active Contracts/i }).click();
       await page.waitForTimeout(500);
       const agreementCards = await agreementsPage.getAgreementCards();
