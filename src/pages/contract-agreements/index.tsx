@@ -187,9 +187,9 @@ export default function ContractAgreementsListPage() {
           },
         ]}
       >
-        <div className="flex justify-between pb-6">
+        <div className="flex justify-between gap-x-5 pb-6">
           <div className="flex justify-start gap-x-5 items-center">
-            <div className="min-w-xl">
+            <div className="h-full min-w-xl">
               <SearchBar searchTarget="assetId" placeholder={translator("contractAgreements.searchPlaceholder")} searchOperator="ilike" />
             </div>
             <div className="flex gap-x-4">

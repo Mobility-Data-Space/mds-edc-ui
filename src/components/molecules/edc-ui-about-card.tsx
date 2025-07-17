@@ -2,7 +2,7 @@ import React from "react";
 import {Card, CardContent, Typography} from "@mui/material";
 import {T} from "@/i18n";
 import {TitleWithIcon} from "@/components/atoms/TitleWithIcon.tsx";
-import CheckIcon from '@mui/icons-material/Check';
+import CheckIcon from '@mui/icons-material/CheckSharp';
 import Link from "next/link";
 
 function TextWithIcon({ title, link = "", linkTitle = "" }: { title: string, link?: string, linkTitle?: string }) {

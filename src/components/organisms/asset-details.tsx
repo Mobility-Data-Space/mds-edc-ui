@@ -37,7 +37,7 @@ export default function AssetDetails({ asset, participantId, connectorEndpoint }
       <Divider />
       <div className="flex flex-wrap gap-2">
         {keywords.map((keyword: { "@value": string }, index: number) =>
-          <Chip className="font-medium text-sm !cursor-default" clickable label={keyword["@value"]} key={index} />
+          <Chip className="font-medium text-sm !cursor-default" color="info" clickable label={keyword["@value"]} key={index} />
         )}
       </div>
 

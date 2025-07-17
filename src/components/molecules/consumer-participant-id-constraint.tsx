@@ -1,14 +1,12 @@
-import { IconButton } from "@mui/material";
+import {Icon, IconButton} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
-import { Minus } from "lucide-react";
-
 import { Input } from "@/components/atoms/input";
 import { MuiSelect } from "@/components/atoms/mui-select";
 import { ConstraintProps } from "@/components/molecules/constraint";
-
 import { T } from "@/i18n";
 import { consumerParticipantIdOperators } from "@/utilities/policy-operators";
+import React from "react";
 
 export function ConsumerParticipantIdConstraint({ value, onChange, onRemove }: ConstraintProps) {
   value = value as AtomicConstraint;
@@ -25,10 +23,10 @@ export function ConsumerParticipantIdConstraint({ value, onChange, onRemove }: C
         <IconButton
           size="large"
           onClick={onRemove}
-          className="font-medium !-mt-5"
+          className="font-medium !-mt-1"
           color="secondary"
         >
-          <Minus className="size-6" />
+          <Icon style={{ fontSize: "28px" }} >remove</Icon>
         </IconButton>
       </div>
     </div>

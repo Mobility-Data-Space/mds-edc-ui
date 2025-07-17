@@ -7,7 +7,7 @@ import SideDrawer from "@/components/organisms/side-drawer";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
 import { ContractNegotiation } from "@think-it-labs/edc-connector-client";
-import { Tooltip } from "@mui/material";
+import {Chip, Tooltip} from "@mui/material";
 import { ContractAgreementView } from "@think-it-labs/edc-connector-ui/contract-agreement-view";
 import { ContractNegotiationsList } from "@think-it-labs/edc-connector-ui/contract-negotiations-list";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld.tsx";
@@ -16,6 +16,9 @@ import { useSnackbar } from "notistack";
 import { useCallback, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
 import {formatDateTime, formatDateTimeAgo} from "@/utilities/date.ts";
+import {transferProcessStateColor} from "@/utilities/transfer-process.ts";
+import {StateChip} from "@/components/atoms/state-chip.tsx";
+import {theme} from "@/theme/ThemeProvider.tsx";
 
 const CreatedAt = ({ item }: { item: ContractNegotiation }) => {
   const createdAtValue = readValue(item, "https://w3id.org/edc/v0.0.1/ns/createdAt");
@@ -160,6 +163,7 @@ export default function ContractNegotiationsListPage() {
                     key={index}
                     onClick={() => openDetailsModal(item)}
                     data-testid="negotiation-item"
+                    className="bg-color-hover"
                   >
                     <Table.Cell>
                       <button
@@ -170,9 +174,7 @@ export default function ContractNegotiationsListPage() {
                       </button>
                     </Table.Cell>
                     <Table.Cell>
-                      <span className="font-semibold">
-                        {item.state}
-                      </span>
+                      <StateChip state={item.state} />
                     </Table.Cell>
                     <Table.Cell>
                       {!item.contractAgreementId ? "" :

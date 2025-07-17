@@ -1,12 +1,12 @@
 import React, {useMemo, useState} from 'react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from 'recharts';
-import {STATE_ERROR, STATE_RUNNING} from "@/constants/transfer-process.ts";
-import {TransferProcessStates} from "@think-it-labs/edc-connector-client";
+import {Cell, Pie, PieChart, ResponsiveContainer} from 'recharts';
+import {COLORS, HOVER_COLORS} from "@/constants/transfer-process.ts";
 import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/entities";
 import {TitleWithIcon} from "@/components/atoms/TitleWithIcon.tsx";
 import {T} from "@/i18n";
 import {Card, CardContent, Typography} from "@mui/material";
 import {theme} from "@/theme/ThemeProvider.tsx";
+import {transferProcessStateColor, transferProcessStateHoverColor} from "@/utilities/transfer-process.ts";
 
 interface TransferProcessStatusChartCardProps {
   title: string;
@@ -18,15 +18,8 @@ interface Entry {
   name?: string;
   value?: number;
   color?: string;
+  hoverColor?: string;
 }
-
-const COLORS: { [key: string]: string } = {
-  [STATE_RUNNING]: "#7eb0d5",
-  [TransferProcessStates.STARTED]: "#7eb0d5",
-  [TransferProcessStates.DEPROVISIONED]: "#fd7f6f",
-  [STATE_ERROR]: "#fd7f6f",
-  [TransferProcessStates.TERMINATED]: "#b2e061",
-};
 
 function CustomLegend({ data }: { data: Entry[] }) {
   return (
@@ -106,7 +99,8 @@ export function TransferProcessStatusChartCard({ title, transferProcesses, "data
     return Object.entries(data).map(([state, count]) => ({
       name: state,
       value: count,
-      color: COLORS[state],
+      color: transferProcessStateColor(state),
+      hoverColor: transferProcessStateHoverColor(state),
     }));
   }, [transferProcesses]);
 
@@ -144,7 +138,6 @@ export function TransferProcessStatusChartCard({ title, transferProcesses, "data
             <ResponsiveContainer width="100%" height={300} style={{ outline: 'none' }}>
               <PieChart onMouseLeave={handleMouseLeave}>
                 <Pie
-
                   data={data}
                   cx="50%"
                   cy="50%"
@@ -161,10 +154,9 @@ export function TransferProcessStatusChartCard({ title, transferProcesses, "data
                   {data.map((entry, index) => (
                     <Cell
                       key={`${title}-${entry.name}`}
-                      fill={entry.color}
+                      fill={(isHovered && entry.name === hoveredEntry.name ? entry.color : entry.hoverColor)}
                       stroke={isHovered && entry.name === hoveredEntry.name ? "#cccccc" : "white"}
                       strokeWidth={2}
-                      style={(isHovered && entry.name === hoveredEntry.name ? {filter: "brightness(1.15)"} : {})}
                       onMouseEnter={() => handleMouseEnter(entry)}
                       onMouseOutCapture={handleMouseLeave}
                       onMouseOver={(event) => handleMouseMove(entry, event)}
