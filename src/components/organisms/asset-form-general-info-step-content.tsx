@@ -25,7 +25,7 @@ export function AssetFormGeneralInfoStepContent({ translator, formData, onChange
 
   return (
     <div className="flex flex-col gap-y-5">
-      <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 w-full prose">
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 w-full">
         <AssetTitle
           formData={formData}
           errors={errors}
