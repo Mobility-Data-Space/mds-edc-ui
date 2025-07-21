@@ -278,14 +278,60 @@ The code above glosses over some critical details (combining AND and OR operator
 
 This change would be viable to merge into upstream in my opinion as it could be a useful feature but isn't too intrusive.
 
+### 5. Use the vendor internal state
+
+We'll expose the `useList` hook from the vendor to the application and inject the data from other requests.
+
+```jsx
+// pages/assets/page.tsx
+const { mergeItems, querySpecs } = useList(); // we need to be within the ListContext provider
+const filteredById = await client.management.assets.queryAll(context, {
+  ...querySpecs,
+  filterExpression: [
+    {
+      "operandLeft": "https://w3id.org/edc/v0.0.1/ns/id",
+      "operator": "ilike",
+      "operandRight": `%${querySpecs.filterExpression.operandRight}%`
+    }
+  ],
+});
+
+return (
+  <>
+    <SearchBar 
+      searchTarget={"http://purl.org/dc/terms/description"} 
+      searchOperator="ilike" 
+    /> 
+
+    {/* ... */}
+
+    <AssetsList.Items
+      limit={25}
+      offset={0}
+      sortField="createdAt"
+      sortOrder="DESC"
+    >
+      {({ item, index }) => (
+        <AssetCard asset={item} key={index} />
+      )}
+    </AssetsList.Items>
+  </>
+);
+```
+
+This approach allows us a minimum change to the vendor but still requires a change to each list page. Another consideration here is that the data from the first criterion (description in the example) will render first, causing a screen jitter for possibly a split second but still visible in my estimation.
+
+The code above needs to be within the ListContextProvider, so we need to split each page into 2 components: 1 that initiates the ListContext (i.e. AssetsList) and within it another component to render out the list (the code above).
+
 ## Comparison
 
 | Approach | Application Refactor | Vendor Refactor | Performance | Upstream Compatibility | Notes |
 |----------|---------------------|-----------------|-------------|----------------------|-------|
 | Application-side querying | High | None | Good | High | Lose vendor features, every page needs changes |
 | Initial array supply | Medium | Low | Good | Medium | Requires state lifting, coordination complexity |
-| Query all data | High | None | Poor | High | Scalability issues, memory intensive |
-| Multiple vendor requests | Low | High | Good | High | Clean API, maintains existing features |
+| Query all data | High | Medium | Poor | Low | Scalability issues, memory intensive |
+| Multiple vendor requests | Low | Medium | Good | High | Clean API, maintains existing features |
+| Vendor internal state | High | Low | Medium to Poor | Medium |  Minimal vendor changes, screen jitter, component splitting |
 
 ## Conclusion
 
