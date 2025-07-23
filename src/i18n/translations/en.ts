@@ -481,6 +481,7 @@ export const en = {
     },
     contractNegotiations: {
       title: "List all contract negotiations",
+      manualApprovalTitle: "Negotiations with manual approval",
       description:
         "List of contract agreements that owned connectors can consume. Listed agreements are the successful outcome of contract negotiations between two EDC connectors.",
       headingId: "ID",

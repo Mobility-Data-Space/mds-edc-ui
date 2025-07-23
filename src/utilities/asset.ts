@@ -438,7 +438,7 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
     const headers = (formDataToTransform.authHeaders || []).map(
       (value : { input: { key: string, value: string } }) => `${value?.input?.key}:${value?.input?.value}`
     ).join(";");
-    console.log("asset submit before transform : ", formDataToTransform);
+
     return removeEmptyFields({
       type: DataAddressTypes.HttpData,
       method: formDataToTransform?.method,
