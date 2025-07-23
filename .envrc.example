@@ -1,5 +1,6 @@
 export EDC_ID="MDSXXXXX.YYYYY"
 export EDC_NAME="My MDS EDC Connector"
+export EDC_DESCRIPTION="My connector description"
 export EDC_MANAGEMENT_URL="http://edc:8182/api/management"
 export EDC_DEFAULT_URL="http://edc:8181/api"
 export EDC_PROTOCOL_URL="http://edc:8184/api/dsp"
