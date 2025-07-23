@@ -10,24 +10,38 @@ test.describe("Dashboard Tests", () => {
     await dashboardPage.navigate();
   });
 
-  test.fixme("Displays the dashboard header", async ({ page }) => {
-    // Verify the dashboard header is visible
-    const dashboardHeader = await dashboardPage.getDashboardHeader();
-    await expect(dashboardHeader).toBeVisible();
+  test("Displays the correct number of EDC resources in the connector", async ({ page }) => {
+    const dataOffersCount = await dashboardPage.getDataOffersCount();
+    const assetsCount = await dashboardPage.getAssetsCount();
+    const policiesCount = await dashboardPage.getPoliciesCount();
+    const catalogsCount = await dashboardPage.getCatalogsCount();
+    const contractAgreementsCount = await dashboardPage.getContractAgreementsCount();
+    
+    expect(dataOffersCount).toBeGreaterThanOrEqual(1);
+    expect(assetsCount).toBeGreaterThanOrEqual(7);
+    expect(policiesCount).toBeGreaterThanOrEqual(1);
+    expect(catalogsCount).toBeGreaterThanOrEqual(0);
+    expect(contractAgreementsCount).toBeGreaterThanOrEqual(0);
+  });
+  
+  test("Displays the connector management and protocol endpoints", async ({ page }) => {
+    const connectorEndpoint = await dashboardPage.getConnectorEndpoint();
+    const managementApiUrl = await dashboardPage.getManagementApiUrl();
+    
+    expect(connectorEndpoint).toBe(config.EDC_PROTOCOL_URL);
+    expect(managementApiUrl).toBe(config.EDC_MANAGEMENT_URL);
   });
 
-  test("Displays widgets on the dashboard", async ({ page }) => {
+  test("Displays the connector properties on the dashboard", async ({ page }) => {
     const propertiesText = ((await page.getByTestId('dashboard-edc-properties').first().allTextContents()) || [""])[0];
     expect(propertiesText).toContain(config.EDC_PROTOCOL_URL)
     expect(propertiesText).toContain(config.EDC_ID)
     expect(propertiesText).toContain(config.EDC_NAME)
-    expect(propertiesText).toContain(config.EDC_DESCRIPTION)
-
-    await expect(Number(await page.getByTestId('dashboard-your-data-offers').locator('h2').textContent())).toBeGreaterThanOrEqual(1);
-    await expect(Number(await page.getByTestId('dashboard-your-assets').locator('h2').textContent())).toBeGreaterThanOrEqual(7);
-    await expect(Number(await page.getByTestId('dashboard-your-policies').locator('h2').textContent())).toBeGreaterThanOrEqual(1);
-
-    expect(await page.getByTestId('dashboard-connector-endpoint').first().locator('input').inputValue()).toBe(config.EDC_PROTOCOL_URL);
-    expect(await page.getByTestId('dashboard-management-api-url').first().locator('input').inputValue()).toBe(config.EDC_MANAGEMENT_URL);
+    expect(propertiesText).toContain(config.EDC_DESCRIPTION);
+    expect(propertiesText).toContain(config.EDC_CURATOR_ORGANIZATION);
+    expect(propertiesText).toContain(config.EDC_CURATOR_URL);
+    expect(propertiesText).toContain(config.EDC_MAINTAINER_ORGANIZATION);
+    expect(propertiesText).toContain(config.EDC_MAINTAINER_URL);
+    expect(propertiesText).toContain(config.MDS_DAPS_URL);
   });
 });
