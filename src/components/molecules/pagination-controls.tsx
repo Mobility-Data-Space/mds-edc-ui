@@ -32,7 +32,7 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
     return (
         <div className="flex items-center">
             <h5 data-testid={`${dataTestIdPrefix}-info`}>
-                {firstItemIndex}-{lastItemIndex}
+                {`${firstItemIndex}-${lastItemIndex}`}
             </h5>
             <div className="inline-flex float-right gap-x-2">
                 <IconButton
