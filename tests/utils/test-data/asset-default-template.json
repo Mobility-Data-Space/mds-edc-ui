@@ -1,0 +1,61 @@
+{
+  "@context": {
+    "@vocabulary": "https://w3id.org/edc/v0.0.1/ns/",
+    "dcat": "http://www.w3.org/ns/dcat#",
+    "dct": "http://purl.org/dc/terms/",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "mobilitydcatap": "https://w3id.org/mobilitydcat-ap/",
+    "mobilitydcatap-theme": "https://w3id.org/mobilitydcat-ap/mobility-theme/", 
+    "adms": "http://www.w3.org/ns/adms#",
+    "edc": "https://w3id.org/edc/v0.0.1/ns/",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "rdf": "http://www.w3.org/2000/01/rdf-schema#"
+  },
+  "@id": "asset-id-placeholder",
+  "properties": {
+    "dct:title": "title-placeholder",
+    "mobilitydcatap:mobilityTheme": {
+      "mobilitydcatap-theme:data-content-category": "INFRASTRUCTURE_AND_LOGISTICS",
+      "mobilitydcatap-theme:data-content-sub-category": "GENERAL_INFORMATION_ABOUT_PLANNING_OF_ROUTES"
+    },
+    "mobilitydcatap:mobilityDataStandard": {
+      "@id": "my-data-model-001",
+      "mobilitydcatap:schema": {
+        "dcat:downloadURL": [
+          "https://teamabc.departmentxyz.schema/a",
+          "https://teamabc.departmentxyz.schema/b"
+        ],
+        "rdf:Literal": "These reference files are important"
+      }
+    },
+    "mobilitydcatap:transportMode": "RAIL",
+    "mobilitydcatap:georeferencingMethod": "my-geo-reference-method",
+    "dct:description": "description-placeholder",
+    "dct:language": "code/EN",
+    "dct:publisher": "https://data-source.my-org/about",
+    "dct:license": "https://data-source.my-org/license",
+    "dct:rightsHolder": "my-sovereign-legal-name",
+    "dct:accessRights": "usage policies and rights",
+    "dct:spatial": {
+      "skos:prefLabel": "spatial-placeholder",
+      "dct:identifier": ["DE769", "DE636"]
+    },
+    "dct:isReferencedBy": "https://data-source.my-org/references",
+    "dct:temporal": {
+      "dcat:startDate": "2024-02-01",
+      "dcat:endDate": "2027-02-01"
+    },
+    "dct:accrualPeriodicity": "every month",
+    "dcat:organization": "Company Name",
+    "dcat:keywords": ["keyword1", "keyword2"],
+    "dcat:mediaType": "application/json",
+    "dcat:landingPage": "https://data-source.my-org/docs",
+    "owl:versionInfo": "1.1",
+    "adms:sample": ["https://teamabc.departmentxyz.sample/a", "https://teamabc.departmentxyz.sample/b"]
+  },
+  "dataAddress": {
+    "@type": "DataAddress",
+    "type": "HttpData",
+    "baseUrl": "https://example.com/"
+  }
+}
