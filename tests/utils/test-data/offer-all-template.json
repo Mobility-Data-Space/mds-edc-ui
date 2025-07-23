@@ -1,0 +1,9 @@
+{
+  "@context": {
+    "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
+  },
+  "@id": "contract-id-placeholder",
+  "accessPolicyId": "access-policy-placeholder",
+  "contractPolicyId": "contract-policy-placeholder",
+  "assetsSelector": []
+}
