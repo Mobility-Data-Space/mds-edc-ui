@@ -18,14 +18,14 @@ export interface TransferFormDialogProps {
   onClose: () => void,
   onSuccess?: () => void,
   translator: (key: string) => string,
-  contractAgreementLd: ContractAgreement,
+  contractAgreementId: ContractAgreement,
 }
 
-export function TransferFormDialog({ contractAgreementLd, open, onClose, onSuccess = () => {}, translator }: TransferFormDialogProps): JSX.Element {
+export function TransferFormDialog({ contractAgreementId, open, onClose, onSuccess = () => {}, translator }: TransferFormDialogProps): JSX.Element {
   const [formData, setFormData] = useState<DataAddress>(defaultHttpDestinationDataAddress);
 
   const [errors, setErrors] = useState({});
-  const contractAgreement = removeJsonLdSchemaFromProperties(contractAgreementLd);
+  const contractAgreement = removeJsonLdSchemaFromProperties(contractAgreementId);
   const { connector } = useParticipantConnectorState();
   const edcClient = useEdcConnectorClient({ management: connector.managementUrl });
   const formRef = useRef<HTMLFormElement>(null);

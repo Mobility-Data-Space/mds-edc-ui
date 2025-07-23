@@ -130,6 +130,7 @@ export const cn = {
     },
     "contract-negotiations": {
       title: "列出所有合同谈判",
+      manualApprovalTitle: "Negotiations with manual approval",
       description:
         "拥有的连接器可以使用的合同协议列表。 列出的协议是两个 EDC 连接器之间合同谈判的成功结果。",
       headingId: "ID",

@@ -89,7 +89,7 @@ export default function ContractAgreementDialog({ open, onClose, contractAgreeme
   return (
     <>
       <TransferFormDialog
-        contractAgreementLd={contractAgreement}
+        contractAgreementId={contractAgreement}
         open={isTransferModalOpen}
         onClose={() => setIsTransferModalOpen(false)}
         onSuccess={populateTransferProcesses}

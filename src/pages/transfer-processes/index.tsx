@@ -42,29 +42,10 @@ export default function TransferProcessesListPage() {
         currentPage={currentPage}
         firstPage={0}
       >
-        <TransferProcessesList.Error>
-          {({ error }) => {
-            if (error) {
-              enqueueSnackbar(translator("common.transferProcessesLoadError"), {
-                variant: "error",
-                content: (key: any) => (
-                  <Snackbar
-                    type="error"
-                    message={translator("common.transferProcessesLoadError")}
-                    details={error.message || undefined}
-                    onClose={() => { closeSnackbar(key); }}
-                  />
-                )
-              });
-            }
-            return <></>;
-          }}
-        </TransferProcessesList.Error>
-
         <div className="flex justify-between pb-6">
           <div className="flex justify-start gap-x-5 items-center">
             <div className="min-w-xl">
-              <SearchBar searchTarget="id" placeholder={translator("transferProcesses.searchPlaceholder")} searchOperator="ilike" />
+              <SearchBar searchTarget="assetId" placeholder={translator("transferProcesses.searchPlaceholder")} searchOperator="ilike" />
             </div>
           </div>
           <div className="flex justify-end items-center">
