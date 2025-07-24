@@ -4,7 +4,7 @@ import { DeleteDialog } from "@/components/molecules/delete-dialog";
 import AssetDetails from "@/components/organisms/asset-details";
 import DataOfferDetails from "@/components/organisms/data-offer-details";
 import { T } from "@/i18n";
-import { ASSET_TITLE } from "@/schema/asset";
+import { ASSET_TITLE } from "@/jsonld/asset";
 import { datasetToAsset } from "@/utilities/catalog";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton} from "@mui/material";
 import Typography from "@mui/material/Typography";

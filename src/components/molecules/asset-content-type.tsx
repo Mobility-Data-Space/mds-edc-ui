@@ -4,7 +4,7 @@ import {FormHelperText, Link} from "@mui/material";
 import {Input} from "../atoms/input";
 
 import {T} from "@/i18n";
-import {ASSET_CONTENT_TYPE} from "@/schema/asset";
+import {ASSET_CONTENT_TYPE} from "@/jsonld/asset";
 import {AssetProperties} from "@/utilities/asset";
 
 export interface AssetContentTypeProps {

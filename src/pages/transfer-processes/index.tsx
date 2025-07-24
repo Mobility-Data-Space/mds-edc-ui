@@ -8,16 +8,14 @@ import { useParticipantConnectorState } from "@/hooks/use-participant-connector-
 import { T, useTranslator } from "@/i18n";
 import { TransferProcessesList } from "@think-it-labs/edc-connector-ui/transfer-processes-list";
 import { useRouter } from "next/router";
-import { useSnackbar } from "notistack";
 import { useCallback } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
+import { proxyConnectorManagement } from "@/constants/proxy";
 
 export default function TransferProcessesListPage() {
   const router = useRouter();
   const { connector } = useParticipantConnectorState();
   const { translator } = useTranslator();
-  const managementUrl = connector?.managementUrl as string;
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const currentPage = parseInt(router.query.page as string) || 0
 
@@ -36,7 +34,7 @@ export default function TransferProcessesListPage() {
   return (
     <SideDrawer title={<T string="transferProcesses.title" />}>
       <TransferProcessesList
-        managementUrl={managementUrl}
+        managementUrl={proxyConnectorManagement}
         usePagination
         navigate={navigate}
         currentPage={currentPage}
@@ -113,7 +111,7 @@ export default function TransferProcessesListPage() {
                   <TransferProcessTableRow
                     key={item.id}
                     transferProcess={item}
-                    managementUrl={managementUrl}
+                    managementUrl={connector.managementUrl}
                     connectorEndpoint={connector.protocolUrl}
                     participantId={connector.id}
                     data-testid="transfer-process-row"

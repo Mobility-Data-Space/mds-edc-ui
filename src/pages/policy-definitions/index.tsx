@@ -14,14 +14,13 @@ import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useCallback, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
+import { proxyConnectorManagement } from "@/constants/proxy";
 
 export default function PolicyDefinitionListPage() {
   const router = useRouter()
-  const { push, connector } = useParticipantConnectorState();
+  const { push } = useParticipantConnectorState();
   const { translator } = useTranslator();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
-  const managementUrl = connector?.managementUrl as string;
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
@@ -64,7 +63,7 @@ export default function PolicyDefinitionListPage() {
         navigate={navigate}
         currentPage={parseInt(router.query.page as string) || 0}
         firstPage={0}
-        managementUrl={managementUrl}
+        managementUrl={proxyConnectorManagement}
       >
         <div className="flex justify-between pb-6">
           <div className="flex justify-start gap-x-5">

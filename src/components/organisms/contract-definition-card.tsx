@@ -1,3 +1,4 @@
+import { proxyConnectorManagement } from "@/constants/proxy";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T } from "@/i18n";
 import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog";
@@ -33,7 +34,7 @@ export default function ContractDefinitionCard({ contractDefinition, onClick }: 
   const { connector } = useParticipantConnectorState();
 
   return (
-    <ContractDefinitionView id={contractDefinition.id} managementUrl={connector.managementUrl}>
+    <ContractDefinitionView id={contractDefinition.id} managementUrl={proxyConnectorManagement}>
       <Card className="data-offer-card w-full max-w-[368px]" onClick={onClick}>
         <CardContent className="flex flex-col gap-y-3">
           <div>
@@ -58,7 +59,7 @@ export default function ContractDefinitionCard({ contractDefinition, onClick }: 
                 </Typography>
                 <Typography variant="body2">
                   <ContractDefinitionsList.Policy
-                    managementUrl={connector.managementUrl}
+                    managementUrl={proxyConnectorManagement}
                     id={contractDefinition.accessPolicyId}
                   >
                     <ContractDefinitionsList.Policy.Id />
@@ -75,7 +76,7 @@ export default function ContractDefinitionCard({ contractDefinition, onClick }: 
                 </Typography>
                 <Typography variant="body2">
                   <ContractDefinitionsList.Policy
-                    managementUrl={connector.managementUrl}
+                    managementUrl={proxyConnectorManagement}
                     id={contractDefinition.contractPolicyId}
                   >
                     <ContractDefinitionsList.Policy.Id />

@@ -1,5 +1,5 @@
 import { T } from "@/i18n";
-import { contextToCompact } from "@/schema/context.ts";
+import { contextToCompact } from "@/jsonld/context";
 import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import jsonld from "jsonld";

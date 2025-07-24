@@ -17,6 +17,7 @@ import { MouseEvent, useCallback, useMemo, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
 import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
 import {formatDateTime, formatDateTimeAgo} from "@/utilities/date.ts";
+import { proxyConnectorManagement } from "@/constants/proxy";
 
 const CreatedAt = ({ item }: { item: ContractNegotiation }) => {
   const createdAtValue = readValue(item, "https://w3id.org/edc/v0.0.1/ns/createdAt");
@@ -100,7 +101,7 @@ export default function ContractNegotiationsManualApprovalListPage() {
         translator={translator}
       />
       <ContractNegotiationsList
-        managementUrl={connector.managementUrl}
+        managementUrl={proxyConnectorManagement}
         usePagination
         navigate={navigate}
         currentPage={currentPage}

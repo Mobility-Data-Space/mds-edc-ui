@@ -12,6 +12,7 @@ import {DataAddressTypes, defaultHttpDestinationDataAddress} from "@/utilities/d
 import {createTransferProcessRequest} from "@/utilities/transfer-process";
 import {AssetFormDataAddressStep} from "@/components/organisms/asset-form-data-address-step.tsx";
 import {validateDataAddress} from "@/utilities/asset.ts";
+import { proxyConnectorManagement } from "@/constants/proxy";
 
 export interface TransferFormDialogProps {
   open: boolean,
@@ -27,7 +28,7 @@ export function TransferFormDialog({ contractAgreementId, open, onClose, onSucce
   const [errors, setErrors] = useState({});
   const contractAgreement = removeJsonLdSchemaFromProperties(contractAgreementId);
   const { connector } = useParticipantConnectorState();
-  const edcClient = useEdcConnectorClient({ management: connector.managementUrl });
+  const edcClient = useEdcConnectorClient({ management: proxyConnectorManagement });
   const formRef = useRef<HTMLFormElement>(null);
 
   const onSubmit = () => {

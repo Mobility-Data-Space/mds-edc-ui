@@ -1,11 +1,11 @@
-import { Participant } from "@/constants/dataspace";
+import { Participant } from "@/utilities/participant";
 import { EdcConnectorClient, IdResponse } from "@think-it-labs/edc-connector-client";
 import { randomUUID } from "node:crypto";
     
 export async function seed(participant: Participant) {
     const client: EdcConnectorClient = new EdcConnectorClient
         .Builder()
-        .managementUrl(participant.connectorManagementUrl)
+        .managementUrl(participant.managementUrl)
         .apiToken(process.env.TEST_API_KEY || "default-test-api-key")
         .build();
 

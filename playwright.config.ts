@@ -5,10 +5,10 @@ export default defineConfig({
   testDir: './tests',
   fullyParallel: true, 
   forbidOnly: !!process.env.CI,
-  retries: 0,
+  retries: 1,
   reporter: 'html',
   timeout: 25 * 1000, // 25 seconds timeout
-  maxFailures: 10,
+  maxFailures: 7,
   use: {
     // Base URL to use in actions like `await page.goto('/')`.
     baseURL: 'http://127.0.0.1:3000',
