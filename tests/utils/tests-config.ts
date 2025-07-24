@@ -1,7 +1,7 @@
 export const participantConfig = {
-  EDC_ID: "MDSXXXXX.YYYYY",
-  EDC_NAME: "My MDS EDC Connector",
-  EDC_DESCRIPTION: "This is the connector description from env variables",
+  EDC_ID: "MDSXXXXXXX.YYYYYYY",
+  EDC_NAME: "Think-it Test Connector 1",
+  EDC_DESCRIPTION: "Think-it GmbH MDS EDC Test Connector 1",
   EDC_MANAGEMENT_URL: "http://localhost:8182/api/management",
   EDC_DEFAULT_URL: "http://localhost:8181/api",
   EDC_PROTOCOL_URL: "http://localhost:8183/api/dsp",
@@ -15,9 +15,9 @@ export const participantConfig = {
 }
 
 export const counterPartyParticipantConfig = {
-  EDC_ID: "MDSXXXXX.ZZZZ",
-  EDC_NAME: "My MDS EDC Connector",
-  EDC_DESCRIPTION: "This is the connector description from env variables",
+  EDC_ID: "MDSXXXXXXX.ZZZZZZZ",
+  EDC_NAME: "Think-it Test Connector 2",
+  EDC_DESCRIPTION: "Think-it GmbH MDS EDC Test Connector 2",
   EDC_MANAGEMENT_URL: "http://localhost:9182/api/management",
   EDC_DEFAULT_URL: "http://localhost:9181/api",
   EDC_PROTOCOL_URL: "http://localhost:9183/api/dsp",

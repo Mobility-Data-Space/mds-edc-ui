@@ -1,5 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
-import { participantConfig as UiConfig } from './tests/utils/ui-config' ;
+import { participantConfig as UiConfig } from './tests/utils/tests-config' ;
 
 export default defineConfig({
   testDir: './tests',

@@ -1,6 +1,6 @@
 import { execSync } from 'child_process';
 import { seed } from './seed';
-import { participantConfig, counterPartyParticipantConfig } from './ui-config'
+import { participantConfig, counterPartyParticipantConfig } from './tests-config'
 
 const checkInitStatus = (serviceName: string): boolean => {
   try {
