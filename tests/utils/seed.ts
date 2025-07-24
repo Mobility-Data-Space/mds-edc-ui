@@ -1,12 +1,6 @@
 import { Participant } from "@/constants/dataspace";
 import { EdcConnectorClient, IdResponse } from "@think-it-labs/edc-connector-client";
 import { randomUUID } from "node:crypto";
-
-function randomNumber(max: number): number {
-  return Math.max(Math.round(Math.random() * max), 1);
-}
-
-const SEED = parseInt(process.env.SEED || "10");
     
 export async function seed(participant: Participant) {
     const client: EdcConnectorClient = new EdcConnectorClient
@@ -16,7 +10,7 @@ export async function seed(participant: Participant) {
         .build();
 
     // Create assets
-    const assetCount = randomNumber(SEED);
+    const assetCount = 10;
     const assetPromises: Promise<IdResponse>[] = [];
 
     console.log(
