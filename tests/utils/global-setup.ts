@@ -21,13 +21,19 @@ async function globalSetup() {
   const services = ['edc-1', 'edc-2'];
   const interval = 5000; // 5 seconds
 
-  console.log('Waiting for services to become healthy...');
-  for (const service of services) {
-    while (!checkInitStatus(service)) {
-      console.log(`Service ${service} is not healthy yet. Retrying in ${interval / 1000} seconds...`);
-      await new Promise((resolve) => setTimeout(resolve, interval));
+  const isCI = process.env.CI === 'true';
+
+  if (!isCI) {
+    console.log('Waiting for services to become healthy...');
+    for (const service of services) {
+      while (!checkInitStatus(service)) {
+        console.log(`Service ${service} is not healthy yet. Retrying in ${interval / 1000} seconds...`);
+        await new Promise((resolve) => setTimeout(resolve, interval));
+      }
+      console.log(`Service ${service} is ready.`);
     }
-    console.log(`Service ${service} is ready.`);
+  } else {
+    console.log('Running in CI environment. Skipping Docker health checks.');
   }
 
   console.log('Seeding dataspace ...');
