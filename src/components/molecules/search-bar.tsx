@@ -17,7 +17,7 @@ export default function SearchBar({ placeholder, searchTarget, searchOperator }:
 
   useEffect(() => {
     setSearchSpec({ operator: searchOperator, operandLeft: searchTarget })
-  }, [searchTarget, searchOperator])
+  }, [setSearchSpec, searchTarget, searchOperator])
 
     return (
       <div className="relative flex rounded-lg h-full" >
