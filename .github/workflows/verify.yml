@@ -24,7 +24,7 @@ jobs:
           - 8184:8184
           - 8185:8185
         options: >-
-          --health-cmd="curl -f http://0.0.0.0:8181/api/check/liveness || exit 1"
+          --health-cmd="curl -f http://localhost:8181/api/check/liveness || exit 1"
           --health-interval=10s
           --health-retries=3
         env:
@@ -58,7 +58,7 @@ jobs:
           - 9184:9184
           - 9185:9185
         options: >-
-          --health-cmd="curl -f http://0.0.0.0:8181/api/check/liveness || exit 1"
+          --health-cmd="curl -f http://localhost:9181/api/check/liveness || exit 1"
           --health-interval=10s
           --health-retries=3
         env:
