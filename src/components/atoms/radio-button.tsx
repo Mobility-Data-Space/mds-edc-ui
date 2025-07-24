@@ -11,7 +11,7 @@ export type RadioButtonProps = {
   labelFalse: string
 }
 
-export function RadioButton({ id = "", trueValue = true, falseValue = false, value, onChange, labelTrue, labelFalse, }: RadioButtonProps): JSX.Element {
+export function RadioButton({ id = "", trueValue = "true", falseValue = "false", value, onChange, labelTrue, labelFalse, }: RadioButtonProps): JSX.Element {
   const valueIsTrue = value === trueValue;
   const onClick = () => {
     return onChange(valueIsTrue ? falseValue : trueValue);

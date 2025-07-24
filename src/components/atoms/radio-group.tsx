@@ -14,11 +14,12 @@ interface RadioButtonsGroup {
   id?: string;
   label?: React.ReactNode;
   defaultValue: string;
+  value: string;
   options: Option[];
   onChange: (newValue: string) => void;
 }
 
-export default function RadioButtonsGroup({ name, id = "", label = "", defaultValue, options, onChange }: RadioButtonsGroup) {
+export default function RadioButtonsGroup({ name, id = "", label = "", value, defaultValue, options, onChange }: RadioButtonsGroup) {
   return (
     <FormControl color="secondary">
       <label
@@ -30,6 +31,7 @@ export default function RadioButtonsGroup({ name, id = "", label = "", defaultVa
       <RadioGroup
         onChange={(event) => onChange(event.target.value)}
         defaultValue={defaultValue}
+        value={value}
         name={name}
         id={id}
       >

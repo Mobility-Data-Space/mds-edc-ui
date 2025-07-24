@@ -3,9 +3,9 @@ import { TitleWithIcon } from "@/components/atoms/TitleWithIcon";
 import { DeleteDialog } from "@/components/molecules/delete-dialog";
 import { Snackbar } from "@/components/molecules/snackbar";
 import AssetDetails from "@/components/organisms/asset-details";
-import { T } from "@/i18n";
+import {T, useTranslator} from "@/i18n";
 import { ASSET_TITLE } from "@/schema/asset";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton} from "@mui/material";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton, Tooltip} from "@mui/material";
 import { Asset } from "@think-it-labs/edc-connector-client";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
 import { enqueueSnackbar, useSnackbar } from 'notistack';
@@ -29,6 +29,7 @@ export default function AssetDialog({ open, onClose, asset, onEditClick, deleteE
   const title = readValue(asset.properties, ASSET_TITLE) || "";
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const { closeSnackbar } = useSnackbar();
+  const { translator } = useTranslator();
 
   const onDeleteConfirm = async () => {
     try {
@@ -73,14 +74,18 @@ export default function AssetDialog({ open, onClose, asset, onEditClick, deleteE
 
             <div>
               {onEditClick &&
-                <IconButton onClick={onEditClick}>
-                  <Icon color="secondary" >edit</Icon>
-                </IconButton>
+                <Tooltip title={translator("common.edit")} >
+                  <IconButton onClick={onEditClick}>
+                    <Icon color="secondary" >edit</Icon>
+                  </IconButton>
+                </Tooltip>
               }
               {deleteEnabled &&
-                <IconButton data-testid="delete-asset-modal-btn" onClick={() => setDeleteDialogOpen(true)}>
-                  <Icon color="secondary" >delete</Icon>
-                </IconButton>
+                <Tooltip title={translator("common.delete")} >
+                  <IconButton data-testid="delete-asset-modal-btn" onClick={() => setDeleteDialogOpen(true)}>
+                    <Icon color="secondary" >delete</Icon>
+                  </IconButton>
+                </Tooltip>
               }
             </div>
           </div>

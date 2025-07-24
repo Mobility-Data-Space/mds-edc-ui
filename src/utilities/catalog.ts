@@ -18,7 +18,7 @@ export const datasetToContractDefinitions = (dataset: Dataset): ContractDefiniti
   return dataset[HAS_POLICY] || [];
 };
 
-export const removeJsonLdSchemaFromProperties = (originalJson: any): any => {
+export const removeJsonLdSchemaFromProperties = (originalJson: any, keepKeys = false): any => {
   if (Array.isArray(originalJson)) {
     return originalJson.map(item => removeJsonLdSchemaFromProperties(item));
   }
@@ -35,9 +35,9 @@ export const removeJsonLdSchemaFromProperties = (originalJson: any): any => {
 
       if (newKey === 'operator' && typeof originalJson[key]['@id'] === 'string') {
         const operatorParts = originalJson[key]['@id'].split('/');
-        convertedObject[newKey] = operatorParts[operatorParts.length - 1];
+        convertedObject[keepKeys ? key : newKey] = operatorParts[operatorParts.length - 1];
       } else {
-        convertedObject[newKey] = removeJsonLdSchemaFromProperties(originalJson[key]);
+        convertedObject[keepKeys ? key : newKey] = removeJsonLdSchemaFromProperties(originalJson[key]);
       }
     }
   }

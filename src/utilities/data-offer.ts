@@ -1,6 +1,6 @@
 import {CriterionInput} from "@think-it-labs/edc-connector-client";
 
-const EDC_ID_FIELD = "https://w3id.org/edc/v0.0.1/ns/id"
+export const EDC_ID_FIELD = "https://w3id.org/edc/v0.0.1/ns/id"
 
 export const operatorEqual = {
   value: '=',
