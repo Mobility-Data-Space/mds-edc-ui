@@ -12,7 +12,7 @@ export async function seed(participant: Participant) {
     const client: EdcConnectorClient = new EdcConnectorClient
         .Builder()
         .managementUrl(participant.connectorManagementUrl)
-        .apiToken("my-test-api-key")
+        .apiToken(process.env.TEST_API_KEY || "default-test-api-key")
         .build();
 
     // Create assets
