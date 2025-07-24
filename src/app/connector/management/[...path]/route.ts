@@ -57,6 +57,29 @@ const handlePost = async (req: NextRequest): Promise<NextResponse> => {
   return response;
 };
 
+// Handler for PUT requests
+const handlePut = async (req: NextRequest): Promise<NextResponse> => {
+  const url = buildUrl(req);
+  const requestBody = await req.text();
+
+  const proxy = await fetchProxy(url, {
+    method: "PUT",
+    headers: {
+      "content-type": "application/json",
+      "x-api-key": connectorApiKey(),
+    },
+    credentials: "same-origin",
+    body: requestBody && requestBody !== "{}" ? requestBody : undefined,
+  });
+
+
+  const readableStream = proxy.body;
+  const response = new NextResponse(readableStream, { status: proxy.status });
+  setResponseHeaders(proxy, response);
+
+  return response;
+};
+
 // Handler for DELETE requests
 const handleDelete = async (req: NextRequest): Promise<NextResponse> => {
   const url = buildUrl(req);
@@ -80,5 +103,5 @@ const handleDefault = async (): Promise<NextResponse> => {
 export const GET = handleGet;
 export const POST = handlePost;
 export const DELETE = handleDelete;
-export const PUT = handleDefault;
+export const PUT = handlePut;
 export const HEAD = handleDefault;
