@@ -1,4 +1,4 @@
-name: Verify
+name: Verify (Test and Build)
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  test-and-build:
     runs-on: ubuntu-latest
 
     services:
@@ -25,7 +25,7 @@ jobs:
           - 8185:8185
         env:
           EDC_PARTICIPANT_ID: "participant_1"
-          EDC_COMPONENT_ID: "participant_1_MDS_COMPONENT"
+          EDC_COMPONENT_ID: "participant_1"
           EDC_HOSTNAME: "edc-participant-1"
           WEB_HTTP_PATH: "/api"
           WEB_HTTP_PORT: "8181"
