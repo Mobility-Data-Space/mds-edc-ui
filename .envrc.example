@@ -1,7 +1,15 @@
 export EDC_ID="MDSXXXXX.YYYYY"
 export EDC_NAME="My MDS EDC Connector"
+export EDC_DESCRIPTION="My connector description"
 export EDC_MANAGEMENT_URL="http://edc:8182/api/management"
 export EDC_DEFAULT_URL="http://edc:8181/api"
 export EDC_PROTOCOL_URL="http://edc:8184/api/dsp"
 export EDC_PUBLIC_URL="http://edc:8183/public"
 export EDC_MANAGEMENT_API_KEY="API_KEY"
+export EDC_CURATOR_ORGANIZATION="Think-it GmbH",
+export EDC_CURATOR_URL="https://think-it.io",
+export EDC_MAINTAINER_ORGANIZATION="Think-it GmbH",
+export EDC_MAINTAINER_URL="https://think-it.io",
+export MDS_DAPS_URL="https://daps.mobility-dataspace.eu"
+
+export TEST_API_KEY="TEST_API_KEY"

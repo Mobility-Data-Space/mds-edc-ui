@@ -1,5 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
-import { config as UiConfig } from './tests/utils/ui-config' ;
+import { participantConfig as UiConfig } from './tests/utils/tests-config' ;
 
 export default defineConfig({
   testDir: './tests',
@@ -26,17 +26,22 @@ export default defineConfig({
     }
   ],
 
-  // Run your local dev server before starting the tests.
-  webServer: [{
-      name: "MDS EDC UI Server",
-      command: 'yarn dev',
-      url: 'http://127.0.0.1:3000',
-      env: UiConfig,
-      reuseExistingServer: false,
-    },
-    {
-      name: "MDS EDC E2E Services",
-      command: 'docker compose -f ./docker-compose.e2e.yml up -d'
-    }
-  ]
+  webServer: process.env.CI ? 
+      [{
+          name: "MDS EDC UI Server",
+          command: 'yarn dev',
+          url: 'http://127.0.0.1:3000',
+          env: UiConfig,
+          reuseExistingServer: false,
+      }] : [{
+        name: "MDS EDC UI Server",
+        command: 'yarn dev',
+        url: 'http://127.0.0.1:3000',
+        env: UiConfig,
+        reuseExistingServer: false,
+      },
+      {
+        name: "MDS EDC E2E Services",
+        command: 'docker compose -f ./docker-compose.e2e.yml up -d'
+      }]
 });

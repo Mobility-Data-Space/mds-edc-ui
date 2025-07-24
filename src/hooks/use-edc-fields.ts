@@ -22,12 +22,12 @@ export const useEdcFields = (): FieldShowProps[] => {
     },
     {
       label: "dashboard.curatorOrganizationName",
-      value: "",
+      value: connector.curatorName,
       icon: 'apartment',
     },
     {
       label: "dashboard.curatorUrl",
-      value: "",
+      value: connector.curatorUrl,
       icon: 'apartment',
     },
     {
@@ -36,34 +36,19 @@ export const useEdcFields = (): FieldShowProps[] => {
       icon: 'title',
     },
     {
-      label: "dashboard.maintainerOrganizationName",
-      value: "",
+      label: "dashboard.maintainerName",
+      value: connector.maintainerName,
       icon: 'contact_support',
     },
     {
-      label: "dashboard.maintainerOrganizationUrl",
-      value: "",
+      label: "dashboard.maintainerUrl",
+      value: connector.maintainerUrl,
       icon: 'contact_support',
     },
     {
       label: "dashboard.dapsTokenUrl",
-      value: "",
+      value: connector.dapsUrl,
       icon: 'vpn_key',
-    },
-    {
-      label: "dashboard.miwAuthorityId",
-      value: "",
-      icon: 'lock',
-    },
-    {
-      label: "dashboard.miwUrl",
-      value: "",
-      icon: 'link',
-    },
-    {
-      label: "dashboard.miwTokenUrl",
-      value: "",
-      icon: 'vpn_key',
-    },
+    }
   ];
 };

@@ -1,4 +1,4 @@
-name: Verify
+name: Verify (Test and Build)
 
 on:
   push:
@@ -10,8 +10,71 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  test-and-build:
     runs-on: ubuntu-latest
+
+    services:
+      edc-1:
+        image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:1.0.0-rc.7
+        ports:
+          - 8181:8181
+          - 8186:8186
+          - 8182:8182
+          - 8183:8183
+          - 8184:8184
+          - 8185:8185
+        env:
+          EDC_PARTICIPANT_ID: "participant_1"
+          EDC_COMPONENT_ID: "participant_1"
+          EDC_HOSTNAME: "edc-participant-1"
+          WEB_HTTP_PATH: "/api"
+          WEB_HTTP_PORT: "8181"
+          WEB_HTTP_CONTROL_PATH: "/api/control"
+          WEB_HTTP_CONTROL_PORT: "8186"
+          WEB_HTTP_MANAGEMENT_PATH: "/api/management"
+          WEB_HTTP_MANAGEMENT_PORT: "8182"
+          WEB_HTTP_MANAGEMENT_AUTH_TYPE: "tokenbased"
+          WEB_HTTP_MANAGEMENT_AUTH_KEY: "${{ secrets.TEST_API_KEY }}"
+          WEB_HTTP_PROTOCOL_PATH: "/api/dsp"
+          WEB_HTTP_PROTOCOL_PORT: "8183"
+          WEB_HTTP_VERSION_PATH: "/api/version"
+          WEB_HTTP_VERSION_PORT: "8184"
+          WEB_HTTP_PUBLIC_PATH: "/public"
+          WEB_HTTP_PUBLIC_PORT: "8185"
+          EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: "transfer-proxy-token-signer-public-key"
+          EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: "transfer-proxy-token-signer-private-key"
+          EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "false"
+      
+      edc-2:
+        image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:1.0.0-rc.7
+        ports:
+          - 9181:8181
+          - 9186:8186
+          - 9182:8182
+          - 9183:8183
+          - 9184:8184
+          - 9185:8185
+        env:
+          EDC_PARTICIPANT_ID: "participant_2"
+          EDC_COMPONENT_ID: "participant_2_MDS_COMPONENT"
+          EDC_HOSTNAME: "edc-participant-2"
+          WEB_HTTP_PATH: "/api"
+          WEB_HTTP_PORT: "8181"
+          WEB_HTTP_CONTROL_PATH: "/api/control"
+          WEB_HTTP_CONTROL_PORT: "8186"
+          WEB_HTTP_MANAGEMENT_PATH: "/api/management"
+          WEB_HTTP_MANAGEMENT_PORT: "8182"
+          WEB_HTTP_MANAGEMENT_AUTH_TYPE: "tokenbased"
+          WEB_HTTP_MANAGEMENT_AUTH_KEY: "${{ secrets.TEST_API_KEY }}"
+          WEB_HTTP_PROTOCOL_PATH: "/api/dsp"
+          WEB_HTTP_PROTOCOL_PORT: "8183"
+          WEB_HTTP_VERSION_PATH: "/api/version"
+          WEB_HTTP_VERSION_PORT: "8184"
+          WEB_HTTP_PUBLIC_PATH: "/public"
+          WEB_HTTP_PUBLIC_PORT: "8185"
+          EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: "transfer-proxy-token-signer-public-key"
+          EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: "transfer-proxy-token-signer-private-key"
+          EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "false"
 
     steps:
     - uses: actions/checkout@v4
@@ -19,7 +82,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 18
+        node-version: 24
 
     - name: Install dependencies
       run: yarn install --frozen-lockfile
@@ -32,9 +95,12 @@ jobs:
       with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.THINKIT_TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
     
     - name: Run Playwright tests
+      env:
+        CI: true
+        TEST_API_KEY: ${{ secrets.TEST_API_KEY }}
       run: yarn playwright test
     
     - uses: actions/upload-artifact@v4
