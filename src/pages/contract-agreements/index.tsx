@@ -99,7 +99,7 @@ export default function ContractAgreementsListPage() {
         }
       }
     )
-  }, [])
+  }, [push, query])
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
@@ -157,7 +157,7 @@ export default function ContractAgreementsListPage() {
             onClose={() => { closeSnackbar(key); }}
           />
       }));
-  }, [edcClient, enqueueSnackbar]);
+  }, [edcClient, connector, enqueueSnackbar, closeSnackbar, translator]);
 
   useEffect(() => {
     populateRetired();
