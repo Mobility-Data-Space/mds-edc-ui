@@ -11,3 +11,5 @@ export EDC_CURATOR_URL="https://think-it.io",
 export EDC_MAINTAINER_ORGANIZATION="Think-it GmbH",
 export EDC_MAINTAINER_URL="https://think-it.io",
 export MDS_DAPS_URL="https://daps.mobility-dataspace.eu"
+
+export TEST_API_KEY="TEST_API_KEY"
