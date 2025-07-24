@@ -1,5 +1,5 @@
 import { Participant } from "@/constants/dataspace";
-import { EdcConnectorClient, IdResponse, PolicyBuilder } from "@think-it-labs/edc-connector-client";
+import { EdcConnectorClient, IdResponse } from "@think-it-labs/edc-connector-client";
 import { randomUUID } from "node:crypto";
 
 function randomNumber(max: number): number {
