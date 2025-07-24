@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { DashboardPage } from './pages/dashboard-page';
-import { config } from "./utils/ui-config.ts";
+import { participantConfig as config } from "./utils/ui-config.ts";
 
 test.describe("Dashboard Tests", () => {
   let dashboardPage: DashboardPage;

@@ -1,4 +1,6 @@
 import { execSync } from 'child_process';
+import { seed } from './seed';
+import { participantConfig, counterPartyParticipantConfig } from './ui-config'
 
 const checkInitStatus = (serviceName: string): boolean => {
   try {
@@ -28,9 +30,43 @@ async function globalSetup() {
     console.log(`Service ${service} is ready.`);
   }
 
-  console.log('Seeding dataspace using seed_dataspace.sh...');
+  console.log('Seeding dataspace ...');
   try {
-    execSync(`./tests/utils/seed_dataspace.sh http://127.0.0.1:8182/api/management http://127.0.0.1:9182/api/management`, { stdio: 'inherit' });
+    const participant = {
+      id: participantConfig.EDC_ID || "",
+      name: participantConfig.EDC_NAME || "",
+      description: participantConfig.EDC_DESCRIPTION || "",
+      edcUrl: "",
+      managementUrl: "",
+      connectorManagementUrl: participantConfig.EDC_MANAGEMENT_URL || "",
+      defaultUrl: participantConfig.EDC_DEFAULT_URL || "",
+      protocolUrl: participantConfig.EDC_PROTOCOL_URL || "",
+      curatorName: participantConfig.EDC_CURATOR_ORGANIZATION || "",
+      curatorUrl: participantConfig.EDC_CURATOR_URL || "",
+      maintainerName: participantConfig.EDC_MAINTAINER_ORGANIZATION || "",
+      maintainerUrl: participantConfig.EDC_MAINTAINER_URL || "",
+      dapsUrl: participantConfig.MDS_DAPS_URL || ""
+    };
+
+    const counterPartyParticipant = {
+      id: counterPartyParticipantConfig.EDC_ID || "",
+      name: counterPartyParticipantConfig.EDC_NAME || "",
+      description: counterPartyParticipantConfig.EDC_DESCRIPTION || "",
+      edcUrl: "",
+      managementUrl: "",
+      connectorManagementUrl: counterPartyParticipantConfig.EDC_MANAGEMENT_URL || "",
+      defaultUrl: counterPartyParticipantConfig.EDC_DEFAULT_URL || "",
+      protocolUrl: counterPartyParticipantConfig.EDC_PROTOCOL_URL || "",
+      curatorName: counterPartyParticipantConfig.EDC_CURATOR_ORGANIZATION || "",
+      curatorUrl: counterPartyParticipantConfig.EDC_CURATOR_URL || "",
+      maintainerName: counterPartyParticipantConfig.EDC_MAINTAINER_ORGANIZATION || "",
+      maintainerUrl: counterPartyParticipantConfig.EDC_MAINTAINER_URL || "",
+      dapsUrl: counterPartyParticipantConfig.MDS_DAPS_URL || ""
+    };
+
+    await seed(participant);
+    await seed(counterPartyParticipant);
+    
     console.log('Dataspace seeding completed successfully.');
   } catch (error) {
     console.error('Error during dataspace seeding:', (error as Error).message);
