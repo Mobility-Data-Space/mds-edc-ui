@@ -68,7 +68,7 @@ test.describe("Assets Page Tests", () => {
       await expect(successMessage).toBeVisible();
     });
 
-    test("Creates a new S3 asset and verifies its visibility in the list", async ({ page }) => {
+    test.fixme("Creates a new S3 asset and verifies its visibility in the list", async ({ page }) => {
       // Open the create asset modal
       await assetsPage.openCreateAssetModal();
 

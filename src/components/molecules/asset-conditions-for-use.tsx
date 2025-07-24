@@ -4,7 +4,7 @@ import {FormHelperText, Link} from "@mui/material";
 import {Input} from "@/components/atoms/input";
 
 import {T} from "@/i18n";
-import {ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE} from "@/schema/asset";
+import {ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE} from "@/jsonld/asset";
 import {AssetProperties} from "@/utilities/asset";
 
 export interface AssetConditionsForUseProps {

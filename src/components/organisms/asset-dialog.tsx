@@ -4,7 +4,7 @@ import { DeleteDialog } from "@/components/molecules/delete-dialog";
 import { Snackbar } from "@/components/molecules/snackbar";
 import AssetDetails from "@/components/organisms/asset-details";
 import { T } from "@/i18n";
-import { ASSET_TITLE } from "@/schema/asset";
+import { ASSET_TITLE } from "@/jsonld/asset";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton} from "@mui/material";
 import { Asset } from "@think-it-labs/edc-connector-client";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";

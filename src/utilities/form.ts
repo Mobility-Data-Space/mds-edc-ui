@@ -1,4 +1,4 @@
-import { ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE } from "@/schema/asset";
+import { ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE } from "@/jsonld/asset";
 
 export const removeEmptyFields = (object: { [key: string]: any }) => {
   const newFormData: { [key: string]: any } = {};

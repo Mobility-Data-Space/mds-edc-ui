@@ -7,7 +7,7 @@ import {KeyValuePairInputList} from "@/components/molecules/key-value-pair-input
 
 import {T} from "@/i18n";
 import {AssetProperties} from "@/utilities/asset";
-import { ASSET_ADVANCED_INFO_GEO_LOCATION, ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS } from "@/schema/asset";
+import { ASSET_ADVANCED_INFO_GEO_LOCATION, ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS } from "@/jsonld/asset";
 
 export interface AssetNutsLocationsProps {
   translator: (key: string) => string;

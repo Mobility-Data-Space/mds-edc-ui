@@ -26,10 +26,11 @@ import { AssetFormDataAddressStep } from "@/components/organisms/asset-form-data
 import PolicyExpression from "@/components/organisms/policy-expression";
 import SideDrawer from "@/components/organisms/side-drawer";
 import { PUBLISH_MODE_DO_NOT_PUBLISH, PUBLISH_MODE_PUBLISH_RESTRICTED, PUBLISH_MODE_PUBLISH_UNRESTRICTED, PUBLISH_MODES } from "@/constants/data-address-types";
+import { proxyConnectorManagement } from "@/constants/proxy";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
-import { ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_TITLE, ASSET_VERSION } from "@/schema/asset";
-import { UNRESTRICTED_POLICY_ID } from "@/schema/policy";
+import { ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_TITLE, ASSET_VERSION } from "@/jsonld/asset";
+import { UNRESTRICTED_POLICY_ID } from "@/jsonld/policy";
 import { AssetProperties, defaultCreateAssetFormData, fromAssetForm, generateId, validateDataAddress } from "@/utilities/asset";
 import { defaultCreateContractDefinitionFormData, fromContractDefinitionForm, MdsContractDefinitionInput } from "@/utilities/contract-definition";
 import { idSelector } from "@/utilities/data-offer.ts";
@@ -67,7 +68,7 @@ export default function CreateDataOfferPage() {
   const [errors, setErrors] = useState({ properties: {}, advancedInfo: {}, dataAddress: {} });
 
   const [existingIds, setExistingIds] = useState<string[]>([]);
-  const client = useEdcConnectorClient({ management: connector.managementUrl });
+  const client = useEdcConnectorClient({ management: proxyConnectorManagement });
   useEffect(() => {
     client.management.assets.queryAll({ offset: 0 })
       .then(assets => setExistingIds(assets.map(asset => asset["@id"])));

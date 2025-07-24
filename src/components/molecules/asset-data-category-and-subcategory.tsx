@@ -3,7 +3,7 @@ import { MuiSelect } from "@/components/atoms/mui-select";
 
 import { DATA_CATEGORY_SELECT_DATA, DATA_SUBCATEGORIES_DATA, TYPE_DATA_CATEGORY } from "@/constants/data-category";
 import { T } from "@/i18n";
-import { ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME } from "@/schema/asset";
+import { ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME } from "@/jsonld/asset";
 import { AssetProperties } from "@/utilities/asset";
 
 export interface AssetDataCategoryAndSubcategoryProps {

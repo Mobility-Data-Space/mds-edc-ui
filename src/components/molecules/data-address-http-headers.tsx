@@ -6,7 +6,7 @@ import {InfoOutlined} from "@mui/icons-material";
 import {KeyValuePairInputList} from "@/components/molecules/key-value-pair-input-list";
 
 import {T} from "@/i18n";
-import {ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS} from "@/schema/asset";
+import {ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS} from "@/jsonld/asset";
 import {AssetProperties} from "@/utilities/asset";
 import {DataAddress} from "@think-it-labs/edc-connector-client/dist/src/entities/data-address";
 

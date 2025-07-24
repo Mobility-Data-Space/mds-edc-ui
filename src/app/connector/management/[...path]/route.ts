@@ -1,9 +1,13 @@
-import { connectorApiKey, managementPrefix, participantConfig } from "@/utilities/env";
+import { proxyConnectorManagement } from "@/constants/proxy";
 import { NextRequest, NextResponse } from "next/server";
 
+function connectorApiKey() {
+  return process.env.EDC_MANAGEMENT_API_KEY || "";
+}
+
 const buildUrl = (req: NextRequest): string => {
-  const { connectorManagementUrl } = participantConfig();
-  return connectorManagementUrl + req.nextUrl.pathname.replace(managementPrefix, "");
+  const connectorManagementUrl = process.env.EDC_MANAGEMENT_URL || "" ;
+  return connectorManagementUrl + req.nextUrl.pathname.replace(proxyConnectorManagement, "");
 };
 
 const fetchProxy = async (url: string, options: RequestInit): Promise<Response> => {

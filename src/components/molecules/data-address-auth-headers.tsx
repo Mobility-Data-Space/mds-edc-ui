@@ -9,7 +9,7 @@ import {T} from "@/i18n";
 import {
   ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS,
   ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_SELECT_OPTIONS
-} from "@/schema/asset";
+} from "@/jsonld/asset";
 import {AssetProperties} from "@/utilities/asset";
 import {DataAddress} from "@think-it-labs/edc-connector-client/dist/src/entities/data-address";
 import {MuiSelect} from "@/components/atoms/mui-select.tsx";
