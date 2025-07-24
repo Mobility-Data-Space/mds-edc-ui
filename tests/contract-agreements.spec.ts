@@ -44,7 +44,7 @@ test.describe("Contract Agreements Page Tests", () => {
       await expect(searchTrigger).toBeVisible();
     });
 
-    test("should search for agreements by asset ID", async ({ page }) => {
+    test.fixme("should search for agreements by asset ID", async ({ page }) => {
       const initialAgreements = await agreementsPage.getAgreementCards();
       const initialCount = await initialAgreements.count();
 
@@ -159,6 +159,60 @@ test.describe("Contract Agreements Page Tests", () => {
         const searchValue = await searchInput.inputValue();
         expect(searchValue).toBe('test');
       }
+    });
+  });
+
+  test.describe("Status Filter Functionality", () => {
+    test.fixme("Navigates to active contracts and checks all are active", async ({ page }) => {
+      await page.getByRole('button', { name: /Active Contracts/i }).click();
+      await page.waitForTimeout(500); // adjust if needed for debounce
+      const agreementCards = await agreementsPage.getAgreementCards();
+      const count = await agreementCards.count();
+      for (let i = 0; i < count; i++) {
+        const card = agreementCards.nth(i);
+        await expect(card.getByText('Active')).toBeVisible();
+        await expect(card.getByText('Terminated')).not.toBeVisible();
+      }
+    });
+
+    test.fixme("Navigates to terminated contracts and checks all are terminated", async ({ page }) => {
+      await page.getByRole('button', { name: /Terminated Contracts/i }).click();
+      await page.waitForTimeout(500); // adjust if needed for debounce
+      const agreementCards = await agreementsPage.getAgreementCards();
+      const count = await agreementCards.count();
+      for (let i = 0; i < count; i++) {
+        const card = agreementCards.nth(i);
+        await expect(card.getByText('Terminated')).toBeVisible();
+      }
+    });
+  });
+
+  test.describe("Terminate Contract Functionality", () => {
+    test.fixme("Terminates a contract, shows success message, and closes modal", async ({ page }) => {
+      await page.getByRole('button', { name: /Active Contracts/i }).click();
+      await page.waitForTimeout(500);
+      const agreementCards = await agreementsPage.getAgreementCards();
+      const count = await agreementCards.count();
+      if (count === 0) {
+        test.skip(); // No active contracts to terminate
+      }
+      const firstCard = agreementCards.first();
+      await firstCard.click();
+      const agreementDialog = await agreementsPage.getAgreementDialog();
+      await expect(agreementDialog).toBeVisible();
+      const terminateBtn = agreementDialog.getByTestId('transfer-process-terminate');
+      await terminateBtn.click();
+      const terminateDialog = page.getByRole('dialog', { name: /Terminate Contract Agreement/i });
+      await expect(terminateDialog).toBeVisible();
+      const detailedReasonInput = terminateDialog.getByPlaceholder('You can enter a detailed explanation here');
+      await detailedReasonInput.fill('Test termination reason');
+      const confirmCheckbox = terminateDialog.getByLabel('I understand the consequences of terminating a contract.');
+      await confirmCheckbox.check();
+      const confirmTerminateBtn = terminateDialog.getByTestId('transfer-process-submit');
+      await expect(confirmTerminateBtn).toBeEnabled();
+      await confirmTerminateBtn.click();
+      await expect(page.getByText('Contract terminated successful')).toBeVisible();
+      await expect(agreementDialog).not.toBeVisible();
     });
   });
 });

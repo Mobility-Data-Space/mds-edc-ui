@@ -16,6 +16,11 @@ export function participantConfig() {
     connectorManagementUrl: process.env.EDC_MANAGEMENT_URL || "",
     defaultUrl: process.env.EDC_DEFAULT_URL || "",
     protocolUrl: process.env.EDC_PROTOCOL_URL || "",
+    curatorName: process.env.EDC_CURATOR_ORGANIZATION || "",
+    curatorUrl: process.env.EDC_CURATOR_URL || "",
+    maintainerName: process.env.EDC_MAINTAINER_ORGANIZATION || "",
+    maintainerUrl: process.env.EDC_MAINTAINER_URL || "",
+    dapsUrl: process.env.MDS_DAPS_URL || ""
   };
 }
 

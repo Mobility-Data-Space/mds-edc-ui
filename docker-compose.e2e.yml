@@ -1,6 +1,6 @@
 services:
   edc-1:
-    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:1.0.0-rc.3
+    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:1.0.0-rc.7
     environment:
       EDC_PARTICIPANT_ID: "participant_1"
       EDC_COMPONENT_ID: "participant_1_MDS_COMPONENT"
@@ -11,6 +11,8 @@ services:
       WEB_HTTP_CONTROL_PORT: "8186"
       WEB_HTTP_MANAGEMENT_PATH: "/api/management"
       WEB_HTTP_MANAGEMENT_PORT: "8182"
+      WEB_HTTP_MANAGEMENT_AUTH_TYPE: "tokenbased"
+      WEB_HTTP_MANAGEMENT_AUTH_KEY: "${TEST_API_KEY}"
       WEB_HTTP_PROTOCOL_PATH: "/api/dsp"
       WEB_HTTP_PROTOCOL_PORT: "8183"
       WEB_HTTP_VERSION_PATH: "/api/version"
@@ -26,6 +28,8 @@ services:
       EDC_WEB_REST_CORS_ENABLED: true
       EDC_WEB_REST_CORS_HEADERS: origin,content-type,accept,authorization,X-Api-Key
       EDC_WEB_REST_CORS_ORIGINS: '*'
+
+      EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "false"
     ports:
       - "8181:8181"  # API
       - "8186:8186"  # Control
@@ -44,7 +48,7 @@ services:
       start_period: 20s
 
   edc-2:
-    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:1.0.0-rc.3
+    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:1.0.0-rc.7
     environment:
       EDC_PARTICIPANT_ID: "participant_2"
       EDC_COMPONENT_ID: "participant_2_MDS_COMPONENT"
@@ -55,6 +59,8 @@ services:
       WEB_HTTP_CONTROL_PORT: "8186"
       WEB_HTTP_MANAGEMENT_PATH: "/api/management"
       WEB_HTTP_MANAGEMENT_PORT: "8182"
+      WEB_HTTP_MANAGEMENT_AUTH_TYPE: "tokenbased"
+      WEB_HTTP_MANAGEMENT_AUTH_KEY: "${TEST_API_KEY}"
       WEB_HTTP_PROTOCOL_PATH: "/api/dsp"
       WEB_HTTP_PROTOCOL_PORT: "8183"
       WEB_HTTP_VERSION_PATH: "/api/version"
@@ -63,6 +69,8 @@ services:
       WEB_HTTP_PUBLIC_PORT: "8185"
       EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: "transfer-proxy-token-signer-public-key"
       EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: "transfer-proxy-token-signer-private-key"
+
+      EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "false"
     ports:
       - "9181:8181"  # API
       - "9186:8186"  # Control
@@ -79,12 +87,3 @@ services:
       timeout: 3s
       retries: 3
       start_period: 20s
-
-  seed_dataspace:
-    image: ghcr.io/mobility-data-space/mds-catalog/seed-dataspace-dev:latest
-    command: [ "/bin/sh", "-c" , "python3 /seed_dataspace.py http://edc-1:8182/api/management http://edc-2:8182/api/management"]
-    depends_on:
-      edc-1:
-        condition: service_healthy
-      edc-2:
-        condition: service_healthy
