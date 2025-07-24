@@ -17,6 +17,7 @@ import {AssetTemporalCoverage} from "@/components/molecules/asset-temporal-cover
 
 import {T} from "@/i18n";
 import {
+  ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA,
   ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION,
 } from "@/schema/asset";
 import {AssetProperties} from "@/utilities/asset";
@@ -136,11 +137,17 @@ export function AssetFormAdvancedInfoStepContent({ translator, formData, onChang
           placeholder={"..."}
           multiline
           rows={6}
-          value={formData[ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION]}
+          value={formData[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA][ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION]}
           error={errors[ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION]}
           onChange={(event) => onChange({
             ...formData,
-            [ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION]: event.target.value
+            [ASSET_ADVANCED_INFO_DATA_MODEL]: {
+              ...formData[ASSET_ADVANCED_INFO_DATA_MODEL],
+              [ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA]: {
+                ...formData[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA],
+                [ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION]: event.target.value
+              }
+            }
           })}
         />
         <FormHelperText className="flex flex-row gap-x-1">

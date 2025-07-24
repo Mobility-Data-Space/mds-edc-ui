@@ -1,10 +1,9 @@
 import React, {useEffect, useRef, useState} from "react";
 import { enqueueSnackbar } from "notistack";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, Typography} from "@mui/material";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography} from "@mui/material";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 import { ContractDefinitionFormWrapper } from "@think-it-labs/edc-connector-ui/contract-definition-form-wrapper";
-import { useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
-import { T, useTranslator } from "@/i18n";
+import { T } from "@/i18n";
 import { fromContractDefinitionForm, MdsContractDefinitionInput } from "@/utilities/contract-definition";
 import { defaultCreateContractDefinitionFormData } from "@/utilities/contract-definition";
 import {MuiSelect} from "@/components/atoms/mui-select";

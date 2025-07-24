@@ -43,7 +43,7 @@ export function AssetReferenceFileUrls({ translator, formData, onChange, errors 
       valueOnly
       onChange={(value) => onChange(
         {
-          ...formData, 
+          ...formData,
           [ASSET_ADVANCED_INFO_DATA_MODEL]:{
             ...formData[ASSET_ADVANCED_INFO_DATA_MODEL],
             [ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA]: {

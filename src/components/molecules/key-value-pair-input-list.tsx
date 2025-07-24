@@ -1,6 +1,7 @@
 import {TextFieldProps} from "@mui/material/TextField";
 import {Button, FormHelperText} from "@mui/material";
 import {KeyValuePairInput, Tag} from "@/components/atoms/key-value-pair-input";
+import {uid} from "@/utilities/utilities.ts";
 
 export type KeyValuePairInputListProps =  Omit<TextFieldProps, "onChange"> & {
   addText?: string;
@@ -18,10 +19,6 @@ export type KeyValuePairInputListProps =  Omit<TextFieldProps, "onChange"> & {
 };
 
 type TagsList = { input: Tag; valid: boolean; id: string }[];
-
-const uid = function(){
-  return Date.now().toString(36) + Math.random().toString(36);
-}
 
 function tagKeyIsUnique(tagsList: TagsList, key: string, index: number) {
   return !tagsList.find(
@@ -83,7 +80,7 @@ export function KeyValuePairInputList({
 }: KeyValuePairInputListProps) {
   return (
     <div className="w-full flex flex-col gap-y-3">
-      {value.map((tagInput, index) => (
+      {(value || []).map((tagInput, index) => (
         <KeyValuePairInput
           keyLabel={keyLabel}
           keyPlaceholder={keyPlaceholder}

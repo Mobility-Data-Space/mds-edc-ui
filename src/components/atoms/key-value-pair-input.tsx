@@ -68,7 +68,7 @@ export function KeyValuePairInput({
           required={valueOnly}
           label={valueLabel}
           placeholder={valuePlaceholder}
-          value={value.value}
+          value={value?.value}
           onChange={(event) => {
             onChange({ input: { value: event.target.value }, valid: !! value.value })
           }}
