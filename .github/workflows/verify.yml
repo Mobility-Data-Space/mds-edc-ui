@@ -23,7 +23,31 @@ jobs:
           - 8183:8183
           - 8184:8184
           - 8185:8185
-        options: --health-cmd="curl -f http://0.0.0.0:8181/api/check/liveness || exit 1" --health-interval=10s --health-retries=3
+        options: >-
+          --health-cmd="curl -f http://0.0.0.0:8181/api/check/liveness || exit 1"
+          --health-interval=10s
+          --health-retries=3
+        env:
+          EDC_PARTICIPANT_ID: "participant_1"
+          EDC_COMPONENT_ID: "participant_1_MDS_COMPONENT"
+          EDC_HOSTNAME: "edc-participant-1"
+          WEB_HTTP_PATH: "/api"
+          WEB_HTTP_PORT: "8181"
+          WEB_HTTP_CONTROL_PATH: "/api/control"
+          WEB_HTTP_CONTROL_PORT: "8186"
+          WEB_HTTP_MANAGEMENT_PATH: "/api/management"
+          WEB_HTTP_MANAGEMENT_PORT: "8182"
+          WEB_HTTP_MANAGEMENT_AUTH_TYPE: "tokenbased"
+          WEB_HTTP_MANAGEMENT_AUTH_KEY: "my-test-api-key"
+          WEB_HTTP_PROTOCOL_PATH: "/api/dsp"
+          WEB_HTTP_PROTOCOL_PORT: "8183"
+          WEB_HTTP_VERSION_PATH: "/api/version"
+          WEB_HTTP_VERSION_PORT: "8184"
+          WEB_HTTP_PUBLIC_PATH: "/public"
+          WEB_HTTP_PUBLIC_PORT: "8185"
+          EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: "transfer-proxy-token-signer-public-key"
+          EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: "transfer-proxy-token-signer-private-key"
+          EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "false"
       edc-2:
         image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:1.0.0-rc.7
         ports:
@@ -33,7 +57,31 @@ jobs:
           - 9183:9183
           - 9184:9184
           - 9185:9185
-        options: --health-cmd="curl -f http://0.0.0.0:8181/api/check/liveness || exit 1" --health-interval=10s --health-retries=3
+        options: >-
+          --health-cmd="curl -f http://0.0.0.0:8181/api/check/liveness || exit 1"
+          --health-interval=10s
+          --health-retries=3
+        env:
+          EDC_PARTICIPANT_ID: "participant_2"
+          EDC_COMPONENT_ID: "participant_2_MDS_COMPONENT"
+          EDC_HOSTNAME: "edc-participant-2"
+          WEB_HTTP_PATH: "/api"
+          WEB_HTTP_PORT: "8181"
+          WEB_HTTP_CONTROL_PATH: "/api/control"
+          WEB_HTTP_CONTROL_PORT: "8186"
+          WEB_HTTP_MANAGEMENT_PATH: "/api/management"
+          WEB_HTTP_MANAGEMENT_PORT: "8182"
+          WEB_HTTP_MANAGEMENT_AUTH_TYPE: "tokenbased"
+          WEB_HTTP_MANAGEMENT_AUTH_KEY: "my-test-api-key"
+          WEB_HTTP_PROTOCOL_PATH: "/api/dsp"
+          WEB_HTTP_PROTOCOL_PORT: "8183"
+          WEB_HTTP_VERSION_PATH: "/api/version"
+          WEB_HTTP_VERSION_PORT: "8184"
+          WEB_HTTP_PUBLIC_PATH: "/public"
+          WEB_HTTP_PUBLIC_PORT: "8185"
+          EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: "transfer-proxy-token-signer-public-key"
+          EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: "transfer-proxy-token-signer-private-key"
+          EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "false"
 
     steps:
     - uses: actions/checkout@v4
