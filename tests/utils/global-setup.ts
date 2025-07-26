@@ -1,5 +1,5 @@
 import { execSync } from 'child_process';
-import { seed } from './seed';
+import { initiate_transfers, publish_offers } from './seed';
 import { participantConfig, counterPartyParticipantConfig } from './tests-config'
 
 const checkInitStatus = (serviceName: string): boolean => {
@@ -38,6 +38,10 @@ async function globalSetup() {
 
   console.log('Seeding dataspace ...');
   try {
+
+    const participantProtocolUrl = "http://" + services[0] + ":8183/api/dsp" ;
+    const couterPartyparticipantProtocolUrl = "http://" + services[1] + ":8183/api/dsp" ;
+
     const participant = {
       id: participantConfig.EDC_ID || "",
       name: participantConfig.EDC_NAME || "",
@@ -45,7 +49,7 @@ async function globalSetup() {
       publicUrl: participantConfig.EDC_PUBLIC_URL || "",
       managementUrl: participantConfig.EDC_MANAGEMENT_URL || "",
       defaultUrl: participantConfig.EDC_DEFAULT_URL || "",
-      protocolUrl: participantConfig.EDC_PROTOCOL_URL || "",
+      protocolUrl: participantProtocolUrl,
       curatorName: participantConfig.EDC_CURATOR_ORGANIZATION || "",
       curatorUrl: participantConfig.EDC_CURATOR_URL || "",
       maintainerName: participantConfig.EDC_MAINTAINER_ORGANIZATION || "",
@@ -60,7 +64,7 @@ async function globalSetup() {
       publicUrl: counterPartyParticipantConfig.EDC_PUBLIC_URL || "",
       managementUrl: counterPartyParticipantConfig.EDC_MANAGEMENT_URL || "",
       defaultUrl: counterPartyParticipantConfig.EDC_DEFAULT_URL || "",
-      protocolUrl: counterPartyParticipantConfig.EDC_PROTOCOL_URL || "",
+      protocolUrl: couterPartyparticipantProtocolUrl,
       curatorName: counterPartyParticipantConfig.EDC_CURATOR_ORGANIZATION || "",
       curatorUrl: counterPartyParticipantConfig.EDC_CURATOR_URL || "",
       maintainerName: counterPartyParticipantConfig.EDC_MAINTAINER_ORGANIZATION || "",
@@ -68,8 +72,10 @@ async function globalSetup() {
       dapsUrl: counterPartyParticipantConfig.MDS_DAPS_URL || ""
     };
 
-    await seed(participant);
-    await seed(counterPartyParticipant);
+    await publish_offers(participant);
+    await publish_offers(counterPartyParticipant);
+
+    await initiate_transfers(participant, counterPartyParticipant);
     
     console.log('Dataspace seeding completed successfully.');
   } catch (error) {
