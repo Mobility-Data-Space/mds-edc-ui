@@ -20,9 +20,10 @@ export interface TransferFormDialogProps {
   onSuccess?: () => void,
   translator: (key: string) => string,
   contractAgreementId: ContractAgreement,
+  counterPartyAddress: string
 }
 
-export function TransferFormDialog({ contractAgreementId, open, onClose, onSuccess = () => {}, translator }: TransferFormDialogProps): JSX.Element {
+export function TransferFormDialog({ contractAgreementId, open, onClose, onSuccess = () => {}, translator, counterPartyAddress }: TransferFormDialogProps): JSX.Element {
   const [formData, setFormData] = useState<DataAddress>(defaultHttpDestinationDataAddress);
 
   const [errors, setErrors] = useState({});
@@ -33,12 +34,9 @@ export function TransferFormDialog({ contractAgreementId, open, onClose, onSucce
 
   const onSubmit = () => {
     const agreement: Partial<ContractAgreement> = {
-      assetId: contractAgreement?.assetId[0] && contractAgreement?.assetId[0]["@value"],
-      providerId: contractAgreement?.providerId[0] && contractAgreement?.providerId[0]["@value"],
-      consumerId: contractAgreement?.consumerId[0] && contractAgreement?.consumerId[0]["@value"],
-      contractId: contractAgreement["@id"],
+      contractId: contractAgreement["@id"]
     };
-    const transfer = createTransferProcessRequest(agreement as ContractAgreement, formData, connector.protocolUrl);
+    const transfer = createTransferProcessRequest(agreement as ContractAgreement, formData, counterPartyAddress);
     edcClient.management.transferProcesses.initiate(transfer)
       .then(() => {
         enqueueSnackbar(translator("transferProcesses.new.success"));

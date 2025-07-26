@@ -20,7 +20,7 @@ export const remoteTypes = [
 export interface OnRequestDataAddress extends BaseDataAddress {
   type: DataAddressTypes.MDSOnRequestOffer,
   email?: string,
-  preferred_email_subject?: string
+  preferred_subject?: string
 }
 
 export interface AmazonS3DataAddress extends BaseDataAddress {

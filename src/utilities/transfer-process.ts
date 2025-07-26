@@ -8,18 +8,23 @@ export const TRANSFER_TYPE_PULL = "-PULL" ;
 export const TRANSFER_TYPE_PUSH = "-PUSH" ;
 
 export const createTransferProcessRequest = (agreement: ContractAgreement, dataDestination: DataAddress, counterPartyAddress: string) : TransferProcessInput => {
-  const typeIsHttpData = dataDestination.type === DataAddressTypes.HttpData;
-  const transferType = typeIsHttpData ?
-    DataAddressTypes.HttpData + (dataDestination.isPull ? TRANSFER_TYPE_PULL : TRANSFER_TYPE_PUSH) :
-    dataDestination.type;
+  let transferProcess: TransferProcessInput = {} as TransferProcessInput;
 
-  return {
-    assetId: agreement.assetId,
-    counterPartyAddress: counterPartyAddress,
-    contractId: agreement.contractId,
-    dataDestination: typeIsHttpData && dataDestination.isPull ? { type: DataAddressTypes.HttpData } : transformDataAddress(dataDestination),
-    transferType,
-  };
+  const transferType = dataDestination.type + (dataDestination.isPull ? TRANSFER_TYPE_PULL : TRANSFER_TYPE_PUSH) ;
+
+  transferProcess.counterPartyAddress = counterPartyAddress,
+  transferProcess.contractId = agreement.contractId,
+  transferProcess.transferType = transferType
+
+  if (!dataDestination.isPull){
+    transferProcess.dataDestination = transformDataAddress(dataDestination)
+  }
+
+  if (dataDestination.type === DataAddressTypes.CustomJson) {
+    transferProcess.transferType = DataAddressTypes.HttpData + TRANSFER_TYPE_PUSH
+  }
+
+  return transferProcess;
 }
 
 export const transferProcessStateColor = (state: string) => {
