@@ -20,7 +20,7 @@ export function AssetFormDataAddressAzure({ formData, errors, onChange, translat
           htmlFor="data-address-container"
           className="inline-block text-sm text-black font-medium mb-2"
         >
-          <T string="assets.new.fieldBucketName"/> *
+          <T string="assets.new.fieldContainer"/> *
         </label>
         <Input
           name="container"
@@ -38,15 +38,15 @@ export function AssetFormDataAddressAzure({ formData, errors, onChange, translat
       </div>
       <div>
         <label
-          htmlFor="data-region-account"
+          htmlFor="data-address-account"
           className="inline-block text-sm text-black font-medium mb-2"
         >
           <T string="assets.new.fieldAccount"/> *
         </label>
         <Input
-          name="region"
-          id="data-region-account"
-          key="data-region-account"
+          name="account"
+          id="data-address-account"
+          key="data-address-account"
           label={translator("assets.new.fieldAccount")}
           placeholder={translator("assets.new.fieldAccount")}
           required
@@ -122,15 +122,15 @@ export function AssetFormDataAddressAzure({ formData, errors, onChange, translat
 
       <div>
         <label
-          htmlFor="data-keyname-description"
+          htmlFor="data-address-keyname"
           className="inline-block text-sm text-black font-medium mb-2"
         >
           <T string="assets.new.fieldKeyname"/> *
         </label>
         <Input
           name="keyname"
-          id="data-keyname-description"
-          key="data-keyname-description"
+          id="data-address-keyname"
+          key="data-address-keyname"
           label={translator("assets.new.fieldKeyname")}
           placeholder={translator("assets.new.fieldKeyname")}
           helperText={typeof errors.keyname === "string" ? errors.keyname : ""}

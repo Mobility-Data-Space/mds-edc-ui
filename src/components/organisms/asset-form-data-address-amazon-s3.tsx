@@ -17,27 +17,6 @@ export function AssetFormDataAddressAmazonS3({ formData, errors, onChange, trans
     <>
       <div>
         <label
-          htmlFor="data-address-bucketName"
-          className="inline-block text-sm text-black font-medium mb-2"
-        >
-          <T string="assets.new.fieldBucketName"/> *
-        </label>
-        <Input
-          name="bucketName"
-          id="data-address-bucketName"
-          key="data-address-bucketName"
-          label={translator("assets.new.fieldBucketName")}
-          placeholder={translator("assets.new.fieldBucketName")}
-          required
-          helperText={typeof errors.bucketName === "string" ? errors.bucketName : ""}
-          classes={{ textField: { '& p':{ color: theme.palette.error.main } }} as any}
-          error={errors.bucketName}
-          value={formData.bucketName}
-          onChange={(event) => onChange({ ...formData, bucketName: event.target.value })}
-        />
-      </div>
-      <div>
-        <label
           htmlFor="data-region-fieldRegion"
           className="inline-block text-sm text-black font-medium mb-2"
         >
@@ -59,22 +38,23 @@ export function AssetFormDataAddressAmazonS3({ formData, errors, onChange, trans
       </div>
       <div>
         <label
-          htmlFor="data-keyname-Keyname"
+          htmlFor="data-address-bucketName"
           className="inline-block text-sm text-black font-medium mb-2"
         >
-          <T string="assets.new.fieldKeyname"/>
+          <T string="assets.new.fieldBucketName"/> *
         </label>
         <Input
-          name="keyname"
-          id="data-keyname-Keyname"
-          key="data-keyname-Keyname"
-          label={translator("assets.new.fieldKeyname")}
-          placeholder={translator("assets.new.fieldKeyname")}
-          helperText={typeof errors.keyname === "string" ? errors.keyname : ""}
+          name="bucketName"
+          id="data-address-bucketName"
+          key="data-address-bucketName"
+          label={translator("assets.new.fieldBucketName")}
+          placeholder={translator("assets.new.fieldBucketName")}
+          required
+          helperText={typeof errors.bucketName === "string" ? errors.bucketName : ""}
           classes={{ textField: { '& p':{ color: theme.palette.error.main } }} as any}
-          error={errors.keyname}
-          value={formData.keyname}
-          onChange={(event) => onChange({ ...formData, keyname: event.target.value })}
+          error={errors.bucketName}
+          value={formData.bucketName}
+          onChange={(event) => onChange({ ...formData, bucketName: event.target.value })}
         />
       </div>
       <div>
@@ -83,7 +63,7 @@ export function AssetFormDataAddressAmazonS3({ formData, errors, onChange, trans
           className="inline-block text-sm text-black font-medium mb-2"
         >
           <T string="assets.new.fieldObjectName"/>
-          {isDestination || formData.objectPrefix ? "" : " *"}
+          {!isDestination && !formData.objectPrefix ? " *" : ""}
         </label>
         <Input
           name="objectName"
@@ -91,7 +71,7 @@ export function AssetFormDataAddressAmazonS3({ formData, errors, onChange, trans
           key="data-address-objectName"
           label={translator("assets.new.fieldObjectName")}
           placeholder={translator("assets.new.fieldObjectName")}
-          required={! isDestination && !formData.objectPrefix}
+          required={!isDestination && !formData.objectPrefix}
           helperText={typeof errors.objectName === "string" ? errors.objectName : ""}
           classes={{ textField: { '& p':{ color: theme.palette.error.main } }} as any}
           error={errors.objectName}
@@ -99,7 +79,31 @@ export function AssetFormDataAddressAmazonS3({ formData, errors, onChange, trans
           onChange={(event) => onChange({ ...formData, objectName: event.target.value })}
         />
       </div>
-      {isDestination ?
+      {!isDestination && (
+        <div>
+          <label
+            htmlFor="data-address-objectPrefix"
+            className="inline-block text-sm text-black font-medium mb-2"
+          >
+            <T string="assets.new.fieldObjectPrefix"/>
+            {!formData.objectName ? " *" : ""}
+          </label>
+          <Input
+            name="objectPrefix"
+            id="data-address-objectPrefix"
+            key="data-address-objectPrefix"
+            label={translator("assets.new.fieldObjectPrefix")}
+            placeholder={translator("assets.new.fieldObjectPrefix")}
+            required={!formData.objectName}
+            helperText={typeof errors.objectPrefix === "string" ? errors.objectPrefix : ""}
+            classes={{ textField: { '& p':{ color: theme.palette.error.main } }} as any}
+            error={errors.objectPrefix}
+            value={formData.objectPrefix}
+            onChange={(event) => onChange({ ...formData, objectPrefix: event.target.value })}
+          />
+        </div>
+      )}
+      {isDestination && (
         <div>
           <label
             htmlFor="data-address-folderName"
@@ -114,33 +118,33 @@ export function AssetFormDataAddressAmazonS3({ formData, errors, onChange, trans
             label={translator("assets.new.fieldFolderName")}
             placeholder={translator("assets.new.fieldFolderName")}
             helperText={typeof errors.folderName === "string" ? errors.folderName : ""}
-            classes={{textField: {'& p': {color: theme.palette.error.main}}} as any}
+            classes={{ textField: { '& p':{ color: theme.palette.error.main } }} as any}
             error={errors.folderName}
             value={formData.folderName}
-            onChange={(event) => onChange({...formData, folderName: event.target.value})}
-          />
-        </div> :
-        <div>
-          <label
-            htmlFor="data-address-objectPrefix"
-            className="inline-block text-sm text-black font-medium mb-2"
-          >
-            <T string="assets.new.fieldObjectPrefix"/>
-          </label>
-          <Input
-            name="objectPrefix"
-            id="data-address-objectPrefix"
-            key="data-address-objectPrefix"
-            label={translator("assets.new.fieldObjectPrefix")}
-            placeholder={translator("assets.new.fieldObjectPrefix")}
-            helperText={typeof errors.objectPrefix === "string" ? errors.objectPrefix : ""}
-            classes={{textField: {'& p': {color: theme.palette.error.main}}} as any}
-            error={errors.objectPrefix}
-            value={formData.objectPrefix}
-            onChange={(event) => onChange({...formData, objectPrefix: event.target.value})}
+            onChange={(event) => onChange({ ...formData, folderName: event.target.value })}
           />
         </div>
-      }
+      )}
+      <div>
+        <label
+          htmlFor="data-address-keyname"
+          className="inline-block text-sm text-black font-medium mb-2"
+        >
+          <T string="assets.new.fieldKeyname"/>
+        </label>
+        <Input
+          name="keyname"
+          id="data-address-keyname"
+          key="data-address-keyname"
+          label={translator("assets.new.fieldKeyname")}
+          placeholder={translator("assets.new.fieldKeyname")}
+          helperText={typeof errors.keyname === "string" ? errors.keyname : ""}
+          classes={{ textField: { '& p':{ color: theme.palette.error.main } }} as any}
+          error={errors.keyname}
+          value={formData.keyname}
+          onChange={(event) => onChange({ ...formData, keyname: event.target.value })}
+        />
+      </div>
     </>
   );
 }

@@ -38,6 +38,13 @@ export const fromAssetForm = (formData: AssetInput) => {
     }
   });
 
+  if(cleanFormDataObject.dataAddress.type == DataAddressTypes.MDSOnRequestOffer){
+    cleanFormDataObject.properties.additionalProperties = {}
+    cleanFormDataObject.properties.additionalProperties.onrequest = "true"
+    cleanFormDataObject.properties.additionalProperties.email = cleanFormDataObject.dataAddress.email
+    cleanFormDataObject.properties.additionalProperties.preferred_subject = cleanFormDataObject.dataAddress.preferred_subject
+  }
+
   return {
     "@type": "https://w3id.org/edc/v0.0.1/ns/Asset",
     "@id": cleanFormDataObject["@id"],
@@ -355,14 +362,14 @@ export const transformForId = (str?: string) => {
 
 export const validateDataAddress = (formDataToValidate: DataAddress, translator: (str: string) => string, isDestination = false) => {
   if (formDataToValidate.type === DataAddressTypes.CustomJson) {
-    if (! formDataToValidate.description) {
-      return { description: true };
+    if (! formDataToValidate.dataAddress) {
+      return { dataAddress: true };
     }
 
     try {
-      JSON.parse(formDataToValidate.description as string);
+      JSON.parse(formDataToValidate.dataAddress as string);
     } catch (e) {
-      return { description: translator("assets.new.mustBeValidJson") };
+      return { dataAddress: translator("assets.new.mustBeValidJson") };
     }
   }
 
@@ -387,8 +394,8 @@ export const validateDataAddress = (formDataToValidate: DataAddress, translator:
       errors.email = translator("assets.new.mustBeValidEmail");
     }
 
-    if (! formDataToValidate.preferred_email_subject) {
-      errors.preferred_email_subject = true;
+    if (! formDataToValidate.preferred_subject) {
+      errors.preferred_subject = true;
     }
 
     return errors;
@@ -411,7 +418,7 @@ export const validateDataAddress = (formDataToValidate: DataAddress, translator:
   }
 
   if (formDataToValidate.type === DataAddressTypes.AzureStorage) {
-    const requiredProperties = ["bucketName", "region", "keyname"];
+    const requiredProperties = ["account", "container", "keyname"];
     const errors : DataAddressErrors<AzureBlobDataAddress> = {}
     requiredProperties.forEach((propertyName) => {
       if (! formDataToValidate[propertyName]) {
@@ -428,7 +435,7 @@ export const validateDataAddress = (formDataToValidate: DataAddress, translator:
 export const transformDataAddress = (formDataToTransform: DataAddress) => {
   if (formDataToTransform.type === DataAddressTypes.CustomJson) {
     try {
-      return JSON.parse(formDataToTransform.description as string);
+      return JSON.parse(formDataToTransform.dataAddress as string);
     } catch (e) {
       return formDataToTransform;
     }
@@ -453,6 +460,7 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
       proxyQueryParams: formDataToTransform?.proxyQueryParams,
       proxyMethod: formDataToTransform?.proxyMethod,
       contentType: formDataToTransform?.contentType,
+      queryParams: formDataToTransform?.queryParams,
       headers,
     });
   }
@@ -461,7 +469,7 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
     return {
       type: DataAddressTypes.MDSOnRequestOffer,
       email: formDataToTransform.email,
-      preferred_email_subject: formDataToTransform.preferred_email_subject,
+      preferred_subject: formDataToTransform.preferred_subject,
     };
   }
 

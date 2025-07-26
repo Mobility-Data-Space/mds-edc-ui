@@ -67,7 +67,7 @@ export default function ContractAgreementDialog({ open, onClose, contractAgreeme
             ));
         });
     }
-  }, [edcClient, contractAgreement, participantId, connectorEndpoint, translator]);
+  }, [edcClient, contractAgreement, participantId, connectorEndpoint, translator, setCounterPartyAddress]);
 
   const populateTransferProcesses = useCallback(() => {
     if (!contractAgreement.id) {
@@ -94,6 +94,7 @@ export default function ContractAgreementDialog({ open, onClose, contractAgreeme
         onClose={() => setIsTransferModalOpen(false)}
         onSuccess={populateTransferProcesses}
         translator={translator}
+        counterPartyAddress={counterPartyAddress}
       />
       <ContractAgreementTerminateDialog
         contractAgreement={contractAgreement}
