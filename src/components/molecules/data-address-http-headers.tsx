@@ -33,13 +33,13 @@ export function DataAddressHttpHeaders({ translator, formData, onChange, errors 
         addText={translator("assets.new.fieldDataAddressHttpHeadersAddText")}
         keyPlaceholder={translator("assets.new.fieldDataAddressHttpHeaderNamePlaceholder")}
         valuePlaceholder={"..."}
-        name="authHeaders"
+        name="headers"
         id="data-address-http-headers"
         type="text"
         required
-        error={!!errors.authHeaders}
-        value={formData.authHeaders || []}
-        onChange={(value) => onChange({...formData, authHeaders: value})}
+        error={!!errors.headers}
+        value={formData.headers || []}
+        onChange={(value) => onChange({...formData, headers: value})}
       />
     </div>
   );

@@ -42,7 +42,7 @@ export function DataAddressAuthHeaders({ translator, formData, onChange, errors 
             value: option.value,
             text: translator(option.text)
           }))}
-          defaultValue="Vault"
+          defaultValue="Vault-Secret"
           error={errors.authHeaderType}
           value={formData.authHeaderType || "Vault-Secret"}
           onChange={(event) => onChange({...formData, authHeaderType: event.target.value})}
@@ -69,9 +69,11 @@ export function DataAddressAuthHeaders({ translator, formData, onChange, errors 
             label={<T
               string={`assets.new.fieldDataAddressAuthHeader${formData.authHeaderType === "Vault-Secret" ? "Vault" : ""}Value`}/>}
             placeholder={formData.authHeaderType === "Vault-Secret" ? "Mysecret123" : "Bearer ..."}
-            value={formData.authCode}
-            error={errors.authCode}
-            onChange={(event) => onChange({...formData, authCode: event.target.value})}
+            value={formData.authHeaderType === "Vault-Secret" ? formData.secretName : formData.authCode}
+            error={formData.authHeaderType === "Vault-Secret" ? errors.secretName : errors.authCode}
+            onChange={(event) => formData.authHeaderType === "Vault-Secret" ? 
+              onChange({...formData, secretName: event.target.value}) : 
+              onChange({...formData, authCode: event.target.value})}
           />
         </div>
       </>}
