@@ -1,8 +1,9 @@
 import { MAX_ITEMS } from '@/constants/lists';
 import { expect, test } from '@playwright/test';
 import { CatalogBrowserPage } from './pages/catalog-browser-page';
+import { counterPartyParticipantConfig } from './utils/tests-config';
 
-const COUNTER_PARTY_ADDRESS = "http://edc-2:8183/api/dsp";
+const COUNTER_PARTY_ADDRESS = counterPartyParticipantConfig.EDC_PROTOCOL_URL;
 
 test.describe("Catalog Browser Tests", () => {
   let catalogPage: CatalogBrowserPage;

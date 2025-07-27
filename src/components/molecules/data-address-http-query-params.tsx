@@ -10,7 +10,7 @@ import {ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS} from "@/jsonld/asset";
 import {AssetProperties} from "@/utilities/asset";
 import {DataAddress} from "@think-it-labs/edc-connector-client/dist/src/entities/data-address";
 
-export interface DataAddressProxyQueryParamsProps {
+export interface DataAddressHttpQueryParamsProps {
   translator: (key: string) => string;
   formData: DataAddress;
   onChange: (formData: DataAddress) => void;
@@ -18,7 +18,7 @@ export interface DataAddressProxyQueryParamsProps {
   required?: boolean;
 }
 
-export function DataAddressProxyQueryParams({ translator, formData, onChange, errors }: DataAddressProxyQueryParamsProps): JSX.Element {
+export function DataAddressHttpQueryParams({ translator, formData, onChange, errors }: DataAddressHttpQueryParamsProps): JSX.Element {
 
   return (
     <div className="flex flex-col gap-y-5 items-start">

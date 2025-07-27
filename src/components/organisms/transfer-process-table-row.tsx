@@ -77,6 +77,7 @@ export default function TransferProcessTableRow({ transferProcess, managementUrl
       />
 
       <JsonLdDialog
+        dataTestId="transfer-process-details-dialog"
         isOpen={transferProcessDialogIsOpen}
         onClose={() => setTransferProcessDialogIsOpen(false)}
         jsonLdObject={jsonLdObject}
@@ -127,6 +128,7 @@ export default function TransferProcessTableRow({ transferProcess, managementUrl
         </Table.Cell>
         <Table.Cell>
           <span
+            data-testid="show-transfer-process-details"
             className="hover:underline cursor-pointer"
             onClick={() => setTransferProcessDialogIsOpen(true)}
           >

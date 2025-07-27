@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { DataAddress } from "@think-it-labs/edc-connector-client";
 import {T} from "@/i18n";
 import {Input} from "@/components/atoms/input";
 import {theme} from "@/theme/ThemeProvider";
+import { Checkbox } from "@/components/atoms/checkbox";
 
 export interface AssetFormDataAddressAmazonS3Props {
   translator: (key: string) => string,
@@ -13,8 +14,18 @@ export interface AssetFormDataAddressAmazonS3Props {
 }
 
 export function AssetFormDataAddressAmazonS3({ formData, errors, onChange, translator, isDestination = false }: AssetFormDataAddressAmazonS3Props): JSX.Element {
+  const [multipleObjects, setMultipleObjects] = useState(false);
+
   return (
     <>
+      <div>
+        <Checkbox
+          data-testid="multiple-objects-checkbox"
+          label={translator("assets.new.fieldMultipleObjects")}
+          value={multipleObjects}
+          onChange={(event) => setMultipleObjects(event.target.checked)}
+        />
+      </div>
       <div>
         <label
           htmlFor="data-region-fieldRegion"
@@ -57,29 +68,31 @@ export function AssetFormDataAddressAmazonS3({ formData, errors, onChange, trans
           onChange={(event) => onChange({ ...formData, bucketName: event.target.value })}
         />
       </div>
-      <div>
-        <label
-          htmlFor="data-address-objectName"
-          className="inline-block text-sm text-black font-medium mb-2"
-        >
-          <T string="assets.new.fieldObjectName"/>
-          {!isDestination && !formData.objectPrefix ? " *" : ""}
-        </label>
-        <Input
-          name="objectName"
-          id="data-address-objectName"
-          key="data-address-objectName"
-          label={translator("assets.new.fieldObjectName")}
-          placeholder={translator("assets.new.fieldObjectName")}
-          required={!isDestination && !formData.objectPrefix}
-          helperText={typeof errors.objectName === "string" ? errors.objectName : ""}
-          classes={{ textField: { '& p':{ color: theme.palette.error.main } }} as any}
-          error={errors.objectName}
-          value={formData.objectName}
-          onChange={(event) => onChange({ ...formData, objectName: event.target.value })}
-        />
-      </div>
-      {!isDestination && (
+      
+      {!multipleObjects ? (
+        <div>
+          <label
+            htmlFor="data-address-objectName"
+            className="inline-block text-sm text-black font-medium mb-2"
+          >
+            <T string="assets.new.fieldObjectName"/>
+            {!isDestination && !formData.objectPrefix ? " *" : ""}
+          </label>
+          <Input
+            name="objectName"
+            id="data-address-objectName"
+            key="data-address-objectName"
+            label={translator("assets.new.fieldObjectName")}
+            placeholder={translator("assets.new.fieldObjectName")}
+            required={!isDestination && !formData.objectPrefix}
+            helperText={typeof errors.objectName === "string" ? errors.objectName : ""}
+            classes={{ textField: { '& p':{ color: theme.palette.error.main } }} as any}
+            error={errors.objectName}
+            value={formData.objectName}
+            onChange={(event) => onChange({ ...formData, objectName: event.target.value })}
+          />
+        </div>
+      ) : !isDestination && (
         <div>
           <label
             htmlFor="data-address-objectPrefix"
@@ -103,6 +116,7 @@ export function AssetFormDataAddressAmazonS3({ formData, errors, onChange, trans
           />
         </div>
       )}
+
       {isDestination && (
         <div>
           <label

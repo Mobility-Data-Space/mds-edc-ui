@@ -1,5 +1,5 @@
 import { Participant } from "@/utilities/participant";
-import { EdcConnectorClient, IdResponse, PolicyBuilder } from "@think-it-labs/edc-connector-client";
+import { TransferProcessInput , EdcConnectorClient, IdResponse, PolicyBuilder  } from "@think-it-labs/edc-connector-client";
 import { randomUUID } from "node:crypto";
 
 async function waitForNegotiationState(
@@ -177,11 +177,13 @@ export async function initiate_transfers(participant: Participant, counterPartyP
 
     const contractAgreement = await client.management.contractAgreements.get(contractNegotiation.contractAgreementId);
 
-    const transferResponse = await client.management.transferProcesses.initiate({
+    const transferProcessInput = {
         counterPartyAddress: participant.protocolUrl,
         contractId: contractAgreement.id,
-        transferType: "HttpData-PULL"
-    });
+        transferType: "HttpData-PULL",
+    } as TransferProcessInput;
+
+    const transferResponse = await client.management.transferProcesses.initiate(transferProcessInput);
 
     console.log(
         "  transfer process initiated for",

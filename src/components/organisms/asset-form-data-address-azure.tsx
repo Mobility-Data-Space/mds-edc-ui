@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { DataAddress } from "@think-it-labs/edc-connector-client";
 import {T} from "@/i18n";
 import {Input} from "@/components/atoms/input";
 import {theme} from "@/theme/ThemeProvider";
+import { Checkbox } from "@/components/atoms/checkbox";
 
 export interface AssetFormDataAddressAzureProps {
   translator: (key: string) => string,
@@ -13,8 +14,18 @@ export interface AssetFormDataAddressAzureProps {
 }
 
 export function AssetFormDataAddressAzure({ formData, errors, onChange, translator, isDestination = false }: AssetFormDataAddressAzureProps): JSX.Element {
+  const [multipleBlobs, setMultipleBlobs] = useState(false);
+
   return (
     <>
+      <div>
+        <Checkbox
+          data-testid="multiple-blobs-checkbox"
+          label={translator("assets.new.fieldMultipleBlobs")}
+          value={multipleBlobs}
+          onChange={(event) => setMultipleBlobs(event.target.checked)}
+        />
+      </div>
       <div>
         <label
           htmlFor="data-address-container"
@@ -79,46 +90,49 @@ export function AssetFormDataAddressAzure({ formData, errors, onChange, translat
           />
         </div>
       }
-      <div>
-        <label
-          htmlFor="data-address-blobName"
-          className="inline-block text-sm text-black font-medium mb-2"
-        >
-          <T string="assets.new.fieldBlobName"/>
-        </label>
-        <Input
-          name="blobName"
-          id="data-address-blobName"
-          key="data-address-blobName"
-          label={translator("assets.new.fieldBlobName")}
-          placeholder={translator("assets.new.fieldBlobName")}
-          helperText={typeof errors.blobName === "string" ? errors.blobName : ""}
-          classes={{textField: {'& p': {color: theme.palette.error.main}}} as any}
-          error={errors.blobName}
-          value={formData.blobName}
-          onChange={(event) => onChange({...formData, blobName: event.target.value})}
-        />
-      </div>
-      <div>
-        <label
-          htmlFor="data-address-blobPrefix"
-          className="inline-block text-sm text-black font-medium mb-2"
-        >
-          <T string="assets.new.fieldBlobPrefix"/>
-        </label>
-        <Input
-          name="blobPrefix"
-          id="data-address-blobPrefix"
-          key="data-address-blobPrefix"
-          label={translator("assets.new.fieldBlobPrefix")}
-          placeholder={translator("assets.new.fieldBlobPrefix")}
-          helperText={typeof errors.blobPrefix === "string" ? errors.blobPrefix : ""}
-          classes={{textField: {'& p': {color: theme.palette.error.main}}} as any}
-          error={errors.blobPrefix}
-          value={formData.blobPrefix}
-          onChange={(event) => onChange({...formData, blobPrefix: event.target.value})}
-        />
-      </div>
+      {!multipleBlobs ? (
+        <div>
+          <label
+            htmlFor="data-address-blobName"
+            className="inline-block text-sm text-black font-medium mb-2"
+          >
+            <T string="assets.new.fieldBlobName"/>
+          </label>
+          <Input
+            name="blobName"
+            id="data-address-blobName"
+            key="data-address-blobName"
+            label={translator("assets.new.fieldBlobName")}
+            placeholder={translator("assets.new.fieldBlobName")}
+            helperText={typeof errors.blobName === "string" ? errors.blobName : ""}
+            classes={{textField: {'& p': {color: theme.palette.error.main}}} as any}
+            error={errors.blobName}
+            value={formData.blobName}
+            onChange={(event) => onChange({...formData, blobName: event.target.value})}
+          />
+        </div>
+      ) : !isDestination && (
+        <div>
+          <label
+            htmlFor="data-address-blobPrefix"
+            className="inline-block text-sm text-black font-medium mb-2"
+          >
+            <T string="assets.new.fieldBlobPrefix"/>
+          </label>
+          <Input
+            name="blobPrefix"
+            id="data-address-blobPrefix"
+            key="data-address-blobPrefix"
+            label={translator("assets.new.fieldBlobPrefix")}
+            placeholder={translator("assets.new.fieldBlobPrefix")}
+            helperText={typeof errors.blobPrefix === "string" ? errors.blobPrefix : ""}
+            classes={{textField: {'& p': {color: theme.palette.error.main}}} as any}
+            error={errors.blobPrefix}
+            value={formData.blobPrefix}
+            onChange={(event) => onChange({...formData, blobPrefix: event.target.value})}
+          />
+        </div>
+      )}
 
       <div>
         <label

@@ -13,7 +13,6 @@ export class ContractAgreementsPage extends BaseListPage {
   async navigate() {
     await this.page.goto('/contract-agreements');
     await this.page.waitForLoadState("networkidle")
-    // await this.page.waitForResponse((response) => response.url().includes('/connector/management/v3/contractagreements'));
   }
 
   async getAgreementsList() {

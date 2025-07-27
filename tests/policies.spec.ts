@@ -252,7 +252,7 @@ test.describe("Policy Definitions Page Tests", () => {
       expect(isNextEnabled).toBeFalsy();
     });
 
-    test.fixme("should maintain search results across pagination", async ({ page }) => {
+    test("should maintain search results across pagination", async ({ page }) => {
       await policiesPage.searchPolicies('test');
 
       const isNextEnabled = await policiesPage.isNextPageEnabled();

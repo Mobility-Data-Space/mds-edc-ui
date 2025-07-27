@@ -89,14 +89,7 @@ export function AssetFormDataAddressStep({ formData, errors, onChange, translato
         />
       }
 
-      {formData.type === DataAddressTypes.HttpData && <>
-        {isDestination &&
-          <Checkbox
-            label={<T string="assets.new.isPull" />}
-            value={formData.isPull}
-            onChange={(event) => onChange({ ...formData, isPull: event.target.checked })}
-          />
-        }
+      {formData.type === DataAddressTypes.HttpData && 
         <AssetFormDataAddressHttp
           translator={translator}
           formData={formData}
@@ -106,7 +99,7 @@ export function AssetFormDataAddressStep({ formData, errors, onChange, translato
           isDestination={isDestination}
           isPull={formData.isPull}
         />
-      </>}
+      }
     </div>
   );
 }
