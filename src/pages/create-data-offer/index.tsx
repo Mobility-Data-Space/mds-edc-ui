@@ -22,7 +22,7 @@ import { AssetTitle } from "@/components/molecules/asset-title";
 import { AssetTransportMode } from "@/components/molecules/asset-transport-mode";
 import { AssetVersion } from "@/components/molecules/asset-version";
 import { Snackbar } from "@/components/molecules/snackbar";
-import { AssetFormDataAddressStep } from "@/components/organisms/asset-form-data-address-step";
+import { FormDataAddressStep } from "@/components/organisms/form-data-address-step";
 import PolicyExpression from "@/components/organisms/policy-expression";
 import SideDrawer from "@/components/organisms/side-drawer";
 import { PUBLISH_MODE_DO_NOT_PUBLISH, PUBLISH_MODE_PUBLISH_RESTRICTED, PUBLISH_MODE_PUBLISH_UNRESTRICTED, PUBLISH_MODES } from "@/constants/data-address-types";
@@ -87,7 +87,6 @@ export default function CreateDataOfferPage() {
   }
 
   const policyExpressionIsNotValid = useCallback((policyExpression: (AtomicConstraint | MultiplicityConstraint)[]) => {
-    console.log({ publishMode, policyExpression })
     if (publishMode !== PUBLISH_MODE_PUBLISH_RESTRICTED.value) {
       return false
     }
@@ -268,7 +267,7 @@ export default function CreateDataOfferPage() {
                 </label>
               </div>
               <div className="sm:col-span-2 flex flex-col gap-6">
-                <AssetFormDataAddressStep
+                <FormDataAddressStep
                   translator={translator}
                   formData={formData.asset.dataAddress}
                   onChange={dataAddressFormOnChange}

@@ -91,7 +91,6 @@ test.describe("Catalog Browser Tests", () => {
           const firstCatalog = initialCatalogs.first();
           const firstCatalogText = await firstCatalog.locator('[data-testid="asset-title"]').textContent();
           const searchTerm = firstCatalogText || 'test';
-          console.log(searchTerm)
 
           await catalogPage.searchCatalog(searchTerm);
 
