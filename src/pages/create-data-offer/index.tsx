@@ -273,7 +273,7 @@ export default function CreateDataOfferPage() {
                   onChange={dataAddressFormOnChange}
                   errors={errors.dataAddress}
                   methodAlwaysShowing
-                  customDataSourceConfigRows={6}
+                  customDataAddressConfigRows={6}
                 />
               </div>
             </div>

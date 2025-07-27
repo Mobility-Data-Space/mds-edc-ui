@@ -121,16 +121,16 @@ export function FormDataAddressHttp({ formData, errors, onChange, translator, me
 
               <div>
                 <label
-                  htmlFor="data-address-path"
+                  htmlFor="data-address-body-request"
                   className="inline-block text-sm font-medium text-gray-800 mt-2.5"
                 >
-                  <T string="assets.new.fieldProxyBody"/>
+                  <T string="assets.new.fieldEnableProxyBody"/>
                 </label>
                 <div>
                   <RadioButton
                     labelTrue={translator("assets.new.fieldDataAddressHttpProxyBodyTrue")}
                     labelFalse={translator("assets.new.fieldDataAddressHttpProxyBodyFalse")}
-                    id="data-address-http-proxy-body"
+                    id="data-address-body-request"
                     value={formData.proxyBody}
                     onChange={(value) => onChange({...formData, proxyBody: value})}
                   />
