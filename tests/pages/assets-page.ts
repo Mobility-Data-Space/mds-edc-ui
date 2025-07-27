@@ -2,6 +2,7 @@ import { Page } from '@playwright/test';
 import { BaseListPage } from './base-list-page';
 
 export class AssetsPage extends BaseListPage {
+  
   readonly assetListLocator = '#asset-list';
   readonly assetCardLocator = '.asset-card';
   readonly assetDialogLocator = '.asset-dialog';
@@ -16,6 +17,47 @@ export class AssetsPage extends BaseListPage {
   constructor(page: Page) {
     super(page);
   }
+
+  async fillHttpPath() {
+    await this.page.getByRole('textbox', { name: 'The default URL path' }).fill('/api/v1/resource');
+  }
+
+  async addQueryParams() {
+    // Add the first query parameter
+    await this.page.getByRole('button', { name: 'Add Query Param' }).click();
+    await this.page.getByRole('textbox', { name: 'Query Param Name' }).fill('param1');
+    await this.page.getByRole('textbox', { name: 'Value' }).fill('value1');
+
+    // Add the second query parameter
+    await this.page.getByRole('button', { name: 'Add Query Param' }).click();
+    await this.page.getByRole('textbox', { name: 'Query Param Name' }).nth(1).fill('param2');
+    await this.page.getByRole('textbox', { name: 'Value' }).nth(1).fill('value2');
+  }
+
+  async addAuthHeaders() {
+    await this.page.getByRole('button', { name: 'Add Authentication' }).click() ;
+    await this.page.getByRole('textbox', { name: 'Auth Header Name' }).fill('Authorization');
+    await this.page.getByRole('textbox', { name: 'Auth Header Value' }).fill('Bearer token123');
+  }
+
+  async addAdditionalHeaders() {
+    await this.page.getByRole('button', { name: 'Add Additional Headers' }).click() ;
+    await this.page.getByRole('textbox', { name: 'Key' }).fill('Custom-Header');
+    await this.page.getByRole('textbox', { name: 'Value' }).nth(3).fill('HeaderValue');
+  }
+
+  async enableProxyBody() {
+    await this.page.getByRole('button', {name: 'Request Body'}).click() ;
+  }
+
+  async enableProxyPath() {
+    await this.page.getByRole('button', {name: 'Enable Proxy Path'}).click() ;
+  }
+
+  async enableProxyQueryParams() {
+    await this.page.getByRole('button', {name: 'Enable Proxy Query Params'}).click() ;
+  }
+
 
   async getEditButton() {
     return this.page.locator(this.editButtonLocator);
@@ -61,7 +103,7 @@ export class AssetsPage extends BaseListPage {
   }
 
   async fillHttpURL() {
-    await this.page.getByRole('textbox', { name: 'URL' }).fill("https://google.com");
+    await this.page.getByRole('textbox', { name: 'Base URL' }).fill("https://google.com");
   }
 
   async selectHttpMethod(method: string = "GET") {
@@ -97,7 +139,7 @@ export class AssetsPage extends BaseListPage {
   }
 
   async fillCustomJsonDatasource() {
-    await this.page.getByRole('textbox', { name: 'Custom Datasource Config' }).fill('{"type": "HttpData", "baseUrl": "https://example.com"}');
+    await this.page.getByRole('textbox', { name: 'Custom Data Source Config' }).fill('{"type": "HttpData", "baseUrl": "https://example.com"}');
   }
 
   async selectOnRequestType() {
