@@ -5,7 +5,7 @@ import {Input} from "@/components/atoms/input";
 import {theme} from "@/theme/ThemeProvider";
 import { Checkbox } from "@/components/atoms/checkbox";
 
-export interface AssetFormDataAddressAmazonS3Props {
+export interface FormDataAddressAmazonS3Props {
   translator: (key: string) => string,
   formData: DataAddress,
   onChange: any,
@@ -13,7 +13,7 @@ export interface AssetFormDataAddressAmazonS3Props {
   isDestination?: boolean,
 }
 
-export function AssetFormDataAddressAmazonS3({ formData, errors, onChange, translator, isDestination = false }: AssetFormDataAddressAmazonS3Props): JSX.Element {
+export function FormDataAddressAmazonS3({ formData, errors, onChange, translator, isDestination = false }: FormDataAddressAmazonS3Props): JSX.Element {
   const [multipleObjects, setMultipleObjects] = useState(false);
 
   return (

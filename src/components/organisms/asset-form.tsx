@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { StepIcon } from "@/components/atoms/step-icon";
 import { AssetFormAdvancedInfoStepContent } from "@/components/organisms/asset-form-advanced-step-content";
-import { AssetFormDataAddressStep } from "@/components/organisms/asset-form-data-address-step";
+import { FormDataAddressStep } from "@/components/organisms/form-data-address-step";
 import { AssetFormGeneralInfoStepContent } from "@/components/organisms/asset-form-general-info-step-content";
 
 import { Snackbar } from "@/components/molecules/snackbar";
@@ -273,7 +273,7 @@ export default function AssetForm({ onClose }: AssetFormProps) {
             </div>
             <StepContent>
               <div data-testid="asset-create-data-address-step-content">
-                <AssetFormDataAddressStep
+                <FormDataAddressStep
                   translator={translator}
                   formData={formData.dataAddress}
                   onChange={dataAddressFormOnChange}

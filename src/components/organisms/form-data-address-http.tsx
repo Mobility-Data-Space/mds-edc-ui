@@ -9,7 +9,7 @@ import {DataAddressHttpHeaders} from "@/components/molecules/data-address-http-h
 import { DataAddressHttpQueryParams } from "../molecules/data-address-http-query-params";
 import { Checkbox } from "../atoms/checkbox";
 
-export interface AssetFormDataAddressHttpProps {
+export interface FormDataAddressHttpProps {
   translator: (key: string) => string,
   formData: DataAddress,
   onChange: any,
@@ -22,7 +22,7 @@ export interface AssetFormDataAddressHttpProps {
 const sourceMethods = [ "GET", "POST" ].map((value) => ({ value }));
 const destinationMethods = [ "POST", "PUT", "PATCH" ].map((value) => ({ value }));
 
-export function AssetFormDataAddressHttp({ formData, errors, onChange, translator, methodAlwaysShowing = false, isPull = false, isDestination = false }: AssetFormDataAddressHttpProps): JSX.Element {
+export function FormDataAddressHttp({ formData, errors, onChange, translator, methodAlwaysShowing = false, isPull = false, isDestination = false }: FormDataAddressHttpProps): JSX.Element {
   const methods = isDestination ? destinationMethods : sourceMethods;
 
   return (

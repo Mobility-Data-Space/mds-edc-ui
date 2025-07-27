@@ -8,9 +8,9 @@ import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use
 import {T} from "@/i18n";
 import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
 import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
-import {DataAddressTypes, defaultHttpDestinationDataAddress} from "@/utilities/data-address";
+import {defaultHttpDestinationDataAddress} from "@/utilities/data-address";
 import {createTransferProcessRequest} from "@/utilities/transfer-process";
-import {AssetFormDataAddressStep} from "@/components/organisms/asset-form-data-address-step.tsx";
+import {FormDataAddressStep} from "@/components/organisms/form-data-address-step";
 import {validateDataAddress} from "@/utilities/asset.ts";
 import { proxyConnectorManagement } from "@/constants/proxy";
 
@@ -74,7 +74,7 @@ export function TransferFormDialog({ contractAgreementId, open, onClose, onSucce
             return onSubmit();
           }}
         >
-          <AssetFormDataAddressStep
+          <FormDataAddressStep
             translator={translator}
             formData={formData}
             onChange={onChange}

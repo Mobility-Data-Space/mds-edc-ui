@@ -5,7 +5,7 @@ import {Input} from "@/components/atoms/input";
 import {theme} from "@/theme/ThemeProvider";
 import { Checkbox } from "@/components/atoms/checkbox";
 
-export interface AssetFormDataAddressAzureProps {
+export interface FormDataAddressAzureProps {
   translator: (key: string) => string,
   formData: DataAddress,
   onChange: any,
@@ -13,7 +13,7 @@ export interface AssetFormDataAddressAzureProps {
   isDestination?: boolean,
 }
 
-export function AssetFormDataAddressAzure({ formData, errors, onChange, translator, isDestination = false }: AssetFormDataAddressAzureProps): JSX.Element {
+export function FormDataAddressAzure({ formData, errors, onChange, translator, isDestination = false }: FormDataAddressAzureProps): JSX.Element {
   const [multipleBlobs, setMultipleBlobs] = useState(false);
 
   return (

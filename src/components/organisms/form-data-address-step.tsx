@@ -1,18 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import {Input} from "@/components/atoms/input";
 import {MuiSelect} from "@/components/atoms/mui-select";
 import {DATA_ADDRESS_DESTINATION_SELECT_DATA, DATA_ADDRESS_SELECT_DATA} from "@/constants/data-address-types";
 import {theme} from "@/theme/ThemeProvider";
 import {DataAddressTypes} from "@/utilities/data-address.ts";
-import {AssetFormDataAddressAmazonS3} from "@/components/organisms/asset-form-data-address-amazon-s3.tsx";
+import {FormDataAddressAmazonS3} from "@/components/organisms/form-data-address-amazon-s3";
 import {AssetContactEmailAndSubject} from "@/components/molecules/asset-contact-email-and-subject.tsx";
-import {AssetFormDataAddressHttp} from "@/components/organisms/asset-form-data-address-http";
-import {Checkbox} from "@/components/atoms/checkbox.tsx";
-import {AssetFormDataAddressAzure} from "@/components/organisms/asset-form-data-address-azure.tsx";
+import {FormDataAddressHttp} from "@/components/organisms/form-data-address-http";
+import {FormDataAddressAzure} from "@/components/organisms/form-data-address-azure";
 import { DataAddress } from "@think-it-labs/edc-connector-client";
 import { T } from "@/i18n";
 
-export interface AssetDataAddressFormStepProps {
+export interface DataAddressFormStepProps {
   translator: (key: string) => string,
   formData: DataAddress,
   onChange: any,
@@ -22,7 +21,7 @@ export interface AssetDataAddressFormStepProps {
   isDestination?: boolean,
 }
 
-export function AssetFormDataAddressStep({ formData, errors, onChange, translator, methodAlwaysShowing = false, customDataSourceConfigRows = 2, isDestination = false }: AssetDataAddressFormStepProps): JSX.Element {
+export function FormDataAddressStep({ formData, errors, onChange, translator, methodAlwaysShowing = false, customDataSourceConfigRows = 2, isDestination = false }: DataAddressFormStepProps): JSX.Element {
   return (
     <div className="flex flex-col gap-y-5">
       <div className="flex flex-col gap-y-5 items-start">
@@ -53,7 +52,7 @@ export function AssetFormDataAddressStep({ formData, errors, onChange, translato
       }
 
       {formData.type === DataAddressTypes.AmazonS3 &&
-        <AssetFormDataAddressAmazonS3
+        <FormDataAddressAmazonS3
           translator={translator}
           formData={formData}
           onChange={onChange}
@@ -63,7 +62,7 @@ export function AssetFormDataAddressStep({ formData, errors, onChange, translato
       }
 
       {formData.type === DataAddressTypes.AzureStorage &&
-        <AssetFormDataAddressAzure
+        <FormDataAddressAzure
           translator={translator}
           formData={formData}
           onChange={onChange}
@@ -90,7 +89,7 @@ export function AssetFormDataAddressStep({ formData, errors, onChange, translato
       }
 
       {formData.type === DataAddressTypes.HttpData && 
-        <AssetFormDataAddressHttp
+        <FormDataAddressHttp
           translator={translator}
           formData={formData}
           onChange={onChange}
