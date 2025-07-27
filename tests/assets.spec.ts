@@ -68,6 +68,11 @@ test.describe("Assets Page Tests", () => {
         await assetsPage.selectHttpMethod("GET");
         await assetsPage.fillHttpURL();
 
+        await assetsPage.fillHttpPath() ;
+        await assetsPage.addQueryParams();
+        await assetsPage.addAuthHeaders();
+        await assetsPage.addAdditionalHeaders();
+
         await assetsPage.submitCreateAssetForm();
 
         const successMessage = await assetsPage.getToastMessage("success");
@@ -89,6 +94,10 @@ test.describe("Assets Page Tests", () => {
         await assetsPage.selectHttpMethod("POST");
         await assetsPage.fillHttpURL();
 
+        await assetsPage.enableProxyQueryParams();
+        await assetsPage.enableProxyPath();
+        await assetsPage.enableProxyBody() ;
+        
         await assetsPage.submitCreateAssetForm();
 
         const successMessage = await assetsPage.getToastMessage("success");
