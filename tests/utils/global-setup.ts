@@ -1,6 +1,6 @@
 import { execSync } from 'child_process';
 import { initiate_transfers, publish_offers } from './seed';
-import { participantConfig, counterPartyParticipantConfig } from './tests-config'
+import { participantConfig, counterPartyParticipantConfig, SERVICES } from './tests-config'
 
 const checkInitStatus = (serviceName: string): boolean => {
   try {
@@ -18,14 +18,13 @@ const checkInitStatus = (serviceName: string): boolean => {
 };
 
 async function globalSetup() {
-  const services = ['edc-1', 'edc-2'];
   const interval = 5000; // 5 seconds
 
   const isCI = process.env.CI === 'true';
 
   if (!isCI) {
     console.log('Waiting for services to become healthy...');
-    for (const service of services) {
+    for (const service of SERVICES) {
       while (!checkInitStatus(service)) {
         console.log(`Service ${service} is not healthy yet. Retrying in ${interval / 1000} seconds...`);
         await new Promise((resolve) => setTimeout(resolve, interval));
@@ -38,38 +37,34 @@ async function globalSetup() {
 
   console.log('Seeding dataspace ...');
   try {
-
-    const participantProtocolUrl = "http://" + services[0] + ":8183/api/dsp" ;
-    const couterPartyparticipantProtocolUrl = "http://" + services[1] + ":8183/api/dsp" ;
-
     const participant = {
-      id: participantConfig.EDC_ID || "",
-      name: participantConfig.EDC_NAME || "",
-      description: participantConfig.EDC_DESCRIPTION || "",
-      publicUrl: participantConfig.EDC_PUBLIC_URL || "",
-      managementUrl: participantConfig.EDC_MANAGEMENT_URL || "",
-      defaultUrl: participantConfig.EDC_DEFAULT_URL || "",
-      protocolUrl: participantProtocolUrl,
-      curatorName: participantConfig.EDC_CURATOR_ORGANIZATION || "",
-      curatorUrl: participantConfig.EDC_CURATOR_URL || "",
-      maintainerName: participantConfig.EDC_MAINTAINER_ORGANIZATION || "",
-      maintainerUrl: participantConfig.EDC_MAINTAINER_URL || "",
-      dapsUrl: participantConfig.MDS_DAPS_URL || ""
+      id: participantConfig.EDC_ID,
+      name: participantConfig.EDC_NAME,
+      description: participantConfig.EDC_DESCRIPTION,
+      publicUrl: participantConfig.EDC_PUBLIC_URL,
+      managementUrl: participantConfig.EDC_MANAGEMENT_URL,
+      defaultUrl: participantConfig.EDC_DEFAULT_URL,
+      protocolUrl: participantConfig.EDC_PROTOCOL_URL,
+      curatorName: participantConfig.EDC_CURATOR_ORGANIZATION,
+      curatorUrl: participantConfig.EDC_CURATOR_URL,
+      maintainerName: participantConfig.EDC_MAINTAINER_ORGANIZATION,
+      maintainerUrl: participantConfig.EDC_MAINTAINER_URL,
+      dapsUrl: participantConfig.MDS_DAPS_URL
     };
 
     const counterPartyParticipant = {
-      id: counterPartyParticipantConfig.EDC_ID || "",
-      name: counterPartyParticipantConfig.EDC_NAME || "",
-      description: counterPartyParticipantConfig.EDC_DESCRIPTION || "",
-      publicUrl: counterPartyParticipantConfig.EDC_PUBLIC_URL || "",
-      managementUrl: counterPartyParticipantConfig.EDC_MANAGEMENT_URL || "",
-      defaultUrl: counterPartyParticipantConfig.EDC_DEFAULT_URL || "",
-      protocolUrl: couterPartyparticipantProtocolUrl,
-      curatorName: counterPartyParticipantConfig.EDC_CURATOR_ORGANIZATION || "",
-      curatorUrl: counterPartyParticipantConfig.EDC_CURATOR_URL || "",
-      maintainerName: counterPartyParticipantConfig.EDC_MAINTAINER_ORGANIZATION || "",
-      maintainerUrl: counterPartyParticipantConfig.EDC_MAINTAINER_URL || "",
-      dapsUrl: counterPartyParticipantConfig.MDS_DAPS_URL || ""
+      id: counterPartyParticipantConfig.EDC_ID,
+      name: counterPartyParticipantConfig.EDC_NAME,
+      description: counterPartyParticipantConfig.EDC_DESCRIPTION,
+      publicUrl: counterPartyParticipantConfig.EDC_PUBLIC_URL,
+      managementUrl: counterPartyParticipantConfig.EDC_MANAGEMENT_URL,
+      defaultUrl: counterPartyParticipantConfig.EDC_DEFAULT_URL,
+      protocolUrl: counterPartyParticipantConfig.EDC_PROTOCOL_URL,
+      curatorName: counterPartyParticipantConfig.EDC_CURATOR_ORGANIZATION,
+      curatorUrl: counterPartyParticipantConfig.EDC_CURATOR_URL,
+      maintainerName: counterPartyParticipantConfig.EDC_MAINTAINER_ORGANIZATION,
+      maintainerUrl: counterPartyParticipantConfig.EDC_MAINTAINER_URL,
+      dapsUrl: counterPartyParticipantConfig.MDS_DAPS_URL
     };
 
     await publish_offers(participant);

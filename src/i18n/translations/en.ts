@@ -263,7 +263,8 @@ export const en = {
         privateProperties: "Private Properties",
 
         isPull: "Data address PULL",
-
+        fieldMultipleObjects: "Multiple S3 Objects",
+        fieldMultipleBlobs: "Multiple Azure Blobs", 
         buttonCancel: "Cancel",
         buttonSave: "Add asset",
 
