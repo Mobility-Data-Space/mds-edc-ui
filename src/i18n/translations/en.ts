@@ -179,13 +179,14 @@ export const en = {
 
         fieldDataAddressType: "Type",
         fieldDataAddressMethodAndContentType: "Method",
-        fieldDataAddressUrl: "URL",
+        fieldDataAddressUrl: "Base URL",
         fieldDataAddressBaseUrlPlaceholder:
           "The base URL for the data address location",
         fieldDataAddressName: "Name",
         fieldDataAddressNamePlaceholder:
           "Data address human readable identifier",
         fieldDataAddressPathPlaceholder: "The default URL path",
+        fieldDataAddressPath: "Path",
         fieldDataAddressAuth: "Authorization",
         fieldDataAddressAuthKeyPlaceholder: "Authorization header",
         fieldDataAddressAuthCodePlaceholder: "Secret code",

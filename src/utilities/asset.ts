@@ -442,9 +442,18 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
   }
 
   if (formDataToTransform.type === DataAddressTypes.HttpData) {
-    const headers = (formDataToTransform.authHeaders || []).map(
-      (value : { input: { key: string, value: string } }) => `${value?.input?.key}:${value?.input?.value}`
-    ).join(";");
+    const headers = (formDataToTransform.headers || [])
+      .filter((value: { input: { key: string, value: string } }) => value?.input?.key && value?.input?.value)
+      .reduce((acc: Record<string, string>, value: { input: { key: string, value: string } }) => {
+          acc[`header:${value.input.key}`] = value.input.value;
+          return acc;
+        }, {}
+    );
+
+    const queryParams = (formDataToTransform.queryParams || [])
+      .filter((value: { input: { key: string, value: string } }) => value?.input?.key && value?.input?.value)
+      .map((value: { input: { key: string, value: string } }) => `${value.input.key}=${value.input.value}`)
+      .join("&");
 
     return removeEmptyFields({
       type: DataAddressTypes.HttpData,
@@ -460,8 +469,8 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
       proxyQueryParams: formDataToTransform?.proxyQueryParams,
       proxyMethod: formDataToTransform?.proxyMethod,
       contentType: formDataToTransform?.contentType,
-      queryParams: formDataToTransform?.queryParams,
-      headers,
+      queryParams: queryParams,
+      ...headers,
     });
   }
 

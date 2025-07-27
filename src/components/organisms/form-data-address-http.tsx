@@ -90,9 +90,28 @@ export function FormDataAddressHttp({ formData, errors, onChange, translator, me
                 onChange={(event) => onChange({...formData, baseUrl: event.target.value})}
               />
             </div>
+            {formData.proxyPath ? "" :
+              <div className="sm:col-span-2 flex flex-col gap-y-5">
+                <label
+                  htmlFor="data-address-path"
+                  className="inline-block text-sm font-medium text-gray-800 mt-2.5"
+                >
+                  <T string="assets.new.fieldDataAddressPath"/>
+                </label>
+                <Input
+                  name="data-address-path"
+                  id="data-address-path"
+                  data-testid="data-address-path"
+                  placeholder={"/api"}
+                  label={translator("assets.new.fieldDataAddressPathPlaceholder")}
+                  error={errors.path}
+                  value={formData.path}
+                  onChange={(event) => onChange({...formData, path: event.target.value})}
+                />
+              </div>
+            }
           </div>
           {isDestination ? "" : 
-            <div>
               <div className="flex flex-col items-start gap-3">
                 <RadioButton
                   labelTrue={translator("assets.new.fieldDataAddressHttpProxyPathTrue")}
@@ -102,23 +121,16 @@ export function FormDataAddressHttp({ formData, errors, onChange, translator, me
                   onChange={(value) => onChange({...formData, proxyPath: value})}
                 />
               </div>
-
-              <DataAddressHttpQueryParams
-                translator={translator}
-                formData={formData}
-                onChange={onChange}
-                errors={errors}
-              />
-              <div>
-                <RadioButton
-                  labelTrue={translator("assets.new.fieldDataAddressHttpProxyQueryParamsTrue")}
-                  labelFalse={translator("assets.new.fieldDataAddressHttpProxyQueryParamsFalse")}
-                  id="data-address-http-proxy-query-params"
-                  value={formData.proxyQueryParams}
-                  onChange={(value) => onChange({...formData, proxyQueryParams: value})}
-                />
-              </div>
-
+          }
+          <DataAddressHttpQueryParams
+            translator={translator}
+            formData={formData}
+            onChange={onChange}
+            errors={errors}
+            isDestination={isDestination}
+          />
+          {isDestination ? "" : 
+            <div>
               <div>
                 <label
                   htmlFor="data-address-body-request"
@@ -140,21 +152,19 @@ export function FormDataAddressHttp({ formData, errors, onChange, translator, me
           }
         </div>
 
-        <div className="flex flex-col gap-y-5 items-start">
-          <DataAddressAuthHeaders
-            translator={translator}
-            formData={formData}
-            onChange={onChange}
-            errors={errors}
-          />
+        <DataAddressAuthHeaders
+          translator={translator}
+          formData={formData}
+          onChange={onChange}
+          errors={errors}
+        />
 
-          <DataAddressHttpHeaders
-            translator={translator}
-            formData={formData}
-            onChange={onChange}
-            errors={errors}
-          />
-        </div>
+        <DataAddressHttpHeaders
+          translator={translator}
+          formData={formData}
+          onChange={onChange}
+          errors={errors}
+        />
       </>
       }
     </>
