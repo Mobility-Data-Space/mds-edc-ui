@@ -17,11 +17,11 @@ export interface DataAddressFormStepProps {
   onChange: any,
   errors: { [key: string]: boolean | string },
   methodAlwaysShowing?: boolean,
-  customDataSourceConfigRows?: number,
+  customDataAddressConfigRows?: number,
   isDestination?: boolean,
 }
 
-export function FormDataAddressStep({ formData, errors, onChange, translator, methodAlwaysShowing = false, customDataSourceConfigRows = 2, isDestination = false }: DataAddressFormStepProps): JSX.Element {
+export function FormDataAddressStep({ formData, errors, onChange, translator, methodAlwaysShowing = false, customDataAddressConfigRows = 2, isDestination = false }: DataAddressFormStepProps): JSX.Element {
   return (
     <div className="flex flex-col gap-y-5">
       <div className="flex flex-col gap-y-5 items-start">
@@ -77,8 +77,8 @@ export function FormDataAddressStep({ formData, errors, onChange, translator, me
           id="data-address-custom-json"
           key="data-address-custom-json"
           multiline
-          rows={customDataSourceConfigRows}
-          label={translator("assets.new.fieldCustomDatasourceConfig")}
+          rows={customDataAddressConfigRows}
+          label={isDestination ? translator("assets.new.fieldCustomDataDestintationConfig") : translator("assets.new.fieldCustomDataSourceConfig")}
           placeholder={'{"https://w3id.org/edc/v0.0.1/ns/type": "HttpData", ...}'}
           required
           classes={{ textField: { '& p':{ color: theme.palette.error.main } }} as any}
