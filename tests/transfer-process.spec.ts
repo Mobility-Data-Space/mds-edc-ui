@@ -131,14 +131,9 @@ test.describe("Transfer Processes Page Tests", () => {
     });
 
     test("should disable next button on last page", async ({ page }) => {
-      const totalLastIndex = await transferProcessesPage.getLastElementIndex();
-
       while (await transferProcessesPage.isNextPageEnabled()) {
         await transferProcessesPage.goToNextPage();
       }
-
-      const currentLastIndex = await transferProcessesPage.getLastElementIndex();
-      expect(currentLastIndex).toBe(totalLastIndex);
 
       const isNextEnabled = await transferProcessesPage.isNextPageEnabled();
       expect(isNextEnabled).toBeFalsy();

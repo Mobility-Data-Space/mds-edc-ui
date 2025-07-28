@@ -58,7 +58,6 @@ export class AssetsPage extends BaseListPage {
     await this.page.getByRole('button', {name: 'Enable Proxy Query Params'}).click() ;
   }
 
-
   async getEditButton() {
     return this.page.locator(this.editButtonLocator);
   }
@@ -112,12 +111,12 @@ export class AssetsPage extends BaseListPage {
   }
 
   async selectHttpType() {
-    await this.page.getByRole('combobox').filter({ hasText: 'REST-API Endpoint' }).click();
+    await this.page.getByRole('combobox', { name: 'Type' }).click();
     await this.page.getByRole('option', { name: 'REST-API Endpoint' }).click();
   }
 
   async selectAzureType() {
-    await this.page.getByRole('combobox').filter({ hasText: 'REST-API Endpoint' }).click();
+    await this.page.getByRole('combobox', { name: 'Type' }).click();
     await this.page.getByRole('option', { name: 'Azure Blob Storage' }).click();
   }
 
@@ -134,7 +133,7 @@ export class AssetsPage extends BaseListPage {
   }
 
   async selectCustomJsonType() {
-    await this.page.getByRole('combobox').filter({ hasText: 'REST-API Endpoint' }).click();
+    await this.page.getByRole('combobox', { name: 'Type' }).click();
     await this.page.getByRole('option', { name: 'Custom JSON' }).click();
   }
 
@@ -143,7 +142,7 @@ export class AssetsPage extends BaseListPage {
   }
 
   async selectOnRequestType() {
-    await this.page.getByRole('combobox').filter({ hasText: 'REST-API Endpoint' }).click();
+    await this.page.getByRole('combobox', { name: 'Type' }).click();
     await this.page.getByRole('option', { name: 'On Request' }).click();
   }
 
@@ -153,7 +152,7 @@ export class AssetsPage extends BaseListPage {
   }
 
   async selectS3Type() {
-    await this.page.getByRole('combobox').filter({ hasText: 'REST-API Endpoint' }).click();
+    await this.page.getByRole('combobox', { name: 'Type' }).click();
     await this.page.getByRole('option', { name: 'Amazon S3' }).click();
   }
 

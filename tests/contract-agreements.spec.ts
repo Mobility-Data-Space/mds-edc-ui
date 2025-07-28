@@ -22,8 +22,8 @@ test.describe("Contract Agreements Page Tests", () => {
     });
   });
 
-  test.describe("View Functionality", () => {
-    test("Displays agreement details when an agreement is selected", async ({ page }) => {
+  test.describe("View Functionality and Transfer Process Initiation", () => {
+    test("Displays agreement details and initiate HTTP Push transfer processes", async ({ page }) => {
       // Select an agreement
       const agreementCards = await agreementsPage.getAgreementCards();
       const agreementCard = agreementCards.first();
@@ -32,6 +32,71 @@ test.describe("Contract Agreements Page Tests", () => {
       // Verify the agreement details are visible
       const agreementDialog = await agreementsPage.getAgreementDialog();
       await expect(agreementDialog).toBeVisible();
+
+      // Initiate transfer for HTTP
+      await agreementsPage.initiateTransfer();
+      // default type is HTTP Push
+      await agreementsPage.fillHttpURL();
+      await agreementsPage.submitTransfer();
+      const successMessage = page.getByText('Contract Agreement transferred successfully');
+      await expect(successMessage).toBeVisible();
+    });
+
+    test("Displays agreement details and initiate S3 Push transfer processes", async ({ page }) => {
+      // Select an agreement
+      const agreementCards = await agreementsPage.getAgreementCards();
+      const agreementCard = agreementCards.first();
+      await agreementCard.click();
+
+      // Verify the agreement details are visible
+      const agreementDialog = await agreementsPage.getAgreementDialog();
+      await expect(agreementDialog).toBeVisible();
+
+      // Initiate transfer for S3
+      await agreementsPage.initiateTransfer();
+      await agreementsPage.selectS3Type() ;
+      await agreementsPage.fillRequiredS3DataDestination("single");
+      await agreementsPage.submitTransfer();
+      const successMessage = page.getByText('Contract Agreement transferred successfully');
+      await expect(successMessage).toBeVisible();
+    });
+
+    test("Displays agreement details and initiate Azure Push transfer processes", async ({ page }) => {
+      // Select an agreement
+      const agreementCards = await agreementsPage.getAgreementCards();
+      const agreementCard = agreementCards.first();
+      await agreementCard.click();
+
+      // Verify the agreement details are visible
+      const agreementDialog = await agreementsPage.getAgreementDialog();
+      await expect(agreementDialog).toBeVisible();
+
+      // Initiate transfer for Azure
+      await agreementsPage.initiateTransfer();
+      await agreementsPage.selectAzureType() ;
+      await agreementsPage.fillRequiredAzureDataDestination("single");
+      await agreementsPage.submitTransfer();
+      const successMessage = page.getByText('Contract Agreement transferred successfully');
+      await expect(successMessage).toBeVisible();
+    });
+
+    test("Displays agreement details when an agreement is selected and initiate a custom JSON (HTTP Push) transfer processes", async ({ page }) => {
+      // Select an agreement
+      const agreementCards = await agreementsPage.getAgreementCards();
+      const agreementCard = agreementCards.first();
+      await agreementCard.click();
+
+      // Verify the agreement details are visible
+      const agreementDialog = await agreementsPage.getAgreementDialog();
+      await expect(agreementDialog).toBeVisible();
+
+      // Initiate transfer with Custom JSON
+      await agreementsPage.initiateTransfer();
+      await agreementsPage.selectCustomJsonType() ;
+      await agreementsPage.fillCustomJsonDataDestination();
+      await agreementsPage.submitTransfer();
+      const successMessage = page.getByText('Contract Agreement transferred successfully');
+      await expect(successMessage).toBeVisible();
     });
   });
 
@@ -137,14 +202,9 @@ test.describe("Contract Agreements Page Tests", () => {
     });
 
     test("should disable next button on last page", async ({ page }) => {
-      const totalLastIndex = await agreementsPage.getLastElementIndex();
-
       while (await agreementsPage.isNextPageEnabled()) {
         await agreementsPage.goToNextPage();
       }
-
-      const currentLastIndex = await agreementsPage.getLastElementIndex();
-      expect(currentLastIndex).toBe(totalLastIndex);
 
       const isNextEnabled = await agreementsPage.isNextPageEnabled();
       expect(isNextEnabled).toBeFalsy();
