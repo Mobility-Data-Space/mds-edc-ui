@@ -44,7 +44,7 @@ export function JsonLdDialog({ isOpen, onClose, title, jsonLdObject, dataTestId 
         content: (key) => (
           <Snackbar
             type="error"
-            message={deleteFailMessage}
+            message={deleteFailMessage || ""}
             onClose={() => { closeSnackbar(key); }}
           />
         )
