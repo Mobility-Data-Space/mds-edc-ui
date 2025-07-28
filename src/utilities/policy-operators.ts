@@ -15,7 +15,7 @@ export const operatorNotEqual = {
 
 export const operatorIn = {
   value: 'isPartOf',
-  text: 'is Part Of',
+  text: 'IN',
   tooltip: 'In',
 };
 
