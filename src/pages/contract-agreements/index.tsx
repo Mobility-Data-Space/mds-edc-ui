@@ -11,7 +11,7 @@ import { T, useTranslator } from "@/i18n";
 import { theme } from "@/theme/ThemeProvider.tsx";
 import { AGREEMENT_RETIREMENT_DATE, AGREEMENT_RETIREMENT_REASON, AgreementsRetirementController, RetiredContractAgreement } from "@/utilities/contract-agreement";
 import { operatorEqual, operatorIn } from "@/utilities/data-offer";
-import { Button, ButtonGroup } from "@mui/material";
+import { Button, ButtonGroup, Typography } from "@mui/material";
 import { ContractAgreement, TransferProcessStates } from "@think-it-labs/edc-connector-client";
 import { ContractAgreementsList } from "@think-it-labs/edc-connector-ui/contract-agreements-list";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
@@ -47,7 +47,6 @@ export default function ContractAgreementsListPage() {
   const { connector } = useParticipantConnectorState();
   const [retiredContractAgreementIds, setRetiredContractAgreementIds] = useState<string[]>([]);
   const [contractAgreementInfo, setContractAgreementInfo] = useState<ContractAgreementInfo>({});
-
 
   const { translator } = useTranslator();
 
@@ -222,10 +221,29 @@ export default function ContractAgreementsListPage() {
           },
         ]}
       >
-        <div className="flex flex-col gap-y-4 pb-6">
-          <div className="flex justify-between items-center">
-            <div className="h-full min-w-xl">
-              <SearchBar searchTarget="assetId" placeholder={translator("contractAgreements.searchPlaceholder")} searchOperator="ilike" />
+        <div className="flex flex-wrap justify-end gap-4 pb-6 min-h-[56px]">
+            <div className="h-full flex-grow min-w-3xs">
+              <SearchBar searchTarget="assetId" placeholder={translator("contractAgreements.searchPlaceholder")}
+                         searchOperator="ilike"/>
+            </div>
+            <div className="flex gap-x-4 flex-grow">
+              <ButtonGroup className="min-h-[54px]" color="info" variant="outlined" sx={{
+                ".MuiButtonGroup-grouped": {
+                  borderColor: theme.palette.info.main,
+                }
+              }}>
+                {Object.keys(StatusFilter).map((filter) => (
+                  <Button
+                    key={filter}
+                    variant={selectedStatusFilter === filter ? "contained" : "outlined"}
+                    onClick={() => setSelectedStatusFilter(filter as StatusFilter)}
+                  >
+                    <Typography variant="button" component="span" className="break-keep">
+                      <T string={`contractAgreements.${filter.toLowerCase()}Contracts`}/>
+                    </Typography>
+                  </Button>
+                ))}
+              </ButtonGroup>
             </div>
             <div className="flex justify-end items-center">
               <ContractAgreementsList.Pagination>
@@ -243,24 +261,6 @@ export default function ContractAgreementsListPage() {
                 }
               </ContractAgreementsList.Pagination>
             </div>
-          </div>
-          <div className="flex gap-x-4">
-            <ButtonGroup color="info" variant="outlined" sx={{
-              ".MuiButtonGroup-grouped": {
-                borderColor: theme.palette.info.main,
-              }
-            }}>
-              {Object.keys(StatusFilter).map((filter) => (
-                <Button
-                  key={filter}
-                  variant={selectedStatusFilter === filter ? "contained" : "outlined"}
-                  onClick={() => setSelectedStatusFilter(filter as StatusFilter)}
-                >
-                  <T string={`contractAgreements.${filter.toLowerCase()}Contracts`} />
-                </Button>
-              ))}
-            </ButtonGroup>
-          </div>
         </div>
 
         <ContractAgreementsList.Error>
