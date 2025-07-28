@@ -135,6 +135,7 @@ export const de = {
     },
     "contract-negotiations": {
       title: "Listen Sie alle Vertragsverhandlungen auf",
+      manualApprovalTitle: "Negotiations with manual approval",
       description:
         "Liste der Vertragsvereinbarungen, die eigene Connectors nutzen können. Die aufgeführten Vereinbarungen sind das erfolgreiche Ergebnis von Vertragsverhandlungen zwischen zwei EDC-Anschlüssen.",
       headingId: "ID",

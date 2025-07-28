@@ -6,7 +6,7 @@ import {InfoOutlined} from "@mui/icons-material";
 import {KeyValuePairInputList} from "@/components/molecules/key-value-pair-input-list";
 
 import {T} from "@/i18n";
-import {ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA, ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS} from "@/schema/asset";
+import {ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA, ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS} from "@/jsonld/asset";
 
 import {AssetProperties} from "@/utilities/asset";
 

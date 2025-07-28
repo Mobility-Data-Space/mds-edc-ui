@@ -11,12 +11,14 @@ export function Table(
   { children, className, ...rest }: PropsWithChildren<TableProps>,
 ) {
   return (
-    <table
-      {...rest}
-      className={clsx("min-w-full divide-y divide-gray-200", className)}
-    >
-      {children}
-    </table>
+    <div className="overflow-x-auto">
+      <table
+        {...rest}
+        className={clsx("min-w-full divide-y divide-gray-200", className)}
+      >
+        {children}
+      </table>
+    </div>
   );
 }
 

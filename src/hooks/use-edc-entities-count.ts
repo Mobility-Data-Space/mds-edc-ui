@@ -1,7 +1,7 @@
-import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state.ts";
 import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
 import {useEffect, useState} from "react";
 import {ManagementController} from "@think-it-labs/edc-connector-client/dist/src/facades/management";
+import { proxyConnectorManagement } from "@/constants/proxy";
 
 export interface EdcEntitiesCount {
   dataOffers: number,
@@ -27,9 +27,7 @@ const endpoints: [string, keyof ManagementController][] = Object.entries({
 });
 
 export const useEdcEntitiesCount = (): EdcEntitiesCount => {
-  const { connector } = useParticipantConnectorState();
-
-  const edcClient = useEdcConnectorClient({ management: connector.managementUrl });
+  const edcClient = useEdcConnectorClient({ management: proxyConnectorManagement });
   const [count, setCount] = useState<EdcEntitiesCount>(defaultEdcEntitiesCount);
 
   useEffect(() => {

@@ -18,7 +18,7 @@ export function RadioButton({ id = "", trueValue = "true", falseValue = "false",
   }
 
   return (
-    <Button id={id} onClick={onClick} color={valueIsTrue ? "error" : "secondary"} size="small" >
+    <Button id={id} onClick={onClick} color={valueIsTrue ? "error" : "secondary"} size="small" className="!px-2 !py-3" >
       <span className="font-medium text-sm">{valueIsTrue ? labelTrue : labelFalse}</span>
     </Button>
   );

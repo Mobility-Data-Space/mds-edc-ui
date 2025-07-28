@@ -1,3 +1,4 @@
+import { proxyConnectorManagement } from "@/constants/proxy";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T } from "@/i18n";
 import { formatDateTimeAgo } from "@/utilities/date.ts";
@@ -18,7 +19,7 @@ export default function ContractAgreementCard({ contractAgreement, onClick, isTe
   const { connector } = useParticipantConnectorState();
 
   return (
-    <ContractAgreementView id={contractAgreement.id} managementUrl={connector.managementUrl}>
+    <ContractAgreementView id={contractAgreement.id} managementUrl={proxyConnectorManagement}>
       <Card className="contract-agreement-card w-full max-w-[300px]" onClick={onClick}>
         <CardContent className="flex flex-col gap-y-3">
           <div>

@@ -4,7 +4,7 @@ import {Input} from "@/components/atoms/input";
 
 import {T} from "@/i18n";
 
-import {ASSET_ENDPOINT_DOCUMENTATION} from "@/schema/asset";
+import {ASSET_ENDPOINT_DOCUMENTATION} from "@/jsonld/asset";
 import {AssetProperties} from "@/utilities/asset";
 
 export interface AssetEndpointDocumentationProps {

@@ -1,25 +1,27 @@
 import React from "react";
-import { DataAddress } from "@think-it-labs/edc-connector-client";
-import {T} from "@/i18n";
 import {Input} from "@/components/atoms/input";
 import {MuiSelect} from "@/components/atoms/mui-select";
-import {DATA_ADDRESS_SELECT_DATA} from "@/constants/data-address-types";
+import {DATA_ADDRESS_DESTINATION_SELECT_DATA, DATA_ADDRESS_SELECT_DATA} from "@/constants/data-address-types";
 import {theme} from "@/theme/ThemeProvider";
 import {DataAddressTypes} from "@/utilities/data-address.ts";
-import {AssetFormDataAddressAmazonS3} from "@/components/organisms/asset-form-data-address-amazon-s3.tsx";
+import {FormDataAddressAmazonS3} from "@/components/organisms/form-data-address-amazon-s3";
 import {AssetContactEmailAndSubject} from "@/components/molecules/asset-contact-email-and-subject.tsx";
-import {AssetFormDataAddressHttp} from "@/components/organisms/asset-form-data-address-http";
+import {FormDataAddressHttp} from "@/components/organisms/form-data-address-http";
+import {FormDataAddressAzure} from "@/components/organisms/form-data-address-azure";
+import { DataAddress } from "@think-it-labs/edc-connector-client";
+import { T } from "@/i18n";
 
-export interface AssetDataAddressFormStepProps {
+export interface DataAddressFormStepProps {
   translator: (key: string) => string,
   formData: DataAddress,
   onChange: any,
   errors: { [key: string]: boolean | string },
   methodAlwaysShowing?: boolean,
-  customDataSourceConfigRows?: number,
+  customDataAddressConfigRows?: number,
+  isDestination?: boolean,
 }
 
-export function AssetFormDataAddressStep({ formData, errors, onChange, translator, methodAlwaysShowing = false, customDataSourceConfigRows = 2 }: AssetDataAddressFormStepProps): JSX.Element {
+export function FormDataAddressStep({ formData, errors, onChange, translator, methodAlwaysShowing = false, customDataAddressConfigRows = 2, isDestination = false }: DataAddressFormStepProps): JSX.Element {
   return (
     <div className="flex flex-col gap-y-5">
       <div className="flex flex-col gap-y-5 items-start">
@@ -33,7 +35,7 @@ export function AssetFormDataAddressStep({ formData, errors, onChange, translato
           name="data-address-type"
           id="data-address-type"
           label={translator("assets.new.fieldDataAddressType")}
-          options={DATA_ADDRESS_SELECT_DATA}
+          options={isDestination ? DATA_ADDRESS_DESTINATION_SELECT_DATA : DATA_ADDRESS_SELECT_DATA}
           error={errors.type}
           value={formData.type}
           onChange={(event) => onChange({ ...formData, type: event.target.value })}
@@ -50,48 +52,51 @@ export function AssetFormDataAddressStep({ formData, errors, onChange, translato
       }
 
       {formData.type === DataAddressTypes.AmazonS3 &&
-        <AssetFormDataAddressAmazonS3
+        <FormDataAddressAmazonS3
           translator={translator}
           formData={formData}
           onChange={onChange}
           errors={errors}
+          isDestination={isDestination}
         />
       }
 
-      {formData.type === DataAddressTypes.AzureBlob &&
-        <AssetFormDataAddressAmazonS3
+      {formData.type === DataAddressTypes.AzureStorage &&
+        <FormDataAddressAzure
           translator={translator}
           formData={formData}
           onChange={onChange}
           errors={errors}
+          isDestination={isDestination}
         />
       }
 
       {formData.type === DataAddressTypes.CustomJson &&
         <Input
-          name="data-address-description"
-          id="data-address-description"
-          key="data-address-description"
+          name="data-address-custom-json"
+          id="data-address-custom-json"
+          key="data-address-custom-json"
           multiline
-          rows={customDataSourceConfigRows}
-          label={translator("assets.new.fieldCustomDatasourceConfig")}
+          rows={customDataAddressConfigRows}
+          label={isDestination ? translator("assets.new.fieldCustomDataDestintationConfig") : translator("assets.new.fieldCustomDataSourceConfig")}
           placeholder={'{"https://w3id.org/edc/v0.0.1/ns/type": "HttpData", ...}'}
           required
-          helperText={typeof errors.description === "string" ? errors.description : ""}
           classes={{ textField: { '& p':{ color: theme.palette.error.main } }} as any}
-          error={errors.description}
-          value={formData.description}
-          onChange={(event) => onChange({ ...formData, description: event.target.value })}
+          error={errors.dataAddress}
+          value={formData.dataAddress}
+          onChange={(event) => onChange({ ...formData, dataAddress: event.target.value })}
         />
       }
 
-      {formData.type === DataAddressTypes.HttpData &&
-        <AssetFormDataAddressHttp
+      {formData.type === DataAddressTypes.HttpData && 
+        <FormDataAddressHttp
           translator={translator}
           formData={formData}
           onChange={onChange}
           errors={errors}
           methodAlwaysShowing={methodAlwaysShowing}
+          isDestination={isDestination}
+          isPull={formData.isPull}
         />
       }
     </div>

@@ -5,45 +5,38 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import {ContractAgreement, DataAddress} from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
-import {Input} from "@/components/atoms/input";
-import {MuiSelect} from "@/components/atoms/mui-select";
 import {T} from "@/i18n";
-import { DATA_ADDRESS_SELECT_DATA } from "@/constants/data-address-types";
-import {theme} from "@/theme/ThemeProvider";
 import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
 import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
-import { DataAddressTypes, defaultHttpDataAddress } from "@/utilities/data-address";
+import {defaultHttpDestinationDataAddress} from "@/utilities/data-address";
 import {createTransferProcessRequest} from "@/utilities/transfer-process";
-import {AssetContactEmailAndSubject} from "@/components/molecules/asset-contact-email-and-subject.tsx";
-import {AssetFormDataAddressAmazonS3} from "@/components/organisms/asset-form-data-address-amazon-s3.tsx";
-import {AssetFormDataAddressStep} from "@/components/organisms/asset-form-data-address-step.tsx";
+import {FormDataAddressStep} from "@/components/organisms/form-data-address-step";
 import {validateDataAddress} from "@/utilities/asset.ts";
+import { proxyConnectorManagement } from "@/constants/proxy";
 
 export interface TransferFormDialogProps {
   open: boolean,
   onClose: () => void,
   onSuccess?: () => void,
   translator: (key: string) => string,
-  contractAgreementLd: ContractAgreement,
+  contractAgreementId: ContractAgreement,
+  counterPartyAddress: string
 }
 
-export function TransferFormDialog({ contractAgreementLd, open, onClose, onSuccess = () => {}, translator }: TransferFormDialogProps): JSX.Element {
-  const [formData, setFormData] = useState<DataAddress>(defaultHttpDataAddress);
+export function TransferFormDialog({ contractAgreementId, open, onClose, onSuccess = () => {}, translator, counterPartyAddress }: TransferFormDialogProps): JSX.Element {
+  const [formData, setFormData] = useState<DataAddress>(defaultHttpDestinationDataAddress);
 
   const [errors, setErrors] = useState({});
-  const contractAgreement = removeJsonLdSchemaFromProperties(contractAgreementLd);
+  const contractAgreement = removeJsonLdSchemaFromProperties(contractAgreementId);
   const { connector } = useParticipantConnectorState();
-  const edcClient = useEdcConnectorClient({management: connector.managementUrl});
+  const edcClient = useEdcConnectorClient({ management: proxyConnectorManagement });
   const formRef = useRef<HTMLFormElement>(null);
 
   const onSubmit = () => {
     const agreement: Partial<ContractAgreement> = {
-      assetId: contractAgreement?.assetId[0] && contractAgreement?.assetId[0]["@value"],
-      providerId: contractAgreement?.providerId[0] && contractAgreement?.providerId[0]["@value"],
-      consumerId: contractAgreement?.consumerId[0] && contractAgreement?.consumerId[0]["@value"],
-      contractId: contractAgreement["@id"],
+      contractId: contractAgreement["@id"]
     };
-    const transfer = createTransferProcessRequest(agreement as ContractAgreement, DataAddressTypes.HttpData, formData, connector.protocolUrl);
+    const transfer = createTransferProcessRequest(agreement as ContractAgreement, formData, counterPartyAddress);
     edcClient.management.transferProcesses.initiate(transfer)
       .then(() => {
         enqueueSnackbar(translator("transferProcesses.new.success"));
@@ -57,7 +50,7 @@ export function TransferFormDialog({ contractAgreementLd, open, onClose, onSucce
   }
 
   const onChange = (newFormData: DataAddress) => {
-    setErrors(validateDataAddress(newFormData, translator));
+    setErrors(validateDataAddress(newFormData, translator, true));
     setFormData(newFormData);
   }
 
@@ -81,21 +74,24 @@ export function TransferFormDialog({ contractAgreementLd, open, onClose, onSucce
             return onSubmit();
           }}
         >
-          <AssetFormDataAddressStep
+          <FormDataAddressStep
             translator={translator}
             formData={formData}
             onChange={onChange}
             errors={errors}
+            isDestination
           />
         </form>
       </DialogContent>
       <DialogActions>
-        <Button color="secondary" onClick={onClose}>
-          <T string="common.close"/>
-        </Button>
-        <Button color="primary" variant="contained" onClick={() => formRef.current && formRef.current.requestSubmit()}>
-          <T string="transferProcesses.new.initiateTransfer"/>
-        </Button>
+        <div className="flex justify-end flex-grow gap-x-3 p-3">
+          <Button color="secondary" onClick={onClose}>
+            <T string="common.close"/>
+          </Button>
+          <Button color="primary" variant="contained" onClick={() => formRef.current && formRef.current.requestSubmit()}>
+            <T string="transferProcesses.new.initiateTransfer"/>
+          </Button>
+        </div>
       </DialogActions>
     </Dialog>
   );

@@ -1,7 +1,7 @@
 import React from "react";
 import {Input} from "../atoms/input";
 import {T} from "@/i18n";
-import {ASSET_ADVANCED_INFO_GEO_LOCATION, ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL} from "@/schema/asset";
+import {ASSET_ADVANCED_INFO_GEO_LOCATION, ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL} from "@/jsonld/asset";
 import {AssetProperties} from "@/utilities/asset";
 
 export interface AssetGeoLocationsProps {

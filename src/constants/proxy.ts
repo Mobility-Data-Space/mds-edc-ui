@@ -1,0 +1,1 @@
+export const proxyConnectorManagement = "/connector/management";

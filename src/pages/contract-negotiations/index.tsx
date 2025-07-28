@@ -19,6 +19,7 @@ import {formatDateTime, formatDateTimeAgo} from "@/utilities/date.ts";
 import {transferProcessStateColor} from "@/utilities/transfer-process.ts";
 import {StateChip} from "@/components/atoms/state-chip.tsx";
 import {theme} from "@/theme/ThemeProvider.tsx";
+import { proxyConnectorManagement } from "@/constants/proxy";
 
 const CreatedAt = ({ item }: { item: ContractNegotiation }) => {
   const createdAtValue = readValue(item, "https://w3id.org/edc/v0.0.1/ns/createdAt");
@@ -81,7 +82,7 @@ export default function ContractNegotiationsListPage() {
         translator={translator}
       />
       <ContractNegotiationsList
-        managementUrl={managementUrl}
+        managementUrl={proxyConnectorManagement}
         usePagination
         navigate={navigate}
         currentPage={currentPage}

@@ -1,11 +1,38 @@
-import { Participant } from "@/constants/dataspace";
-import { EdcConnectorClient, IdResponse } from "@think-it-labs/edc-connector-client";
+import { Participant } from "@/utilities/participant";
+import { TransferProcessInput , EdcConnectorClient, IdResponse, PolicyBuilder  } from "@think-it-labs/edc-connector-client";
 import { randomUUID } from "node:crypto";
-    
-export async function seed(participant: Participant) {
+
+async function waitForNegotiationState(
+    client: EdcConnectorClient,
+    negotiationId: string,
+    targetState: string,
+    interval = 500,
+    times = 50,
+): Promise<void> {
+    let waiting = true;
+    let actualState: string;
+
+    do {
+        times--;
+        await new Promise((resolve) => setTimeout(resolve, interval));
+
+        const response = await client.management.contractNegotiations.getState(
+            negotiationId,
+        );
+        actualState = response.state;
+
+        waiting = actualState !== targetState;
+    } while (waiting && times > 0);
+
+    if (actualState !== targetState) {
+        throw new Error("state mismatch");
+    }
+}
+
+export async function publish_offers(participant: Participant) {
     const client: EdcConnectorClient = new EdcConnectorClient
         .Builder()
-        .managementUrl(participant.connectorManagementUrl)
+        .managementUrl(participant.managementUrl)
         .apiToken(process.env.TEST_API_KEY || "default-test-api-key")
         .build();
 
@@ -104,5 +131,64 @@ export async function seed(participant: Participant) {
     console.log(
         "  contract definitions created",
         participant.id,
+    );
+}
+
+export async function initiate_transfers(participant: Participant, counterPartyParticipant: Participant) {
+    const client: EdcConnectorClient = new EdcConnectorClient
+        .Builder()
+        .managementUrl(participant.managementUrl)
+        .apiToken(process.env.TEST_API_KEY || "default-test-api-key")
+        .build();
+
+    // Initiate negotiation and transfer process
+    console.log(
+        "Initiate negotiation and transfer process for",
+        participant.id,
+        counterPartyParticipant.protocolUrl
+    );
+
+    const catalog = await client.management.catalog.request({
+        counterPartyAddress: counterPartyParticipant.protocolUrl,
+    });
+
+    const dataset = catalog.datasets[0];
+    
+    const offer = dataset.offers[0];
+    const p = new PolicyBuilder().type("Offer").raw({
+        ...offer,
+        assigner: counterPartyParticipant.id,
+        target: dataset.id
+    }).build();
+    
+    const negotiationResponse = await client.management.contractNegotiations.initiate({
+        counterPartyAddress: counterPartyParticipant.protocolUrl,
+        policy: p
+    });
+
+    console.log(
+        "  awaiting negotiation finalization for",
+        participant.id,
+    );
+
+    await waitForNegotiationState(client, negotiationResponse.id, "FINALIZED");
+
+    const contractNegotiation = await client.management.contractNegotiations.get(negotiationResponse.id);
+
+    const contractAgreement = await client.management.contractAgreements.get(contractNegotiation.contractAgreementId);
+
+    const transferProcessInput = {
+        counterPartyAddress: participant.protocolUrl,
+        contractId: contractAgreement.id,
+        transferType: "HttpData-PULL",
+    } as TransferProcessInput;
+
+    const transferResponse = await client.management.transferProcesses.initiate(transferProcessInput);
+
+    console.log(
+        "  transfer process initiated for",
+        participant.id,
+        "with transfer ID",
+        transferResponse.id,
     );
 }

@@ -46,9 +46,9 @@ export function AssetContactEmailAndSubject({ translator, formData, onChange, er
           data-testid="data-offer-contact-preferred-email-subject"
           placeholder={translator("dataOffer.new.dataOfferContactPreferredEmailSubject")}
           tooltip={translator("dataOffer.new.dataOfferContactPreferredEmailSubjectTooltip")}
-          value={formData.preferred_email_subject}
-          error={errors.preferred_email_subject}
-          onChange={(event) => onChange({ ...formData, preferred_email_subject: event.target.value })}
+          value={formData.preferred_subject}
+          error={errors.preferred_subject}
+          onChange={(event) => onChange({ ...formData, preferred_subject: event.target.value })}
         />
       </div>
     </>
