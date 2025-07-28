@@ -22,12 +22,12 @@ import { AssetTitle } from "@/components/molecules/asset-title.tsx";
 import { AssetTransportMode } from "@/components/molecules/asset-transport-mode.tsx";
 import { AssetVersion } from "@/components/molecules/asset-version.tsx";
 import { Snackbar } from "@/components/molecules/snackbar.tsx";
-import { AssetFormDataAddressStep } from "@/components/organisms/asset-form-data-address-step.tsx";
+import { FormDataAddressStep } from "@/components/organisms/form-data-address-step.tsx";
 import SideDrawer from "@/components/organisms/side-drawer.tsx";
 import { DATA_OFFER_TYPE_DATA_SOURCE } from "@/constants/data-address-types.ts";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state.ts";
 import { T, useTranslator } from "@/i18n";
-import { ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_TITLE } from "@/schema/asset.ts";
+import { ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_TITLE } from "@/jsonld/asset.ts";
 import {AssetProperties, assetToAssetInput, defaultCreateAssetFormData, fromAssetForm, validateDataAddress } from "@/utilities/asset.ts";
 import { Button, Checkbox, Divider, FormControlLabel, Typography } from "@mui/material";
 import {AssetInput, DataAddress, PolicyDefinitionInput } from "@think-it-labs/edc-connector-client";
@@ -35,12 +35,13 @@ import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use
 import { useSnackbar } from "notistack";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
+import { proxyConnectorManagement } from "@/constants/proxy";
 
 export default function EditAssetPage() {
   const { query: { id } } = useRouter();
   const [offerType, setOfferType] = useState("Unchanged");
   const { push, connector } = useParticipantConnectorState();
-  const client = useEdcConnectorClient({ management: connector.managementUrl });
+  const client = useEdcConnectorClient({ management: proxyConnectorManagement });
 
   useEffect(() => {
     if (! id) {
@@ -187,13 +188,13 @@ export default function EditAssetPage() {
                   onChange={setOfferType}
                 />
                 {offerType === "Unchanged" ? "" :
-                  <AssetFormDataAddressStep
+                  <FormDataAddressStep
                     translator={translator}
                     formData={formData.dataAddress}
                     onChange={dataAddressFormOnChange}
                     errors={errors.dataAddress}
                     methodAlwaysShowing
-                    customDataSourceConfigRows={6}
+                    customDataAddressConfigRows={6}
                   />
                 }
               </div>
