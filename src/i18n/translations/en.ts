@@ -336,12 +336,12 @@ export const en = {
       },
     },
     contractDefinitions: {
-      id: "Contract Offer Id",
-      contractOffer: "Contract Offer",
-      title: "List all contract definitions",
+      id: "Data Offer Id",
+      contractOffer: "Data Offer",
+      title: "List all data offers",
       description:
         "List all of your contracts offered to the external network. Contract definitions define how other participants would consume owned assets.",
-      buttonAdd: "Add contract definition",
+      buttonAdd: "Add data offer",
       headingId: "ID",
       contractPolicy: "Contract Policy",
       contractPolicyJsonLd: "Contract Policy JSON-LD",
@@ -351,9 +351,9 @@ export const en = {
       accessPolicy: "Access Policy",
       assets: "Assets",
       publishDataOffer: "Publish Data Offer",
-      searchPlaceholder: "Search Contract Definitions",
+      searchPlaceholder: "Search Data Offers",
       "[id]": {
-        title: "View contract definition",
+        title: "View data offer",
         deleteButton: "Delete",
         fieldId: "ID",
         fieldCreatedAt: "Created At",
@@ -362,7 +362,7 @@ export const en = {
         fieldAssetSelector: "Assets",
       },
       new: {
-        title: "Create a contract definition",
+        title: "Create a data offer",
         description: "Describe a new policy by defining rules which ensure owned data is accessed in a specific way, following strict requirements.",
         id: "ID",
         publishNewDataOffer: "Publish New Data Offer",
