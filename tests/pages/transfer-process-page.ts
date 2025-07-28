@@ -3,8 +3,8 @@ import { BaseListPage } from './base-list-page';
 
 export class TransferProcessesPage extends BaseListPage {
   readonly transferProcessesListLocator = '[data-testid="transfer-processes-list"]';
-  readonly transferProcessRowLocator = '[data-testid="transfer-process-row"]';
-  readonly transferProcessDialogLocator = '.transfer-process-dialog';
+  readonly transferProcessRowLocator = '.transfer-process-row';
+  readonly transferProcessDialogLocator = '[data-testid="transfer-process-details-dialog"]';
 
   constructor(page: Page) {
     super(page);

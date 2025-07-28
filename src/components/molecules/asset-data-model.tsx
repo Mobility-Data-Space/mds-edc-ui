@@ -3,7 +3,7 @@ import React from "react";
 import {Input} from "@/components/atoms/input";
 
 import {T} from "@/i18n";
-import {ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_MODEL_ID} from "@/schema/asset";
+import {ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_MODEL_ID} from "@/jsonld/asset";
 import {AssetProperties} from "@/utilities/asset";
 
 export interface AssetDataModelProps {

@@ -6,7 +6,7 @@ import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
 import {MarkdownCollapsableText} from "@/components/molecules/markdown-collapsable-text";
 import FieldGrid from "@/components/molecules/field-grid";
 import {T} from "@/i18n";
-import {ASSET_KEYWORDS, ASSET_DESCRIPTION} from "@/schema/asset";
+import {ASSET_KEYWORDS, ASSET_DESCRIPTION} from "@/jsonld/asset";
 import {assetDataAddressFieldsTitle, assetDataAddressFieldsToShow, assetFieldsToShow, assetPrivateFieldsToShow} from "@/utilities/asset";
 
 interface AssetDetailsProps {

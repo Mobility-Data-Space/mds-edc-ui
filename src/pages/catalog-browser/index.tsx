@@ -16,6 +16,7 @@ import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use
 import { enqueueSnackbar, useSnackbar } from "notistack";
 import { useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
+import { proxyConnectorManagement } from "@/constants/proxy";
 
 export default function CatalogPage() {
   const { connector } = useParticipantConnectorState();
@@ -37,7 +38,7 @@ export default function CatalogPage() {
   const [catalogParticipantId, setCatalogParticipantId] = useState("");
   const [datasetToNegotiate, setDatasetToNegotiate] = useState<Dataset>({} as Dataset);
 
-  const client = useEdcConnectorClient({ management: connector.managementUrl });
+  const client = useEdcConnectorClient({ management: proxyConnectorManagement });
   const fetchCatalogParticipantId = (counterPartyAddress: string) => {
     client.management.catalog.request({
       counterPartyAddress
@@ -75,7 +76,7 @@ export default function CatalogPage() {
 
       <SideDrawer title={<T string="catalog.title" />}>
         <ContractOffersList
-          managementUrl={connector.managementUrl}
+          managementUrl={proxyConnectorManagement}
           counterPartyAddress={counterPartyAddressToSearch}
           usePagination
           navigate={setCurrentPage}

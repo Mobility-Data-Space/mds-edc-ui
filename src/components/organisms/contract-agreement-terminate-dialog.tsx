@@ -9,6 +9,7 @@ import {Checkbox} from "@/components/atoms/checkbox";
 import {AgreementsRetirementController} from "@/utilities/contract-agreement";
 import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
 import {enqueueSnackbar} from "notistack";
+import { proxyConnectorManagement } from "@/constants/proxy";
 
 interface ContractAgreementTerminateDialogProps {
   contractAgreement: ContractAgreement,
@@ -42,7 +43,7 @@ export default function ContractAgreementTerminateDialog({ contractAgreement, op
   const charactersCount = ! detailedReasonError && `${formData.detailedReason.length}/${TERMINATION_DETAILED_REASON_MAX_LENGTH} characters`;
 
   const onClick = () => {
-    const controller = new AgreementsRetirementController(connector.managementUrl)
+    const controller = new AgreementsRetirementController(proxyConnectorManagement)
     controller.retireAgreement(contractAgreement.id, formData.detailedReason)
       .then(() => {
         onSuccess();

@@ -3,7 +3,7 @@ import React from "react";
 import {Input} from "@/components/atoms/input";
 
 import {T} from "@/i18n";
-import { ASSET_ORGANIZATION } from "@/schema/asset";
+import { ASSET_ORGANIZATION } from "@/jsonld/asset";
 import {AssetProperties} from "@/utilities/asset";
 
 export interface AssetSovereignLegalNameProps {

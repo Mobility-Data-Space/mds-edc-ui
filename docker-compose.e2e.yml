@@ -1,10 +1,11 @@
 services:
   edc-1:
-    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:1.0.0-rc.7
+    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
+    entrypoint: ["/app/bin/connector-inmemory", "--log-level=debug"]
     environment:
-      EDC_PARTICIPANT_ID: "participant_1"
+      EDC_PARTICIPANT_ID: "MDSXXXXXXX.YYYYYYY"
       EDC_COMPONENT_ID: "participant_1_MDS_COMPONENT"
-      EDC_HOSTNAME: "edc-participant-1"
+
       WEB_HTTP_PATH: "/api"
       WEB_HTTP_PORT: "8181"
       WEB_HTTP_CONTROL_PATH: "/api/control"
@@ -19,6 +20,8 @@ services:
       WEB_HTTP_VERSION_PORT: "8184"
       WEB_HTTP_PUBLIC_PATH: "/public"
       WEB_HTTP_PUBLIC_PORT: "8185"
+
+      EDC_DSP_CALLBACK_ADDRESS: "http://edc-1:8183/api/dsp"
 
       # Transfer Proxy Configuration
       EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: "transfer-proxy-token-signer-public-key"
@@ -48,11 +51,12 @@ services:
       start_period: 20s
 
   edc-2:
-    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:1.0.0-rc.7
+    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
+    entrypoint: ["/app/bin/connector-inmemory", "--log-level=debug"]
     environment:
-      EDC_PARTICIPANT_ID: "participant_2"
+      EDC_PARTICIPANT_ID: "MDSXXXXXXX.ZZZZZZZ"
       EDC_COMPONENT_ID: "participant_2_MDS_COMPONENT"
-      EDC_HOSTNAME: "edc-participant-2"
+
       WEB_HTTP_PATH: "/api"
       WEB_HTTP_PORT: "8181"
       WEB_HTTP_CONTROL_PATH: "/api/control"
@@ -67,6 +71,9 @@ services:
       WEB_HTTP_VERSION_PORT: "8184"
       WEB_HTTP_PUBLIC_PATH: "/public"
       WEB_HTTP_PUBLIC_PORT: "8185"
+
+      EDC_DSP_CALLBACK_ADDRESS: "http://edc-2:8183/api/dsp"
+
       EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: "transfer-proxy-token-signer-public-key"
       EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: "transfer-proxy-token-signer-private-key"
 

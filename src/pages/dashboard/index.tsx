@@ -12,13 +12,14 @@ import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-e
 import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/entities";
 import {useEffect, useState} from "react";
 import { TransferProcessStatusChartCard } from "@/components/molecules/transfer-process-status-chart-card.tsx";
+import { proxyConnectorManagement } from "@/constants/proxy";
 
 export default function ConnectorPage() {
   const { connector } = useParticipantConnectorState();
   const { translator } = useTranslator();
   const entitiesCount = useEdcEntitiesCount()
   const edcFields = useEdcFields();
-  const edcClient = useEdcConnectorClient({ management: connector.managementUrl });
+  const edcClient = useEdcConnectorClient({ management: proxyConnectorManagement });
   const [transferProcesses, setTransferProcesses] = useState<TransferProcess[]>([]);
 
   useEffect(() => {
@@ -50,7 +51,7 @@ export default function ConnectorPage() {
           <EdcInfoCard
             name={connector.name}
             description={connector.description}
-            managementUrl={connector.connectorManagementUrl}
+            managementUrl={connector.managementUrl}
             protocolUrl={connector.protocolUrl}
             translator={translator}
           />
