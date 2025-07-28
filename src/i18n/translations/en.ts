@@ -384,6 +384,7 @@ export const en = {
       policy: "Policy",
       createPolicy: "Create Policy",
       searchPlaceholder: "Search Policies",
+      deleteSuccess: "Policy deleted successfully!",
       "[id]": {
         title: "View policy definition",
         deleteButton: "Delete",
