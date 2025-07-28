@@ -1,10 +1,12 @@
 import { Participant } from "@/utilities/participant";
 import { useRouter } from "next/router";
-import {useEffect, useState} from "react";
+import {useEffect, useState, useRef} from "react";
 
 export const useParticipantConnectorState = () => {
   const router = useRouter();
   const [connector, setConnector] = useState({} as Participant);
+
+  const isFetched = useRef(false);
 
   useEffect(() => {
     const fetchConnectorConfig = async () => {
@@ -12,8 +14,11 @@ export const useParticipantConnectorState = () => {
       setConnector(await config.json());
     };
 
-    fetchConnectorConfig() ;
-  }, [])
+    if (!isFetched.current) {
+      fetchConnectorConfig();
+      isFetched.current = true;
+    }
+  }, []);
 
   return {
     connector,
