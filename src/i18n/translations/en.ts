@@ -108,6 +108,10 @@ export const en = {
         deleteTitle: "Deletion confirmation",
         fetchError: "Failed to fetch asset",
       },
+      edit: {
+        title: "Edit Asset",
+        keepDatasourceUnchanged: "Keep the datasource unchanged",
+      },
       new: {
         title: "Create new asset",
         description:

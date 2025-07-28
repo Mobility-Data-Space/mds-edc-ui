@@ -37,9 +37,21 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { proxyConnectorManagement } from "@/constants/proxy";
 
+const unchangedOfferType = {
+  text: "assets.edit.keepDatasourceUnchanged",
+  value: "Unchanged",
+}
+
 export default function EditAssetPage() {
   const { query: { id } } = useRouter();
-  const [offerType, setOfferType] = useState("Unchanged");
+  const [offerType, setOfferType] = useState(unchangedOfferType.value);
+  const [oldAssetData, setOldAssetData] = useState({} as AssetInput);
+  const onChangeOfferType = ((newOfferType: string) => {
+    if (newOfferType === unchangedOfferType.value) {
+      setFormData({ ...formData, dataAddress: oldAssetData.dataAddress })
+    }
+    setOfferType(newOfferType);
+  });
   const { push, connector } = useParticipantConnectorState();
   const client = useEdcConnectorClient({ management: proxyConnectorManagement });
 
@@ -49,8 +61,9 @@ export default function EditAssetPage() {
     }
     client.management.assets.get(id as string)
     .then(assetToAssetInput)
-    .then((assetInput) => {
-      setFormData(assetInput)
+    .then((assetInput: AssetInput) => {
+      setOldAssetData(assetInput);
+      setFormData(assetInput);
     })
   }, [client, id]);
 
@@ -129,7 +142,7 @@ export default function EditAssetPage() {
       return;
     }
     client.management.assets.update(fromAssetForm(formData))
-    .then((result) => {
+    .then(() => {
       enqueueSnackbar("", {
         content: (key) => <Snackbar
           type="success"
@@ -143,7 +156,7 @@ export default function EditAssetPage() {
       enqueueSnackbar("", {
         content: (key) => <Snackbar
           type="error"
-          message={translator('dataOffer.new.dataOfferCreateError')}
+          message={translator('assets.new.dataOfferCreateError')}
           onClose={() => { closeSnackbar(key) }}
         />
       })
@@ -155,7 +168,7 @@ export default function EditAssetPage() {
   }
 
   return (
-    <SideDrawer title={<T string="dataOffer.new.title" />}>
+    <SideDrawer title={<T string="assets.edit.title" />}>
       <form>
         <div className="flex flex-col gap-y-12">
 
@@ -180,12 +193,12 @@ export default function EditAssetPage() {
                   defaultValue={offerType}
                   options={[
                     {
-                      text: "Keep the datasource unchanged",
-                      value: "Unchanged",
+                      ...unchangedOfferType,
+                      text: translator(unchangedOfferType.text)
                     },
                     DATA_OFFER_TYPE_DATA_SOURCE,
                   ]}
-                  onChange={setOfferType}
+                  onChange={onChangeOfferType}
                 />
                 {offerType === "Unchanged" ? "" :
                   <FormDataAddressStep
