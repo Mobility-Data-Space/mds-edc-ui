@@ -15,7 +15,7 @@ jobs:
 
     services:
       edc-1:
-        image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:1.0.0-rc.7
+        image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
         ports:
           - 8181:8181
           - 8186:8186
@@ -24,9 +24,9 @@ jobs:
           - 8184:8184
           - 8185:8185
         env:
-          EDC_PARTICIPANT_ID: "participant_1"
+          EDC_PARTICIPANT_ID: "MDSXXXXXXX.YYYYYYY"
           EDC_COMPONENT_ID: "participant_1"
-          EDC_HOSTNAME: "edc-participant-1"
+
           WEB_HTTP_PATH: "/api"
           WEB_HTTP_PORT: "8181"
           WEB_HTTP_CONTROL_PATH: "/api/control"
@@ -41,12 +41,13 @@ jobs:
           WEB_HTTP_VERSION_PORT: "8184"
           WEB_HTTP_PUBLIC_PATH: "/public"
           WEB_HTTP_PUBLIC_PORT: "8185"
+          EDC_DSP_CALLBACK_ADDRESS: "http://edc-1:8183/api/dsp"
           EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: "transfer-proxy-token-signer-public-key"
           EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: "transfer-proxy-token-signer-private-key"
           EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "false"
       
       edc-2:
-        image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:1.0.0-rc.7
+        image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
         ports:
           - 9181:8181
           - 9186:8186
@@ -55,9 +56,9 @@ jobs:
           - 9184:8184
           - 9185:8185
         env:
-          EDC_PARTICIPANT_ID: "participant_2"
-          EDC_COMPONENT_ID: "participant_2_MDS_COMPONENT"
-          EDC_HOSTNAME: "edc-participant-2"
+          EDC_PARTICIPANT_ID: "MDSXXXXXXX.ZZZZZZZ"
+          EDC_COMPONENT_ID: "participant_2"
+
           WEB_HTTP_PATH: "/api"
           WEB_HTTP_PORT: "8181"
           WEB_HTTP_CONTROL_PATH: "/api/control"
@@ -72,6 +73,7 @@ jobs:
           WEB_HTTP_VERSION_PORT: "8184"
           WEB_HTTP_PUBLIC_PATH: "/public"
           WEB_HTTP_PUBLIC_PORT: "8185"
+          EDC_DSP_CALLBACK_ADDRESS: "http://edc-2:8183/api/dsp"
           EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: "transfer-proxy-token-signer-public-key"
           EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: "transfer-proxy-token-signer-private-key"
           EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "false"

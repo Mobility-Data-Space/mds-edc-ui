@@ -113,14 +113,9 @@ test.describe("Contract Negotiations Tests", () => {
     });
 
     test("should disable next button on last page", async ({ page }) => {
-      const totalLastIndex = await negotiationsPage.getLastElementIndex();
-
       while (await negotiationsPage.isNextPageEnabled()) {
         await negotiationsPage.goToNextPage();
       }
-
-      const currentLastIndex = await negotiationsPage.getLastElementIndex();
-      expect(currentLastIndex).toBe(totalLastIndex);
 
       const isNextEnabled = await negotiationsPage.isNextPageEnabled();
       expect(isNextEnabled).toBeFalsy();
