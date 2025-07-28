@@ -3,7 +3,7 @@ import React from "react";
 import DateRangePicker from "@/components/molecules/date-range-picker";
 
 import {T} from "@/i18n";
-import {ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START} from "@/schema/asset";
+import {ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START} from "@/jsonld/asset";
 import {AssetProperties} from "@/utilities/asset";
 
 export interface AssetTemporalCoverageProps {

@@ -10,6 +10,7 @@ import { fromPolicyDefinitionForm } from "@/utilities/policy";
 import PolicyExpression from "@/components/organisms/policy-expression";
 import { MultiplicityConstraint } from "@/utilities/policy-constraints";
 import { Input } from "@/components/atoms/input";
+import { proxyConnectorManagement } from "@/constants/proxy";
 
 export default function CreatePolicyDefinitionPage() {
   const { push, connector } = useParticipantConnectorState();
@@ -50,7 +51,7 @@ export default function CreatePolicyDefinitionPage() {
     <SideDrawer title={<T string="policyDefinitions.new.title" />}>
       <div>
         <PolicyDefinitionFormWrapper
-          managementUrl={connector.managementUrl}
+          managementUrl={proxyConnectorManagement}
           formData={() => fromPolicyDefinitionForm(formData, policyId)}
           onSuccess={() => push("/policy-definitions")}
           onFailure={onFormSubmitFail}

@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useCallback, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
+import { proxyConnectorManagement } from "@/constants/proxy";
 
 export default function AssetListPage() {
   const router = useRouter();
@@ -77,7 +78,7 @@ export default function AssetListPage() {
 
       <SideDrawer title={<T string="assets.title" />}>
         <AssetsList
-          managementUrl={connector.managementUrl}
+          managementUrl={proxyConnectorManagement}
           usePagination
           navigate={navigate}
           currentPage={parseInt(router.query.page as string) || 0}

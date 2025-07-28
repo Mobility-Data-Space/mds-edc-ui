@@ -19,6 +19,7 @@ import { useRouter } from "next/router";
 import { SnackbarKey, useSnackbar } from "notistack";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
+import { proxyConnectorManagement } from "@/constants/proxy";
 
 enum TypeFilter {
   Consuming = "Consuming",
@@ -112,12 +113,11 @@ export default function ContractAgreementsListPage() {
     setOpenContractAgreementData({ contractAgreement });
   };
 
-  const edcClient = useEdcConnectorClient({ management: connector.managementUrl });
+  const edcClient = useEdcConnectorClient({ management: proxyConnectorManagement });
 
   const populateRetired = useCallback(() => {
-    const controller = new AgreementsRetirementController(connector.managementUrl)
+    const controller = new AgreementsRetirementController(proxyConnectorManagement)
     controller.retiredAgreementsRequest().then(retiredAgreements => {
-      setRetiredContractAgreementIds(retiredAgreements.map(contractAgreement => contractAgreement.agreementId as string));
       const retiredContractAgreementsToSave: { [key: string]: RetiredContractAgreement } = {};
       retiredAgreements.forEach(retiredContractAgreement => {
         retiredContractAgreementsToSave[retiredContractAgreement.agreementId] = retiredContractAgreement;
@@ -157,7 +157,7 @@ export default function ContractAgreementsListPage() {
             onClose={() => { closeSnackbar(key); }}
           />
       }));
-  }, [edcClient, connector, enqueueSnackbar, closeSnackbar, translator]);
+  }, [edcClient, enqueueSnackbar, closeSnackbar, translator]);
 
   useEffect(() => {
     populateRetired();
@@ -196,13 +196,13 @@ export default function ContractAgreementsListPage() {
         }}
         participantId={connector.id}
         connectorEndpoint={connector.protocolUrl}
-        managementUrl={connector.managementUrl}
+        managementUrl={proxyConnectorManagement}
         contentStyle={{ maxWidth: "90vw", width: "1000px" }}
         translator={translator}
       />
 
       <ContractAgreementsList
-        managementUrl={connector.managementUrl}
+        managementUrl={proxyConnectorManagement}
         usePagination={true}
         navigate={navigate}
         currentPage={parseInt(query.page as string) || 0}
@@ -222,44 +222,44 @@ export default function ContractAgreementsListPage() {
           },
         ]}
       >
-        <div className="flex justify-between gap-x-5 pb-6">
-          <div className="flex justify-start gap-x-5 items-center">
+        <div className="flex flex-col gap-y-4 pb-6">
+          <div className="flex justify-between items-center">
             <div className="h-full min-w-xl">
               <SearchBar searchTarget="assetId" placeholder={translator("contractAgreements.searchPlaceholder")} searchOperator="ilike" />
             </div>
-            <div className="flex gap-x-4">
-              <ButtonGroup color="info" variant="outlined" sx={{
-                ".MuiButtonGroup-grouped": {
-                  borderColor: theme.palette.info.main,
+            <div className="flex justify-end items-center">
+              <ContractAgreementsList.Pagination>
+                {({ decrementPage, hasPrev, hasNext, incrementPage, page, itemsCount }) =>
+                  <PaginationControls
+                    page={page}
+                    hasPrev={hasPrev}
+                    hasNext={hasNext}
+                    decrementPage={decrementPage}
+                    incrementPage={incrementPage}
+                    maxItems={MAX_ITEMS}
+                    dataTestIdPrefix="pagination"
+                    itemsCount={itemsCount}
+                  />
                 }
-              }}>
-                {Object.keys(StatusFilter).map((filter) => (
-                  <Button
-                    key={filter}
-                    variant={selectedStatusFilter === filter ? "contained" : "outlined"}
-                    onClick={() => setSelectedStatusFilter(filter as StatusFilter)}
-                  >
-                    <T string={`contractAgreements.${filter.toLowerCase()}Contracts`} />
-                  </Button>
-                ))}
-              </ButtonGroup>
+              </ContractAgreementsList.Pagination>
             </div>
           </div>
-          <div className="flex justify-end items-center">
-            <ContractAgreementsList.Pagination>
-              {({ decrementPage, hasPrev, hasNext, incrementPage, page, itemsCount }) =>
-                <PaginationControls
-                  page={page}
-                  hasPrev={hasPrev}
-                  hasNext={hasNext}
-                  decrementPage={decrementPage}
-                  incrementPage={incrementPage}
-                  maxItems={MAX_ITEMS}
-                  dataTestIdPrefix="pagination"
-                  itemsCount={itemsCount}
-                />
+          <div className="flex gap-x-4">
+            <ButtonGroup color="info" variant="outlined" sx={{
+              ".MuiButtonGroup-grouped": {
+                borderColor: theme.palette.info.main,
               }
-            </ContractAgreementsList.Pagination>
+            }}>
+              {Object.keys(StatusFilter).map((filter) => (
+                <Button
+                  key={filter}
+                  variant={selectedStatusFilter === filter ? "contained" : "outlined"}
+                  onClick={() => setSelectedStatusFilter(filter as StatusFilter)}
+                >
+                  <T string={`contractAgreements.${filter.toLowerCase()}Contracts`} />
+                </Button>
+              ))}
+            </ButtonGroup>
           </div>
         </div>
 

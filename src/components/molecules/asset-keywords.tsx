@@ -2,7 +2,7 @@ import React from "react";
 
 import {KeywordsInput} from "@/components/atoms/keywords-input";
 
-import {ASSET_KEYWORDS} from "@/schema/asset";
+import {ASSET_KEYWORDS} from "@/jsonld/asset";
 import {AssetProperties} from "@/utilities/asset";
 
 export interface AssetKeywordsProps {

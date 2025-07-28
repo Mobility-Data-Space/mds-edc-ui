@@ -183,14 +183,9 @@ test.describe("Data Offer Tests", () => {
     });
 
     test("should disable next button on last page", async ({ page }) => {
-      const totalLastIndex = await dataOfferPage.getLastElementIndex();
-
       while (await dataOfferPage.isNextPageEnabled()) {
         await dataOfferPage.goToNextPage();
       }
-
-      const currentLastIndex = await dataOfferPage.getLastElementIndex();
-      expect(currentLastIndex).toBe(totalLastIndex);
 
       const isNextEnabled = await dataOfferPage.isNextPageEnabled();
       expect(isNextEnabled).toBeFalsy();

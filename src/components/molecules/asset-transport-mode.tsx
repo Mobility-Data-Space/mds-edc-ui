@@ -2,7 +2,7 @@ import React from "react";
 
 import {MuiSelect} from "@/components/atoms/mui-select";
 
-import {ASSET_ADVANCED_INFO_TRANSPORT_MODE} from "@/schema/asset";
+import {ASSET_ADVANCED_INFO_TRANSPORT_MODE} from "@/jsonld/asset";
 import {GEO_REFERENCE_DATA} from "@/constants/data-category";
 import {AssetProperties} from "@/utilities/asset";
 

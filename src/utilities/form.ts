@@ -1,12 +1,12 @@
-import { ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE } from "@/schema/asset";
+import { ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE } from "@/jsonld/asset";
 
 export const removeEmptyFields = (object: { [key: string]: any }) => {
   const newFormData: { [key: string]: any } = {};
   for (const key in object) {
-    if(key == ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE){
-      continue; 
+    if (key == ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE) {
+      continue;
     }
-    
+
     if (typeof object[key] === "boolean") {
       newFormData[key] = "" + object[key];
       continue;
@@ -28,8 +28,7 @@ export const removeEmptyFields = (object: { [key: string]: any }) => {
       newFormData[key] = object[key];
       continue;
     }
-    
-    
   }
+
   return newFormData;
 };

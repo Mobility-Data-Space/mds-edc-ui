@@ -11,7 +11,7 @@ export const DATA_ADDRESS_TYPE_S3 = {
 };
 
 export const DATA_ADDRESS_TYPE_AZURE = {
-  value: DataAddressTypes.AzureBlob,
+  value: DataAddressTypes.AzureStorage,
   text: 'Azure Blob Storage',
 };
 
@@ -27,10 +27,17 @@ export const DATA_ADDRESS_TYPE_CUSTOM_JSON = {
 
 export const DATA_ADDRESS_SELECT_DATA = [
   DATA_ADDRESS_TYPE_HTTP,
-  DATA_ADDRESS_TYPE_CUSTOM_JSON,
   DATA_ADDRESS_TYPE_S3,
   DATA_ADDRESS_TYPE_AZURE,
+  DATA_ADDRESS_TYPE_CUSTOM_JSON,
   DATA_ADDRESS_TYPE_ON_REQUEST
+];
+
+export const DATA_ADDRESS_DESTINATION_SELECT_DATA = [
+  DATA_ADDRESS_TYPE_HTTP,
+  DATA_ADDRESS_TYPE_S3,
+  DATA_ADDRESS_TYPE_AZURE,
+  DATA_ADDRESS_TYPE_CUSTOM_JSON
 ];
 
 export const DATA_OFFER_TYPE_DATA_SOURCE = {
@@ -47,8 +54,6 @@ export const DATA_OFFER_TYPE_LIVE = {
   text: 'LIVE',
   value: 'LIVE',
 };
-
-export const DATA_OFFER_TYPES = [DATA_OFFER_TYPE_DATA_SOURCE, DATA_OFFER_TYPE_ON_REQUEST];
 
 export const PUBLISH_MODE_PUBLISH_UNRESTRICTED = {
   text: "Publish unrestricted",
