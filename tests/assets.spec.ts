@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { AssetsPage } from './pages/assets-page';
 import { MAX_ITEMS } from '@/constants/lists';
+import { participantConfig } from './utils/tests-config';
 
 test.describe("Assets Page Tests", () => {
   let assetsPage: AssetsPage;
@@ -24,7 +25,7 @@ test.describe("Assets Page Tests", () => {
   });
 
   test.describe("Create Functionality", () => {
-    test("Creates a new asset and verifies its visibility in the list then create a new asset with same ID and expect failure", async ({ page }) => {
+    test("Creates a new asset and verifies its visibility in the list", async ({ page }) => {
       // Open the create asset modal
       await assetsPage.openCreateAssetModal();  
 
@@ -50,6 +51,14 @@ test.describe("Assets Page Tests", () => {
       // Verify the success message is displayed
       const successMessage = await assetsPage.getToastMessage("success");
       await expect(successMessage).toBeVisible();
+
+      await assetsPage.searchAssets(assetTitle);
+      const searchResults = await assetsPage.getSearchResults();
+
+      await searchResults.nth(0).click() ;
+
+      const organizationName = page.getByTestId("organizationName");
+      expect(organizationName).toHaveText(participantConfig.EDC_CURATOR_ORGANIZATION);
     });
 
     test.describe("Asset Data Sources", () => {

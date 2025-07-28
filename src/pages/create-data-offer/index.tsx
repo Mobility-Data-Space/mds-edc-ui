@@ -193,7 +193,7 @@ export default function CreateDataOfferPage() {
     }
 
     // create asset
-    client.management.assets.create(fromAssetForm(formData.asset))
+    client.management.assets.create(fromAssetForm(formData.asset, connector.curatorName))
       .then((result) => {
         // get asset id for contract definition
         formData.contract.assetsSelector = idSelector(result["@id"]);
