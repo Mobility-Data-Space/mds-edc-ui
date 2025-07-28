@@ -111,7 +111,7 @@ export default function TransferProcessesListPage() {
                   <TransferProcessTableRow
                     key={item.id}
                     transferProcess={item}
-                    managementUrl={connector.managementUrl}
+                    managementUrl={proxyConnectorManagement}
                     connectorEndpoint={connector.protocolUrl}
                     participantId={connector.id}
                     data-testid="transfer-process-row"
