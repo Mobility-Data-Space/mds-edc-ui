@@ -4,7 +4,7 @@ import {
   ASSET_KEYWORDS,
   ASSET_TITLE,
   ASSET_VERSION,
-} from "@/schema/asset";
+} from "@/jsonld/asset";
 import { datasetToAsset } from "@/utilities/catalog";
 import { truncate } from "@/utilities/utilities";
 import { Card, CardContent, Chip } from "@mui/material";

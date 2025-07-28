@@ -7,14 +7,15 @@ import { useEffect, useRef, useState } from "react";
 
 import { StepIcon } from "@/components/atoms/step-icon";
 import { AssetFormAdvancedInfoStepContent } from "@/components/organisms/asset-form-advanced-step-content";
-import { AssetFormDataAddressStep } from "@/components/organisms/asset-form-data-address-step";
+import { FormDataAddressStep } from "@/components/organisms/form-data-address-step";
 import { AssetFormGeneralInfoStepContent } from "@/components/organisms/asset-form-general-info-step-content";
 
 import { Snackbar } from "@/components/molecules/snackbar";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
-import { ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_TITLE, ASSET_VERSION } from "@/schema/asset";
+import { ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_TITLE, ASSET_VERSION } from "@/jsonld/asset";
 import { AssetProperties, defaultCreateAssetFormData, fromAssetForm, generateId, validateDataAddress } from "@/utilities/asset";
+import { proxyConnectorManagement } from "@/constants/proxy";
 
 const stepLabelSharedProps = {
   className: "w-full justify-start p-4",
@@ -38,7 +39,7 @@ export default function AssetForm({ onClose }: AssetFormProps) {
   const [existingIds, setExistingIds] = useState<string[]>([]);
   const [errors, setErrors] = useState({ properties: {}, dataAddress: {} });
 
-  const client = useEdcConnectorClient({ management: connector.managementUrl });
+  const client = useEdcConnectorClient({ management: proxyConnectorManagement });
 
   const [formError, setFormError] = useState<string | null>(null);
   const [formErrorDetails, setFormErrorDetails] = useState<string | null>(null);
@@ -204,7 +205,7 @@ export default function AssetForm({ onClose }: AssetFormProps) {
       </div>
 
       <AssetFormWrapper
-        managementUrl={connector.managementUrl}
+        managementUrl={proxyConnectorManagement}
         onSuccess={() => {
           enqueueSnackbar("", {
             content: (key) => (
@@ -272,7 +273,7 @@ export default function AssetForm({ onClose }: AssetFormProps) {
             </div>
             <StepContent>
               <div data-testid="asset-create-data-address-step-content">
-                <AssetFormDataAddressStep
+                <FormDataAddressStep
                   translator={translator}
                   formData={formData.dataAddress}
                   onChange={dataAddressFormOnChange}

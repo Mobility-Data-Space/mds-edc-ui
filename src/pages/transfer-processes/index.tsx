@@ -8,16 +8,14 @@ import { useParticipantConnectorState } from "@/hooks/use-participant-connector-
 import { T, useTranslator } from "@/i18n";
 import { TransferProcessesList } from "@think-it-labs/edc-connector-ui/transfer-processes-list";
 import { useRouter } from "next/router";
-import { useSnackbar } from "notistack";
 import { useCallback } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
+import { proxyConnectorManagement } from "@/constants/proxy";
 
 export default function TransferProcessesListPage() {
   const router = useRouter();
   const { connector } = useParticipantConnectorState();
   const { translator } = useTranslator();
-  const managementUrl = connector?.managementUrl as string;
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const currentPage = parseInt(router.query.page as string) || 0
 
@@ -36,35 +34,16 @@ export default function TransferProcessesListPage() {
   return (
     <SideDrawer title={<T string="transferProcesses.title" />}>
       <TransferProcessesList
-        managementUrl={managementUrl}
+        managementUrl={proxyConnectorManagement}
         usePagination
         navigate={navigate}
         currentPage={currentPage}
         firstPage={0}
       >
-        <TransferProcessesList.Error>
-          {({ error }) => {
-            if (error) {
-              enqueueSnackbar(translator("common.transferProcessesLoadError"), {
-                variant: "error",
-                content: (key: any) => (
-                  <Snackbar
-                    type="error"
-                    message={translator("common.transferProcessesLoadError")}
-                    details={error.message || undefined}
-                    onClose={() => { closeSnackbar(key); }}
-                  />
-                )
-              });
-            }
-            return <></>;
-          }}
-        </TransferProcessesList.Error>
-
         <div className="flex justify-between pb-6">
           <div className="flex justify-start gap-x-5 items-center">
             <div className="min-w-xl">
-              <SearchBar searchTarget="id" placeholder={translator("transferProcesses.searchPlaceholder")} searchOperator="ilike" />
+              <SearchBar searchTarget="assetId" placeholder={translator("transferProcesses.searchPlaceholder")} searchOperator="ilike" />
             </div>
           </div>
           <div className="flex justify-end items-center">
@@ -132,7 +111,7 @@ export default function TransferProcessesListPage() {
                   <TransferProcessTableRow
                     key={item.id}
                     transferProcess={item}
-                    managementUrl={managementUrl}
+                    managementUrl={connector.managementUrl}
                     connectorEndpoint={connector.protocolUrl}
                     participantId={connector.id}
                     data-testid="transfer-process-row"

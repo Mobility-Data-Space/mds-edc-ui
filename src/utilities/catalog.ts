@@ -1,5 +1,5 @@
 import {Asset, ContractDefinition, Dataset, JsonLdObject} from "@think-it-labs/edc-connector-client";
-import {contextPrefixes} from "@/schema/context";
+import {contextPrefixes} from "@/jsonld/context";
 import {formatDateTime} from "@/utilities/date.ts";
 
 export const HAS_POLICY = "http://www.w3.org/ns/odrl/2/hasPolicy";

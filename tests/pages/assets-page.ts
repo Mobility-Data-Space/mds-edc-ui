@@ -2,6 +2,7 @@ import { Page } from '@playwright/test';
 import { BaseListPage } from './base-list-page';
 
 export class AssetsPage extends BaseListPage {
+  
   readonly assetListLocator = '#asset-list';
   readonly assetCardLocator = '.asset-card';
   readonly assetDialogLocator = '.asset-dialog';
@@ -9,25 +10,56 @@ export class AssetsPage extends BaseListPage {
   readonly createAssetModalLocator = '.create-asset-form';
   readonly editButtonLocator = '[data-testid="edit-asset-button"]';
   readonly deleteAssetButtonLocator = '[data-testid=delete-asset-modal-btn]';
+  
   readonly assetsAdvancedSectionLocator = '[data-testid=asset-create-advanced-info-step-title]'
   readonly assetsDataSourceSectionLocator = '[data-testid=asset-create-data-address-step-title]';
-  readonly createAssetOnlyOptionLocator = '[data-testid="create-asset-only-option"]';
-  readonly myAssetsPageLocator = '[data-testid="my-assets-page"]';
 
   constructor(page: Page) {
     super(page);
   }
 
+  async fillHttpPath() {
+    await this.page.getByRole('textbox', { name: 'The default URL path' }).fill('/api/v1/resource');
+  }
+
+  async addQueryParams() {
+    // Add the first query parameter
+    await this.page.getByRole('button', { name: 'Add Query Param' }).click();
+    await this.page.getByRole('textbox', { name: 'Query Param Name' }).fill('param1');
+    await this.page.getByRole('textbox', { name: 'Value' }).fill('value1');
+
+    // Add the second query parameter
+    await this.page.getByRole('button', { name: 'Add Query Param' }).click();
+    await this.page.getByRole('textbox', { name: 'Query Param Name' }).nth(1).fill('param2');
+    await this.page.getByRole('textbox', { name: 'Value' }).nth(1).fill('value2');
+  }
+
+  async addAuthHeaders() {
+    await this.page.getByRole('button', { name: 'Add Authentication' }).click() ;
+    await this.page.getByRole('textbox', { name: 'Auth Header Name' }).fill('Authorization');
+    await this.page.getByRole('textbox', { name: 'Auth Header Value' }).fill('Bearer token123');
+  }
+
+  async addAdditionalHeaders() {
+    await this.page.getByRole('button', { name: 'Add Additional Headers' }).click() ;
+    await this.page.getByRole('textbox', { name: 'Key' }).fill('Custom-Header');
+    await this.page.getByRole('textbox', { name: 'Value' }).nth(3).fill('HeaderValue');
+  }
+
+  async enableProxyBody() {
+    await this.page.getByRole('button', {name: 'Request Body'}).click() ;
+  }
+
+  async enableProxyPath() {
+    await this.page.getByRole('button', {name: 'Enable Proxy Path'}).click() ;
+  }
+
+  async enableProxyQueryParams() {
+    await this.page.getByRole('button', {name: 'Enable Proxy Query Params'}).click() ;
+  }
+
   async getEditButton() {
     return this.page.locator(this.editButtonLocator);
-  }
-
-  async selectCreateAssetOnlyOption() {
-    await this.page.locator(this.createAssetOnlyOptionLocator).click();
-  }
-
-  async getMyAssetsPage() {
-    return this.page.locator(this.myAssetsPageLocator);
   }
 
   async navigate() {
@@ -48,8 +80,11 @@ export class AssetsPage extends BaseListPage {
     await this.page.locator(this.createAssetModalLocator).waitFor();
   }
 
-  async fillCreateAssetForm(title: string, id: string) {
+  async fillAssetTitle(title: string) {
     await this.page.getByRole('textbox', { name: 'Title' }).fill(title);
+  }
+
+  async fillAssetId(id: string) {
     await this.page.getByRole('textbox', { name: 'Asset ID' }).fill(id);
   }
 
@@ -57,15 +92,80 @@ export class AssetsPage extends BaseListPage {
     await this.page.locator(this.assetsAdvancedSectionLocator).click();
   }
 
-  async fillRequiredAdvancedField() {
+  async fillRequiredAssetFields() {
     await this.page.getByRole('combobox').filter({ hasText: 'Select data category' }).click();
     await this.page.getByRole('option', { name: 'Traffic Information' }).click();
   }
+
   async openDataSourceSection() {
     await this.page.locator(this.assetsDataSourceSectionLocator).click();
   }
-  async fillHttpDatasource() {
-    await this.page.getByRole('textbox', { name: 'URL URL' }).fill("https://google.com");
+
+  async fillHttpURL() {
+    await this.page.getByRole('textbox', { name: 'Base URL' }).fill("https://google.com");
+  }
+
+  async selectHttpMethod(method: string = "GET") {
+    await this.page.getByRole('combobox', { name: 'Method' }).click() ;
+    await this.page.getByRole('option', { name: method }).click();
+  }
+
+  async selectHttpType() {
+    await this.page.getByRole('combobox', { name: 'Type' }).click();
+    await this.page.getByRole('option', { name: 'REST-API Endpoint' }).click();
+  }
+
+  async selectAzureType() {
+    await this.page.getByRole('combobox', { name: 'Type' }).click();
+    await this.page.getByRole('option', { name: 'Azure Blob Storage' }).click();
+  }
+
+  async fillRequiredAzureDatasource(type: string) {
+    await this.page.getByRole('textbox', { name: 'Container' }).fill("myazurecontainer");
+    await this.page.getByRole('textbox', { name: 'Account' }).fill("myazureaccount");
+    await this.page.getByRole('textbox', { name: 'Keyname' }).fill("myazurekeyname");
+    if (type === "single") {
+      await this.page.getByRole('textbox', { name: 'Blob Name' }).fill("myazureblob");
+    } else if (type === "multiple") {
+      await this.page.getByRole("checkbox", {name: "Multiple Azure Blobs"}).click() ;
+      await this.page.getByRole('textbox', { name: 'Blob Prefix' }).fill("myazureprefix");
+    }
+  }
+
+  async selectCustomJsonType() {
+    await this.page.getByRole('combobox', { name: 'Type' }).click();
+    await this.page.getByRole('option', { name: 'Custom JSON' }).click();
+  }
+
+  async fillCustomJsonDatasource() {
+    await this.page.getByRole('textbox', { name: 'Custom Data Source Config' }).fill('{"type": "HttpData", "baseUrl": "https://example.com"}');
+  }
+
+  async selectOnRequestType() {
+    await this.page.getByRole('combobox', { name: 'Type' }).click();
+    await this.page.getByRole('option', { name: 'On Request' }).click();
+  }
+
+  async fillOnRequestDatasource() {
+    await this.page.getByRole('textbox', { name: 'Contact E-mail' }).fill("test@email.com");
+    await this.page.getByRole('textbox', { name: 'Preferred E-mail subject' }).fill('Subject for test');
+  }
+
+  async selectS3Type() {
+    await this.page.getByRole('combobox', { name: 'Type' }).click();
+    await this.page.getByRole('option', { name: 'Amazon S3' }).click();
+  }
+
+  async fillRequiredS3Datasource(type: string) {
+    await this.page.getByRole('textbox', { name: 'Bucket Name' }).fill("mys3bucket");
+    await this.page.getByRole('textbox', { name: 'Region' }).fill("eu-west-1");
+    if (type === "single") {
+      await this.page.getByRole('textbox', { name: 'Object Name' }).fill("mys3objectname");
+    } else if (type === "multiple") {
+      await this.page.getByRole("checkbox", {name: "Multiple S3 Objects"}).click() ;
+      await this.page.getByRole('textbox', { name: 'Object Prefix' }).fill("mys3objectprefix");
+    }
+    
   }
 
   async submitDeleteAsset() {
@@ -96,7 +196,7 @@ export class AssetsPage extends BaseListPage {
     await this.page.getByTestId('asset-create-submit').click();
   }
 
-  getAssetInList(assetId: string) {
+  async getAssetInList(assetId: string) {
     return this.page.locator(this.assetListLocator).locator(this.assetCardLocator).filter({ hasText: assetId });
   }
 

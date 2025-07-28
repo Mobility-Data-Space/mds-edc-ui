@@ -15,12 +15,12 @@ import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useCallback, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
+import { proxyConnectorManagement } from "@/constants/proxy";
 
 export default function AssetListPage() {
   const { push, query } = useRouter()
   const { connector } = useParticipantConnectorState();
   const { translator } = useTranslator();
-  const managementUrl = connector?.managementUrl as string;
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
@@ -56,7 +56,7 @@ export default function AssetListPage() {
         onClose={() => setIsCreateModalOpen(false)}
         participantId={connector.id}
         connectorEndpoint={connector.protocolUrl}
-        managementUrl={managementUrl}
+        managementUrl={proxyConnectorManagement}
         translator={translator}
         onSuccess={() => setListKey(key => key + 1)}
       />
@@ -72,7 +72,7 @@ export default function AssetListPage() {
         />}
       />
       <ContractDefinitionsList
-        managementUrl={managementUrl}
+        managementUrl={proxyConnectorManagement}
         usePagination
         navigate={navigate}
         currentPage={parseInt(query.page as string) || 0}

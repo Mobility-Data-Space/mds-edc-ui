@@ -5,7 +5,7 @@ import {FormHelperText, Link} from "@mui/material";
 import {Input} from "@/components/atoms/input";
 
 import {T} from "@/i18n";
-import {ASSET_DESCRIPTION} from "@/schema/asset";
+import {ASSET_DESCRIPTION} from "@/jsonld/asset";
 import {AssetProperties} from "@/utilities/asset";
 
 export interface AssetDescriptionProps {

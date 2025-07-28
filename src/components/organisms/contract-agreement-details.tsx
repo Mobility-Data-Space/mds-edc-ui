@@ -9,7 +9,7 @@ import {contractAgreementFieldsToShow} from "@/utilities/contract-agreement";
 import FieldGrid from "@/components/molecules/field-grid";
 import {MarkdownCollapsableText} from "@/components/molecules/markdown-collapsable-text";
 import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
-import {ASSET_DESCRIPTION} from "@/schema/asset";
+import {ASSET_DESCRIPTION} from "@/jsonld/asset";
 import Divider from "@mui/material/Divider";
 import {assetGeneralFieldsToShow} from "@/utilities/asset";
 import {PolicyConstraintShow} from "@/components/molecules/policy-constraint-show";

@@ -2,7 +2,7 @@ import React from "react";
 
 import {MuiSelect} from "@/components/atoms/mui-select";
 
-import {ASSET_LANGUAGE} from "@/schema/asset";
+import {ASSET_LANGUAGE} from "@/jsonld/asset";
 import {HIGHLIGHTED_LANGUAGE_SELECT_DATA, LANGUAGE_SELECT_DATA} from "@/constants/languages";
 import {AssetProperties} from "@/utilities/asset";
 

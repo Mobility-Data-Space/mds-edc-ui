@@ -1,10 +1,9 @@
 export interface Participant {
   id: string;
   name: string;
-  description?: string;
-  edcUrl: string; // public url
+  description: string;
+  publicUrl: string;
   managementUrl: string;
-  connectorManagementUrl: string;
   defaultUrl: string;
   protocolUrl: string;
   curatorName: string,
@@ -13,4 +12,3 @@ export interface Participant {
   maintainerUrl: string,
   dapsUrl: string
 }
-
