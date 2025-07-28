@@ -10,6 +10,7 @@ import {MultiTranslate, T} from "@/i18n";
 export interface FieldShowProps {
   icon: string;
   label: string;
+  testDataId?: string;
   value?: string;
   openModalText?: string;
   subLabel?: string;
@@ -17,7 +18,7 @@ export interface FieldShowProps {
   copyTextIcon?: boolean
 }
 
-export function FieldShow({ icon, label, value, valueTitle, subLabel, openModalText, copyTextIcon = false}: FieldShowProps): JSX.Element {
+export function FieldShow({ icon, label, value, valueTitle, subLabel, openModalText, testDataId, copyTextIcon = false}: FieldShowProps): JSX.Element {
   const nonNullValue = value || "";
   const shouldNotTranslateValue = 0 === nonNullValue.indexOf('http') || (typeof nonNullValue === "string" && nonNullValue.match(/^\d/));
   const [dialogIsOpen, setDialogIsOpen] = React.useState(false);
@@ -31,7 +32,7 @@ export function FieldShow({ icon, label, value, valueTitle, subLabel, openModalT
           <Typography variant="body2" color="textDisabled" className="uppercase">
             {0 === label.indexOf('http') ? label : <T string={label}/>}
           </Typography>
-          <Typography>
+          <Typography data-testid={testDataId}>
             {shouldNotTranslateValue ? nonNullValue : <MultiTranslate string={nonNullValue}/>}
           </Typography>
         </div> :

@@ -3,7 +3,7 @@ import React from "react";
 import {Input} from "@/components/atoms/input";
 
 import {T} from "@/i18n";
-import { ASSET_ORGANIZATION } from "@/jsonld/asset";
+import { ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME, ASSET_ORGANIZATION } from "@/jsonld/asset";
 import {AssetProperties} from "@/utilities/asset";
 
 export interface AssetSovereignLegalNameProps {
@@ -18,15 +18,15 @@ export function AssetSovereignLegalName({ translator, formData, onChange, errors
 
   return (
     <Input
-      name={ASSET_ORGANIZATION}
+      name={ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME}
       id="advanced-sovereign-legal-name"
       type="text"
       label={<T string="assets.new.fieldAdvancedInfoSovereignLegalName"/>}
       placeholder={translator("assets.new.fieldAdvancedInfoSovereignLegalNamePlaceholder")}
       tooltip={translator("assets.new.fieldAdvancedInfoSovereignLegalNameTooltip")}
-      value={formData[ASSET_ORGANIZATION]}
-      error={errors[ASSET_ORGANIZATION]}
-      onChange={(event) => onChange({...formData, [ASSET_ORGANIZATION]: event.target.value})}
+      value={formData[ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME]}
+      error={errors[ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME]}
+      onChange={(event) => onChange({...formData, [ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME]: event.target.value})}
     />
   );
 }

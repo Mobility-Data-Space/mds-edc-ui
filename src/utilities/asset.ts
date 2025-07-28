@@ -5,7 +5,7 @@ import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
 import {ENGLISH_SELECT_DATA, LANGUAGES} from "@/constants/languages";
 import {DELIMITER} from "@/i18n";
 import {extractArrayValues, isEmail, isUrl} from "@/utilities/utilities";
-import {ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE, ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_MODEL_ID, ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA, ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY, ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY, ASSET_ADVANCED_INFO_GEO_LOCATION, ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL, ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS, ASSET_ADVANCED_INFO_GEO_REFERENCE_METHOD, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION, ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START, ASSET_ADVANCED_INFO_TRANSPORT_MODE, ASSET_CONTENT_TYPE, ASSET_DESCRIPTION, ASSET_ENDPOINT_DOCUMENTATION, ASSET_KEYWORDS, ASSET_LANGUAGE, ASSET_ORGANIZATION, ASSET_PUBLISHER, ASSET_STANDARD_LICENSE, ASSET_TITLE, ASSET_VERSION} from "@/jsonld/asset";
+import {ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE, ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_MODEL_ID, ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA, ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY, ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY, ASSET_ADVANCED_INFO_GEO_LOCATION, ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL, ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS, ASSET_ADVANCED_INFO_GEO_REFERENCE_METHOD, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION, ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS, ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START, ASSET_ADVANCED_INFO_TRANSPORT_MODE, ASSET_CONTENT_TYPE, ASSET_DESCRIPTION, ASSET_ENDPOINT_DOCUMENTATION, ASSET_KEYWORDS, ASSET_LANGUAGE, ASSET_ORGANIZATION, ASSET_PUBLISHER, ASSET_STANDARD_LICENSE, ASSET_TITLE, ASSET_VERSION} from "@/jsonld/asset";
 import {AzureBlobDataAddress, DataAddressErrors, DataAddressTypes, defaultHttpSourceDataAddress, OnRequestDataAddress, AmazonS3DataAddress} from "./data-address";
 import {CONTEXT_DCAT} from "@/jsonld/context";
 import {HttpDataAddress} from "@think-it-labs/edc-connector-client/dist/src/entities/data-address";
@@ -28,12 +28,13 @@ const temporalCoverageValue = ([start, end]: [string, string]) => {
   return `${start} - ${end}`;
 }
 
-export const fromAssetForm = (formData: AssetInput) => {
+export const fromAssetForm = (formData: AssetInput, organizationName: string) => {
   const cleanFormDataObject = removeEmptyFields({
     ...formData,
     "@id": formData.properties["@id"],
     properties: {
       ...formData.properties,
+      [ASSET_ORGANIZATION]: organizationName,
       "@id": ""
     }
   });
@@ -67,6 +68,7 @@ export const defaultCreateAssetFormData: AssetInput = {
     [ASSET_ENDPOINT_DOCUMENTATION]: "",
     [ASSET_PUBLISHER]: "",
     [ASSET_STANDARD_LICENSE]: "",
+    [ASSET_ORGANIZATION]: "",
 
     [ASSET_ADVANCED_INFO_MOBILITY_THEME]: {
       [ASSET_ADVANCED_INFO_DATA_CATEGORY]: "",
@@ -84,7 +86,7 @@ export const defaultCreateAssetFormData: AssetInput = {
         [ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION]: ""
       }
     },
-    [ASSET_ORGANIZATION]: "",
+    [ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME]: "",
     [ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY]: "",
     [ASSET_ADVANCED_INFO_GEO_LOCATION]: {
       [ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL]: "",
@@ -149,7 +151,8 @@ export const assetGeneralFieldsToShow = (asset: Asset, participantId: string, co
     {
       label: "assets.new.creatorOrganizationName",
       value: readValue(asset.properties, ASSET_ORGANIZATION) || emptyValue,
-      icon: "account_circle"
+      icon: "account_circle",
+      testDataId: "organizationName"
     },
     {
       label: "assets.new.connectorEndpoint",
@@ -234,7 +237,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
       value: extractArrayValues(nutsLocations).join(DELIMITER),
     });
   }
-  const sovereignLegalName = readValue(asset.properties, ASSET_ORGANIZATION)
+  const sovereignLegalName = readValue(asset.properties, ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME)
   if (sovereignLegalName) {
     advancedFields.push({
       icon: 'account_balance',
