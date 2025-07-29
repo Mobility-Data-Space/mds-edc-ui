@@ -35,11 +35,12 @@ export const fromAssetForm = (formData: AssetInput, organizationName: string) =>
   const properties = { ...formData.properties };
   delete properties["@id"];
   delete properties[EDC_ID_FIELD];
+  
   const cleanFormDataObject = removeEmptyFields({
     ...formData,
     "@id": formData.properties["@id"],
     properties: {
-      ...formData.properties,
+      ...properties,
       [ASSET_ORGANIZATION]: organizationName
     }
   });
