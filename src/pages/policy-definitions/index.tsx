@@ -15,22 +15,27 @@ import { useSnackbar } from "notistack";
 import { useCallback, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
 import { proxyConnectorManagement } from "@/constants/proxy";
+import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
 
 export default function PolicyDefinitionListPage() {
   const router = useRouter()
   const { push } = useParticipantConnectorState();
   const { translator } = useTranslator();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const edcClient = useEdcConnectorClient({ management: proxyConnectorManagement })
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
   const [openPolicyDefinitionData, setOpenPolicyDefinitionData] = useState({
     policyDefinition: {} as PolicyDefinition,
+    deleteItem: async () => { },
   });
 
   const openDetailsModal = (policyDefinition: PolicyDefinition) => {
     setIsDetailsModalOpen(true);
-    setOpenPolicyDefinitionData({ policyDefinition });
+    setOpenPolicyDefinitionData({ policyDefinition, deleteItem: () => {
+        return edcClient.management.policyDefinitions.delete(policyDefinition?.id)
+    } });
   };
 
   const navigate = useCallback((newPage: number) => {
@@ -57,6 +62,22 @@ export default function PolicyDefinitionListPage() {
           subtitle={<T string="policyDefinitions.policy" />}
           icon={<Icon fontSize="large">policy</Icon>}
         />}
+        deleteConfirmationMessage={`Please confirm you want to delete Policy ${openPolicyDefinitionData.policyDefinition?.id}. This action cannot be undone.`}
+        deleteFailMessage={`Failed deleting policy ${openPolicyDefinitionData.policyDefinition?.id}`}
+        deleteButtonTestId="delete-policy-modal-btn"
+        deleteItem={openPolicyDefinitionData.deleteItem}
+        onDeleteSuccess={() => {
+          enqueueSnackbar("", {
+            content: (key) => (
+              <Snackbar
+                type="success"
+                message={translator('policyDefinitions.deleteSuccess')}
+                onClose={() => { closeSnackbar(key); }}
+              />
+            )
+          });
+          setTimeout(() => push("/policy-definitions"), 1000) ;
+        }}
       />
       <PolicyDefinitionsList
         usePagination
