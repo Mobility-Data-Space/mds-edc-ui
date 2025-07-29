@@ -9,7 +9,7 @@ export class PoliciesPage extends BaseListPage {
   readonly policyIdInputLocator = '[data-testid="policy-id-input"]';
   readonly createButtonLocator = 'button:has-text("Create")';
   readonly errorMessageLocator = '[data-testid="toast-error-message"]';
-  readonly deleteButtonLocator = '[data-testid="delete-policy-button"]';
+  readonly deleteButtonLocator = '[data-testid="delete-policy-modal-btn"]';
   readonly addExpressionButtonLocator = '[data-testid="add-expression-button"]';
   readonly participantIdExpressionLocator = '[data-testid="participant-id-expression"]';
   readonly participantIdFieldLocator = '[data-testid="participant-id-field"]';
@@ -35,7 +35,7 @@ export class PoliciesPage extends BaseListPage {
 
   async selectInOperator() {
     await this.page.getByRole('combobox').click();
-    await this.page.getByRole('option', { name: "is Part Of" }).click();
+    await this.page.getByRole('option', { name: "IN" }).click();
   }
 
   async selectEqualOperator() {

@@ -272,7 +272,7 @@ export const en = {
 
         isPull: "Data address PULL",
         fieldMultipleObjects: "Multiple S3 Objects",
-        fieldMultipleBlobs: "Multiple Azure Blobs", 
+        fieldMultipleBlobs: "Multiple Azure Blobs",
         buttonCancel: "Cancel",
         buttonSave: "Add asset",
 
@@ -343,12 +343,12 @@ export const en = {
       },
     },
     contractDefinitions: {
-      id: "Contract Offer Id",
-      contractOffer: "Contract Offer",
-      title: "List all contract definitions",
+      id: "Data Offer Id",
+      contractOffer: "Data Offer",
+      title: "List all data offers",
       description:
         "List all of your contracts offered to the external network. Contract definitions define how other participants would consume owned assets.",
-      buttonAdd: "Add contract definition",
+      buttonAdd: "Add data offer",
       headingId: "ID",
       contractPolicy: "Contract Policy",
       contractPolicyJsonLd: "Contract Policy JSON-LD",
@@ -358,9 +358,9 @@ export const en = {
       accessPolicy: "Access Policy",
       assets: "Assets",
       publishDataOffer: "Publish Data Offer",
-      searchPlaceholder: "Search Contract Definitions",
+      searchPlaceholder: "Search Data Offers",
       "[id]": {
-        title: "View contract definition",
+        title: "View data offer",
         deleteButton: "Delete",
         fieldId: "ID",
         fieldCreatedAt: "Created At",
@@ -369,7 +369,7 @@ export const en = {
         fieldAssetSelector: "Assets",
       },
       new: {
-        title: "Create a contract definition",
+        title: "Create a data offer",
         description: "Describe a new policy by defining rules which ensure owned data is accessed in a specific way, following strict requirements.",
         id: "ID",
         publishNewDataOffer: "Publish New Data Offer",
@@ -391,6 +391,7 @@ export const en = {
       policy: "Policy",
       createPolicy: "Create Policy",
       searchPlaceholder: "Search Policies",
+      deleteSuccess: "Policy deleted successfully!",
       "[id]": {
         title: "View policy definition",
         deleteButton: "Delete",
@@ -425,6 +426,7 @@ export const en = {
       fetchStatus: "Fetch Status",
       searchPlaceholder: "Search Catalog By Asset Title",
       otherConnectorEndpointCatalogs: "Other Connector Endpoint Catalogs",
+      negotiationConfirmationCheckbox: "I agree to the Data Offer Terms & Conditions",
       "[participant]": {
         title: "List contract offers for ",
         description: "List participants for the selected participant.",
