@@ -30,7 +30,7 @@ export class BaseListPage {
         const searchInput = this.page.locator(this.searchInputLocator);
         await searchInput.fill(searchTerm);
         await this.page.locator(this.searchTriggerLocator).click();
-        await this.page.waitForResponse((response) => response.url().includes(apiEndpoint));
+        await this.page.waitForLoadState("networkidle");
     }
 
     async clearSearch(apiEndpoint: string) {

@@ -75,7 +75,7 @@ export default function AssetDialog({ open, onClose, asset, onEditClick, deleteE
             <div>
               {onEditClick &&
                 <Tooltip title={translator("common.edit")} >
-                  <IconButton onClick={onEditClick}>
+                  <IconButton data-testid="edit-asset-button" onClick={onEditClick}>
                     <Icon color="secondary" >edit</Icon>
                   </IconButton>
                 </Tooltip>

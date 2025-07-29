@@ -249,34 +249,32 @@ test.describe("Assets Page Tests", () => {
   });
 
   test.describe("Edit Functionality", () => {
-    test.fixme("should display 'Edit' button in the asset details modal", async ({ page }) => {
+    test("Updates an asset and verifies the changes", async ({ page }) => {
       // Select an asset to view details
-      const assetCards = await assetsPage.getAssetCards();
-      const assetCard = assetCards.first();
-      await assetCard.click();
-
-      // Verify the "Edit" button is present in the asset details modal
-      const editButton = await assetsPage.getEditButton();
-      await expect(editButton).toBeVisible();
-    });
-
-    test.fixme("Updates an asset and verifies the changes", async ({ page }) => {
-      // Select an asset to update
       const assetCards = await assetsPage.getAssetCards();
       const assetCard = assetCards.first();
       const originalTitle = await assetCard.locator('[data-testid="asset-title"]').textContent();
       const updatedTitle = `${originalTitle} - Updated`;
       const updatedDescription = "This is an updated description.";
 
-      // Open the edit modal and update the asset
-      const assetId = await assetCard.locator('[data-testid="asset-title"]').textContent();
-      await assetsPage.openEditAssetModal(assetId || "");
+      await assetCard.click();
+
+      // Verify the "Edit" button is present in the asset details modal
+      const editButton = await assetsPage.getEditButton();
+      await expect(editButton).toBeVisible();
+      await editButton.click() ;
+
+      await page.waitForURL("assets/**/edit") ;
+      await page.waitForResponse((response) => response.url().includes('/connector/management/v3/assets'))
+
       await assetsPage.fillEditAssetForm(updatedTitle, updatedDescription);
+
       await assetsPage.submitEditAssetForm();
 
       // Verify the updated asset appears in the list
-      const updatedAssetLocator = await assetsPage.getAssetInList(updatedTitle);
-      await expect(updatedAssetLocator).toBeVisible();
+      await assetsPage.searchAssets(updatedTitle);
+      const searchResults = await assetsPage.getSearchResults();
+      await expect(searchResults).toBeVisible();
     });
   });
 
