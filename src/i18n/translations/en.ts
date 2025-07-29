@@ -266,7 +266,7 @@ export const en = {
 
         isPull: "Data address PULL",
         fieldMultipleObjects: "Multiple S3 Objects",
-        fieldMultipleBlobs: "Multiple Azure Blobs", 
+        fieldMultipleBlobs: "Multiple Azure Blobs",
         buttonCancel: "Cancel",
         buttonSave: "Add asset",
 
@@ -418,6 +418,7 @@ export const en = {
       fetchStatus: "Fetch Status",
       searchPlaceholder: "Search Catalog By Asset Title",
       otherConnectorEndpointCatalogs: "Other Connector Endpoint Catalogs",
+      negotiationConfirmationCheckbox: "I agree to the Data Offer Terms & Conditions",
       "[participant]": {
         title: "List contract offers for ",
         description: "List participants for the selected participant.",

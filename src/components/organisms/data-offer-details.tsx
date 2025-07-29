@@ -102,6 +102,7 @@ export default function DataOfferDetails({ offers, assetId, counterPartyAddress,
               onConfirm={() => onNegotiateConfirm(offer)}
               title="contractNegotiations.negotiateConfirmTitle"
               content="contractNegotiations.negotiateConfirmContent"
+              confirmCheckboxText={translator("catalog.negotiationConfirmationCheckbox")}
             />
           </div>
         ))}
