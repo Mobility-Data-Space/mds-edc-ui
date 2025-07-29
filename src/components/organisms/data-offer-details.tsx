@@ -12,6 +12,7 @@ import {T, useTranslator} from "@/i18n";
 import { createNegotiationRequest } from "@/utilities/contract-negotiations";
 import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
 import {PolicyConstraintShow} from "@/components/molecules/policy-constraint-show";
+import { proxyConnectorManagement } from "@/constants/proxy";
 
 interface DataOfferDetailsProps {
   offers?: Policy[];
@@ -38,7 +39,7 @@ export default function DataOfferDetails({ offers, assetId, counterPartyAddress,
 
   const [negotiateContractIsOpen, setNegotiateContractIsOpen] = useState<Record<string, boolean>>({});
 
-  const edcClient = useEdcConnectorClient({management: connector.managementUrl});
+  const edcClient = useEdcConnectorClient({management: proxyConnectorManagement});
 
   const onNegotiateConfirm = (offer: Policy) => {
     const negotiation = createNegotiationRequest(offer, counterPartyAddress, participantId, assetId) ;
