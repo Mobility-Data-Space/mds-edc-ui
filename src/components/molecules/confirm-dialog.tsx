@@ -1,9 +1,10 @@
-import React from "react";
+import React, {useState} from "react";
 
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
 import Typography from "@mui/material/Typography";
 
 import {T} from "@/i18n";
+import {Checkbox} from "@/components/atoms/checkbox.tsx";
 
 interface ConfirmDialogProps {
   title?: string;
@@ -12,9 +13,11 @@ interface ConfirmDialogProps {
   onClose: () => void;
   onConfirm: () => void;
   contentStyle?: { [key: string]: string }
+  confirmCheckboxText?: string;
 }
 
-export function ConfirmDialog({ open, onClose, title = "", content = "", onConfirm, contentStyle = {} }: ConfirmDialogProps): JSX.Element {
+export function ConfirmDialog({ open, onClose, title = "", content = "", onConfirm, contentStyle = {}, confirmCheckboxText }: ConfirmDialogProps): JSX.Element {
+  const [isChecked, setIsChecked] = useState(false);
   const onConfirmAndClose = () => {
     onConfirm();
     onClose();
@@ -34,15 +37,25 @@ export function ConfirmDialog({ open, onClose, title = "", content = "", onConfi
       </DialogTitle>
       <DialogContent style={contentStyle}>
         <T string={content} />
+        {confirmCheckboxText &&
+          <Checkbox
+            label={confirmCheckboxText}
+            value={isChecked}
+            onChange={(event) => setIsChecked(event.target.checked)}
+          />
+        }
       </DialogContent>
       <DialogActions>
-        <Button color="secondary" onClick={onClose}>
-          <T string="common.close"/>
-        </Button>
-        <Button color="primary" variant="contained" onClick={onConfirmAndClose}>
-          <T string="common.confirm"/>
-        </Button>
+        <div className="flex justify-end flex-grow gap-x-3 p-3">
+          <Button color="secondary" onClick={onClose}>
+            <T string="common.close"/>
+          </Button>
+          <Button color="primary" variant="contained" onClick={onConfirmAndClose}
+                  disabled={!!confirmCheckboxText && !isChecked}>
+            <T string="common.confirm"/>
+          </Button>
+        </div>
       </DialogActions>
     </Dialog>
-  );
+);
 }
