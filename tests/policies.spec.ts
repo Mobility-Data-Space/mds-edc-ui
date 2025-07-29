@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { PoliciesPage } from './pages/policies-page';
+import { randomUUID } from 'node:crypto';
 
 test.describe("Policy Definitions Page Tests", () => {
   let policiesPage: PoliciesPage;
@@ -124,15 +125,38 @@ test.describe("Policy Definitions Page Tests", () => {
   });
 
   test.describe("Delete Functionality", () => {
-    test.fixme("should display 'Delete' button in the policy details modal", async ({ page }) => {
-      // Select a policy to view details
+    test("should delete the policy", async ({ page }) => {
+      // Open the Create Policy dialog
+      await policiesPage.clickCreatePolicyButton();
+      await page.waitForURL("**/new");
+
+      // Fill in the policy details
+      const policyId = `TestPolicy-DELETE-${randomUUID()}`
+      await policiesPage.fillPolicyId(policyId);
+
+      // Attempt to create the policy
+      await policiesPage.clickCreateButton();
+      await page.waitForResponse((response) => response.url().includes('/connector/management/v3/policydefinitions/request'));
+
       const policyCards = await policiesPage.getPolicyCards();
-      const policyCard = policyCards.first();
+      const policyCard = policyCards.locator('[data-testid="policy-id"]', {hasText: policyId});
       await policyCard.click();
 
       // Verify the "Delete" button is present in the policy details modal
       const deleteButton = await policiesPage.getDeleteButton();
       await expect(deleteButton).toBeVisible();
+
+      await deleteButton.click();
+
+      const confirmDeleteButton = page.getByTestId('confirm-delete-btn') ;
+      await expect(confirmDeleteButton).toBeVisible() ;
+
+      await confirmDeleteButton.click() ;
+      const successMessage = await page.getByTestId('toast-success-message').textContent() ;
+      expect(successMessage).toContain("Policy deleted successfully!");
+
+      await page.waitForTimeout(1000);
+      expect(policyCard).toBeHidden() ;
     });
 
   });

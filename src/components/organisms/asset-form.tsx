@@ -219,7 +219,7 @@ export default function AssetForm({ onClose }: AssetFormProps) {
           window.dispatchEvent(new Event("list-refetch"));
           onClose()
         }}
-        formData={() => fromAssetForm(formData)}
+        formData={() => fromAssetForm(formData, connector.curatorName)}
         onFailure={onFormSubmitFail}
       >
         <Stepper activeStep={activeStep} orientation="vertical" className="p-5">

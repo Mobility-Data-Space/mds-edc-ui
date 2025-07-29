@@ -17,7 +17,7 @@ import { useCallback, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
 import { proxyConnectorManagement } from "@/constants/proxy";
 
-export default function AssetListPage() {
+export default function DataOffersPage() {
   const { push, query } = useRouter()
   const { connector } = useParticipantConnectorState();
   const { translator } = useTranslator();
