@@ -141,7 +141,7 @@ export default function EditAssetPage() {
     if (cannotSubmit()) {
       return;
     }
-    client.management.assets.update(fromAssetForm(formData))
+    client.management.assets.update(fromAssetForm(formData, connector.curatorName))
     .then(() => {
       enqueueSnackbar("", {
         content: (key) => <Snackbar
