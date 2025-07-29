@@ -10,12 +10,15 @@ export interface AssetIdProps {
   onChange: (formData: AssetProperties) => void;
   errors: { [key: string]: boolean };
   hideLabel?: boolean;
+  disabled?: boolean;
 }
 
-export function AssetId({ translator, formData, onChange, errors, hideLabel = false }: AssetIdProps): JSX.Element {
+export function AssetId({ translator, formData, onChange, errors, hideLabel = false, disabled = false }: AssetIdProps): JSX.Element {
+
   return (
     <Input
       required
+      disabled={disabled}
       name="@id"
       id="properties-id"
       data-testid="properties-id"

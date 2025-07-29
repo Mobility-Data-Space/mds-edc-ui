@@ -18,7 +18,6 @@ export interface AssetNutsLocationsProps {
 }
 
 export function AssetNutsLocations({ translator, formData, onChange, errors }: AssetNutsLocationsProps): JSX.Element {
-
   return (<>
     <label
       htmlFor="advanced-info-nuts-locations"
@@ -41,7 +40,7 @@ export function AssetNutsLocations({ translator, formData, onChange, errors }: A
       value={formData[ASSET_ADVANCED_INFO_GEO_LOCATION][ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS] as []}
       valueOnly
       onChange={(value) => onChange({
-        ...formData, 
+        ...formData,
         [ASSET_ADVANCED_INFO_GEO_LOCATION]: {
           ...formData[ASSET_ADVANCED_INFO_GEO_LOCATION],
           [ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS]: value

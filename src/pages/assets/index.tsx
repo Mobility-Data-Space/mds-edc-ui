@@ -60,6 +60,7 @@ export default function AssetListPage() {
         onClose={() => setIsDetailsModalOpen(false)}
         deleteEnabled
         deleteItem={openAssetData.deleteItem}
+        onEditClick={() => router.push(`/assets/${openAssetData.asset.id}/edit`)}
         participantId={connector.id}
         connectorEndpoint={connector.protocolUrl}
         contentStyle={{ maxWidth: "90vw", width: "1000px" }}

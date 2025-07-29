@@ -8,7 +8,7 @@ export const ELECTROMOBILITY = 'Electromobility';
 export const TRAFFIC_SIGNS_AND_SPEED_INFORMATION = 'Traffic Signs and Speed Information';
 export const WEATHER_INFORMATION = 'Weather Information';
 export const PUBLIC_TRANSPORT_INFORMATION = 'Public Transport Information';
-export const SHARED_AND_ON_DEMAND_MOBILITY = 'Shared and On-Demand Mobility';
+export const SHARED_AND_ON_DEMAND_MOBILITY = 'Shared and On Demand Mobility';
 export const INFRASTRUCTURE_AND_LOGISTICS = 'Infrastructure and Logistics';
 export const VARIOUS = 'Various';
 
@@ -17,7 +17,7 @@ export type TYPE_DATA_CATEGORY = typeof TRAFFIC_INFORMATION | typeof ROADWORKS_A
 
 export const SUBCATEGORIES = {
   [TRAFFIC_INFORMATION]: [
-    'Accvalueents',
+    'Accidents',
     'Hazard Warnings',
   ],
   [ROADWORKS_AND_ROAD_CONDITIONS]: [
@@ -34,7 +34,7 @@ export const SUBCATEGORIES = {
   ],
   [ELECTROMOBILITY]: [
     'Location of Charging Station',
-    'Prices at Charging Station',
+    'Prices of Charging Station',
     'Availability of Charging Station',
   ],
   [TRAFFIC_SIGNS_AND_SPEED_INFORMATION]: [
