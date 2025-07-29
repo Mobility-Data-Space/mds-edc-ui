@@ -1,4 +1,4 @@
-import { DELIMITER } from "@/i18n";
+import {DELIMITER} from "@/i18n";
 
 export const truncate = (string: string, length: number = 10) => {
   if (!string) {
@@ -56,4 +56,8 @@ export const isEmail = (email: string) => {
 
 export const isDate = (date: string) => {
   return /^\d{1,2}[./-]\d{1,2}[./-]\d{4}$/.test(date);
+}
+
+export const uid = function () {
+  return Date.now().toString(36) + Math.random().toString(36);
 }

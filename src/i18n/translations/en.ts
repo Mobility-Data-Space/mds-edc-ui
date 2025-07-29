@@ -19,6 +19,8 @@ export const en = {
     common: {
       add: "Add",
       create: "Create",
+      edit: "Edit",
+      update: "Update",
       confirm: "Confirm",
       cancel: "Cancel",
       close: "Close",
@@ -105,6 +107,10 @@ export const en = {
         dataAddress: "Data address",
         deleteTitle: "Deletion confirmation",
         fetchError: "Failed to fetch asset",
+      },
+      edit: {
+        title: "Edit Asset",
+        keepDatasourceUnchanged: "Keep the datasource unchanged",
       },
       new: {
         title: "Create new asset",
@@ -331,6 +337,7 @@ export const en = {
         dataOfferTimespanRestriction: "Timespan Restriction",
         dataOfferDateRange: "Date Range",
         assetCreateSuccess: "Asset was created successfully!",
+        assetUpdateSuccess: "Successfully saved asset",
         dataOfferCreateSuccess: "Data offer was published successfully!",
         dataOfferCreateError: "Failed to create data offer. Please try again later."
       },

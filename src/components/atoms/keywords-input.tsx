@@ -31,7 +31,7 @@ export function KeywordsInput({ tooltip = "", label = "", placeholder = "", erro
         color="secondary"
         variant={"outlined"}
         placeholder={placeholder}
-        value={value}
+        value={value || []}
         onChange={onChange}
         error={error}
         slotProps={{

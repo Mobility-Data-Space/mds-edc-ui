@@ -185,7 +185,7 @@ export class AssetsPage extends BaseListPage {
   }
 
   async submitEditAssetForm() {
-    await this.page.getByTestId('asset-edit-submit').click();
+    await this.page.getByTestId('data-offer-create-submit').click();
   }
 
   async confirmDeleteAsset() {
