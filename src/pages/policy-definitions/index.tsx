@@ -76,6 +76,7 @@ export default function PolicyDefinitionListPage() {
               />
             )
           });
+          setTimeout(() => push("/policy-definitions"), 1000) ;
         }}
       />
       <PolicyDefinitionsList

@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { PoliciesPage } from './pages/policies-page';
+import { randomUUID } from 'node:crypto';
 
 test.describe("Policy Definitions Page Tests", () => {
   let policiesPage: PoliciesPage;
@@ -130,14 +131,15 @@ test.describe("Policy Definitions Page Tests", () => {
       await page.waitForURL("**/new");
 
       // Fill in the policy details
-      await policiesPage.fillPolicyId("TestPolicy-DELETE");
+      const policyId = `TestPolicy-DELETE-${randomUUID()}`
+      await policiesPage.fillPolicyId(policyId);
 
       // Attempt to create the policy
       await policiesPage.clickCreateButton();
       await page.waitForResponse((response) => response.url().includes('/connector/management/v3/policydefinitions/request'));
 
       const policyCards = await policiesPage.getPolicyCards();
-      const policyCard = policyCards.locator('[data-testid="policy-id"]', {hasText: "TestPolicy-DELETE"});
+      const policyCard = policyCards.locator('[data-testid="policy-id"]', {hasText: policyId});
       await policyCard.click();
 
       // Verify the "Delete" button is present in the policy details modal
@@ -152,6 +154,8 @@ test.describe("Policy Definitions Page Tests", () => {
       await confirmDeleteButton.click() ;
       const successMessage = await page.getByTestId('toast-success-message').textContent() ;
       expect(successMessage).toContain("Policy deleted successfully!");
+
+      await page.waitForTimeout(1000);
       expect(policyCard).toBeHidden() ;
     });
 
