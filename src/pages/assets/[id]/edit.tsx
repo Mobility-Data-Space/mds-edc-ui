@@ -206,7 +206,6 @@ export default function EditAssetPage() {
                     formData={formData.dataAddress}
                     onChange={dataAddressFormOnChange}
                     errors={errors.dataAddress}
-                    methodAlwaysShowing
                     customDataAddressConfigRows={6}
                   />
                 }
