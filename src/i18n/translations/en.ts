@@ -432,6 +432,8 @@ export const en = {
       searchPlaceholder: "Search Catalog By Asset Title",
       otherConnectorEndpointCatalogs: "Other Connector Endpoint Catalogs",
       negotiationConfirmationCheckbox: "I agree to the Data Offer Terms & Conditions",
+      failedFetchingCatalog: "Failed Fetching Catalog",
+      emptyCounterPartyUrl: "Please enter other connector endpoints to fetch catalogs.",
       "[participant]": {
         title: "List contract offers for ",
         description: "List participants for the selected participant.",
