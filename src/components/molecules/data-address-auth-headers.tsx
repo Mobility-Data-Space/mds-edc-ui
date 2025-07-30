@@ -34,7 +34,7 @@ export function DataAddressAuthHeaders({ translator, formData, onChange, errors 
       >
         <T string="assets.new.fieldDataAddressHeaderAuth"/>
       </label>
-      {!formData.addAuthHeaders ? "" : <>
+      {!JSON.parse(formData.addAuthHeaders || "false") ? "" : <>
         <MuiSelect
           name="authHeaderType"
           label={translator("assets.new.fieldDataAddressType")}
