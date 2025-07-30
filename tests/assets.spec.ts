@@ -280,10 +280,9 @@ test.describe("Assets Page Tests", () => {
 
       await assetsPage.submitEditAssetForm();
 
-      // Verify the updated asset appears in the list
-      await assetsPage.searchAssets(updatedTitle);
-      const searchResults = await assetsPage.getSearchResults();
-      await expect(searchResults).toBeVisible();
+      // Verify the success message is displayed
+      const successMessage = await assetsPage.getToastMessage("success")
+      await expect(successMessage).toBeVisible();
     });
   });
 

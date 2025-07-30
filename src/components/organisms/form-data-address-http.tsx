@@ -44,7 +44,7 @@ export function FormDataAddressHttp({ formData, errors, onChange, translator, me
           </label>
           <div>
             <div className="sm:col-span-1 flex flex-col gap-y-3">
-              {formData.proxyMethod ? "" :
+              {JSON.parse(formData.proxyMethod || "false") ? "" :
                 <MuiSelect
                   name="data-address-method"
                   id="data-address-method"
@@ -90,7 +90,7 @@ export function FormDataAddressHttp({ formData, errors, onChange, translator, me
                 onChange={(event) => onChange({...formData, baseUrl: event.target.value})}
               />
             </div>
-            {formData.proxyPath ? "" :
+            {JSON.parse(formData.proxyPath || "false") ? "" :
               <div className="sm:col-span-2 flex flex-col gap-y-5">
                 <label
                   htmlFor="data-address-path"

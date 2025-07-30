@@ -112,7 +112,6 @@ export default function AssetForm({ onClose }: AssetFormProps) {
 
   const dataAddressFormOnChange = (dataAddressFormData: DataAddress) => {
     setErrors((oldErrors) => ({ ...oldErrors, dataAddress: validateDataAddress(dataAddressFormData, translator) }));
-
     return onChange({ ...formData, dataAddress: dataAddressFormData });
   };
 
