@@ -10,7 +10,7 @@ import { useParticipantConnectorState } from "@/hooks/use-participant-connector-
 import { T, useTranslator } from "@/i18n";
 import { theme } from "@/theme/ThemeProvider.tsx";
 import { AGREEMENT_RETIREMENT_DATE, AGREEMENT_RETIREMENT_REASON, AgreementsRetirementController, RetiredContractAgreement } from "@/utilities/contract-agreement";
-import { operatorEqual, operatorIn } from "@/utilities/data-offer";
+import { operatorIn } from "@/utilities/data-offer";
 import { Button, ButtonGroup, Typography } from "@mui/material";
 import { ContractAgreement, TransferProcessStates } from "@think-it-labs/edc-connector-client";
 import { ContractAgreementsList } from "@think-it-labs/edc-connector-ui/contract-agreements-list";
@@ -20,11 +20,6 @@ import { SnackbarKey, useSnackbar } from "notistack";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
 import { proxyConnectorManagement } from "@/constants/proxy";
-
-enum TypeFilter {
-  Consuming = "Consuming",
-  Providing = "Providing",
-}
 
 enum StatusFilter {
   All = "All",
@@ -47,23 +42,9 @@ export default function ContractAgreementsListPage() {
   const { connector } = useParticipantConnectorState();
   const [retiredContractAgreementIds, setRetiredContractAgreementIds] = useState<string[]>([]);
   const [contractAgreementInfo, setContractAgreementInfo] = useState<ContractAgreementInfo>({});
-
   const { translator } = useTranslator();
 
-  const [selectedTypeFilter, setSelectedTypeFilter] = useState<TypeFilter>(TypeFilter.Consuming);
   const selectedStatusFilter: StatusFilter = query.status as StatusFilter || StatusFilter.All
-  const typeFilterExpression = useMemo(() => ({
-    [TypeFilter.Consuming]: [{
-      operandLeft: "consumerId",
-      operator: operatorEqual.value,
-      operandRight: connector.id
-    }],
-    [TypeFilter.Providing]: [{
-      operandLeft: "providerId",
-      operator: operatorEqual.value,
-      operandRight: connector.id
-    }],
-  }), [connector.id]);
   const statusFilterExpression = useMemo(() => ({
     [StatusFilter.All]: [],
     [StatusFilter.Active]: [],
@@ -77,28 +58,23 @@ export default function ContractAgreementsListPage() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const navigate = useCallback((newPage: number) => {
-    push(
-      {
-        href: window.location.href,
-        query: {
-          ...query,
-          page: newPage,
-        },
+    push({
+      href: window.location.href,
+      query: {
+        ...query,
+        page: newPage,
       },
-    );
-
+    });
   }, [push, query])
 
   const setSelectedStatusFilter = useCallback((statusFilter: StatusFilter) => {
-    push(
-      {
-        href: window.location.href,
-        query: {
-          ...query,
-          status: statusFilter
-        }
+    push({
+      href: window.location.href,
+      query: {
+        ...query,
+        status: statusFilter
       }
-    )
+    })
   }, [push, query])
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
@@ -144,6 +120,7 @@ export default function ContractAgreementsListPage() {
           }
         });
         setContractAgreementInfo(contractAgreementInfoToSave);
+        setRetiredContractAgreementIds(retiredAgreementsList);
       });
     }).catch((error) => enqueueSnackbar(translator("contractAgreements.retiredFetchError"),
       {
@@ -222,45 +199,45 @@ export default function ContractAgreementsListPage() {
         ]}
       >
         <div className="flex flex-wrap justify-end gap-4 pb-6 min-h-[56px]">
-            <div className="h-full flex-grow min-w-3xs">
-              <SearchBar searchTarget="assetId" placeholder={translator("contractAgreements.searchPlaceholder")}
-                         searchOperator="ilike"/>
-            </div>
-            <div className="flex gap-x-4 flex-grow">
-              <ButtonGroup className="min-h-[54px]" color="info" variant="outlined" sx={{
-                ".MuiButtonGroup-grouped": {
-                  borderColor: theme.palette.info.main,
-                }
-              }}>
-                {Object.keys(StatusFilter).map((filter) => (
-                  <Button
-                    key={filter}
-                    variant={selectedStatusFilter === filter ? "contained" : "outlined"}
-                    onClick={() => setSelectedStatusFilter(filter as StatusFilter)}
-                  >
-                    <Typography variant="button" component="span" className="break-keep">
-                      <T string={`contractAgreements.${filter.toLowerCase()}Contracts`}/>
-                    </Typography>
-                  </Button>
-                ))}
-              </ButtonGroup>
-            </div>
-            <div className="flex justify-end items-center">
-              <ContractAgreementsList.Pagination>
-                {({ decrementPage, hasPrev, hasNext, incrementPage, page, itemsCount }) =>
-                  <PaginationControls
-                    page={page}
-                    hasPrev={hasPrev}
-                    hasNext={hasNext}
-                    decrementPage={decrementPage}
-                    incrementPage={incrementPage}
-                    maxItems={MAX_ITEMS}
-                    dataTestIdPrefix="pagination"
-                    itemsCount={itemsCount}
-                  />
-                }
-              </ContractAgreementsList.Pagination>
-            </div>
+          <div className="h-full flex-grow min-w-3xs">
+            <SearchBar searchTarget="assetId" placeholder={translator("contractAgreements.searchPlaceholder")}
+                       searchOperator="ilike"/>
+          </div>
+          <div className="flex gap-x-4 flex-grow">
+            <ButtonGroup className="min-h-[54px]" color="info" variant="outlined" sx={{
+              ".MuiButtonGroup-grouped": {
+                borderColor: theme.palette.info.main,
+              }
+            }}>
+              {Object.keys(StatusFilter).map((filter) => (
+                <Button
+                  key={filter}
+                  variant={selectedStatusFilter === filter ? "contained" : "outlined"}
+                  onClick={() => setSelectedStatusFilter(filter as StatusFilter)}
+                >
+                  <Typography variant="button" component="span" className="break-keep">
+                    <T string={`contractAgreements.${filter.toLowerCase()}Contracts`}/>
+                  </Typography>
+                </Button>
+              ))}
+            </ButtonGroup>
+          </div>
+          <div className="flex justify-end items-center">
+            <ContractAgreementsList.Pagination>
+              {({ decrementPage, hasPrev, hasNext, incrementPage, page, itemsCount }) =>
+                <PaginationControls
+                  page={page}
+                  hasPrev={hasPrev}
+                  hasNext={hasNext}
+                  decrementPage={decrementPage}
+                  incrementPage={incrementPage}
+                  maxItems={MAX_ITEMS}
+                  dataTestIdPrefix="pagination"
+                  itemsCount={itemsCount}
+                />
+              }
+            </ContractAgreementsList.Pagination>
+          </div>
         </div>
 
         <ContractAgreementsList.Error>
@@ -289,7 +266,9 @@ export default function ContractAgreementsListPage() {
             filterExpression={statusFilterExpression[selectedStatusFilter]}
           >
             {({ item, index }) => {
-              if (selectedStatusFilter === StatusFilter.Active && retiredContractAgreementIds.includes(item.id)) { return <></> }
+              if (selectedStatusFilter === StatusFilter.Active && retiredContractAgreementIds.includes(item.id)) {
+                return <></>;
+              }
               return <ContractAgreementCard
                 key={index}
                 contractAgreement={item}
@@ -298,7 +277,7 @@ export default function ContractAgreementsListPage() {
                 isRunning={contractAgreementInfo[item.id]?.isRunning}
                 transferCount={contractAgreementInfo[item.id]?.transfersCount}
                 data-testid="contract-agreement-card"
-              />
+              />;
             }}
           </ContractAgreementsList.Items>
         </div>
