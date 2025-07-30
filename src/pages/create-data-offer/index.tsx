@@ -36,7 +36,8 @@ import { defaultCreateContractDefinitionFormData, fromContractDefinitionForm, Md
 import { idSelector } from "@/utilities/data-offer.ts";
 import { defaultCreatePolicyFormData, fromPolicyDefinitionForm } from "@/utilities/policy";
 import { isAndConstraint, isAtomicConstraint, isOrConstraint, isXoneConstraint, MultiplicityConstraint } from "@/utilities/policy-constraints";
-import { Button, Checkbox, Divider, FormControlLabel, Typography } from "@mui/material";
+import { Button, Checkbox as MuiCheckbox, Divider, FormControlLabel, Typography } from "@mui/material";
+import {Checkbox} from "@/components/atoms/checkbox";
 import { AssetInput, AtomicConstraint, DataAddress, PolicyDefinitionInput } from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 import { useSnackbar } from "notistack";
@@ -63,7 +64,7 @@ export default function CreateDataOfferPage() {
     contract: defaultCreateContractDefinitionFormData
   });
   const [policyExpression, setPolicyExpression] = useState<(AtomicConstraint | MultiplicityConstraint)[]>([]);
-  const [publishMode, setPublishMode] = useState("")
+  const [publishMode, setPublishMode] = useState(PUBLISH_MODE_PUBLISH_UNRESTRICTED.value as string)
 
   const [errors, setErrors] = useState({ properties: {}, advancedInfo: {}, dataAddress: {} });
 
@@ -72,7 +73,7 @@ export default function CreateDataOfferPage() {
   useEffect(() => {
     client.management.assets.queryAll({ offset: 0 })
       .then(assets => setExistingIds(assets.map(asset => asset["@id"])));
-  }, [client]);
+  }, [client, setExistingIds]);
 
   const generalInfoIsNotValid = () => {
     return 0 < Object.entries(validateGeneralInfo(formData.asset.properties)).length
@@ -272,7 +273,6 @@ export default function CreateDataOfferPage() {
                   formData={formData.asset.dataAddress}
                   onChange={dataAddressFormOnChange}
                   errors={errors.dataAddress}
-                  methodAlwaysShowing
                   customDataAddressConfigRows={6}
                 />
               </div>
@@ -357,7 +357,7 @@ export default function CreateDataOfferPage() {
                 <FormControlLabel
                   label={<T string="dataOffer.new.showAdvancedFields" />}
                   control={
-                    <Checkbox
+                    <MuiCheckbox
                       color="secondary"
                       checked={showAdvancedFields}
                       onChange={() => setShowAdvancedFields((value) => !value)}
@@ -714,6 +714,28 @@ export default function CreateDataOfferPage() {
                     onChange={(value) => { policyExpressionFormOnChange(value) }}
                   />
                 </div>
+                }
+                {publishMode === PUBLISH_MODE_DO_NOT_PUBLISH.value ? "" : <>
+                <div className="sm:col-span-1">
+                  <label
+                    className="inline-block text-sm text-black font-medium"
+                  >
+                    {<T string="dataOffer.new.negotiationType" />}
+                  </label>
+                </div>
+                <Checkbox
+                  label={translator("contractDefinitions.new.manualApproval")}
+                  value={formData.contract.privateProperties.manualApproval}
+                  onChange={(event) => {
+                    onChange({
+                      ...formData, 
+                      contract: {
+                        ...formData.contract,
+                        privateProperties: {manualApproval: event.target.checked}
+                      }
+                    })
+                  }}
+                /></>
                 }
               </div>
             </div>

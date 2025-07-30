@@ -56,7 +56,10 @@ export default function ContractNegotiationsManualApprovalListPage() {
     event.stopPropagation();
 
     mdsManualApprovalController.approve(item["@id"])
-      .then(() => enqueueSnackbar(translator("contractNegotiations.approveSuccess")))
+      .then(() => {
+        enqueueSnackbar(translator("contractNegotiations.approveSuccess"));
+        setTimeout(() => push("/negotiation-manual-approval"), 1200)
+      })
       .catch((error) => enqueueSnackbar(translator("contractNegotiations.approveError")))
   };
 
@@ -64,7 +67,10 @@ export default function ContractNegotiationsManualApprovalListPage() {
     event.stopPropagation();
 
     mdsManualApprovalController.reject(item["@id"])
-      .then(() => enqueueSnackbar(translator("contractNegotiations.rejectSuccess")))
+      .then(() => {
+        enqueueSnackbar(translator("contractNegotiations.rejectSuccess"))
+        setTimeout(() => push("/negotiation-manual-approval"), 1200)
+      })
       .catch((error) => enqueueSnackbar(translator("contractNegotiations.rejectError")))
   };
 

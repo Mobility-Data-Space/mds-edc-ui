@@ -30,7 +30,7 @@ export function DataAddressHttpQueryParams({ translator, formData, onChange, err
       >
         <T string="assets.new.fieldDataAddressQueryParams"/>
       </label>
-      {formData.proxyQueryParams ? "" :
+      {JSON.parse(formData.proxyQueryParams || "false") ? "" :
         <KeyValuePairInputList
           name="queryParams"
           id="data-address-query-params"
