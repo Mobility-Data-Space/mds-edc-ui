@@ -45,7 +45,7 @@ export default function ContractNegotiationsManualApprovalListPage() {
     contractNegotiation: {} as ContractNegotiation,
   });
 
-  const mdsManualApprovalController = useMemo(() => new MDSManualApprovalController(proxyConnectorManagement), [connector]);
+  const mdsManualApprovalController = useMemo(() => new MDSManualApprovalController(proxyConnectorManagement), []);
 
   const openDetailsModal = (contractNegotiation: ContractNegotiation) => {
     setIsDetailsModalOpen(true);
