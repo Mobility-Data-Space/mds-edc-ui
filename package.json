@@ -21,7 +21,7 @@
     "@tailwindcss/typography": "^0.5.16",
     "@think-it-labs/edc-connector-client": "^0.8.0",
     "clsx": "^2.1.0",
-    "date-fns": "2.0.0",
+    "date-fns": "4.1.0",
     "dayjs": "^1.11.13",
     "formik": "^2.4.6",
     "i18next": "^25.3.2",
