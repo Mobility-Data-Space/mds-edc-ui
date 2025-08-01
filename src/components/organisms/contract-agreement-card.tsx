@@ -2,7 +2,11 @@ import { proxyConnectorManagement } from "@/constants/proxy";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T } from "@/i18n";
 import { formatDateTimeAgo } from "@/utilities/date.ts";
-import { Card, CardContent, Icon, LinearProgress } from "@mui/material";
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import FileDownloadOffIcon from '@mui/icons-material/FileDownloadOff';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import FileUploadOffIcon from '@mui/icons-material/FileUploadOff';
+import { Card, CardContent, LinearProgress } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { ContractAgreement } from "@think-it-labs/edc-connector-client";
 import { ContractAgreementView } from "@think-it-labs/edc-connector-ui/contract-agreement-view";
@@ -15,8 +19,22 @@ export interface ContractAgreementCard {
   onClick: () => void;
 }
 
+const contractIcons = {
+  terminated: {
+    consumer: FileDownloadOffIcon,
+    provider: FileUploadOffIcon
+  },
+  active: {
+    consumer: FileDownloadIcon,
+    provider: FileUploadIcon
+  }
+} as const;
+
 export default function ContractAgreementCard({ contractAgreement, onClick, isTerminated = false, isRunning = false, transferCount = 0 }: ContractAgreementCard) {
   const { connector } = useParticipantConnectorState();
+
+  const isConsumer = contractAgreement.consumerId === connector.id;
+  const Icon = contractIcons[isTerminated ? 'terminated' : 'active'][isConsumer ? 'consumer' : 'provider'];
 
   return (
     <ContractAgreementView id={contractAgreement.id} managementUrl={proxyConnectorManagement}>
@@ -25,12 +43,7 @@ export default function ContractAgreementCard({ contractAgreement, onClick, isTe
           <div>
             <div className="flex gap-x-4">
               <div className="flex items-center">
-                <Icon fontSize="large" color={isTerminated ? "error" : "inherit"}>
-                  {
-                    (contractAgreement.consumerId === connector.id ? "file_download" : "file_upload") +
-                    (isTerminated ? "_off" : "")
-                  }
-                </Icon>
+                <Icon fontSize="large" color={isTerminated ? "error" : "inherit"} />
               </div>
               <div>
                 <Typography data-testid="asset-id" variant="h4" className="!leading-none hover:underline cursor-pointer [word-break:break-word]">

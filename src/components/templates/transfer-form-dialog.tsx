@@ -1,18 +1,18 @@
-import React, {useRef, useState} from "react";
-import {enqueueSnackbar} from "notistack";
-import {Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
+import React, { useRef, useState } from "react";
+import { closeSnackbar, enqueueSnackbar } from "notistack";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import {ContractAgreement, DataAddress} from "@think-it-labs/edc-connector-client";
+import { ContractAgreement, DataAddress } from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
-import {T} from "@/i18n";
-import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
-import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog";
-import {defaultHttpDestinationDataAddress} from "@/utilities/data-address";
-import {createTransferProcessRequest} from "@/utilities/transfer-process";
-import {FormDataAddressStep} from "@/components/organisms/form-data-address-step";
-import {validateDataAddress} from "@/utilities/asset.ts";
+import { T } from "@/i18n";
+import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog";
+import { defaultHttpDestinationDataAddress } from "@/utilities/data-address";
+import { createTransferProcessRequest } from "@/utilities/transfer-process";
+import { FormDataAddressStep } from "@/components/organisms/form-data-address-step";
+import { validateDataAddress } from "@/utilities/asset.ts";
 import { proxyConnectorManagement } from "@/constants/proxy";
+import { Snackbar } from "../molecules/snackbar";
 
 export interface TransferFormDialogProps {
   open: boolean,
@@ -23,12 +23,11 @@ export interface TransferFormDialogProps {
   counterPartyAddress: string
 }
 
-export function TransferFormDialog({ contractAgreementId, open, onClose, onSuccess = () => {}, translator, counterPartyAddress }: TransferFormDialogProps): JSX.Element {
+export function TransferFormDialog({ contractAgreementId, open, onClose, onSuccess = () => { }, translator, counterPartyAddress }: TransferFormDialogProps): JSX.Element {
   const [formData, setFormData] = useState<DataAddress>(defaultHttpDestinationDataAddress);
 
   const [errors, setErrors] = useState({});
   const contractAgreement = removeJsonLdSchemaFromProperties(contractAgreementId);
-  const { connector } = useParticipantConnectorState();
   const edcClient = useEdcConnectorClient({ management: proxyConnectorManagement });
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -39,7 +38,16 @@ export function TransferFormDialog({ contractAgreementId, open, onClose, onSucce
     const transfer = createTransferProcessRequest(agreement as ContractAgreement, formData, counterPartyAddress);
     edcClient.management.transferProcesses.initiate(transfer)
       .then(() => {
-        enqueueSnackbar(translator("transferProcesses.new.success"));
+        enqueueSnackbar(translator("transferProcesses.new.success"), {
+          variant: "success",
+          content: (key) => (
+            <Snackbar
+              type="success"
+              message={translator('transferProcesses.new.success')}
+              onClose={() => { closeSnackbar(key); }}
+            />
+          )
+        })
         onSuccess();
         onClose();
       })
@@ -86,10 +94,10 @@ export function TransferFormDialog({ contractAgreementId, open, onClose, onSucce
       <DialogActions>
         <div className="flex justify-end flex-grow gap-x-3 p-3">
           <Button color="secondary" onClick={onClose}>
-            <T string="common.close"/>
+            <T string="common.close" />
           </Button>
           <Button color="primary" variant="contained" onClick={() => formRef.current && formRef.current.requestSubmit()}>
-            <T string="transferProcesses.new.initiateTransfer"/>
+            <T string="transferProcesses.new.initiateTransfer" />
           </Button>
         </div>
       </DialogActions>
