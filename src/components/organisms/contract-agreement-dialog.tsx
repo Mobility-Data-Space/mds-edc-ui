@@ -28,10 +28,11 @@ interface ContractAgreementDialogProps {
   isTerminated?: boolean;
   isRunning?: boolean;
   isTerminatedAt?: number;
+  onInitSuccess?: (contractAgreement: ContractAgreement) => void;
   onTerminateSuccess?: () => void;
 }
 
-export default function ContractAgreementDialog({ open, onClose, contractAgreement, participantId, managementUrl, connectorEndpoint, contentStyle = {}, translator, retirementReason = "", isTerminated = false, isRunning = false, isTerminatedAt = 0, onTerminateSuccess = () => { } }: ContractAgreementDialogProps) {
+export default function ContractAgreementDialog({ open, onClose, contractAgreement, participantId, managementUrl, connectorEndpoint, contentStyle = {}, translator, retirementReason = "", isTerminated = false, isRunning = false, isTerminatedAt = 0, onTerminateSuccess = () => { }, onInitSuccess = () => { } }: ContractAgreementDialogProps) {
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [isTerminateModalOpen, setIsTerminateModalOpen] = useState(false);
 
@@ -92,7 +93,10 @@ export default function ContractAgreementDialog({ open, onClose, contractAgreeme
         contractAgreementId={contractAgreement}
         open={isTransferModalOpen}
         onClose={() => setIsTransferModalOpen(false)}
-        onSuccess={populateTransferProcesses}
+        onSuccess={() => {
+          populateTransferProcesses()
+          onInitSuccess(contractAgreement)
+        }}
         translator={translator}
         counterPartyAddress={counterPartyAddress}
       />

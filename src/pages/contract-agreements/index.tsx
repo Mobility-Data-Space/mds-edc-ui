@@ -5,21 +5,20 @@ import { Snackbar } from "@/components/molecules/snackbar";
 import ContractAgreementCard from "@/components/organisms/contract-agreement-card";
 import ContractAgreementDialog from "@/components/organisms/contract-agreement-dialog";
 import SideDrawer from "@/components/organisms/side-drawer";
-import { STATE_RUNNING } from "@/constants/transfer-process.ts";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
 import { theme } from "@/theme/ThemeProvider.tsx";
-import { AGREEMENT_RETIREMENT_DATE, AGREEMENT_RETIREMENT_REASON, AgreementsRetirementController, RetiredContractAgreement } from "@/utilities/contract-agreement";
 import { operatorIn } from "@/utilities/data-offer";
 import { Button, ButtonGroup, Typography } from "@mui/material";
-import { ContractAgreement, TransferProcessStates } from "@think-it-labs/edc-connector-client";
+import { ContractAgreement } from "@think-it-labs/edc-connector-client";
 import { ContractAgreementsList } from "@think-it-labs/edc-connector-ui/contract-agreements-list";
-import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 import { useRouter } from "next/router";
 import { SnackbarKey, useSnackbar } from "notistack";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
 import { proxyConnectorManagement } from "@/constants/proxy";
+import { useTerminatedProcesses } from "@/hooks/use-terminated-processes";
+import { useUpdateQueryParams } from "@/hooks/use-update-query-params";
 
 enum StatusFilter {
   All = "All",
@@ -27,22 +26,14 @@ enum StatusFilter {
   Terminated = "Terminated",
 }
 
-interface ContractAgreementInfo {
-  [key: string]: {
-    isTerminated: boolean,
-    isTerminatedAt: number,
-    retirementReason: string,
-    isRunning: boolean,
-    transfersCount: number,
-  }
-}
-
 export default function ContractAgreementsListPage() {
-  const { push, query } = useRouter()
+  const { query } = useRouter()
   const { connector } = useParticipantConnectorState();
-  const [retiredContractAgreementIds, setRetiredContractAgreementIds] = useState<string[]>([]);
-  const [contractAgreementInfo, setContractAgreementInfo] = useState<ContractAgreementInfo>({});
   const { translator } = useTranslator();
+
+  const { contractAgreementInfo, retiredContractAgreementIds, rePopulateRetired } = useTerminatedProcesses()
+
+  const updateQueryParams = useUpdateQueryParams()
 
   const selectedStatusFilter: StatusFilter = query.status as StatusFilter || StatusFilter.All
   const statusFilterExpression = useMemo(() => ({
@@ -57,25 +48,13 @@ export default function ContractAgreementsListPage() {
 
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-  const navigate = useCallback((newPage: number) => {
-    push({
-      href: window.location.href,
-      query: {
-        ...query,
-        page: newPage,
-      },
-    });
-  }, [push, query])
+  const navigateToPage = useCallback((newPage: number) => {
+    updateQueryParams({ page: String(newPage) })
+  }, [updateQueryParams])
 
   const setSelectedStatusFilter = useCallback((statusFilter: StatusFilter) => {
-    push({
-      href: window.location.href,
-      query: {
-        ...query,
-        status: statusFilter
-      }
-    })
-  }, [push, query])
+    updateQueryParams({ status: statusFilter })
+  }, [updateQueryParams])
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
@@ -87,57 +66,6 @@ export default function ContractAgreementsListPage() {
     setIsDetailsModalOpen(true);
     setOpenContractAgreementData({ contractAgreement });
   };
-
-  const edcClient = useEdcConnectorClient({ management: proxyConnectorManagement });
-
-  const populateRetired = useCallback(() => {
-    const controller = new AgreementsRetirementController(proxyConnectorManagement)
-    controller.retiredAgreementsRequest().then(retiredAgreements => {
-      const retiredContractAgreementsToSave: { [key: string]: RetiredContractAgreement } = {};
-      retiredAgreements.forEach(retiredContractAgreement => {
-        retiredContractAgreementsToSave[retiredContractAgreement.agreementId] = retiredContractAgreement;
-      });
-
-      edcClient.management.transferProcesses.queryAll({ offset: 0 }).then((transferProcesses) => {
-        const contractAgreementInfoToSave: ContractAgreementInfo = {};
-        const retiredAgreementsList = Object.keys(retiredContractAgreementsToSave);
-        transferProcesses.forEach(transferProcess => {
-          const contractAgreementId = transferProcess.contractId;
-          if (contractAgreementInfoToSave[contractAgreementId]) {
-            contractAgreementInfoToSave[contractAgreementId].transfersCount++;
-            if (contractAgreementInfoToSave[contractAgreementId].isRunning !== true) {
-              contractAgreementInfoToSave[contractAgreementId].isRunning = transferProcess.state === STATE_RUNNING;
-            }
-          } else {
-            const retiredContractAgreement = retiredContractAgreementsToSave[contractAgreementId] || {};
-            contractAgreementInfoToSave[contractAgreementId] = {
-              isTerminated: retiredAgreementsList.includes(contractAgreementId),
-              isRunning: transferProcess.state !== TransferProcessStates.TERMINATED && transferProcess.state === STATE_RUNNING,
-              isTerminatedAt: retiredContractAgreement[AGREEMENT_RETIREMENT_DATE] as number,
-              retirementReason: retiredContractAgreement[AGREEMENT_RETIREMENT_REASON] as string,
-              transfersCount: 1,
-            };
-          }
-        });
-        setContractAgreementInfo(contractAgreementInfoToSave);
-        setRetiredContractAgreementIds(retiredAgreementsList);
-      });
-    }).catch((error) => enqueueSnackbar(translator("contractAgreements.retiredFetchError"),
-      {
-        variant: "error",
-        content: (key: SnackbarKey) =>
-          <Snackbar
-            type="error"
-            message={translator('contractAgreements.retiredFetchError')}
-            content={error}
-            onClose={() => { closeSnackbar(key); }}
-          />
-      }));
-  }, [edcClient, enqueueSnackbar, closeSnackbar, translator]);
-
-  useEffect(() => {
-    populateRetired();
-  }, [populateRetired, edcClient]);
 
   if (!connector) {
     return "No connector";
@@ -156,8 +84,16 @@ export default function ContractAgreementsListPage() {
         isTerminatedAt={openContractAgreementInfo?.isTerminatedAt}
         isRunning={openContractAgreementInfo?.isRunning}
         onClose={() => setIsDetailsModalOpen(false)}
+        onInitSuccess={
+          (contractAgreement: ContractAgreement) => {
+            console.log("running this")
+            console.log({ contractAgreementInfo, contractAgreement })
+            const count = contractAgreementInfo[contractAgreement.id]?.transfersCount || 0
+            contractAgreementInfo[contractAgreement.id].transfersCount = count + 1
+          }
+        }
         onTerminateSuccess={() => {
-          populateRetired()
+          rePopulateRetired()
           enqueueSnackbar(translator('contractAgreements.terminationSuccess'), {
             variant: "success",
             content: (key: SnackbarKey) => (
@@ -180,7 +116,7 @@ export default function ContractAgreementsListPage() {
       <ContractAgreementsList
         managementUrl={proxyConnectorManagement}
         usePagination={true}
-        navigate={navigate}
+        navigate={navigateToPage}
         currentPage={parseInt(query.page as string) || 0}
         firstPage={0}
         sections={[
@@ -201,7 +137,7 @@ export default function ContractAgreementsListPage() {
         <div className="flex flex-wrap justify-end gap-4 pb-6 min-h-[56px]">
           <div className="h-full flex-grow min-w-3xs">
             <SearchBar searchTarget="assetId" placeholder={translator("contractAgreements.searchPlaceholder")}
-                       searchOperator="ilike"/>
+              searchOperator="ilike" />
           </div>
           <div className="flex gap-x-4 flex-grow">
             <ButtonGroup className="min-h-[54px]" color="info" variant="outlined" sx={{
@@ -216,7 +152,7 @@ export default function ContractAgreementsListPage() {
                   onClick={() => setSelectedStatusFilter(filter as StatusFilter)}
                 >
                   <Typography variant="button" component="span" className="break-keep">
-                    <T string={`contractAgreements.${filter.toLowerCase()}Contracts`}/>
+                    <T string={`contractAgreements.${filter.toLowerCase()}Contracts`} />
                   </Typography>
                 </Button>
               ))}
