@@ -106,7 +106,7 @@ export default function TransferProcessesListPage() {
               <TransferProcessesList.Items
                 limit={MAX_ITEMS}
                 sortOrder="DESC"
-                sortField="createdAt"
+                sortField="stateTimestamp"
               >
                 {({ item }) => (
                   <TransferProcessTableRow
