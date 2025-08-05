@@ -131,6 +131,7 @@ export default function DataOffersPage() {
             key={listKey}
             limit={MAX_ITEMS}
             sortOrder="DESC"
+            // sortField="createdAt"
           >
             {({ item, index }) => (
               <ContractDefinitionCard
