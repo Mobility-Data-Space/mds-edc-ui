@@ -197,6 +197,7 @@ export default function ContractNegotiationsManualApprovalListPage() {
               <ContractNegotiationsList.Items
                 limit={MAX_ITEMS}
                 sortOrder="DESC"
+                sortField="createdAt"
                 filterExpression={pendingFilter}
               >
                 {({ item, index }) => (

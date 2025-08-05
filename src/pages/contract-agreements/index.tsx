@@ -263,6 +263,7 @@ export default function ContractAgreementsListPage() {
           <ContractAgreementsList.Items
             limit={MAX_ITEMS}
             sortOrder="DESC"
+            // sortField="createdAt"
             filterExpression={statusFilterExpression[selectedStatusFilter]}
           >
             {({ item, index }) => {
