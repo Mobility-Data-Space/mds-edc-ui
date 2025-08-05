@@ -138,6 +138,7 @@ export default function PolicyDefinitionListPage() {
           <PolicyDefinitionsList.Items
             limit={MAX_ITEMS}
             sortOrder="DESC"
+            sortField="createdAt"
           >
             {({ item, index }) => (
               <PolicyCard

@@ -143,6 +143,7 @@ export default function AssetListPage() {
               <AssetsList.Items
                 limit={MAX_ITEMS}
                 sortOrder="DESC"
+                sortField="createdAt"
               >
                 {({ item, index, deleteItem }) => (
                   <AssetCard asset={item} key={index} onClick={() => openDetailsModal(item, deleteItem)} participantId={connector.id} data-testid="asset-card" />

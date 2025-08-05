@@ -158,6 +158,7 @@ export default function ContractNegotiationsListPage() {
               <ContractNegotiationsList.Items
                 limit={MAX_ITEMS}
                 sortOrder="DESC"
+                sortField="createdAt"
               >
                 {({ item, index }) => (
                   <Table.Row

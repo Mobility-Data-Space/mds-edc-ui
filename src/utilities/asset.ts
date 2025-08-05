@@ -340,7 +340,7 @@ export const assetDataAddressFieldsToShow = (asset: Asset): FieldShowProps[] => 
       },
       {
         label: "dataOffer.new.dataOfferContactPreferredEmailSubject",
-        value: readValue(dataAddress, "preferred_email_subject"),
+        value: readValue(dataAddress, "preferred_subject"),
         icon: 'subject',
         copyTextIcon: true,
       },

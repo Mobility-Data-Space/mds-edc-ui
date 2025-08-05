@@ -136,6 +136,7 @@ export default function CatalogPage() {
               key={listKey}
               limit={MAX_ITEMS}
               sortOrder="DESC"
+              sortField="createdAt"
             >
               {({ item, index }) => (
                 <DataOfferCard
