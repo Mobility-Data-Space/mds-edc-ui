@@ -1,4 +1,5 @@
 import dayjs, {Dayjs} from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat"
 import TimeAgo from "javascript-time-ago";
 import en from 'javascript-time-ago/locale/en'
 import {TIME_LOCALE} from "@/constants/time-locale.ts";
@@ -6,7 +7,7 @@ import {TIME_LOCALE} from "@/constants/time-locale.ts";
 export type DateType = Dayjs | Date | null;
 
 export const browserLanguage = () => {
-  return (typeof navigator !== 'undefined' && navigator.language) || TIME_LOCALE;
+  return TIME_LOCALE;
 }
 
 export interface FormatDateTimeOptions {
@@ -45,15 +46,14 @@ export const browserDateFormat = () => {
 }
 
 export const DATE_FORMAT = browserDateFormat();
-export const DEFAULT_DATE_FORMAT = "DD-MM-YYYY";
 
 export const dateToString = (date?: DateType | string) => {
-  if (typeof date === "string") {
-    return date;
-  }
-
-  const dayjsDate = dayjs(date, DATE_FORMAT);
-  return dayjsDate.isValid() ? dayjsDate.format(DATE_FORMAT) : "";
+  dayjs.extend(customParseFormat);
+  
+  // date is string or DateType
+  const formattedDate = typeof date == "string" ? dayjs(date, DATE_FORMAT) : dayjs(date) ;
+  
+  return formattedDate.isValid() ? formattedDate.format(DATE_FORMAT) : "" ;
 }
 
 export const formatDateTimeAgo = (milliSecondsTimestamp: number) => {

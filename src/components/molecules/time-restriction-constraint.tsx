@@ -6,13 +6,13 @@ import {MuiSelect} from "@/components/atoms/mui-select";
 import {DatePicker} from "@/components/atoms/date-picker";
 import {ConstraintProps} from "@/components/molecules/constraint";
 import {T, useTranslator} from "@/i18n";
-import { DATE_FORMAT, DEFAULT_DATE_FORMAT } from "@/utilities/date.ts";
+import { DATE_FORMAT } from "@/utilities/date.ts";
 import dayjs from "dayjs";
 import { timeRestrictionOperators } from "@/utilities/policy-operators";
 
 export function TimeRestrictionConstraint({ value, onChange, onRemove }: ConstraintProps) {
   value = value as AtomicConstraint
-  const dayJsDate = dayjs(value.rightOperand, DEFAULT_DATE_FORMAT);
+  const dayJsDate = dayjs(value.rightOperand);
   const dateIsNotValid = !dayJsDate.isValid();
   const { translator } = useTranslator() ;
 
@@ -30,7 +30,7 @@ export function TimeRestrictionConstraint({ value, onChange, onRemove }: Constra
       <DatePicker
         label={`${translator("dataOffer.new.policyExpressionTimeRestriction")}*`}
         error={dateIsNotValid}
-        onChange={(dateValue) => onChange({ ...value, rightOperand: dayjs(dateValue, DATE_FORMAT).format(DEFAULT_DATE_FORMAT) })}
+        onChange={(dateValue) => onChange({ ...value, rightOperand: dayjs(dateValue, DATE_FORMAT).toISOString() })}
         value={dateIsNotValid ? "" : dayJsDate.format(DATE_FORMAT)}
       />
 
