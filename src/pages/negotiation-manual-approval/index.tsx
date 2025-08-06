@@ -37,7 +37,7 @@ const CounterPartyAddress = ({ item }: { item: ContractNegotiation }) => {
 export default function ContractNegotiationsManualApprovalListPage() {
   const { query, push } = useRouter()
   const { connector } = useParticipantConnectorState();
-  const { globalTranslator, translator } = useTranslator();
+  const { translator } = useTranslator();
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
@@ -141,8 +141,8 @@ export default function ContractNegotiationsManualApprovalListPage() {
             </label>
             <div className="min-w-xl">
               <SearchBar
-                placeholder={globalTranslator("searchPlaceholder")}
-                searchTarget="assetId"
+                placeholder={translator("contractNegotiations.searchPlaceholder")}
+                searchTarget="counterPartyId"
                 searchOperator="ilike"
               />
             </div>

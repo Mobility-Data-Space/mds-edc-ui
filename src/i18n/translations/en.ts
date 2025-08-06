@@ -101,7 +101,7 @@ export const en = {
       headingDataAddressName: "Data address name",
       headingDataAddressType: "Data address type",
       headingDataAddressUrl: "Data address url",
-      searchPlaceholder: "Search Assets",
+      searchPlaceholder: "Search Assets by Title",
       "[id]": {
         title: "View asset",
         dataAddress: "Data address",
@@ -359,7 +359,7 @@ export const en = {
       accessPolicy: "Access Policy",
       assets: "Assets",
       publishDataOffer: "Publish Data Offer",
-      searchPlaceholder: "Search Data Offers",
+      searchPlaceholder: "Search Data Offers by Offer ID",
       "[id]": {
         title: "View data offer",
         deleteButton: "Delete",
@@ -391,7 +391,7 @@ export const en = {
       headingCreatedAt: "Created at",
       policy: "Policy",
       createPolicy: "Create Policy",
-      searchPlaceholder: "Search Policies",
+      searchPlaceholder: "Search Policies by Policy ID",
       deleteSuccess: "Policy deleted successfully!",
       "[id]": {
         title: "View policy definition",
@@ -463,7 +463,7 @@ export const en = {
       transfers: "Transfers",
       otherConnector: "Other Connector",
       retiredFetchError: "Error while fetching retired contract agreements",
-      searchPlaceholder: "Search Contract Agreements",
+      searchPlaceholder: "Search Contract Agreements by Asset ID",
       terminationSuccess: "Contract terminated successful",
       "[id]": {
         title: "View contract agreement",
@@ -509,7 +509,7 @@ export const en = {
       cannotNegotiateOwnedConnectors: "Cannot negotiate contracts with your own connector.",
       negotiateConfirmTitle: "Data Offer Terms & Conditions",
       negotiateConfirmContent: "Hereby I agree that by pressing the 'Confirm' button, I accept the license\n    terms, policies, and additional conditions for use, including any copyright\n    notices, associated with the provider's offer.",
-      searchPlaceholder: "Search Contract Negotiations",
+      searchPlaceholder: "Search Contract Negotiations by CounterParty Connector ID",
       "[id]": {
         title: "View contract negotiation",
         description: "A single contract negotiation",
@@ -539,7 +539,7 @@ export const en = {
       headingAsset: "Asset",
       headingCorrelationId: "Correlation ID",
       direction: "Direction",
-      searchPlaceholder: "Search Transfer Processes",
+      searchPlaceholder: "Search Transfer Processes by Asset ID",
       "[id]": {
         title: "View transfer process",
         description: "A single transfer process",
