@@ -4,6 +4,10 @@
 
 In this document, the application refers to the user-facing MDS Next.js application, and vendor refers to the EDC headless UI library that lives in the `/vendor` directory.
 
+## Final Decision
+
+We decided to move forward with lifting the search state to the application level, this approach is the most compatible with the existing vendor APIs while allowing us to solve this issue in a cleaner way. Implemented in [#208](https://github.com/Mobility-Data-Space/mds-edc-ui/pull/208).
+
 ## Requirements
 
 - Ability to paginate through entities
