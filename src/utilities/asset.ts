@@ -14,6 +14,7 @@ import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog.ts";
 import jsonld from "jsonld";
 import {Tag} from "@/components/atoms/key-value-pair-input.tsx";
 import {EDC_ID_FIELD} from "@/utilities/data-offer.ts";
+import { dateToString } from "./date";
 
 const temporalCoverageValue = ([start, end]: [string, string]) => {
   if (!start && !end) {
@@ -303,7 +304,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
     advancedFields.push({
       icon: 'today',
       label: 'assets.new.fieldAdvancedInfoTemporalCoverage',
-      value: temporalCoverageValue([readValue(temporalCoverage[0], `${CONTEXT_DCAT.value}startDate`), readValue(temporalCoverage[0], `${CONTEXT_DCAT.value}endDate`)]),
+      value: temporalCoverageValue([dateToString(readValue(temporalCoverage[0], `${CONTEXT_DCAT.value}startDate`)), dateToString(readValue(temporalCoverage[0], `${CONTEXT_DCAT.value}endDate`))]),
     });
   }
 

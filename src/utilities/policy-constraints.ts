@@ -1,6 +1,8 @@
 import { AtomicConstraint, Constraint } from "@think-it-labs/edc-connector-client";
 
 import { consumerParticipantIdLeft, operatorIn, operatorLessThan, timeRestrictionLeft } from "./policy-operators";
+import dayjs from "dayjs";
+import { DATE_FORMAT } from "./date";
 
 export const createParticipantIdConstraint = (): AtomicConstraint => ({
   leftOperand: consumerParticipantIdLeft,
@@ -17,8 +19,8 @@ export const createTimeRestrictionConstraint = (rightOperand = "", operator = op
 // Multi
 export const createTimespanAndConstraint = ([startDate, endDate]: [string, string]): AndConstraint => ({
   and: [
-    createTimeRestrictionConstraint(startDate, operatorLessThan.value),
-    createTimeRestrictionConstraint(endDate, operatorLessThan.value)
+    createTimeRestrictionConstraint(dayjs(startDate, DATE_FORMAT).toISOString(), operatorLessThan.value),
+    createTimeRestrictionConstraint(dayjs(endDate, DATE_FORMAT).toISOString(), operatorLessThan.value)
   ],
 });
 
