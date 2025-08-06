@@ -17,7 +17,7 @@ import { SnackbarKey, useSnackbar } from "notistack";
 import { useCallback, useMemo, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
 import { proxyConnectorManagement } from "@/constants/proxy";
-import { useTerminatedProcesses } from "@/hooks/use-terminated-processes";
+import { useTerminatedContractAgreements } from "@/hooks/use-terminated-contract-agreements";
 import { useUpdateQueryParams } from "@/hooks/use-update-query-params";
 
 enum StatusFilter {
@@ -31,7 +31,7 @@ export default function ContractAgreementsListPage() {
   const { connector } = useParticipantConnectorState();
   const { translator } = useTranslator();
 
-  const { contractAgreementInfo, retiredContractAgreementIds, rePopulateRetired } = useTerminatedProcesses()
+  const { contractAgreementInfo, retiredContractAgreementIds, rePopulateRetired } = useTerminatedContractAgreements()
 
   const updateQueryParams = useUpdateQueryParams()
 
@@ -86,8 +86,16 @@ export default function ContractAgreementsListPage() {
         onClose={() => setIsDetailsModalOpen(false)}
         onInitSuccess={
           (contractAgreement: ContractAgreement) => {
-            console.log("running this")
-            console.log({ contractAgreementInfo, contractAgreement })
+            if (!contractAgreementInfo[contractAgreement.id]) {
+              contractAgreementInfo[contractAgreement.id] = {
+                transfersCount: 0,
+                isRunning: true,
+                retirementReason: "",
+                isTerminatedAt: 0,
+                isTerminated: false,
+              }
+            }
+
             const count = contractAgreementInfo[contractAgreement.id]?.transfersCount || 0
             contractAgreementInfo[contractAgreement.id].transfersCount = count + 1
           }
