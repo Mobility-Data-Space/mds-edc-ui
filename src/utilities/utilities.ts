@@ -55,7 +55,8 @@ export const isEmail = (email: string) => {
 }
 
 export const isDate = (date: string) => {
-  return /^\d{1,2}[./-]\d{1,2}[./-]\d{4}$/.test(date);
+  // Can match different formats like 12/31/2025 and 1-1-2025 || ISO8601
+  return /^\d{1,2}[./-]\d{1,2}[./-]\d{4}$/.test(date) || /^\d{4}(-\d{2}(-\d{2}(T\d{2}:\d{2}(:\d{2}(\.\d{1,3})?)?(Z|[+-]\d{2}:\d{2})?)?)?)?$/.test(date);
 }
 
 export const uid = function () {
