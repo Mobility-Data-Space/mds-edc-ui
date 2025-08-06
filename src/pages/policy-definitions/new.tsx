@@ -57,7 +57,7 @@ export default function CreatePolicyDefinitionPage() {
           onFailure={onFormSubmitFail}
         >
           <div className="flex flex-col gap-y-6 p-5">
-            <div className="grid sm:grid-cols-3 gap-2 sm:gap-6">
+            <div className="grid sm:grid-cols-2 gap-2 sm:gap-6">
               <div className="sm:col-span-2 flex flex-col gap-6">
                 <div>
                   <label
@@ -78,10 +78,10 @@ export default function CreatePolicyDefinitionPage() {
                 </div>
               </div>
             </div>
-            <div className="grid sm:grid-cols-3 gap-2 sm:gap-6">
+            <div className="grid sm:grid-cols-2 gap-2 sm:gap-6">
               <div className="sm:col-span-2 flex flex-col gap-6">
                 <div>
-                  <label className="inline-block text-sm text-black font-medium mb-2">
+                  <label className="inline-block text-sm text-black font-medium mb-4">
                     <T string="policyDefinitions.new.policyExpression"/>
                   </label>
                   <PolicyExpression
