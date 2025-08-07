@@ -492,18 +492,21 @@ export const assetToAssetInput = async (asset: Asset) => {
   }
 
 
-let geoLocationNuts = properties[ASSET_ADVANCED_INFO_GEO_LOCATION][ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS];
+  let geoLocationNuts = properties[ASSET_ADVANCED_INFO_GEO_LOCATION][ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS];
+  if(geoLocationNuts && !Array.isArray(geoLocationNuts)) {
+    geoLocationNuts = [geoLocationNuts]
+  }
+  if (geoLocationNuts) {
+    properties[ASSET_ADVANCED_INFO_GEO_LOCATION][ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS] = geoLocationNuts.map(toKeyValueInput)
+  } 
 
-if(geoLocationNuts && !Array.isArray(geoLocationNuts)) {
-  geoLocationNuts = [geoLocationNuts]
- }
-  
- if (geoLocationNuts) {
-   properties[ASSET_ADVANCED_INFO_GEO_LOCATION][ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS] = geoLocationNuts.map(toKeyValueInput)
- }
-
-  properties[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] =
-    properties[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] && Array.isArray(properties[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS]) ? properties[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS].map(toKeyValueInput) : [properties[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS]].map(toKeyValueInput);
+  let infoReferenceFileUrls = properties[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] ;
+  if(infoReferenceFileUrls && !Array.isArray(infoReferenceFileUrls)){
+    infoReferenceFileUrls = [infoReferenceFileUrls].map(toKeyValueInput)
+  }
+  if(infoReferenceFileUrls){
+    properties[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] = infoReferenceFileUrls.map(toKeyValueInput)
+  }
 
   properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS] =
     properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS] && Array.isArray(properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS]) ? properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS].map(toKeyValueInput) : [properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS]].map(toKeyValueInput);
