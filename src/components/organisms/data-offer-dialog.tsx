@@ -5,7 +5,7 @@ import AssetDetails from "@/components/organisms/asset-details";
 import DataOfferDetails from "@/components/organisms/data-offer-details";
 import { T } from "@/i18n";
 import { ASSET_TITLE } from "@/jsonld/asset";
-import { datasetToAsset } from "@/utilities/catalog";
+import { datasetToAsset, removeJsonLdSchemaFromProperties } from "@/utilities/catalog";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { Dataset } from "@think-it-labs/edc-connector-client";
@@ -36,6 +36,15 @@ export default function DataOfferDialog({ open, onClose, dataset, onEditClick, d
   const title = readValue(dataset, ASSET_TITLE) || "";
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
+  const properties = removeJsonLdSchemaFromProperties(datasetToAsset(dataset).properties);
+  const additionalProperties = readValue(properties, "additionalProperties")?.[0] ;
+  const onrequest = readValue(additionalProperties, "onrequest") == "true";
+
+  const openEmail = () => {
+    const recipient = readValue(additionalProperties, "email"); // Replace with dynamic value if needed
+    const subject = readValue(additionalProperties, "preferred_subject");
+    window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}`;
+};
   const onDeleteConfirm = async () => {
     try {
       deleteItem && await deleteItem();
@@ -97,25 +106,32 @@ export default function DataOfferDialog({ open, onClose, dataset, onEditClick, d
           <div className="flex flex-col gap-y-2.5">
             <AssetDetails asset={datasetToAsset(dataset)} participantId={participantId} connectorEndpoint={counterPartyAddress} />
           </div>
-          <div>
-            <OnRequestDataOfferDescription asset={datasetToAsset(dataset)} />
-          </div>
-          <div className="flex flex-col gap-y-2.5">
-            <span /> <span />
-            <DataOfferDetails
-              assetId={dataset["@id"]}
-              participantId={participantId}
-              counterPartyAddress={counterPartyAddress}
-              offers={dataset[HAS_POLICY]}
-              assetIsOwned={assetIsOwned}
-              onNegotiateSuccess={onNegotiateSuccess}
-            />
-          </div>
+          {onrequest ? 
+            <div className="mt-6">
+              <OnRequestDataOfferDescription asset={datasetToAsset(dataset)} />
+            </div> : 
+            <div className="flex flex-col gap-y-2.5">
+              <span /> <span />
+              <DataOfferDetails
+                assetId={dataset["@id"]}
+                participantId={participantId}
+                counterPartyAddress={counterPartyAddress}
+                offers={dataset[HAS_POLICY]}
+                assetIsOwned={assetIsOwned}
+                onNegotiateSuccess={onNegotiateSuccess}
+              />
+            </div>
+          }
         </DialogContent>
         <DialogActions>
           <Button color="secondary" onClick={onClose}>
             <T string="common.close" />
           </Button>
+          {onrequest && !assetIsOwned ? 
+            <Button variant="contained" onClick={openEmail}>
+              <T string="common.contact" />
+            </Button> : "" 
+          }
         </DialogActions>
       </Dialog>
     </>

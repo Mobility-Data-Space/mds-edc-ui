@@ -27,6 +27,7 @@ export const en = {
       delete: "Delete",
       transfer: "Transfer",
       terminate: "Terminate",
+      contact: "Contact",
       showMore: "Show more",
       showLess: "Show less",
       negotiate: "Negotiate",

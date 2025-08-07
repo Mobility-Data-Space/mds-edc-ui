@@ -328,19 +328,21 @@ export const assetDataAddressFieldsTitle = (asset: Asset) => {
 }
 
 export const assetDataAddressFieldsToShow = (asset: Asset): FieldShowProps[] => {
-  const dataAddress = removeJsonLdSchemaFromProperties(asset.dataAddress);
-  const type = readValue(dataAddress, "type");
-  if (type === DataAddressTypes.MDSOnRequestOffer) {
+  const properties = removeJsonLdSchemaFromProperties(asset.properties);
+  const additionalProperties = readValue(properties, "additionalProperties")?.[0] ;
+  const onrequest = readValue(additionalProperties, "onrequest") == "true";
+
+  if (onrequest) {
     return [
       {
         label: "dataOffer.contactEmailAddress",
-        value: readValue(dataAddress, "email"),
+        value: readValue(additionalProperties, "email"),
         icon: 'mail',
         copyTextIcon: true,
       },
       {
         label: "dataOffer.new.dataOfferContactPreferredEmailSubject",
-        value: readValue(dataAddress, "preferred_subject"),
+        value: readValue(additionalProperties, "preferred_subject"),
         icon: 'subject',
         copyTextIcon: true,
       },
