@@ -6,7 +6,7 @@ import {TIME_LOCALE} from "@/constants/time-locale.ts";
 
 export type DateType = Dayjs | Date | null;
 
-export const browserLanguage = () => {
+export const defaultTimeLocale = () => {
   return TIME_LOCALE;
 }
 
@@ -23,7 +23,7 @@ export const formatDateTime = (milliSecondsTimestamp: number, {
   showHour = true,
   showMinute = true,
 }: FormatDateTimeOptions = {showSeconds: false, showDayOfWeek: false}) => {
-  const formatter = new Intl.DateTimeFormat(browserLanguage(), {
+  const formatter = new Intl.DateTimeFormat(defaultTimeLocale(), {
     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     year: "numeric",
     month: "2-digit",
@@ -57,7 +57,7 @@ export const dateToString = (date?: DateType | string) => {
 }
 
 export const formatDateTimeAgo = (milliSecondsTimestamp: number) => {
-  const timeAgo = new TimeAgo(browserLanguage());
+  const timeAgo = new TimeAgo(defaultTimeLocale());
 
   if (! milliSecondsTimestamp) {
     return "";
