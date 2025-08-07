@@ -113,6 +113,8 @@ test.describe("Policy Definitions Page Tests", () => {
 
       // Try to create a policy with the same ID
       await policiesPage.clickCreatePolicyButton();
+      await page.waitForURL("**/new");
+      
       await policiesPage.fillPolicyId(policyId || "");
       await policiesPage.clickCreateButton();
 
