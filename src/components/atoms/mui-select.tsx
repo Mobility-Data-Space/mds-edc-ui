@@ -21,10 +21,6 @@ function valueIsEmpty(value: unknown): boolean {
 }
 
 export function renderSelectOptions(options: Option[], value: unknown): JSX.Element[] {
-  if (options.length === 0) {
-    return [<MenuItem key="hyphen-option">-</MenuItem>]
-  }
-
   let isMultiple = false;
   if (Array.isArray(value)) {
     isMultiple = true;

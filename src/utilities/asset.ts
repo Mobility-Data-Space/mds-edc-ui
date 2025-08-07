@@ -52,6 +52,10 @@ export const fromAssetForm = (formData: AssetInput, organizationName: string) =>
   cleanFormDataObject.properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS] =
     cleanFormDataObject.properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS] && cleanFormDataObject.properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS].length > 0 ? cleanFormDataObject.properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS].map(fromKeyValueInput) : [];
 
+  if (cleanFormDataObject.properties[ASSET_ADVANCED_INFO_MOBILITY_THEME][ASSET_ADVANCED_INFO_DATA_SUBCATEGORY] == "-"){
+    delete cleanFormDataObject.properties[ASSET_ADVANCED_INFO_MOBILITY_THEME][ASSET_ADVANCED_INFO_DATA_SUBCATEGORY]
+  }
+
   if(cleanFormDataObject.dataAddress.type == DataAddressTypes.MDSOnRequestOffer){
     cleanFormDataObject.properties.additionalProperties = {}
     cleanFormDataObject.properties.additionalProperties.onrequest = "true"
@@ -467,103 +471,12 @@ export const fromKeyValueInput = (value: { input: Tag; valid: boolean; id: strin
 }
 
 export const assetToAssetInput = async (asset: Asset) => {
-    const removedJsonLd = await jsonld.compact(asset, contextWithNoPrefixToCompact);
-    const properties: any = { ...defaultCreateAssetFormData.properties, ...removedJsonLd["https://w3id.org/edc/v0.0.1/ns/properties"] as any };
-    const auxDataAddress: any = { ...defaultCreateAssetFormData.dataAddress, ...removedJsonLd["https://w3id.org/edc/v0.0.1/ns/dataAddress"] as any };
-    const dataAddress: any = {};
-
-    const regex = /^https?:\/\/.*[#\/]([^\/#]+)$/;
-    for (const prop in auxDataAddress) {
-      const match = prop.match(regex);
-      if (! match) {
-        dataAddress[prop] = auxDataAddress[prop];
-        continue;
-      }
-      const firstMatch = match[1];
-      dataAddress[firstMatch] = auxDataAddress[prop];
-    }
-
-    if (typeof properties[ASSET_KEYWORDS] === "string") {
-      properties[ASSET_KEYWORDS] = [properties[ASSET_KEYWORDS]];
-    }
-
-      Array.isArray(properties[ASSET_ADVANCED_INFO_GEO_LOCATION][ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS]);
-
-    properties[ASSET_ADVANCED_INFO_GEO_LOCATION][ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS] = properties[ASSET_ADVANCED_INFO_GEO_LOCATION][ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS] && Array.isArray(properties[ASSET_ADVANCED_INFO_GEO_LOCATION][ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS]) ? properties[ASSET_ADVANCED_INFO_GEO_LOCATION][ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS].map(toKeyValueInput) : [properties[ASSET_ADVANCED_INFO_GEO_LOCATION][ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS]].map(toKeyValueInput);
-
-    properties[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] =
-      properties[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] && Array.isArray(properties[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS]) ? properties[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS].map(toKeyValueInput) : [properties[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS]].map(toKeyValueInput);
-
-    properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS] =
-      properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS] && Array.isArray(properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS]) ? properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS].map(toKeyValueInput) : [properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS]].map(toKeyValueInput);
-
-    return {
-      "@id": removedJsonLd["@id"],
-      properties: { ...properties, "@id": removedJsonLd["@id"] },
-      dataAddress,
-    } as AssetInput;
-}
-
-
-export const assetToAssetInput1 = (asset: Asset) => {
-  console.log('AFTER compact : ', asset)
-  const regex = /(.+):(.+)/;
-  const auxProperties: any = asset["edc:properties"];
-  const auxDataAddress: any = asset["edc:dataAddress"];
-  const context: any = asset["@context"]
-  const properties: any = {};
+  const removedJsonLd = await jsonld.compact(asset, contextWithNoPrefixToCompact);
+  const properties: any = { ...defaultCreateAssetFormData.properties, ...removedJsonLd["https://w3id.org/edc/v0.0.1/ns/properties"] as any };
+  const auxDataAddress: any = { ...defaultCreateAssetFormData.dataAddress, ...removedJsonLd["https://w3id.org/edc/v0.0.1/ns/dataAddress"] as any };
   const dataAddress: any = {};
-  for (const prop in auxProperties) {
-    const match = prop.match(regex);
-    if (! match) {
-      properties[prop] = auxProperties[prop];
-      continue;
-    }
-    const firstMatch = match[1];
-    const newProp = prop.replace(`${firstMatch}:`, context[firstMatch] || firstMatch);
-    const auxValue = auxDataAddress[prop];
 
-    if (prop === "mobilitydcatap:mobilityTheme") {
-      properties[ASSET_ADVANCED_INFO_MOBILITY_THEME] = {
-        [ASSET_ADVANCED_INFO_DATA_CATEGORY]: auxProperties["mobilitydcatap:mobilityTheme"]["mobilitydcatap-theme:data-content-category"],
-        [ASSET_ADVANCED_INFO_DATA_SUBCATEGORY]: auxProperties["mobilitydcatap:mobilityTheme"]["mobilitydcatap-theme:data-content-sub-category"],
-      };
-      continue;
-    }
-
-    if (prop === "dct:spatial") {
-      properties[ASSET_ADVANCED_INFO_GEO_LOCATION] = {
-        ...auxProperties["dct:spatial"],
-        [ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS]: auxProperties["dct:spatial"]["dct:identifier"],
-      };
-      continue;
-    }
-
-    if (prop === "dct:temporal") {
-      properties[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE] = {
-        ...auxProperties["dct:temporal"],
-        [ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START]: auxProperties["dct:temporal"]["dcat:startDate"],
-        [ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END]: auxProperties["dct:temporal"]["dcat:endDate"],
-      };
-      continue;
-    }
-
-    if (prop === "mobilitydcatap:mobilityDataStandard") {
-      if (auxProperties["dct:temporal"] ) {
-        properties[ASSET_ADVANCED_INFO_DATA_MODEL] = {
-          ...auxProperties["dct:temporal"],
-        };
-        if (auxProperties["dct:temporal"]["mobilitydcatap:schema"]) {
-          properties[ASSET_ADVANCED_INFO_DATA_MODEL] = {
-            [ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA]: auxProperties["dct:temporal"]["mobilitydcatap:schema"],
-          }
-        }
-      }
-      continue
-    }
-    properties[newProp] = auxProperties[prop];
-  }
-
+  const regex = /^https?:\/\/.*[#\/]([^\/#]+)$/;
   for (const prop in auxDataAddress) {
     const match = prop.match(regex);
     if (! match) {
@@ -571,19 +484,28 @@ export const assetToAssetInput1 = (asset: Asset) => {
       continue;
     }
     const firstMatch = match[1];
-    dataAddress[prop.replace(`${firstMatch}:`, "")] = auxDataAddress[prop];
+    dataAddress[firstMatch] = auxDataAddress[prop];
   }
-  const newAsset = { "@id": asset["@id"], properties, dataAddress };
 
-//        console.log('THEN : ',  result["@id"], {result, newAsset})
-  return {
-    ...defaultCreateAssetFormData,
-    asset: {
-      "@id": asset["@id"],
-      properties: { ...defaultCreateAssetFormData.properties, ...properties, "@id": asset["@id"] },
-      dataAddress: { ...defaultCreateAssetFormData.dataAddress, ...dataAddress },
-    } as AssetInput
+  if (typeof properties[ASSET_KEYWORDS] === "string") {
+    properties[ASSET_KEYWORDS] = [properties[ASSET_KEYWORDS]];
   }
+
+  Array.isArray(properties[ASSET_ADVANCED_INFO_GEO_LOCATION][ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS]);
+
+  properties[ASSET_ADVANCED_INFO_GEO_LOCATION][ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS] = properties[ASSET_ADVANCED_INFO_GEO_LOCATION][ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS] && Array.isArray(properties[ASSET_ADVANCED_INFO_GEO_LOCATION][ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS]) ? properties[ASSET_ADVANCED_INFO_GEO_LOCATION][ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS].map(toKeyValueInput) : [properties[ASSET_ADVANCED_INFO_GEO_LOCATION][ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS]].map(toKeyValueInput);
+
+  properties[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] =
+    properties[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] && Array.isArray(properties[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS]) ? properties[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS].map(toKeyValueInput) : [properties[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS]].map(toKeyValueInput);
+
+  properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS] =
+    properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS] && Array.isArray(properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS]) ? properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS].map(toKeyValueInput) : [properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS]].map(toKeyValueInput);
+
+  return {
+    "@id": removedJsonLd["@id"],
+    properties: { ...properties, "@id": removedJsonLd["@id"] },
+    dataAddress,
+  } as AssetInput;
 }
 
 export const transformDataAddress = (formDataToTransform: DataAddress) => {

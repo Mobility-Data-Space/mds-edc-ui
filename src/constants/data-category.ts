@@ -67,7 +67,9 @@ export const SUBCATEGORIES = {
     'Cargo Logistics',
     'Toll Information',
   ],
-  [VARIOUS]: [],
+  [VARIOUS]: [
+    '-'
+  ],
 }
 
 export const DATA_CATEGORY_SELECT_DATA = Object.keys(SUBCATEGORIES).map(value => ({
