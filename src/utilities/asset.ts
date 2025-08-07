@@ -492,7 +492,6 @@ export const assetToAssetInput = async (asset: Asset) => {
     properties[ASSET_KEYWORDS] = [properties[ASSET_KEYWORDS]];
   }
 
-  Array.isArray(properties[ASSET_ADVANCED_INFO_GEO_LOCATION][ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS]);
 
 let geoLocationNuts = properties[ASSET_ADVANCED_INFO_GEO_LOCATION][ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS];
 
