@@ -2,7 +2,7 @@ import { FieldShowProps } from "@/components/molecules/field-show";
 import { CONTEXT_EDC, TRACTUS_X_CONTEXT } from "@/jsonld/context";
 import { ContractAgreement } from "@think-it-labs/edc-connector-client";
 import { Inner } from "@think-it-labs/edc-connector-client/dist/src/inner";
-import {formatDateTime} from "@/utilities/date.ts";
+import { formatDateTime } from "@/utilities/date.ts";
 
 export const contractAgreementFieldsToShow = (contractAgreement: ContractAgreement, participantId: string, counterPartyAddress: string): FieldShowProps[] => {
   return [
@@ -51,7 +51,7 @@ export interface RetiredContractAgreement {
 export class AgreementsRetirementController {
   #inner: Inner;
   #management: string;
-  #pathPrefix = "/v3.1alpha/retireagreements";
+  #pathPrefix = "/v3/contractagreements/retirements";
   protocol: String = "dataspace-protocol-http";
 
   constructor(management: string) {
