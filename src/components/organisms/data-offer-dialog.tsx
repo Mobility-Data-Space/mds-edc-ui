@@ -11,7 +11,7 @@ import Typography from "@mui/material/Typography";
 import { Dataset } from "@think-it-labs/edc-connector-client";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
 import { enqueueSnackbar } from 'notistack';
-import { useState } from "react";
+import { MouseEvent, MouseEventHandler, useState } from "react";
 
 const HAS_POLICY = "http://www.w3.org/ns/odrl/2/hasPolicy";
 
@@ -40,10 +40,11 @@ export default function DataOfferDialog({ open, onClose, dataset, onEditClick, d
   const additionalProperties = readValue(properties, "additionalProperties")?.[0] ;
   const onrequest = readValue(additionalProperties, "onrequest") == "true";
 
-  const openEmail = () => {
+  const openEmail = (e: MouseEvent) => {
     const recipient = readValue(additionalProperties, "email"); // Replace with dynamic value if needed
     const subject = readValue(additionalProperties, "preferred_subject");
     window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}`;
+    e.preventDefault() ;
 };
   const onDeleteConfirm = async () => {
     try {
@@ -127,7 +128,7 @@ export default function DataOfferDialog({ open, onClose, dataset, onEditClick, d
           <Button color="secondary" onClick={onClose}>
             <T string="common.close" />
           </Button>
-          {onrequest && !assetIsOwned ? 
+          {onrequest && assetIsOwned ? 
             <Button variant="contained" onClick={openEmail}>
               <T string="common.contact" />
             </Button> : "" 
