@@ -22,7 +22,8 @@ export function ConsumerParticipantIdConstraint({ value, onChange, onRemove }: C
       <div className="flex flex-col">
         <MuiSelect 
           label={translator("dataOffer.new.policyExpressionOperator")}
-          options={consumerParticipantIdOperators} value={value.operator}
+          options={consumerParticipantIdOperators} 
+          value={value.operator}
           onChange={(event) => onChange({ ...value, operator: event.target.value })} />
       </div>
       <div className="flex flex-col">
