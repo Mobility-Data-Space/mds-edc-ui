@@ -38,7 +38,7 @@ test.describe("Contract Agreements Page Tests", () => {
       // default type is HTTP Push
       await agreementsPage.fillHttpURL();
       await agreementsPage.submitTransfer();
-      const successMessage = page.getByText('Contract Agreement transferred successfully');
+      const successMessage = page.getByText('Transfer Process Initiated Successfully');
       await expect(successMessage).toBeVisible();
     });
 
@@ -54,10 +54,10 @@ test.describe("Contract Agreements Page Tests", () => {
 
       // Initiate transfer for S3
       await agreementsPage.initiateTransfer();
-      await agreementsPage.selectS3Type() ;
+      await agreementsPage.selectS3Type();
       await agreementsPage.fillRequiredS3DataDestination("single");
       await agreementsPage.submitTransfer();
-      const successMessage = page.getByText('Contract Agreement transferred successfully');
+      const successMessage = page.getByText('Transfer Process Initiated Successfully');
       await expect(successMessage).toBeVisible();
     });
 
@@ -73,10 +73,10 @@ test.describe("Contract Agreements Page Tests", () => {
 
       // Initiate transfer for Azure
       await agreementsPage.initiateTransfer();
-      await agreementsPage.selectAzureType() ;
+      await agreementsPage.selectAzureType();
       await agreementsPage.fillRequiredAzureDataDestination("single");
       await agreementsPage.submitTransfer();
-      const successMessage = page.getByText('Contract Agreement transferred successfully');
+      const successMessage = page.getByText('Transfer Process Initiated Successfully');
       await expect(successMessage).toBeVisible();
     });
 
@@ -92,10 +92,10 @@ test.describe("Contract Agreements Page Tests", () => {
 
       // Initiate transfer with Custom JSON
       await agreementsPage.initiateTransfer();
-      await agreementsPage.selectCustomJsonType() ;
+      await agreementsPage.selectCustomJsonType();
       await agreementsPage.fillCustomJsonDataDestination();
       await agreementsPage.submitTransfer();
-      const successMessage = page.getByText('Contract Agreement transferred successfully');
+      const successMessage = page.getByText('Transfer Process Initiated Successfully');
       await expect(successMessage).toBeVisible();
     });
   });
@@ -252,12 +252,13 @@ test.describe("Contract Agreements Page Tests", () => {
   test.describe("Terminate Contract Functionality", () => {
     test("Terminates a contract, shows success message, and closes modal", async ({ page }) => {
       await page.getByRole('button', { name: /Active Contracts/i }).click();
-      await page.waitForTimeout(500);
+
+      await page.waitForFunction(async () => {
+        const items = document.querySelectorAll(".contract-agreement-card");
+        return items.length > 0;
+      }, { timeout: 30000 });
+
       const agreementCards = await agreementsPage.getAgreementCards();
-      const count = await agreementCards.count();
-      if (count === 0) {
-        test.skip(); // No active contracts to terminate
-      }
       const firstCard = agreementCards.first();
       await firstCard.click();
       const agreementDialog = await agreementsPage.getAgreementDialog();
