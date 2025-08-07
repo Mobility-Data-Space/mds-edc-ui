@@ -6,10 +6,9 @@ export const HAS_POLICY = "http://www.w3.org/ns/odrl/2/hasPolicy";
 
 export const datasetToAsset = (dataset: Dataset): Asset => { // TODO: dataSet type
   return {
-    // TODO: get only specific values for each field
     ["@id"]: dataset["@id"],
     properties: dataset.properties || { ...dataset },
-    dataAddress: dataset.dataAddress || { ...dataset },
+    dataAddress: dataset.dataAddress || {},
     privateProperties: dataset.privateProperties || {},
   } as Asset;
 }
