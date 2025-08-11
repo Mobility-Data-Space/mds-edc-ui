@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { DataOfferPage } from './pages/data-offer-page';
+import { MAX_ITEMS } from '@/constants/lists';
 
 test.describe("Data Offer Tests", () => {
   let dataOfferPage: DataOfferPage;
@@ -162,7 +163,7 @@ test.describe("Data Offer Tests", () => {
         await dataOfferPage.goToPreviousPage();
         const pageAfterPrevFirstIndex = await dataOfferPage.getFirstElementIndex();
 
-        expect(pageAfterPrevFirstIndex).toBe(pageAfterNextFirstIndex - 1);
+        expect(pageAfterPrevFirstIndex).toBe(pageAfterNextFirstIndex - MAX_ITEMS);
       } else {
         const isPrevEnabled = await dataOfferPage.isPreviousPageEnabled();
         const currentFirstIndex = await dataOfferPage.getFirstElementIndex();
