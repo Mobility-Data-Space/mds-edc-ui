@@ -27,3 +27,5 @@ export const Input = forwardRef(({ tooltip = "", onChange, value, error, ...rest
     />
   );
 })
+
+Input.displayName = "Input"
