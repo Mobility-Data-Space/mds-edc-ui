@@ -4457,10 +4457,10 @@ react@^18:
   dependencies:
     loose-envify "^1.1.0"
 
-recharts@^3.0.2:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/recharts/-/recharts-3.1.0.tgz#8c97bc3b9d21c844052220c88d37d9913947342d"
-  integrity sha512-NqAqQcGBmLrfDs2mHX/bz8jJCQtG2FeXfE0GqpZmIuXIjkpIwj8sd9ad0WyvKiBKPd8ZgNG0hL85c8sFDwascw==
+recharts@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/recharts/-/recharts-3.1.2.tgz#44626509c6567ed8208d3347e915397d480bb3d2"
+  integrity sha512-vhNbYwaxNbk/IATK0Ki29k3qvTkGqwvCgyQAQ9MavvvBwjvKnMTswdbklJpcOAoMPN/qxF3Lyqob0zO+ZXkZ4g==
   dependencies:
     "@reduxjs/toolkit" "1.x.x || 2.x.x"
     clsx "^2.1.1"
