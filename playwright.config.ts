@@ -1,9 +1,10 @@
 import { defineConfig, devices } from '@playwright/test';
-import { participantConfig as UiConfig } from './tests/utils/tests-config' ;
+import { participantConfig as UiConfig } from './tests/utils/tests-config';
 
 export default defineConfig({
+  workers: '80%',
   testDir: './tests',
-  fullyParallel: true, 
+  fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: 1,
   reporter: 'html',
@@ -26,22 +27,22 @@ export default defineConfig({
     }
   ],
 
-  webServer: process.env.CI ? 
-      [{
-          name: "MDS EDC UI Server",
-          command: 'yarn dev',
-          url: 'http://127.0.0.1:3000',
-          env: UiConfig,
-          reuseExistingServer: false,
-      }] : [{
-        name: "MDS EDC UI Server",
-        command: 'yarn dev',
-        url: 'http://127.0.0.1:3000',
-        env: UiConfig,
-        reuseExistingServer: false,
-      },
-      {
-        name: "MDS EDC E2E Services",
-        command: 'docker compose -f ./docker-compose.e2e.yml up -d'
-      }]
+  webServer: process.env.CI ?
+    [{
+      name: "MDS EDC UI Server",
+      command: 'yarn dev',
+      url: 'http://127.0.0.1:3000',
+      env: UiConfig,
+      reuseExistingServer: false,
+    }] : [{
+      name: "MDS EDC UI Server",
+      command: 'yarn dev',
+      url: 'http://127.0.0.1:3000',
+      env: UiConfig,
+      reuseExistingServer: false,
+    },
+    {
+      name: "MDS EDC E2E Services",
+      command: 'docker compose -f ./docker-compose.e2e.yml up -d'
+    }]
 });

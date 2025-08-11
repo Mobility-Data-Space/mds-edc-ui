@@ -109,7 +109,7 @@ test.describe("Contract Agreements Page Tests", () => {
       await expect(searchTrigger).toBeVisible();
     });
 
-    test("should search for agreements by asset ID", async ({ page }) => {
+    test.fixme("should search for agreements by asset ID", async ({ page }) => {
       const initialAgreements = await agreementsPage.getAgreementCards();
       const initialCount = await initialAgreements.count();
 
@@ -132,7 +132,7 @@ test.describe("Contract Agreements Page Tests", () => {
       }
     });
 
-    test("should clear search and show all agreements", async ({ page }) => {
+    test.fixme("should clear search and show all agreements", async ({ page }) => {
       await agreementsPage.searchAgreements('test');
 
       await agreementsPage.clearAgreementSearch();

@@ -6,34 +6,52 @@ import { Snackbar } from "@/components/molecules/snackbar";
 import DataOfferCard from "@/components/organisms/data-offer-card";
 import DataOfferDialog from "@/components/organisms/data-offer-dialog";
 import SideDrawer from "@/components/organisms/side-drawer";
+import { proxyConnectorManagement } from "@/constants/proxy";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
+import { useSessionState } from "@/hooks/use-session-state";
+import { useUpdateQueryParams } from "@/hooks/use-update-query-params";
 import { T, useTranslator } from "@/i18n";
-import {Icon, IconButton, Tooltip} from "@mui/material";
+import { Icon, IconButton, Tooltip } from "@mui/material";
 import { Dataset } from "@think-it-labs/edc-connector-client";
 import { ContractOffersList } from "@think-it-labs/edc-connector-ui/contract-offers-list";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
+import { useRouter } from "next/router";
 import { enqueueSnackbar, useSnackbar } from "notistack";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
-import { proxyConnectorManagement } from "@/constants/proxy";
 
 export default function CatalogPage() {
   const { connector } = useParticipantConnectorState();
   const { translator } = useTranslator();
   const { closeSnackbar } = useSnackbar();
-  const [currentPage, setCurrentPage] = useState(0)
+  const { query } = useRouter();
+  const updateQueryParams = useUpdateQueryParams()
 
   const [listKey, setListKey] = useState(1);
   const [isDataOfferDialogOpen, setIsDataOfferDialogOpen] = useState(false);
   const [isCounterPartyAddressDialogOpen, setIsCounterPartyAddressDialogOpen] = useState(false);
 
-  const [counterPartyAddress, setCounterPartyAddress] = useState("");
-  const [counterPartyAddressToSearch, setCounterPartyAddressToSearch] = useState("");
+  const [counterPartyAddress, setCounterPartyAddress] = useSessionState("counterPartyAddress", "");
+  const [counterPartyAddressToSearch, setCounterPartyAddressToSearch] = useState(counterPartyAddress);
+
   const { debounce: debouncedSetCounterPartyAddress } = useDebounce((url) => {
-    setCounterPartyAddressToSearch(url)
+    setCounterPartyAddress(url)
     fetchCatalogParticipantId(url)
+    updateQueryParams({ page: String(0) })
   });
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      sessionStorage.removeItem("counterPartyAddress");
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
 
   const [catalogParticipantId, setCatalogParticipantId] = useState("");
   const [datasetToNegotiate, setDatasetToNegotiate] = useState<Dataset>({} as Dataset);
@@ -46,14 +64,16 @@ export default function CatalogPage() {
       .then((catalog) => {
         setCatalogParticipantId(catalog["https://w3id.org/dspace/v0.8/participantId"][0]["@value"])
       })
-      .catch((error) => {
-      })
   }
 
   const openDataOfferDialog = (dataset: Dataset) => {
     setIsDataOfferDialogOpen(true);
     setDatasetToNegotiate(dataset);
   };
+
+  const navigateToPage = useCallback((newPage: number) => {
+    updateQueryParams({ page: String(newPage) })
+  }, [updateQueryParams])
 
   return (
     <>
@@ -77,12 +97,12 @@ export default function CatalogPage() {
       <SideDrawer title={<T string="catalog.title" />}>
         <ContractOffersList
           managementUrl={proxyConnectorManagement}
-          counterPartyAddress={counterPartyAddressToSearch}
+          counterPartyAddress={counterPartyAddress}
           usePagination
-          navigate={setCurrentPage}
-          currentPage={currentPage}
+          navigate={navigateToPage}
+          currentPage={parseInt(query.page as string) || 0}
           firstPage={0}
-          shouldFetch={!!counterPartyAddressToSearch}
+          shouldFetch={!!counterPartyAddress}
         >
           <div className="w-full grid grid-rows-1 grid-cols-5 gap-x-3.5 py-4 items-center">
             <div className="col-span-2">
@@ -94,7 +114,7 @@ export default function CatalogPage() {
                   type="text"
                   label={<T string="catalog.connectorEndpoints" />}
                   placeholder="https://other-connector.com/api/dsp"
-                  value={counterPartyAddress}
+                  value={counterPartyAddressToSearch}
                   slotProps={{
                     input: {
                       classes: { root: "flex-grow" },
@@ -107,7 +127,7 @@ export default function CatalogPage() {
                     }
                   }}
                   onChange={(event) => {
-                    setCounterPartyAddress(event.target.value);
+                    setCounterPartyAddressToSearch(event.target.value);
                     debouncedSetCounterPartyAddress(event.target.value);
                   }}
                 />
@@ -132,7 +152,7 @@ export default function CatalogPage() {
           </div>
 
           <div className="flex flex-wrap gap-2.5" data-testid="catalog-list">
-            {counterPartyAddressToSearch && <ContractOffersList.Items
+            {counterPartyAddress && <ContractOffersList.Items
               key={listKey}
               limit={MAX_ITEMS}
             >

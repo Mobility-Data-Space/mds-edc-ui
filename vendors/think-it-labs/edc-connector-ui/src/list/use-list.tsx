@@ -20,9 +20,8 @@ interface UseListOptions<T> {
 }
 
 type State<T> = {
-  querySpecBase: QuerySpec;
-  searchSpec: SearchSpec;
-  committedSearchSpec: SearchSpec;
+  baseQuery: QuerySpec;
+  searchFilter: SearchSpec;
   items: T[];
   error: Error | null;
   isLoading: boolean;
@@ -30,14 +29,14 @@ type State<T> = {
 };
 
 type Action<T> =
-  | { type: "SET_QUERY_SPEC_BASE"; payload: QuerySpec }
-  | { type: "SET_SEARCH_SPEC"; payload: Partial<SearchSpec> }
+  | { type: "SET_BASE_QUERY"; payload: QuerySpec }
+  | { type: "SET_SEARCH_FILTER"; payload: Partial<SearchSpec> }
   | { type: "TRIGGER_SEARCH" }
-  | { type: "SEARCH_START" }
-  | { type: "SEARCH_SUCCESS"; payload: T[] }
-  | { type: "SEARCH_ERROR"; payload: Error };
+  | { type: "FETCH_START" }
+  | { type: "FETCH_SUCCESS"; payload: T[] }
+  | { type: "FETCH_ERROR"; payload: Error };
 
-const initialSearchSpec: SearchSpec = {
+const initialSearchFilter: SearchSpec = {
   operandLeft: "edc:name",
   operator: "=",
   operandRight: "",
@@ -45,110 +44,129 @@ const initialSearchSpec: SearchSpec = {
 
 function reducer<T>(state: State<T>, action: Action<T>): State<T> {
   switch (action.type) {
-    case "SET_QUERY_SPEC_BASE":
-      return { ...state, querySpecBase: { ...state.querySpecBase, ...action.payload } };
-    case "SET_SEARCH_SPEC":
-      return { ...state, searchSpec: { ...state.searchSpec, ...action.payload } };
+    case "SET_BASE_QUERY":
+      return { ...state, baseQuery: action.payload };
+
+    case "SET_SEARCH_FILTER":
+      return { ...state, searchFilter: { ...state.searchFilter, ...action.payload } };
+
     case "TRIGGER_SEARCH":
-      return {
-        ...state,
-        committedSearchSpec: state.searchSpec,
-        shouldSearch: true,
-      };
-    case "SEARCH_START":
+      return { ...state, shouldSearch: true };
+
+    case "FETCH_START":
       return { ...state, isLoading: true, error: null };
-    case "SEARCH_SUCCESS":
+
+    case "FETCH_SUCCESS":
       return { ...state, isLoading: false, shouldSearch: false, items: action.payload };
-    case "SEARCH_ERROR":
+
+    case "FETCH_ERROR":
       return { ...state, isLoading: false, shouldSearch: false, error: action.payload };
+
     default:
       return state;
   }
 }
 
-export function useList<T>({ queryAll, delete: del, shouldFetch = true }: UseListOptions<T>): ListHook<T> {
+function buildFinalQuery(baseQuery: QuerySpec, searchFilter: SearchSpec): QuerySpec {
+  let filterExpression = Array.isArray(baseQuery.filterExpression)
+    ? [...baseQuery.filterExpression]
+    : [];
+
+  if (searchFilter.operandRight) {
+    const shouldWrap =
+      (searchFilter.operator === "ilike" || searchFilter.operator === "like");
+
+    const operandRight = shouldWrap
+      ? `%${searchFilter.operandRight}%`
+      : searchFilter.operandRight;
+
+    filterExpression.push({
+      ...searchFilter,
+      operandRight
+    });
+  }
+
+  return {
+    ...baseQuery,
+    filterExpression: filterExpression.length > 0 ? filterExpression : undefined,
+  };
+}
+
+export function useList<T>({
+  queryAll,
+  delete: deleteApi,
+  shouldFetch = true
+}: UseListOptions<T>): ListHook<T> {
+
   const [state, dispatch] = useReducer(reducer<T>, {
-    querySpecBase: {},
-    searchSpec: initialSearchSpec,
-    committedSearchSpec: initialSearchSpec,
+    baseQuery: {},
+    searchFilter: initialSearchFilter,
     items: [],
     error: null,
     isLoading: false,
     shouldSearch: false,
   });
 
-  const deleteItem = useCallback((id: string) => del(id), [del]);
+  const fetchData = useCallback(async (query: QuerySpec) => {
+    if (!shouldFetch) return;
 
-  const buildQuerySpec = useCallback(() => {
-    const { querySpecBase, committedSearchSpec } = state;
-    let filterExpression = Array.isArray(querySpecBase.filterExpression)
-      ? [...querySpecBase.filterExpression]
-      : [];
-    if (committedSearchSpec.operandRight) {
-      const shouldWrap =
-        (committedSearchSpec.operator === "ilike" || committedSearchSpec.operator === "like") &&
-        committedSearchSpec.operandRight;
-      const operandRight = shouldWrap
-        ? `%${committedSearchSpec.operandRight}%`
-        : committedSearchSpec.operandRight;
-      filterExpression.push({ ...committedSearchSpec, operandRight });
+    try {
+      dispatch({ type: "FETCH_START" });
+      const response = await queryAll(query);
+      dispatch({ type: "FETCH_SUCCESS", payload: response });
+    } catch (err) {
+      dispatch({ type: "FETCH_ERROR", payload: err as Error });
     }
-
-    const querySpec: QuerySpec = {
-      ...state.querySpecBase,
-      filterExpression: filterExpression.length > 0 ? filterExpression : undefined,
-    };
-    return querySpec;
-  }, [state.querySpecBase, state.committedSearchSpec]);
+  }, [queryAll, shouldFetch]);
 
   useEffect(() => {
-    if (!shouldFetch) return;
-    // Only fetch if there is a filter or some required field in querySpecBase
-    const hasBase = state.querySpecBase && Object.keys(state.querySpecBase).length > 0;
-    const hasSearch = state.committedSearchSpec && state.committedSearchSpec.operandRight;
-    if (!hasBase && !hasSearch) return;
-    dispatch({ type: "SEARCH_START" });
-    queryAll(buildQuerySpec())
-      .then((response) => {
-        dispatch({ type: "SEARCH_SUCCESS", payload: response });
-      })
-      .catch((err) => {
-        dispatch({ type: "SEARCH_ERROR", payload: err as Error });
-      });
-  }, [queryAll, state.querySpecBase, state.committedSearchSpec, shouldFetch]);
+    const query = buildFinalQuery(state.baseQuery, state.searchFilter);
+
+    const hasBaseQuery = Object.keys(state.baseQuery).length > 0;
+    const hasSearchFilter = state.searchFilter.operandRight;
+
+    if (hasBaseQuery || hasSearchFilter) {
+      fetchData(query);
+    }
+  }, [state.baseQuery, fetchData]);
 
   useEffect(() => {
     if (!state.shouldSearch) return;
-    dispatch({ type: "SEARCH_START" });
-    queryAll(buildQuerySpec())
-      .then((response) => {
-        dispatch({ type: "SEARCH_SUCCESS", payload: response });
-      })
-      .catch((err) => {
-        dispatch({ type: "SEARCH_ERROR", payload: err as Error });
-      });
-  }, [state.shouldSearch]);
+
+    const query = buildFinalQuery(state.baseQuery, state.searchFilter);
+    fetchData(query);
+  }, [state.shouldSearch, state.baseQuery, state.searchFilter, fetchData]);
 
   const setQuerySpec = useCallback((querySpec: QuerySpec) => {
-    dispatch({ type: "SET_QUERY_SPEC_BASE", payload: querySpec });
+    dispatch({ type: "SET_BASE_QUERY", payload: querySpec });
   }, []);
 
   const setSearchSpec = useCallback((searchSpec: Partial<SearchSpec>) => {
-    dispatch({ type: "SET_SEARCH_SPEC", payload: searchSpec });
+    dispatch({ type: "SET_SEARCH_FILTER", payload: searchSpec });
   }, []);
 
   const triggerSearch = useCallback(() => {
     dispatch({ type: "TRIGGER_SEARCH" });
   }, []);
 
+  const deleteItem = useCallback(async (id: string) => {
+    try {
+      await deleteApi(id);
+      const query = buildFinalQuery(state.baseQuery, state.searchFilter);
+      fetchData(query);
+    } catch (err) {
+      dispatch({ type: "FETCH_ERROR", payload: err as Error });
+    }
+  }, [deleteApi, state.baseQuery, state.searchFilter, fetchData]);
+
   return {
     items: state.items,
     error: state.error,
     isLoading: state.isLoading,
     setQuerySpec,
-    searchSpec: state.searchSpec,
+    searchSpec: state.searchFilter,
     setSearchSpec,
-    deleteItem,
     triggerSearch,
+    deleteItem,
   };
 }
