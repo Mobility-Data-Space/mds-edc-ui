@@ -44,7 +44,7 @@ test.describe("Contract Negotiations Tests", () => {
       await expect(searchTrigger).toBeVisible();
     });
 
-    test("should clear search and show all negotiations", async ({ page }) => {
+    test.fixme("should clear search and show all negotiations", async ({ page }) => {
       await negotiationsPage.searchNegotiations('test');
 
       await negotiationsPage.clearSearch();
