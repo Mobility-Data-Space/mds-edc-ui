@@ -1,4 +1,4 @@
-import { QuerySpec } from "@think-it-labs/edc-connector-client";
+import { CriterionInput, QuerySpec } from "@think-it-labs/edc-connector-client";
 import { useCallback, useEffect, useReducer } from "react";
 import { SearchSpec } from "../types";
 
@@ -67,29 +67,115 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
   }
 }
 
-function buildFinalQuery(baseQuery: QuerySpec, searchFilter: SearchSpec): QuerySpec {
-  let filterExpression = Array.isArray(baseQuery.filterExpression)
-    ? [...baseQuery.filterExpression]
-    : [];
+function wrapSearchOperandRight(
+  operator: SearchSpec["operator"],
+  value: string | string[]
+): string | string[] {
+  const shouldWrap = operator === "like" || operator === "ilike";
+  if (!shouldWrap) return value;
+  if (Array.isArray(value)) return value.map((v) => `%${v}%`);
+  return `%${value}%`;
+}
 
-  if (searchFilter.operandRight) {
-    const shouldWrap =
-      (searchFilter.operator === "ilike" || searchFilter.operator === "like");
+function buildFinalQuery(baseQuery: QuerySpec, searchFilter: SearchSpec): QuerySpec[] {
+  const baseFilters = baseQuery.filterExpression ?? [];
+  const andFilters: CriterionInput[] = baseFilters
+    .filter((f) => !Array.isArray(f.operandLeft))
+    .map((f) => ({
+      operandLeft: f.operandLeft as string,
+      operator: f.operator,
+      operandRight: f.operandRight,
+    }));
 
-    const operandRight = shouldWrap
-      ? `%${searchFilter.operandRight}%`
-      : searchFilter.operandRight;
+  const orGroups: CriterionInput[][] = baseFilters
+    .filter((f): f is CriterionInput & { operandLeft: string[] } => Array.isArray(f.operandLeft))
+    .map((f) => {
+      const uniqueLefts = Array.from(new Set(f.operandLeft));
+      return uniqueLefts.map((operandLeft) => ({
+        operandLeft,
+        operator: f.operator,
+        operandRight: f.operandRight,
+      }));
+    })
+    .filter((group) => group.length > 0);
 
-    filterExpression.push({
-      ...searchFilter,
-      operandRight
+  let hasSearch = false;
+  if (searchFilter.operandRight !== undefined && searchFilter.operandRight !== null) {
+    if (typeof searchFilter.operandRight === "string") {
+      hasSearch = searchFilter.operandRight.trim() !== "";
+    } else if (Array.isArray(searchFilter.operandRight)) {
+      hasSearch = searchFilter.operandRight.length > 0;
+    }
+  }
+
+  let operandRight: string | string[] | undefined = undefined;
+  if (hasSearch) {
+    operandRight = wrapSearchOperandRight(searchFilter.operator, searchFilter.operandRight);
+  }
+
+  const searchAnd: CriterionInput[] = [];
+  if (hasSearch && !Array.isArray(searchFilter.operandLeft)) {
+    searchAnd.push({
+      operandLeft: searchFilter.operandLeft,
+      operator: searchFilter.operator,
+      operandRight: operandRight as string | string[],
     });
   }
 
-  return {
+  const searchOrGroups: CriterionInput[][] = [];
+  if (hasSearch && Array.isArray(searchFilter.operandLeft)) {
+    const unique = Array.from(new Set(searchFilter.operandLeft));
+    const group = unique.map((operandLeft) => ({
+      operandLeft,
+      operator: searchFilter.operator,
+      operandRight: operandRight as string | string[],
+    }));
+    searchOrGroups.push(group);
+  }
+
+  const allAndFilters = [...andFilters, ...searchAnd];
+  const allOrGroups = [...orGroups, ...searchOrGroups];
+
+  if (allOrGroups.length === 0) {
+    return [{ ...baseQuery, filterExpression: allAndFilters }];
+  }
+
+  const combinations = allOrGroups.reduce<CriterionInput[][]>(
+    (acc, group) =>
+      acc.length === 0
+        ? group.map((choice) => [choice])
+        : acc.flatMap((prefix) => group.map((choice) => [...prefix, choice])),
+    []
+  );
+
+  return combinations.map((combo) => ({
     ...baseQuery,
-    filterExpression: filterExpression.length > 0 ? filterExpression : undefined,
-  };
+    filterExpression: [...allAndFilters, ...combo],
+  }));
+}
+
+function getId(value: unknown): string | undefined {
+  if (typeof value !== "object" || value === null) return undefined;
+  const record = value as Record<string, unknown>;
+  const id = record["@id"];
+  return typeof id === "string" ? id : undefined;
+}
+
+function mergeAndDedupeById<T>(lists: T[][]): T[] {
+  const seenIds = new Set<string>();
+  return lists
+    .flat()
+    .filter((item) => {
+      const id = getId(item);
+      if (id === undefined) return true;
+      if (seenIds.has(id)) return false;
+      seenIds.add(id);
+      return true;
+    });
+}
+
+function toError(err: unknown): Error {
+  return err instanceof Error ? err : new Error(String(err));
 }
 
 export function useList<T>({
@@ -107,15 +193,31 @@ export function useList<T>({
     shouldSearch: false,
   });
 
-  const fetchData = useCallback(async (query: QuerySpec) => {
+  const fetchData = useCallback(async (queries: QuerySpec[]) => {
     if (!shouldFetch) return;
 
-    try {
-      dispatch({ type: "FETCH_START" });
-      const response = await queryAll(query);
-      dispatch({ type: "FETCH_SUCCESS", payload: response });
-    } catch (err) {
-      dispatch({ type: "FETCH_ERROR", payload: err as Error });
+    dispatch({ type: "FETCH_START" });
+
+    const settled = await Promise.allSettled(queries.map((q) => queryAll(q)));
+
+    const fulfilledValues = settled
+      .filter((r): r is PromiseFulfilledResult<T[]> => r.status === "fulfilled")
+      .map((r) => r.value);
+
+    const errorMessages = settled
+      .filter((r): r is PromiseRejectedResult => r.status === "rejected")
+      .map((r) => (r.reason instanceof Error ? r.reason.message : String(r.reason)));
+
+    const merged = mergeAndDedupeById<T>(fulfilledValues);
+    dispatch({ type: "FETCH_SUCCESS", payload: merged });
+
+    if (errorMessages.length > 0) {
+      dispatch({
+        type: "FETCH_ERROR",
+        payload: new Error(
+          `Some queries failed (${errorMessages.length}/${queries.length}): ${errorMessages.join("; ")}`
+        ),
+      });
     }
   }, [queryAll, shouldFetch]);
 
@@ -155,7 +257,7 @@ export function useList<T>({
       const query = buildFinalQuery(state.baseQuery, state.searchFilter);
       fetchData(query);
     } catch (err) {
-      dispatch({ type: "FETCH_ERROR", payload: err as Error });
+      dispatch({ type: "FETCH_ERROR", payload: toError(err) });
     }
   }, [deleteApi, state.baseQuery, state.searchFilter, fetchData]);
 
