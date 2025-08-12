@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 
 interface SearchBarProps {
   placeholder: string;
-  searchTarget: string;
+  searchTarget: string | string[];
   searchOperator: SearchSpec["operator"]
 }
 
