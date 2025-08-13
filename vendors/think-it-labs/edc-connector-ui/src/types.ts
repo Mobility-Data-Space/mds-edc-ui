@@ -18,7 +18,7 @@ export type ListProps =
   | ListPropsWithPagination;
 
 export interface SearchSpec {
-  operandLeft: string
+  operandLeft: string | string[]
   operator: "=" | "!=" | "in" | "like" | "ilike" | "contains"
   operandRight: string | string[]
 }

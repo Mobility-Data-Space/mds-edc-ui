@@ -69,7 +69,7 @@ export const useTerminatedContractAgreements = () => {
             />
         })
     };
-  }, [edcClient, enqueueSnackbar, closeSnackbar, translator]);
+  }, [edcClient, translator]);
 
   useEffect(() => {
     populateRetired()
