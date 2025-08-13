@@ -7,7 +7,7 @@ import SideDrawer from "@/components/organisms/side-drawer";
 import AssetFormDialog from "@/components/templates/asset-form-dialog";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
-import {Button as MuiButton, Icon} from '@mui/material';
+import { Button as MuiButton, Icon } from '@mui/material';
 import { Asset } from "@think-it-labs/edc-connector-client";
 import { AssetsList } from "@think-it-labs/edc-connector-ui/assets-list";
 import { useRouter } from "next/router";
@@ -106,7 +106,7 @@ export default function AssetListPage() {
           <div className="flex justify-between pb-6">
             <div className="flex justify-start gap-x-5 items-center">
               <div className="min-w-xl h-full">
-                <SearchBar searchTarget="http://purl.org/dc/terms/title" placeholder={translator("assets.searchPlaceholder")} searchOperator="ilike" />
+                <SearchBar searchTarget={["id", "http://purl.org/dc/terms/title", "http://purl.org/dc/terms/description"]} placeholder={translator("assets.searchPlaceholder")} searchOperator="ilike" />
               </div>
               <div className="flex gap-x-4">
                 <MuiButton

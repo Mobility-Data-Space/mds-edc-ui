@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 
 interface SearchBarProps {
   placeholder: string;
-  searchTarget: string;
+  searchTarget: string | string[];
   searchOperator: SearchSpec["operator"]
 }
 
@@ -27,7 +27,7 @@ export default function SearchBar({ placeholder, searchTarget, searchOperator }:
 
   useEffect(() => {
     setSearchSpec({ operandRight: searchQuery })
-  }, [searchQuery])
+  }, [searchQuery, setSearchSpec])
 
   const handleSearch = useCallback(() => { // TODO: use useUpdateQueryParams when merged
     if (searchRef.current) {
@@ -40,7 +40,7 @@ export default function SearchBar({ placeholder, searchTarget, searchOperator }:
         }
       })
     }
-  }, [])
+  }, [push, query])
 
   return (
     <div className="relative flex rounded-lg h-full" >
