@@ -128,7 +128,7 @@ export default function DataOfferDialog({ open, onClose, dataset, onEditClick, d
           <Button color="secondary" onClick={onClose}>
             <T string="common.close" />
           </Button>
-          {onrequest && assetIsOwned ? 
+          {onrequest && !assetIsOwned ? 
             <Button variant="contained" onClick={openEmail}>
               <T string="common.contact" />
             </Button> : "" 
