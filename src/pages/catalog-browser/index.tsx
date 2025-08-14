@@ -114,7 +114,7 @@ export default function CatalogPage() {
                       data-testid="catalog-url"
                       type="text"
                       label={<T string="catalog.connectorEndpoints" />}
-                      placeholder="https://other-connector.com/"
+                      placeholder="https://other-connector.com/api/dsp"
                       value={counterPartyAddressToSearch}
                       slotProps={{
                         input: {
