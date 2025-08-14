@@ -1,6 +1,5 @@
 import React, { useRef, useState } from "react";
 import Button from "@mui/material/Button";
-import { enqueueSnackbar } from "notistack";
 import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
 import { PolicyDefinitionFormWrapper } from "@think-it-labs/edc-connector-ui/policy-definition-form-wrapper";
 import { T, useTranslator } from "@/i18n";
@@ -11,10 +10,13 @@ import PolicyExpression from "@/components/organisms/policy-expression";
 import { MultiplicityConstraint } from "@/utilities/policy-constraints";
 import { Input } from "@/components/atoms/input";
 import { proxyConnectorManagement } from "@/constants/proxy";
+import { Snackbar } from "@/components/molecules/snackbar";
+import { useSnackbar } from "notistack";
 
 export default function CreatePolicyDefinitionPage() {
   const { push, connector } = useParticipantConnectorState();
   const submitButtonRef = useRef<HTMLButtonElement>(null);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const { translator } = useTranslator();
 
@@ -53,7 +55,19 @@ export default function CreatePolicyDefinitionPage() {
         <PolicyDefinitionFormWrapper
           managementUrl={proxyConnectorManagement}
           formData={() => fromPolicyDefinitionForm(formData, policyId)}
-          onSuccess={() => push("/policy-definitions")}
+          onSuccess={() => {
+            enqueueSnackbar("", {
+              content: (key) => (
+                <Snackbar
+                  type="success"
+                  message={translator('policyDefinitions.new.successCreate')}
+                  onClose={() => { closeSnackbar(key); }}
+                />
+              )
+            });
+            window.dispatchEvent(new Event("list-refetch"));
+            setTimeout(() => push("/policy-definitions"), 1000)
+          }}
           onFailure={onFormSubmitFail}
         >
           <div className="flex flex-col gap-y-6 p-5">

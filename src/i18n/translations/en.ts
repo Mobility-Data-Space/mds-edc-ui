@@ -402,6 +402,7 @@ export const en = {
       },
       new: {
         title: "Create a policy definition",
+        successCreate: "Policy created successfully!",
         description:
           "Describe a new policy by defining rules which ensure owned data is accessed in a specific way, following strict requirements.",
         buttonCancel: "Cancel",
