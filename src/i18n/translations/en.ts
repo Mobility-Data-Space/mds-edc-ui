@@ -433,7 +433,7 @@ export const en = {
       otherConnectorEndpointCatalogs: "Other Connector Endpoint Catalogs",
       negotiationConfirmationCheckbox: "I agree to the Data Offer Terms & Conditions",
       failedFetchingCatalog: "Failed Fetching Catalog",
-      emptyCounterPartyUrl: "Please enter other connector endpoints to fetch catalogs.",
+      emptyCounterPartyUrl: "Please enter a connector endpoint to fetch its catalog.",
       "[participant]": {
         title: "List contract offers for ",
         description: "List participants for the selected participant.",
