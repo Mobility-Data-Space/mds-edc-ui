@@ -37,7 +37,6 @@ export default function CatalogPage() {
 
   const { debounce: debouncedSetCounterPartyAddress } = useDebounce((url) => {
     setCounterPartyAddress(url)
-    fetchCatalogParticipantId(url)
     updateQueryParams({ page: String(0) })
   });
 
@@ -57,14 +56,13 @@ export default function CatalogPage() {
   const [datasetToNegotiate, setDatasetToNegotiate] = useState<Dataset>({} as Dataset);
 
   const client = useEdcConnectorClient({ management: proxyConnectorManagement });
-  const fetchCatalogParticipantId = (counterPartyAddress: string) => {
-    client.management.catalog.request({
-      counterPartyAddress
-    })
-      .then((catalog) => {
+  useEffect(() => {
+    if(counterPartyAddress){
+      client.management.catalog.request({ counterPartyAddress }).then((catalog) => {
         setCatalogParticipantId(catalog["https://w3id.org/dspace/v0.8/participantId"][0]["@value"])
       })
-  }
+    }
+  }, [client, counterPartyAddress])
 
   const openDataOfferDialog = (dataset: Dataset) => {
     setIsDataOfferDialogOpen(true);
