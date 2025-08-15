@@ -5,7 +5,10 @@ import { Snackbar } from "@/components/molecules/snackbar";
 import ContractAgreementCard from "@/components/organisms/contract-agreement-card";
 import ContractAgreementDialog from "@/components/organisms/contract-agreement-dialog";
 import SideDrawer from "@/components/organisms/side-drawer";
+import { proxyConnectorManagement } from "@/constants/proxy";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
+import { useTerminatedContractAgreements } from "@/hooks/use-terminated-contract-agreements";
+import { useUpdateQueryParams } from "@/hooks/use-update-query-params";
 import { T, useTranslator } from "@/i18n";
 import { theme } from "@/theme/ThemeProvider.tsx";
 import { operatorIn } from "@/utilities/data-offer";
@@ -15,10 +18,8 @@ import { ContractAgreementsList } from "@think-it-labs/edc-connector-ui/contract
 import { useRouter } from "next/router";
 import { SnackbarKey, useSnackbar } from "notistack";
 import { useCallback, useMemo, useState } from "react";
+import { ErrorPopup } from "../../components/molecules/error-popup";
 import { MAX_ITEMS } from "../../constants/lists";
-import { proxyConnectorManagement } from "@/constants/proxy";
-import { useTerminatedContractAgreements } from "@/hooks/use-terminated-contract-agreements";
-import { useUpdateQueryParams } from "@/hooks/use-update-query-params";
 
 enum StatusFilter {
   All = "All",
@@ -185,22 +186,12 @@ export default function ContractAgreementsListPage() {
         </div>
 
         <ContractAgreementsList.Error>
-          {({ error }) => {
-            if (error) {
-              enqueueSnackbar(translator("common.contractAgreementsLoadError"), {
-                variant: "error",
-                content: (key: any) => (
-                  <Snackbar
-                    type="error"
-                    message={translator('common.contractAgreementsLoadError')}
-                    details={error.message || undefined}
-                    onClose={() => { closeSnackbar(key); }}
-                  />
-                )
-              });
-            }
-            return <></>;
-          }}
+          {({ errors }) =>
+            <ErrorPopup
+              errors={errors}
+              errorMessageKey="common.contractAgreementsLoadError"
+            />
+          }
         </ContractAgreementsList.Error>
 
         <div className="flex flex-col flex-wrap gap-4 py-4" data-testid="contract-agreements-list">

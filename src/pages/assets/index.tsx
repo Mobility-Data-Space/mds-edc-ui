@@ -5,16 +5,17 @@ import AssetCard from "@/components/organisms/asset-card";
 import AssetDialog from "@/components/organisms/asset-dialog";
 import SideDrawer from "@/components/organisms/side-drawer";
 import AssetFormDialog from "@/components/templates/asset-form-dialog";
+import { proxyConnectorManagement } from "@/constants/proxy";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
-import { Button as MuiButton, Icon } from '@mui/material';
+import { Icon, Button as MuiButton } from '@mui/material';
 import { Asset } from "@think-it-labs/edc-connector-client";
 import { AssetsList } from "@think-it-labs/edc-connector-ui/assets-list";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useCallback, useState } from "react";
+import { ErrorPopup } from "../../components/molecules/error-popup";
 import { MAX_ITEMS } from "../../constants/lists";
-import { proxyConnectorManagement } from "@/constants/proxy";
 
 export default function AssetListPage() {
   const router = useRouter();
@@ -86,22 +87,12 @@ export default function AssetListPage() {
           firstPage={0}
         >
           <AssetsList.Error>
-            {({ error }) => {
-              if (error) {
-                enqueueSnackbar(translator('common.assetsLoadError'), {
-                  variant: "error",
-                  content: (key: any) => (
-                    <Snackbar
-                      type="error"
-                      message={translator('common.assetsLoadError')}
-                      details={error.message || undefined}
-                      onClose={() => { closeSnackbar(key); }}
-                    />
-                  )
-                });
-              }
-              return <></>;
-            }}
+            {({ errors }) =>
+              <ErrorPopup
+                errors={errors}
+                errorMessageKey="common.assetsLoadError"
+              />
+            }
           </AssetsList.Error>
           <div className="flex justify-between pb-6">
             <div className="flex justify-start gap-x-5 items-center">
