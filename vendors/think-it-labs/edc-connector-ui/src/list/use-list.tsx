@@ -4,7 +4,7 @@ import { SearchSpec } from "../types";
 
 interface ListHook<T> {
   items: T[];
-  error: Error | null;
+  errors: Error[] | null;
   isLoading: boolean;
   setQuerySpec: (querySpec: QuerySpec) => void;
   searchSpec: SearchSpec;
@@ -23,7 +23,7 @@ type State<T> = {
   baseQuery: QuerySpec;
   searchFilter: SearchSpec;
   items: T[];
-  error: Error | null;
+  errors: Error[] | null;
   isLoading: boolean;
   shouldSearch: boolean;
 };
@@ -34,7 +34,7 @@ type Action<T> =
   | { type: "TRIGGER_SEARCH" }
   | { type: "FETCH_START" }
   | { type: "FETCH_SUCCESS"; payload: T[] }
-  | { type: "FETCH_ERROR"; payload: Error };
+  | { type: "FETCH_ERROR"; payload: Error[] };
 
 const initialSearchFilter: SearchSpec = {
   operandLeft: "edc:name",
@@ -54,13 +54,13 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
       return { ...state, shouldSearch: true };
 
     case "FETCH_START":
-      return { ...state, isLoading: true, error: null };
+      return { ...state, isLoading: true, errors: null };
 
     case "FETCH_SUCCESS":
       return { ...state, isLoading: false, shouldSearch: false, items: action.payload };
 
     case "FETCH_ERROR":
-      return { ...state, isLoading: false, shouldSearch: false, error: action.payload };
+      return { ...state, isLoading: false, shouldSearch: false, errors: action.payload };
 
     default:
       return state;
@@ -188,7 +188,7 @@ export function useList<T>({
     baseQuery: {},
     searchFilter: initialSearchFilter,
     items: [],
-    error: null,
+    errors: null,
     isLoading: false,
     shouldSearch: false,
   });
@@ -206,7 +206,11 @@ export function useList<T>({
 
     const errorMessages = settled
       .filter((r): r is PromiseRejectedResult => r.status === "rejected")
-      .map((r) => (r.reason instanceof Error ? r.reason.message : String(r.reason)));
+      .map(({ reason }) => {
+        return (reason instanceof Error ? reason : new Error(reason))
+      }
+
+      );
 
     const merged = mergeAndDedupeById<T>(fulfilledValues);
     dispatch({ type: "FETCH_SUCCESS", payload: merged });
@@ -214,9 +218,7 @@ export function useList<T>({
     if (errorMessages.length > 0) {
       dispatch({
         type: "FETCH_ERROR",
-        payload: new Error(
-          `Some queries failed (${errorMessages.length}/${queries.length}): ${errorMessages.join("; ")}`
-        ),
+        payload: errorMessages
       });
     }
   }, [queryAll, shouldFetch]);
@@ -257,13 +259,13 @@ export function useList<T>({
       const query = buildFinalQuery(state.baseQuery, state.searchFilter);
       fetchData(query);
     } catch (err) {
-      dispatch({ type: "FETCH_ERROR", payload: toError(err) });
+      dispatch({ type: "FETCH_ERROR", payload: [toError(err)] });
     }
   }, [deleteApi, state.baseQuery, state.searchFilter, fetchData]);
 
   return {
     items: state.items,
-    error: state.error,
+    errors: state.errors,
     isLoading: state.isLoading,
     setQuerySpec,
     searchSpec: state.searchFilter,

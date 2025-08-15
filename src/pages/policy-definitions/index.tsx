@@ -1,21 +1,22 @@
 import { TitleWithIcon } from "@/components/atoms/TitleWithIcon";
-import { Snackbar } from "@/components/molecules/snackbar";
 import { JsonLdDialog } from "@/components/molecules/JsonLdDialog";
 import PaginationControls from "@/components/molecules/pagination-controls";
 import SearchBar from "@/components/molecules/search-bar";
+import { Snackbar } from "@/components/molecules/snackbar";
 import PolicyCard from "@/components/organisms/policy-card";
 import SideDrawer from "@/components/organisms/side-drawer";
+import { proxyConnectorManagement } from "@/constants/proxy";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
 import { Icon, Button as MuiButton } from "@mui/material";
 import { PolicyDefinition } from "@think-it-labs/edc-connector-client";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
 import { PolicyDefinitionsList } from "@think-it-labs/edc-connector-ui/policy-definitions-list";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useCallback, useState } from "react";
+import { ErrorPopup } from "../../components/molecules/error-popup";
 import { MAX_ITEMS } from "../../constants/lists";
-import { proxyConnectorManagement } from "@/constants/proxy";
-import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
 
 export default function PolicyDefinitionListPage() {
   const router = useRouter()
@@ -33,9 +34,11 @@ export default function PolicyDefinitionListPage() {
 
   const openDetailsModal = (policyDefinition: PolicyDefinition) => {
     setIsDetailsModalOpen(true);
-    setOpenPolicyDefinitionData({ policyDefinition, deleteItem: () => {
+    setOpenPolicyDefinitionData({
+      policyDefinition, deleteItem: () => {
         return edcClient.management.policyDefinitions.delete(policyDefinition?.id)
-    } });
+      }
+    });
   };
 
   const navigate = useCallback((newPage: number) => {
@@ -76,7 +79,7 @@ export default function PolicyDefinitionListPage() {
               />
             )
           });
-          setTimeout(() => push("/policy-definitions"), 1000) ;
+          setTimeout(() => push("/policy-definitions"), 1000);
         }}
       />
       <PolicyDefinitionsList
@@ -115,23 +118,14 @@ export default function PolicyDefinitionListPage() {
             </PolicyDefinitionsList.Pagination>
           </div>
         </div>
+
         <PolicyDefinitionsList.Error>
-          {({ error }) => {
-            if (error) {
-              enqueueSnackbar(translator('common.policyDefinitionsLoadError'), {
-                variant: "error",
-                content: (key: any) => (
-                  <Snackbar
-                    type="error"
-                    message={translator('common.policyDefinitionsLoadError')}
-                    details={error.message || undefined}
-                    onClose={() => { closeSnackbar(key); }}
-                  />
-                )
-              });
-            }
-            return <></>;
-          }}
+          {({ errors }) =>
+            <ErrorPopup
+              errors={errors}
+              errorMessageKey="common.policyDefinitionsLoadError"
+            />
+          }
         </PolicyDefinitionsList.Error>
 
         <div className="flex flex-wrap gap-4 py-4" data-testid="policies-list">
