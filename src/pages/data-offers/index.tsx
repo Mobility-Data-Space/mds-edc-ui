@@ -1,11 +1,11 @@
 import { TitleWithIcon } from "@/components/atoms/TitleWithIcon";
-import { Snackbar } from "@/components/molecules/snackbar";
 import { JsonLdDialog } from "@/components/molecules/JsonLdDialog";
 import PaginationControls from "@/components/molecules/pagination-controls";
 import SearchBar from "@/components/molecules/search-bar";
 import ContractDefinitionCard from "@/components/organisms/contract-definition-card";
 import DataOfferCreateDialog from "@/components/organisms/data-offer-create-dialog.tsx";
 import SideDrawer from "@/components/organisms/side-drawer";
+import { proxyConnectorManagement } from "@/constants/proxy";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
 import { Icon, Button as MuiButton } from "@mui/material";
@@ -14,8 +14,8 @@ import { ContractDefinitionsList } from "@think-it-labs/edc-connector-ui/contrac
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useCallback, useState } from "react";
+import { ErrorPopup } from "../../components/molecules/error-popup";
 import { MAX_ITEMS } from "../../constants/lists";
-import { proxyConnectorManagement } from "@/constants/proxy";
 
 export default function DataOffersPage() {
   const { push, query } = useRouter()
@@ -79,22 +79,12 @@ export default function DataOffersPage() {
         firstPage={0}
       >
         <ContractDefinitionsList.Error>
-          {({ error }) => {
-            if (error) {
-              enqueueSnackbar(translator("common.dataOffersLoadError"), {
-                variant: "error",
-                content: (key: any) => (
-                  <Snackbar
-                    type="error"
-                    message={translator('common.dataOffersLoadError')}
-                    details={error.message || undefined}
-                    onClose={() => { closeSnackbar(key); }}
-                  />
-                )
-              });
-            }
-            return <></>;
-          }}
+          {({ errors }) =>
+            <ErrorPopup
+              errors={errors}
+              errorMessageKey="common.dataOffersLoadError"
+            />
+          }
         </ContractDefinitionsList.Error>
         <div className="flex justify-between pb-6">
           <div className="flex justify-start gap-x-5">

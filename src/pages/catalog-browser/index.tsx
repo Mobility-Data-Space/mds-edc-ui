@@ -1,8 +1,8 @@
 import { Input } from "@/components/atoms/input";
 import { CounterPartyAddressDialog } from "@/components/molecules/counter-party-address-dialog";
+import { ErrorPopup } from "@/components/molecules/error-popup";
 import PaginationControls from "@/components/molecules/pagination-controls";
 import SearchBar from "@/components/molecules/search-bar";
-import { Snackbar } from "@/components/molecules/snackbar";
 import DataOfferCard from "@/components/organisms/data-offer-card";
 import DataOfferDialog from "@/components/organisms/data-offer-dialog";
 import SideDrawer from "@/components/organisms/side-drawer";
@@ -17,14 +17,13 @@ import { Dataset } from "@think-it-labs/edc-connector-client";
 import { ContractOffersList } from "@think-it-labs/edc-connector-ui/contract-offers-list";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 import { useRouter } from "next/router";
-import { enqueueSnackbar, useSnackbar } from "notistack";
+
 import { useCallback, useEffect, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
 
 export default function CatalogPage() {
   const { connector } = useParticipantConnectorState();
   const { translator } = useTranslator();
-  const { closeSnackbar } = useSnackbar();
   const { query } = useRouter();
   const updateQueryParams = useUpdateQueryParams()
 
@@ -57,7 +56,7 @@ export default function CatalogPage() {
 
   const client = useEdcConnectorClient({ management: proxyConnectorManagement });
   useEffect(() => {
-    if(counterPartyAddress){
+    if (counterPartyAddress) {
       client.management.catalog.request({ counterPartyAddress }).then((catalog) => {
         setCatalogParticipantId(catalog["https://w3id.org/dspace/v0.8/participantId"][0]["@value"])
       })
@@ -177,23 +176,14 @@ export default function CatalogPage() {
               </span>
             </div>
           </ContractOffersList.Loading>
-          <ContractOffersList.Error >
-            {({ error }) => {
-              if (error) {
-                enqueueSnackbar(translator('common.catalogLoadError'), {
-                  variant: "error",
-                  content: (key: any) => (
-                    <Snackbar
-                      type="error"
-                      message={translator('common.catalogLoadError')}
-                      details={error.message || undefined}
-                      onClose={() => { closeSnackbar(key); }}
-                    />
-                  )
-                });
-              }
-              return <></>;
-            }}
+
+          <ContractOffersList.Error>
+            {({ errors }) => (
+              <ErrorPopup
+                errors={errors}
+                errorMessageKey="common.catalogLoadError"
+              />
+            )}
           </ContractOffersList.Error>
         </ContractOffersList>
       </SideDrawer>
