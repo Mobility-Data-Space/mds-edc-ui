@@ -20,7 +20,8 @@ const getSnackbarStyles = (type: SnackbarType) => {
     const baseStyles = {
         fontFamily: 'Sans',
         minWidth: 350,
-        maxWidth: 1500,
+        maxWidth: 600,
+        width: 600,
         display: 'flex',
         alignItems: 'flex-start',
         maxHeight: 300,
@@ -119,7 +120,8 @@ export const Snackbar = forwardRef<HTMLDivElement, SnackbarProps>(
                                     padding: '6px 10px',
                                     maxHeight: 120,
                                     overflowY: 'auto',
-                                    wordBreak: 'break-all',
+                                    wordWrap: 'break-word',
+                                    overflowWrap: 'break-word',
                                     width: '100%'
                                 }}>
                                     {details}

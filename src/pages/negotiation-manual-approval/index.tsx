@@ -1,23 +1,22 @@
 import { Table } from "@/components/atoms/table";
-import { Snackbar } from "@/components/molecules/snackbar";
 import PaginationControls from "@/components/molecules/pagination-controls";
+import SearchBar from "@/components/molecules/search-bar";
 import ContractNegotiationDialog from "@/components/organisms/contract-negotiation-dialog";
 import SideDrawer from "@/components/organisms/side-drawer";
+import { proxyConnectorManagement } from "@/constants/proxy";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
 import { MDSManualApprovalController } from "@/utilities/contract-negotiations";
-import {Button, Icon, Tooltip} from "@mui/material";
+import { formatDateTime, formatDateTimeAgo } from "@/utilities/date.ts";
+import { Button, Icon, Tooltip } from "@mui/material";
 import { ContractNegotiation, CriterionInput } from "@think-it-labs/edc-connector-client";
 import { ContractNegotiationsList } from "@think-it-labs/edc-connector-ui/contract-negotiations-list";
-import { Search } from "lucide-react";
-import SearchBar from "@/components/molecules/search-bar";
+import { readValue } from "@think-it-labs/edc-connector-ui/json-ld.tsx";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { MouseEvent, useCallback, useMemo, useState } from "react";
+import { ErrorPopup } from "../../components/molecules/error-popup";
 import { MAX_ITEMS } from "../../constants/lists";
-import {readValue} from "@think-it-labs/edc-connector-ui/json-ld.tsx";
-import {formatDateTime, formatDateTimeAgo} from "@/utilities/date.ts";
-import { proxyConnectorManagement } from "@/constants/proxy";
 
 const CreatedAt = ({ item }: { item: ContractNegotiation }) => {
   const createdAtValue = readValue(item, "https://w3id.org/edc/v0.0.1/ns/createdAt");
@@ -114,22 +113,12 @@ export default function ContractNegotiationsManualApprovalListPage() {
         firstPage={0}
       >
         <ContractNegotiationsList.Error>
-          {({ error }) => {
-            if (error) {
-              enqueueSnackbar(translator("common.contractNegotiationsLoadError"), {
-                variant: "error",
-                content: (key: any) => (
-                  <Snackbar
-                    type="error"
-                    message={translator('common.contractNegotiationsLoadError')}
-                    details={error.message || undefined}
-                    onClose={() => { closeSnackbar(key); }}
-                  />
-                )
-              });
-            }
-            return <></>;
-          }}
+          {({ errors }) =>
+            <ErrorPopup
+              errors={errors}
+              errorMessageKey="common.contractNegotiationsLoadError"
+            />
+          }
         </ContractNegotiationsList.Error>
         <div className="flex gap-x-5">
           <div className="flex-grow">
