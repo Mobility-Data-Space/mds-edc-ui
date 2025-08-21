@@ -1,4 +1,5 @@
-import { LineTitle } from "@/components/atoms/line-title.tsx";
+import { LoadingSpinner } from "@/components/atoms/loading-spinner";
+import RadioButtonsGroup from "@/components/atoms/radio-group";
 import PaginationControls from "@/components/molecules/pagination-controls";
 import SearchBar from "@/components/molecules/search-bar";
 import { Snackbar } from "@/components/molecules/snackbar";
@@ -13,13 +14,15 @@ import { T, useTranslator } from "@/i18n";
 import { theme } from "@/theme/ThemeProvider.tsx";
 import { operatorIn } from "@/utilities/data-offer";
 import { Button, ButtonGroup, Typography } from "@mui/material";
-import { ContractAgreement } from "@think-it-labs/edc-connector-client";
+import { ContractAgreement, CriterionInput } from "@think-it-labs/edc-connector-client";
 import { ContractAgreementsList } from "@think-it-labs/edc-connector-ui/contract-agreements-list";
 import { useRouter } from "next/router";
 import { SnackbarKey, useSnackbar } from "notistack";
 import { useCallback, useMemo, useState } from "react";
 import { ErrorPopup } from "../../components/molecules/error-popup";
 import { MAX_ITEMS } from "../../constants/lists";
+
+type OwnershipFilter = "all" | "provider" | "consumer"
 
 enum StatusFilter {
   All = "All",
@@ -38,13 +41,13 @@ export default function ContractAgreementsListPage() {
 
   const selectedStatusFilter: StatusFilter = query.status as StatusFilter || StatusFilter.All
   const statusFilterExpression = useMemo(() => ({
-    [StatusFilter.All]: [],
-    [StatusFilter.Active]: [],
-    [StatusFilter.Terminated]: retiredContractAgreementIds.length ? [{
+    [StatusFilter.All]: undefined,
+    [StatusFilter.Active]: undefined,
+    [StatusFilter.Terminated]: retiredContractAgreementIds.length ? {
       operandLeft: "id",
       operator: operatorIn.value,
       operandRight: retiredContractAgreementIds,
-    }] : [],
+    } : undefined,
   }), [retiredContractAgreementIds]);
 
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -55,6 +58,11 @@ export default function ContractAgreementsListPage() {
 
   const setSelectedStatusFilter = useCallback((statusFilter: StatusFilter) => {
     updateQueryParams({ status: statusFilter, page: String(0) })
+  }, [updateQueryParams])
+
+  const selectedOwnershipFilter: OwnershipFilter = query.owner as OwnershipFilter || "all"
+  const setOwnershipFilter = useCallback((ownershipFilter: OwnershipFilter) => {
+    updateQueryParams({ page: String(0), owner: ownershipFilter })
   }, [updateQueryParams])
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
@@ -73,6 +81,33 @@ export default function ContractAgreementsListPage() {
   }
 
   const openContractAgreementInfo = contractAgreementInfo[openContractAgreementData.contractAgreement.id];
+
+  const getFilterExpression = useMemo(() => {
+    const filters: CriterionInput[] = []
+    if (statusFilterExpression[selectedStatusFilter]) {
+      filters.push(statusFilterExpression[selectedStatusFilter])
+    }
+
+    if (connector.id) {
+      if (selectedOwnershipFilter === "provider") {
+        filters.push({
+          operandLeft: "providerId",
+          operator: "=",
+          operandRight: connector.id
+        })
+      }
+
+      if (selectedOwnershipFilter === "consumer") {
+        filters.push({
+          operandLeft: "consumerId",
+          operator: "=",
+          operandRight: connector.id
+        })
+      }
+    }
+
+    return filters
+  }, [statusFilterExpression, selectedOwnershipFilter, connector.id])
 
   return (
     <SideDrawer title={<T string="contractAgreements.title" />}>
@@ -128,20 +163,6 @@ export default function ContractAgreementsListPage() {
         navigate={navigateToPage}
         currentPage={parseInt(query.page as string) || 0}
         firstPage={0}
-        sections={[
-          {
-            key: "consuming",
-            title: <LineTitle title="contractAgreements.titleConsuming" />,
-            containerClassName: "flex flex-wrap gap-4 py-4",
-            condition: (item) => item.consumerId === connector.id
-          },
-          {
-            key: "providing",
-            title: <LineTitle title="contractAgreements.titleProviding" />,
-            containerClassName: "flex flex-wrap gap-4 py-4",
-            condition: (item) => item.consumerId !== connector.id
-          },
-        ]}
       >
         <div className="flex flex-wrap justify-end gap-4 pb-6 min-h-[56px]">
           <div className="h-full flex-grow min-w-3xs">
@@ -194,40 +215,49 @@ export default function ContractAgreementsListPage() {
           }
         </ContractAgreementsList.Error>
 
-        <div className="flex flex-col flex-wrap gap-4 py-4" data-testid="contract-agreements-list">
-          <ContractAgreementsList.Items
-            limit={MAX_ITEMS}
-            sortOrder="DESC"
-            sortField="contractSigningDate"
-            filterExpression={statusFilterExpression[selectedStatusFilter]}
-          >
-            {({ item, index }) => {
-              if (selectedStatusFilter === StatusFilter.Active && retiredContractAgreementIds.includes(item.id)) {
-                return <></>;
-              }
-              return <ContractAgreementCard
-                key={index}
-                contractAgreement={item}
-                onClick={() => openDetailsModal(item)}
-                isTerminated={retiredContractAgreementIds.includes(item.id)}
-                isRunning={contractAgreementInfo[item.id]?.isRunning}
-                transferCount={contractAgreementInfo[item.id]?.transfersCount}
-                data-testid="contract-agreement-card"
-              />;
-            }}
-          </ContractAgreementsList.Items>
+        <div className="flex gap-6 py-4" data-testid="contract-agreements-list">
+          <div className="flex flex-wrap gap-4 flex-1">
+            <ContractAgreementsList.Items
+              limit={MAX_ITEMS}
+              sortOrder="DESC"
+              sortField="contractSigningDate"
+              filterExpression={getFilterExpression}
+            >
+              {({ item, index }) => {
+                if (selectedStatusFilter === StatusFilter.Active && retiredContractAgreementIds.includes(item.id)) {
+                  return <></>;
+                }
+                return <ContractAgreementCard
+                  key={index}
+                  contractAgreement={item}
+                  onClick={() => openDetailsModal(item)}
+                  isTerminated={retiredContractAgreementIds.includes(item.id)}
+                  isRunning={contractAgreementInfo[item.id]?.isRunning}
+                  transferCount={contractAgreementInfo[item.id]?.transfersCount}
+                  data-testid="contract-agreement-card"
+                />;
+              }}
+            </ContractAgreementsList.Items>
+          </div>
+          <div className="w-56 shrink-0">
+            <RadioButtonsGroup
+              name="ownershipFilter"
+              id="ownershipFilter"
+              defaultValue={selectedOwnershipFilter}
+              value={selectedOwnershipFilter}
+              options={[
+                { text: "All", value: "all" },
+                { text: "Provider", value: "provider" },
+                { text: "Consumer", value: "consumer" },
+              ]}
+              onChange={(ownershipFilter) => setOwnershipFilter(ownershipFilter as OwnershipFilter)}
+            />
+          </div>
         </div>
 
+
         <ContractAgreementsList.Loading>
-          <div className="max-w-20 mx-auto mt-4 flex flex-col bg-white border shadow-sm rounded-xl p-4 md:p-5">
-            <span
-              className="animate-spin mx-auto inline-block size-8 border-[3px] border-current border-t-transparent text-blue-600 rounded-full"
-              role="status"
-              aria-label="loading"
-            >
-              <span className="sr-only">Loading...</span>
-            </span>
-          </div>
+          <LoadingSpinner />
         </ContractAgreementsList.Loading>
       </ContractAgreementsList>
     </SideDrawer>
