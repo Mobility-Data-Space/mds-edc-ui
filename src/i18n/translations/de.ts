@@ -60,6 +60,9 @@ export const de = {
         dataOfferCreateError: "Datenangebot konnte nicht erstellt werden. Bitte versuchen Sie es später erneut."
       }
     },
+    contractDefinitions: {
+      deleteSuccess: "Datenangebot erfolgreich gelöscht!",
+    },
     "contract-definitions": {
       title: "Listen Sie alle Vertragsdefinitionen auf",
       description:

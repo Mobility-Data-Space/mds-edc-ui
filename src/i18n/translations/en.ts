@@ -363,6 +363,7 @@ export const en = {
       assets: "Assets",
       publishDataOffer: "Publish Data Offer",
       searchPlaceholder: "Search Data Offers by Offer ID",
+      deleteSuccess: "Data offer deleted successfully!",
       "[id]": {
         title: "View data offer",
         deleteButton: "Delete",

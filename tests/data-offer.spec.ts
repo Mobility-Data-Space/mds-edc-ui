@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { DataOfferPage } from './pages/data-offer-page';
 import { MAX_ITEMS } from '@/constants/lists';
+import { randomUUID } from 'node:crypto';
 
 test.describe("Data Offer Tests", () => {
   let dataOfferPage: DataOfferPage;
@@ -81,6 +82,52 @@ test.describe("Data Offer Tests", () => {
       const dataOfferCards = await dataOfferPage.getDataOfferCards();
       const dataOffersCount = await dataOfferCards.count();
       expect(dataOffersCount).toBeGreaterThan(2);
+    });
+  });
+
+  test.describe("Delete Functionality", () => {
+    test("should delete a data offer", async ({ page }) => {
+      // Create a data offer to delete
+      await dataOfferPage.openCreateDataOfferDialog();
+
+      const randomId = `data-offer-delete-${randomUUID()}`;
+      await dataOfferPage.fillContractId(randomId);
+      await dataOfferPage.pickContractPolicy();
+      await dataOfferPage.pickAccessPolicy();
+      await dataOfferPage.selectAsset();
+      await dataOfferPage.closeAssetSelector();
+
+      await dataOfferPage.submitCreateDataOfferForm();
+      await page.waitForResponse((response) => response.url().includes('/connector/management/v3/contractdefinitions/request'));
+
+      // Find and click the created data offer card
+      const dataOfferCards = await dataOfferPage.getDataOfferCards();
+      const dataOfferCard = dataOfferCards.locator('[data-testid="contract-definition-id"]', { hasText: randomId });
+      await dataOfferCard.click();
+
+      // Verify the data offer details dialog is open
+      const dataOfferDialog = await dataOfferPage.getDataOfferDialog();
+      await expect(dataOfferDialog).toBeVisible();
+
+      // Verify the "Delete" button is present in the data offer details modal
+      const deleteButton = await dataOfferPage.getDeleteButton();
+      await expect(deleteButton).toBeVisible();
+
+      await deleteButton.click();
+
+      // Confirm deletion
+      const confirmDeleteButton = page.getByTestId('confirm-delete-btn');
+      await expect(confirmDeleteButton).toBeVisible();
+      await confirmDeleteButton.click();
+
+      // Verify the success message
+      const successMessage = await page.getByTestId('toast-success-message').textContent();
+      expect(successMessage).toContain("Data offer deleted successfully!");
+
+      // Wait for the redirect and verify the data offer is removed
+      await page.waitForTimeout(1000);
+      const deletedDataOfferCard = dataOfferCards.locator('[data-testid="contract-definition-id"]', { hasText: randomId });
+      await expect(deletedDataOfferCard).toBeHidden();
     });
   });
 

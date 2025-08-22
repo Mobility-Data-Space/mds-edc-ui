@@ -9,9 +9,14 @@ export class DataOfferPage extends BaseListPage {
   readonly createDataOfferDialogLocator = '[data-testid="create-data-offer-dialog"]';
   readonly dataOfferDialogLocator = '[data-testid="data-offer-dialog"]';
   readonly createDataOfferButtonLocator = 'button:has-text("Publish Data Offer")';
+  readonly deleteButtonLocator = '[data-testid="delete-data-offer-modal-btn"]';
 
   constructor(page: Page) {
     super(page);
+  }
+
+  async getDeleteButton() {
+    return this.page.locator(this.deleteButtonLocator);
   }
 
   async openCreateDataOfferDialog() {
