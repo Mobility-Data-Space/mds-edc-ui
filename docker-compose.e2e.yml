@@ -1,6 +1,7 @@
 services:
   edc-1:
     image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
+    platform: linux/amd64
     entrypoint: ["/app/bin/connector-inmemory", "--log-level=debug"]
     environment:
       EDC_PARTICIPANT_ID: "MDSXXXXXXX.YYYYYYY"
@@ -44,14 +45,15 @@ services:
       - command: apk --no-cache add curl
         user: root
     healthcheck:
-      test: curl -f http://edc-1:8181/api/check/liveness
-      interval: 10s
-      timeout: 3s
-      retries: 3
-      start_period: 20s
+      test: ["CMD", "curl", "-f", "http://edc-1:8181/api/check/liveness"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
   edc-2:
     image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
+    platform: linux/amd64
     entrypoint: ["/app/bin/connector-inmemory", "--log-level=debug"]
     environment:
       EDC_PARTICIPANT_ID: "MDSXXXXXXX.ZZZZZZZ"
@@ -89,8 +91,8 @@ services:
       - command: apk --no-cache add curl
         user: root
     healthcheck:
-      test: curl -f http://edc-2:8181/api/check/liveness
-      interval: 10s
-      timeout: 3s
-      retries: 3
-      start_period: 20s
+      test: ["CMD", "curl", "-f", "http://edc-2:8181/api/check/liveness"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s

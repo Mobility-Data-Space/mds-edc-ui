@@ -8,7 +8,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: 1,
   reporter: 'html',
-  timeout: 25 * 1000, // 25 seconds timeout
+  timeout: 60 * 1000, // 60 seconds timeout for E2E tests with Docker services
   maxFailures: 7,
   use: {
     // Base URL to use in actions like `await page.goto('/')`.
