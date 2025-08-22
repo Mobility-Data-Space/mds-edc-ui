@@ -94,17 +94,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v5
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 24
-
-    - name: Install dependencies
-      run: yarn install --frozen-lockfile
-
-    - name: Install Playwright Browsers
-      run: yarn playwright install --with-deps chromium
     
     - name: Log in to GitHub Container Registry
       uses: docker/login-action@v3
@@ -114,10 +103,15 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
     
     - name: Run Playwright tests for ${{ matrix.test-group.name }}
-      env:
-        CI: true
-        TEST_API_KEY: ${{ secrets.TEST_API_KEY }}
-      run: yarn playwright test ${{ matrix.test-group.tests }}
+      run: |
+        docker run --rm \
+          --network host \
+          -v ${{ github.workspace }}:/app \
+          -w /app \
+          -e CI=true \
+          -e TEST_API_KEY=${{ secrets.TEST_API_KEY }} \
+          mcr.microsoft.com/playwright:v1.54.2-jammy \
+          sh -c "yarn install --frozen-lockfile && yarn playwright test ${{ matrix.test-group.tests }}"
     
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
