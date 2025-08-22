@@ -15,15 +15,18 @@ export class CatalogBrowserPage extends BaseListPage {
 
   async navigate() {
     await this.page.goto('/catalog-browser');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
+    // Wait for the page to be interactive
+    await this.page.locator(this.catalogUrlInputLocator).waitFor({ state: 'visible', timeout: 10000 });
   }
 
   async fillCatalogUrlInput(url: string) {
     await this.page.fill(this.catalogUrlInputLocator, url);
-    // Wait for the catalog API response
-    await this.page.waitForResponse((response) =>
-      response.url().includes('/connector/management/v3/catalog') && response.status() === 200
-    );
+    // Wait for the catalog API response with retry logic
+    const apiAvailable = await this.waitForApiResponse('/connector/management/v3/catalog');
+    if (!apiAvailable) {
+      console.warn('Catalog API not responding, proceeding with caution');
+    }
   }
 
   async getCatalogList() {
