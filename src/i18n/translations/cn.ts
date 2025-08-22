@@ -58,6 +58,9 @@ export const cn = {
         dataOfferCreateError: "创建数据产品失败，请稍后再试。"
       }
     },
+    contractDefinitions: {
+      deleteSuccess: "数据产品删除成功！",
+    },
     "contract-definitions": {
       title: "列出所有合约定义",
       description:
