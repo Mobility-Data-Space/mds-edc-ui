@@ -32,7 +32,7 @@ import { T, useTranslator } from "@/i18n";
 import { ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_TITLE, ASSET_VERSION } from "@/jsonld/asset";
 import { UNRESTRICTED_POLICY_ID } from "@/jsonld/policy";
 import { AssetProperties, defaultCreateAssetFormData, fromAssetForm, generateId, validateDataAddress } from "@/utilities/asset";
-import { defaultCreateContractDefinitionFormData, fromContractDefinitionForm, MdsContractDefinitionInput } from "@/utilities/contract-definition";
+import { defaultCreateContractDefinitionFormData, fromContractDefinitionForm, MdsContractDefinitionInput, createDefaultContractDefinitionFormData } from "@/utilities/contract-definition";
 import { idSelector } from "@/utilities/data-offer.ts";
 import { defaultCreatePolicyFormData, fromPolicyDefinitionForm } from "@/utilities/policy";
 import { isAndConstraint, isAtomicConstraint, isOrConstraint, isXoneConstraint, MultiplicityConstraint } from "@/utilities/policy-constraints";
@@ -58,22 +58,38 @@ export default function CreateDataOfferPage() {
 
   const { translator } = useTranslator();
 
+  const [existingIds, setExistingIds] = useState<string[]>([]);
+  const [existingContractIds, setExistingContractIds] = useState<string[]>([]);
+  
   const [formData, setFormData] = useState<DataOffer>({
     asset: defaultCreateAssetFormData,
     policy: defaultCreatePolicyFormData,
     contract: defaultCreateContractDefinitionFormData
   });
+  
   const [policyExpression, setPolicyExpression] = useState<(AtomicConstraint | MultiplicityConstraint)[]>([]);
   const [publishMode, setPublishMode] = useState(PUBLISH_MODE_PUBLISH_UNRESTRICTED.value as string)
 
   const [errors, setErrors] = useState({ properties: {}, advancedInfo: {}, dataAddress: {} });
-
-  const [existingIds, setExistingIds] = useState<string[]>([]);
   const client = useEdcConnectorClient({ management: proxyConnectorManagement });
+  
   useEffect(() => {
     client.management.assets.queryAll({ offset: 0 })
       .then(assets => setExistingIds(assets.map(asset => asset["@id"])));
-  }, [client, setExistingIds]);
+    
+    client.management.contractDefinitions.queryAll({ offset: 0 })
+      .then(contracts => setExistingContractIds(contracts.map(contract => contract["@id"])));
+  }, [client, setExistingIds, setExistingContractIds]);
+
+  // Update contract ID when existing contracts are loaded
+  useEffect(() => {
+    if (existingContractIds) {
+      setFormData(prev => ({
+        ...prev,
+        contract: createDefaultContractDefinitionFormData(existingContractIds)
+      }));
+    }
+  }, [existingContractIds]);
 
   const generalInfoIsNotValid = () => {
     return 0 < Object.entries(validateGeneralInfo(formData.asset.properties)).length
