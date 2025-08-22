@@ -15,6 +15,13 @@ test.describe("Manual Approval Tests", () => {
     await expect(approvalList).toBeVisible();
   });
 
+  test("should display the new columns in the table", async ({ page }) => {
+    // Verify the new column headers are present
+    await expect(page.getByText("For asset")).toBeVisible();
+    await expect(page.getByText("Negotiation ID")).toBeVisible();
+    await expect(page.getByText("with Counter Party ID")).toBeVisible();
+  });
+
   test.fixme("should approve an item successfully", async ({ page }) => {
     // Approve an item
     const itemName = "Test Approval Item";
