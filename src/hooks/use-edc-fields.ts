@@ -49,6 +49,11 @@ export const useEdcFields = (): FieldShowProps[] => {
       label: "dashboard.dapsTokenUrl",
       value: connector.dapsUrl,
       icon: 'vpn_key',
+    },
+    {
+      label: "dashboard.dapsJwksUrl",
+      value: connector.dapsJwksUrl,
+      icon: 'lock',
     }
   ];
 };

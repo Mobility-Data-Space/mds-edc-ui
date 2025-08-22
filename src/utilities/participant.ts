@@ -10,5 +10,6 @@ export interface Participant {
   curatorUrl: string,
   maintainerName: string,
   maintainerUrl: string,
-  dapsUrl: string
+  dapsUrl: string,
+  dapsJwksUrl: string
 }
