@@ -8,14 +8,16 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import FileUploadOffIcon from '@mui/icons-material/FileUploadOff';
 import { Card, CardContent, LinearProgress } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { ContractAgreement } from "@think-it-labs/edc-connector-client";
+import { ContractAgreement, TransferProcess } from "@think-it-labs/edc-connector-client";
 import { ContractAgreementView } from "@think-it-labs/edc-connector-ui/contract-agreement-view";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
+import { use } from "react";
 
 export interface ContractAgreementCard {
   contractAgreement: ContractAgreement;
   isTerminated?: boolean;
   isRunning?: boolean;
-  transferCount?: number;
+  transferCount?: number; //TODO: Remove this
   onClick: () => void;
 }
 
@@ -30,8 +32,25 @@ const contractIcons = {
   }
 } as const;
 
-export default function ContractAgreementCard({ contractAgreement, onClick, isTerminated = false, isRunning = false, transferCount = 0 }: ContractAgreementCard) {
+let transfersPromisesMap: Map<string, Promise<TransferProcess[]>> = new Map()
+
+export default function ContractAgreementCard({ contractAgreement, onClick, isTerminated = false, isRunning = false }: ContractAgreementCard) {
   const { connector } = useParticipantConnectorState();
+  const edcClient = useEdcConnectorClient({ management: proxyConnectorManagement });
+
+
+  if (!transfersPromisesMap.has(contractAgreement.id)) {
+    transfersPromisesMap.set(contractAgreement.id,
+      edcClient.management.transferProcesses.queryAll({
+        filterExpression: [{
+          operandLeft: "contractId",
+          operator: "=",
+          operandRight: contractAgreement.id
+        }]
+      }))
+  }
+
+  const transfers = use(transfersPromisesMap.get(contractAgreement.id)!)
 
   const isConsumer = contractAgreement.consumerId === connector.id;
   const Icon = contractIcons[isTerminated ? 'terminated' : 'active'][isConsumer ? 'consumer' : 'provider'];
@@ -80,7 +99,7 @@ export default function ContractAgreementCard({ contractAgreement, onClick, isTe
                   <T string="contractAgreements.transfers" />
                 </Typography>
                 <Typography variant="body2">
-                  {transferCount}
+                  {transfers.length}
                 </Typography>
               </div>
 
