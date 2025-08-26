@@ -1,6 +1,6 @@
 import React from "react";
-import {TextFieldProps} from "@mui/material/TextField";
-import {Button, FormHelperText, TextField} from "@mui/material";
+import { TextFieldProps } from "@mui/material/TextField";
+import { Button, FormHelperText, TextField } from "@mui/material";
 
 export type Tag = {
   key: string;
@@ -42,6 +42,7 @@ export function KeyValuePairInput({
       valid: regex.test(text),
     });
   }
+
   return (
     <div className="mb-2">
       <div className={`grid grid-cols-9 gap-x-5`}>
@@ -58,7 +59,7 @@ export function KeyValuePairInput({
               textInputHandler(event.target.value, "key");
             }}
             variant="outlined"
-            error={! valid}
+            error={!valid}
           />
         }
         <TextField
@@ -70,10 +71,10 @@ export function KeyValuePairInput({
           placeholder={valuePlaceholder}
           value={value?.value}
           onChange={(event) => {
-            onChange({ input: { value: event.target.value }, valid: !! value.value })
+            onChange({ input: { value: event.target.value }, valid: !!value.value })
           }}
           variant="outlined"
-          error={! valid}
+          error={!valid}
         />
         <Button onClick={onRemove} color="error" className="col-span-1 font-bold">
           {removeText}
