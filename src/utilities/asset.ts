@@ -1,19 +1,19 @@
-import {removeEmptyFields} from "@/utilities/form";
-import {Asset, AssetInput, DataAddress} from "@think-it-labs/edc-connector-client";
-import {FieldShowProps} from "@/components/molecules/field-show";
-import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
-import {ENGLISH_SELECT_DATA, LANGUAGES} from "@/constants/languages";
-import {DELIMITER} from "@/i18n";
-import {extractArrayValues, isEmail, isUrl, uid} from "@/utilities/utilities";
-import {ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE, ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_MODEL_ID, ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA, ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY, ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY, ASSET_ADVANCED_INFO_GEO_LOCATION, ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL, ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS, ASSET_ADVANCED_INFO_GEO_REFERENCE_METHOD, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION, ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS, ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START, ASSET_ADVANCED_INFO_TRANSPORT_MODE, ASSET_CONTENT_TYPE, ASSET_DESCRIPTION, ASSET_ENDPOINT_DOCUMENTATION, ASSET_KEYWORDS, ASSET_LANGUAGE, ASSET_ORGANIZATION, ASSET_PUBLISHER, ASSET_STANDARD_LICENSE, ASSET_TITLE, ASSET_VERSION} from "@/jsonld/asset";
-import {AzureBlobDataAddress, DataAddressErrors, DataAddressTypes, defaultHttpSourceDataAddress, OnRequestDataAddress, AmazonS3DataAddress} from "./data-address";
-import {CONTEXT_DCAT, contextWithNoPrefixToCompact} from "@/jsonld/context";
-import {HttpDataAddress} from "@think-it-labs/edc-connector-client/dist/src/entities/data-address";
-import {dataCategoryValueToText, dataSubCategoryValueToText} from "@/utilities/data-category.ts";
-import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog.ts";
+import { removeEmptyFields } from "@/utilities/form";
+import { Asset, AssetInput, DataAddress } from "@think-it-labs/edc-connector-client";
+import { FieldShowProps } from "@/components/molecules/field-show";
+import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
+import { ENGLISH_SELECT_DATA, LANGUAGES } from "@/constants/languages";
+import { DELIMITER } from "@/i18n";
+import { extractArrayValues, isEmail, isUrl, uid } from "@/utilities/utilities";
+import { ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE, ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_MODEL_ID, ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA, ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY, ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY, ASSET_ADVANCED_INFO_GEO_LOCATION, ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL, ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS, ASSET_ADVANCED_INFO_GEO_REFERENCE_METHOD, ASSET_ADVANCED_INFO_MOBILITY_THEME, ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION, ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS, ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END, ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START, ASSET_ADVANCED_INFO_TRANSPORT_MODE, ASSET_CONTENT_TYPE, ASSET_DESCRIPTION, ASSET_ENDPOINT_DOCUMENTATION, ASSET_KEYWORDS, ASSET_LANGUAGE, ASSET_ORGANIZATION, ASSET_PUBLISHER, ASSET_STANDARD_LICENSE, ASSET_TITLE, ASSET_VERSION } from "@/jsonld/asset";
+import { AzureBlobDataAddress, DataAddressErrors, DataAddressTypes, defaultHttpSourceDataAddress, OnRequestDataAddress, AmazonS3DataAddress } from "./data-address";
+import { CONTEXT_DCAT, contextWithNoPrefixToCompact } from "@/jsonld/context";
+import { HttpDataAddress } from "@think-it-labs/edc-connector-client/dist/src/entities/data-address";
+import { dataCategoryValueToText, dataSubCategoryValueToText } from "@/utilities/data-category.ts";
+import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog.ts";
 import jsonld from "jsonld";
-import {Tag} from "@/components/atoms/key-value-pair-input.tsx";
-import {EDC_ID_FIELD} from "@/utilities/data-offer.ts";
+import { Tag } from "@/components/atoms/key-value-pair-input.tsx";
+import { EDC_ID_FIELD } from "@/utilities/data-offer.ts";
 import { dateToString } from "./date";
 
 const temporalCoverageValue = ([start, end]: [string, string]) => {
@@ -36,7 +36,7 @@ export const fromAssetForm = (formData: AssetInput, organizationName: string) =>
   const properties = { ...formData.properties };
   delete properties["@id"];
   delete properties[EDC_ID_FIELD];
-  
+
   const cleanFormDataObject = removeEmptyFields({
     ...formData,
     "@id": formData.properties["@id"],
@@ -53,11 +53,11 @@ export const fromAssetForm = (formData: AssetInput, organizationName: string) =>
   cleanFormDataObject.properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS] =
     cleanFormDataObject.properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS] && cleanFormDataObject.properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS].length > 0 ? cleanFormDataObject.properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS].map(fromKeyValueInput) : [];
 
-  if (cleanFormDataObject.properties[ASSET_ADVANCED_INFO_MOBILITY_THEME][ASSET_ADVANCED_INFO_DATA_SUBCATEGORY] == "-"){
+  if (cleanFormDataObject.properties[ASSET_ADVANCED_INFO_MOBILITY_THEME][ASSET_ADVANCED_INFO_DATA_SUBCATEGORY] == "-") {
     delete cleanFormDataObject.properties[ASSET_ADVANCED_INFO_MOBILITY_THEME][ASSET_ADVANCED_INFO_DATA_SUBCATEGORY]
   }
 
-  if(cleanFormDataObject.dataAddress.type == DataAddressTypes.MDSOnRequestOffer){
+  if (cleanFormDataObject.dataAddress.type == DataAddressTypes.MDSOnRequestOffer) {
     cleanFormDataObject.properties.additionalProperties = {}
     cleanFormDataObject.properties.additionalProperties.onrequest = "true"
     cleanFormDataObject.properties.additionalProperties.email = cleanFormDataObject.dataAddress.email
@@ -334,7 +334,7 @@ export const assetDataAddressFieldsTitle = (asset: Asset) => {
 
 export const assetDataAddressFieldsToShow = (asset: Asset): FieldShowProps[] => {
   const properties = removeJsonLdSchemaFromProperties(asset.properties);
-  const additionalProperties = readValue(properties, "additionalProperties")?.[0] ;
+  const additionalProperties = readValue(properties, "additionalProperties")?.[0];
   const onrequest = readValue(additionalProperties, "onrequest") == "true";
 
   if (onrequest) {
@@ -385,7 +385,7 @@ export const transformForId = (str?: string) => {
 
 export const validateDataAddress = (formDataToValidate: DataAddress, translator: (str: string) => string, isDestination = false) => {
   if (formDataToValidate.type === DataAddressTypes.CustomJson) {
-    if (! formDataToValidate.dataAddress) {
+    if (!formDataToValidate.dataAddress) {
       return { dataAddress: true };
     }
 
@@ -399,9 +399,9 @@ export const validateDataAddress = (formDataToValidate: DataAddress, translator:
   if (formDataToValidate.type === DataAddressTypes.HttpData) {
     const errors: DataAddressErrors<HttpDataAddress> = {};
 
-    if (! formDataToValidate.baseUrl) {
+    if (!formDataToValidate.baseUrl) {
       errors.baseUrl = true;
-    } else if (! isUrl(formDataToValidate.baseUrl)) {
+    } else if (!isUrl(formDataToValidate.baseUrl)) {
       errors.baseUrl = translator("assets.new.mustBeValidUrl");
     }
 
@@ -411,13 +411,13 @@ export const validateDataAddress = (formDataToValidate: DataAddress, translator:
   if (formDataToValidate.type === DataAddressTypes.MDSOnRequestOffer) {
     const errors: DataAddressErrors<OnRequestDataAddress> = {};
 
-    if (! formDataToValidate.email) {
+    if (!formDataToValidate.email) {
       errors.email = true;
-    } else if (! isEmail(formDataToValidate.email)) {
+    } else if (!isEmail(formDataToValidate.email)) {
       errors.email = translator("assets.new.mustBeValidEmail");
     }
 
-    if (! formDataToValidate.preferred_subject) {
+    if (!formDataToValidate.preferred_subject) {
       errors.preferred_subject = true;
     }
 
@@ -426,14 +426,14 @@ export const validateDataAddress = (formDataToValidate: DataAddress, translator:
 
   if (formDataToValidate.type === DataAddressTypes.AmazonS3) {
     const requiredProperties = ["bucketName", "region"];
-    const errors : DataAddressErrors<AmazonS3DataAddress> = {}
+    const errors: DataAddressErrors<AmazonS3DataAddress> = {}
     requiredProperties.forEach((propertyName) => {
-      if (! formDataToValidate[propertyName]) {
+      if (!formDataToValidate[propertyName]) {
         errors[propertyName] = true;
       }
     });
 
-    if (! formDataToValidate.objectPrefix && ! formDataToValidate.objectName) {
+    if (!formDataToValidate.objectPrefix && !formDataToValidate.objectName) {
       errors.objectName = true;
     }
 
@@ -442,9 +442,9 @@ export const validateDataAddress = (formDataToValidate: DataAddress, translator:
 
   if (formDataToValidate.type === DataAddressTypes.AzureStorage) {
     const requiredProperties = ["account", "container", "keyname"];
-    const errors : DataAddressErrors<AzureBlobDataAddress> = {}
+    const errors: DataAddressErrors<AzureBlobDataAddress> = {}
     requiredProperties.forEach((propertyName) => {
-      if (! formDataToValidate[propertyName]) {
+      if (!formDataToValidate[propertyName]) {
         errors[propertyName] = true;
       }
     });
@@ -480,7 +480,7 @@ export const assetToAssetInput = async (asset: Asset) => {
   const regex = /^https?:\/\/.*[#\/]([^\/#]+)$/;
   for (const prop in auxDataAddress) {
     const match = prop.match(regex);
-    if (! match) {
+    if (!match) {
       dataAddress[prop] = auxDataAddress[prop];
       continue;
     }
@@ -494,18 +494,18 @@ export const assetToAssetInput = async (asset: Asset) => {
 
 
   let geoLocationNuts = properties[ASSET_ADVANCED_INFO_GEO_LOCATION][ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS];
-  if(geoLocationNuts && !Array.isArray(geoLocationNuts)) {
+  if (geoLocationNuts && !Array.isArray(geoLocationNuts)) {
     geoLocationNuts = [geoLocationNuts]
   }
   if (geoLocationNuts) {
     properties[ASSET_ADVANCED_INFO_GEO_LOCATION][ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS] = geoLocationNuts.map(toKeyValueInput)
-  } 
+  }
 
-  let infoReferenceFileUrls = properties[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] ;
-  if(infoReferenceFileUrls && !Array.isArray(infoReferenceFileUrls)){
+  let infoReferenceFileUrls = properties[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS];
+  if (infoReferenceFileUrls && !Array.isArray(infoReferenceFileUrls)) {
     infoReferenceFileUrls = [infoReferenceFileUrls].map(toKeyValueInput)
   }
-  if(infoReferenceFileUrls){
+  if (infoReferenceFileUrls) {
     properties[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] = infoReferenceFileUrls.map(toKeyValueInput)
   }
 
@@ -532,15 +532,20 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
     const headers = (formDataToTransform.headers || [])
       .filter((value: { input: { key: string, value: string } }) => value?.input?.key && value?.input?.value)
       .reduce((acc: Record<string, string>, value: { input: { key: string, value: string } }) => {
-          acc[`header:${value.input.key}`] = value.input.value;
-          return acc;
-        }, {}
-    );
+        acc[`header:${value.input.key}`] = value.input.value;
+        return acc;
+      }, {}
+      );
 
-    const queryParams = (formDataToTransform.queryParams || [])
-      .filter((value: { input: { key: string, value: string } }) => value?.input?.key && value?.input?.value)
-      .map((value: { input: { key: string, value: string } }) => `${value.input.key}=${value.input.value}`)
-      .join("&");
+    let queryParams: string
+    if (typeof formDataToTransform.queryParams === "string") {
+      queryParams = formDataToTransform.queryParams
+    } else {
+      queryParams = (formDataToTransform.queryParams || [])
+        .filter((value: { input: { key: string, value: string } }) => value?.input?.key && value?.input?.value)
+        .map((value: { input: { key: string, value: string } }) => `${value.input.key}=${value.input.value}`)
+        .join("&");
+    }
 
     return removeEmptyFields({
       type: DataAddressTypes.HttpData,
