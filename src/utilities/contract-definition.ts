@@ -1,5 +1,6 @@
 import {removeEmptyFields} from "@/utilities/form";
 import { ContractDefinitionInput } from "@think-it-labs/edc-connector-client";
+import { generateDataOfferId } from "@/utilities/data-offer";
 
 export type MdsContractDefinitionInput = ContractDefinitionInput & { privateProperties: { manualApproval: boolean } };
 
@@ -9,7 +10,7 @@ export const fromContractDefinitionForm = (formData: MdsContractDefinitionInput)
 };
 
 export const defaultCreateContractDefinitionFormData: MdsContractDefinitionInput = {
-  "@id": "",
+  "@id": "", 
   accessPolicyId: "",
   contractPolicyId: "",
   assetsSelector: [],
@@ -17,3 +18,8 @@ export const defaultCreateContractDefinitionFormData: MdsContractDefinitionInput
     manualApproval: false
   }
 };
+
+export const createDefaultContractDefinitionFormData = (existingIds: string[] = []): MdsContractDefinitionInput => ({
+  ...defaultCreateContractDefinitionFormData,
+  "@id": generateDataOfferId(existingIds)
+});
