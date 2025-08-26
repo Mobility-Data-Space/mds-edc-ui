@@ -1,6 +1,7 @@
 import { execSync } from 'child_process';
 import { initiate_transfers, publish_offers } from './seed';
 import { participantConfig, counterPartyParticipantConfig, SERVICES } from './tests-config'
+import { Participant } from '@/utilities/participant';
 
 const checkInitStatus = (serviceName: string): boolean => {
   try {
@@ -37,7 +38,7 @@ async function globalSetup() {
 
   console.log('Seeding dataspace ...');
   try {
-    const participant = {
+    const participant: Participant = {
       id: participantConfig.EDC_ID,
       name: participantConfig.EDC_NAME,
       description: participantConfig.EDC_DESCRIPTION,
@@ -49,10 +50,11 @@ async function globalSetup() {
       curatorUrl: participantConfig.EDC_CURATOR_URL,
       maintainerName: participantConfig.EDC_MAINTAINER_ORGANIZATION,
       maintainerUrl: participantConfig.EDC_MAINTAINER_URL,
-      dapsUrl: participantConfig.MDS_DAPS_URL
+      dapsUrl: participantConfig.MDS_DAPS_URL,
+      dapsJwksUrl: participantConfig.MDS_DAPS_JWKS_URL
     };
 
-    const counterPartyParticipant = {
+    const counterPartyParticipant: Participant = {
       id: counterPartyParticipantConfig.EDC_ID,
       name: counterPartyParticipantConfig.EDC_NAME,
       description: counterPartyParticipantConfig.EDC_DESCRIPTION,
@@ -64,14 +66,15 @@ async function globalSetup() {
       curatorUrl: counterPartyParticipantConfig.EDC_CURATOR_URL,
       maintainerName: counterPartyParticipantConfig.EDC_MAINTAINER_ORGANIZATION,
       maintainerUrl: counterPartyParticipantConfig.EDC_MAINTAINER_URL,
-      dapsUrl: counterPartyParticipantConfig.MDS_DAPS_URL
+      dapsUrl: counterPartyParticipantConfig.MDS_DAPS_URL,
+      dapsJwksUrl: counterPartyParticipantConfig.MDS_DAPS_JWKS_URL
     };
 
     await publish_offers(participant);
     await publish_offers(counterPartyParticipant);
 
     await initiate_transfers(participant, counterPartyParticipant);
-    
+
     console.log('Dataspace seeding completed successfully.');
   } catch (error) {
     console.error('Error during dataspace seeding:', (error as Error).message);
