@@ -54,7 +54,7 @@ export default function ContractAgreementsListPage() {
   }, [updateQueryParams])
 
   const setSelectedStatusFilter = useCallback((statusFilter: StatusFilter) => {
-    updateQueryParams({ status: statusFilter })
+    updateQueryParams({ status: statusFilter, page: String(0) })
   }, [updateQueryParams])
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
