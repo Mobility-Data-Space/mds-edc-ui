@@ -27,18 +27,31 @@ const CreatedAt = ({ item }: { item: ContractNegotiation }) => {
   </Tooltip>;
 }
 
-const CounterPartyAddress = ({ item }: { item: ContractNegotiation }) => {
-  const counterPartyAddress = item["https://w3id.org/edc/v0.0.1/ns/counterPartyAddress"];
-  const counterPartyAddressValue = counterPartyAddress && counterPartyAddress[0] && counterPartyAddress[0]["@value"];
-  return <>{counterPartyAddressValue}</>
+const CounterPartyId = ({ item }: { item: ContractNegotiation }) => {
+  const counterPartyId = readValue(item, "https://w3id.org/edc/v0.0.1/ns/counterPartyId") ||
+                        readValue(item, "counterPartyId") ||
+                        item.counterPartyId;
+  return <>{counterPartyId}</>
 }
+
+const AssetName = ({ item }: { item: ContractNegotiation }) => {
+  const assetId = readValue(item, "https://w3id.org/edc/v0.0.1/ns/assetId") || 
+                 readValue(item, "assetId") || 
+                 item.assetId;
+  return <>{assetId}</>
+}
+
+const NegotiationId = ({ item }: { item: ContractNegotiation }) => {
+  return <>{item["@id"]}</>
+}
+
 
 export default function ContractNegotiationsManualApprovalListPage() {
   const { query, push } = useRouter()
   const { connector } = useParticipantConnectorState();
   const { translator } = useTranslator();
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [openContractNegotiationData, setOpenContractNegotiationData] = useState({
     contractNegotiation: {} as ContractNegotiation,
@@ -59,7 +72,7 @@ export default function ContractNegotiationsManualApprovalListPage() {
         enqueueSnackbar(translator("contractNegotiations.approveSuccess"));
         setTimeout(() => push("/negotiation-manual-approval"), 1200)
       })
-      .catch((error) => enqueueSnackbar(translator("contractNegotiations.approveError")))
+      .catch(() => enqueueSnackbar(translator("contractNegotiations.approveError")))
   };
 
   const onRejectClick = (item: ContractNegotiation, event: MouseEvent<HTMLButtonElement>) => {
@@ -70,7 +83,7 @@ export default function ContractNegotiationsManualApprovalListPage() {
         enqueueSnackbar(translator("contractNegotiations.rejectSuccess"))
         setTimeout(() => push("/negotiation-manual-approval"), 1200)
       })
-      .catch((error) => enqueueSnackbar(translator("contractNegotiations.rejectError")))
+      .catch(() => enqueueSnackbar(translator("contractNegotiations.rejectError")))
   };
 
   const pendingFilter: CriterionInput[] = [
@@ -161,15 +174,19 @@ export default function ContractNegotiationsManualApprovalListPage() {
                 </Table.Heading>
 
                 <Table.Heading>
-                  <T string="contractNegotiations.headingState" />
-                </Table.Heading>
-
-                <Table.Heading>
-                  <T string="contractNegotiations.headingCounterPartyAddress" />
-                </Table.Heading>
-
-                <Table.Heading>
                   <T string="contractNegotiations.headingCreatedAt" />
+                </Table.Heading>
+
+                <Table.Heading>
+                  <T string="contractNegotiations.headingNegotiationId" />
+                </Table.Heading>
+
+                <Table.Heading>
+                  <T string="contractNegotiations.headingAssetName" />
+                </Table.Heading>
+
+                <Table.Heading>
+                  <T string="contractNegotiations.headingCounterPartyId" />
                 </Table.Heading>
 
                 <Table.Heading>
@@ -204,15 +221,16 @@ export default function ContractNegotiationsManualApprovalListPage() {
                       </button>
                     </Table.Cell>
                     <Table.Cell>
-                      <span className="font-semibold">
-                        {item.state}
-                      </span>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <CounterPartyAddress item={item} />
-                    </Table.Cell>
-                    <Table.Cell>
                       <CreatedAt item={item} />
+                    </Table.Cell>
+                    <Table.Cell>
+                      <NegotiationId item={item} />
+                    </Table.Cell>
+                    <Table.Cell>
+                      <AssetName item={item} />
+                    </Table.Cell>
+                    <Table.Cell>
+                      <CounterPartyId item={item} />
                     </Table.Cell>
                     <Table.Cell>
                       <Button
