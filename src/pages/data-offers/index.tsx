@@ -2,6 +2,7 @@ import { TitleWithIcon } from "@/components/atoms/TitleWithIcon";
 import { JsonLdDialog } from "@/components/molecules/JsonLdDialog";
 import PaginationControls from "@/components/molecules/pagination-controls";
 import SearchBar from "@/components/molecules/search-bar";
+import { Snackbar } from "@/components/molecules/snackbar";
 import ContractDefinitionCard from "@/components/organisms/contract-definition-card";
 import DataOfferCreateDialog from "@/components/organisms/data-offer-create-dialog.tsx";
 import SideDrawer from "@/components/organisms/side-drawer";
@@ -10,6 +11,7 @@ import { useParticipantConnectorState } from "@/hooks/use-participant-connector-
 import { T, useTranslator } from "@/i18n";
 import { Icon, Button as MuiButton } from "@mui/material";
 import { ContractDefinition } from "@think-it-labs/edc-connector-client";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
 import { ContractDefinitionsList } from "@think-it-labs/edc-connector-ui/contract-definitions-list";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
@@ -22,6 +24,7 @@ export default function DataOffersPage() {
   const { connector } = useParticipantConnectorState();
   const { translator } = useTranslator();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const edcClient = useEdcConnectorClient({ management: proxyConnectorManagement });
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -29,11 +32,17 @@ export default function DataOffersPage() {
 
   const [openDataOfferData, setOpenDataOfferData] = useState({
     contractDefinition: {} as ContractDefinition,
+    deleteItem: async () => { },
   });
 
   const openDetailsModal = (contractDefinition: ContractDefinition) => {
     setIsDetailsModalOpen(true);
-    setOpenDataOfferData({ contractDefinition });
+    setOpenDataOfferData({
+      contractDefinition,
+      deleteItem: () => {
+        return edcClient.management.contractDefinitions.delete(contractDefinition?.id)
+      }
+    });
   };
 
   const navigate = useCallback((newPage: number) => {
@@ -67,9 +76,25 @@ export default function DataOffersPage() {
         onClose={() => setIsDetailsModalOpen(false)}
         title={<TitleWithIcon
           title={openDataOfferData.contractDefinition?.id}
-          subtitle={<T string="policyDefinitions.policy" />}
+          subtitle={<T string="contractDefinitions.dataOffer" />}
           icon={<Icon fontSize="large">policy</Icon>}
         />}
+        deleteConfirmationMessage={`Please confirm you want to delete Data Offer ${openDataOfferData.contractDefinition?.id}. This action cannot be undone.`}
+        deleteFailMessage={`Failed deleting data offer ${openDataOfferData.contractDefinition?.id}`}
+        deleteButtonTestId="delete-data-offer-modal-btn"
+        deleteItem={openDataOfferData.deleteItem}
+        onDeleteSuccess={() => {
+          enqueueSnackbar("", {
+            content: (key) => (
+              <Snackbar
+                type="success"
+                message={translator('contractDefinitions.deleteSuccess')}
+                onClose={() => { closeSnackbar(key); }}
+              />
+            )
+          });
+          setTimeout(() => push("/data-offers"), 1000);
+        }}
       />
       <ContractDefinitionsList
         managementUrl={proxyConnectorManagement}
