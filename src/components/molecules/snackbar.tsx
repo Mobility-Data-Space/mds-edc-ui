@@ -19,10 +19,11 @@ export interface SnackbarProps extends SnackbarContentProps {
 const getSnackbarStyles = (type: SnackbarType) => {
     const baseStyles = {
         fontFamily: 'Sans',
-        minWidth: 350,
         maxWidth: 600,
-        width: 600,
-        display: 'flex',
+        width: 'fit-content',
+        display: 'inline-flex',
+        flexGrow: 0,
+        alignSelf: 'flex-start',
         alignItems: 'flex-start',
         maxHeight: 300,
     };
