@@ -8,6 +8,7 @@ import {EdcProperties} from "@/components/molecules/edc-properties.tsx";
 import {useEdcEntitiesCount} from "@/hooks/use-edc-entities-count.ts";
 import {EdcEntitiesCountGrid} from "@/components/molecules/edc-entities-count-grid.tsx";
 import {useEdcFields} from "@/hooks/use-edc-fields.ts";
+import {useVersionFields} from "@/hooks/use-version-fields.ts";
 import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
 import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/entities";
 import {useEffect, useState} from "react";
@@ -19,6 +20,7 @@ export default function ConnectorPage() {
   const { translator } = useTranslator();
   const entitiesCount = useEdcEntitiesCount()
   const edcFields = useEdcFields();
+  const versionFields = useVersionFields();
   const edcClient = useEdcConnectorClient({ management: proxyConnectorManagement });
   const [transferProcesses, setTransferProcesses] = useState<TransferProcess[]>([]);
 
@@ -44,7 +46,7 @@ export default function ConnectorPage() {
             />
           </div>
           <EdcEntitiesCountGrid entitiesCount={entitiesCount} />
-          <EdcProperties fields={edcFields} />
+          <EdcProperties fields={edcFields} versionFields={versionFields} />
         </div>
 
         <div className="flex flex-col gap-y-3 xl:col-span-1">

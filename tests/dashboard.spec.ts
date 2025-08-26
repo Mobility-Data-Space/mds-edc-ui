@@ -43,5 +43,6 @@ test.describe("Dashboard Tests", () => {
     expect(propertiesText).toContain(config.EDC_MAINTAINER_ORGANIZATION);
     expect(propertiesText).toContain(config.EDC_MAINTAINER_URL);
     expect(propertiesText).toContain(config.MDS_DAPS_URL);
+    expect(propertiesText).toContain(config.MDS_DAPS_JWKS_URL);
   });
 });
