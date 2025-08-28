@@ -58,7 +58,7 @@ export const en = {
       dapsTokenUrl: "DAPS Token URL",
       dapsJwksUrl: "DAPS JWKS URL",
       versionInformation: "VERSION INFORMATION",
-      connector: "MDS CONNECTOR", 
+      connector: "MDS CONNECTOR",
       uiVersion: "MDS EDC UI VERSION",
       maintainerUrl: "Maintainer URL",
       maintainerName: "Maintainer Organization Name",
@@ -328,7 +328,7 @@ export const en = {
         policyExpression: "Policy Expression",
         policyExpressionOperator: "Operator",
         policyExpressionConsumerParticipantId: "Consumer's Participant Id",
-        policyExpressionConsumerParticipantIdTooltip: "Consumer's Participant ID, also called Connector ID, of the counter-party connector. You can find the connector's Participant ID under Connector Properties on its dashboard. Ask for it from the data consumers you want to share you data offer with",
+        policyExpressionConsumerParticipantIdTooltip: "You can find the connector's Participant ID under \"Connector Properties\" on its dashboard. Ask for it from the data consumers you want to share your data offer with",
         policyExpressionConsumerParticipantIdExamples: "MDSL1234XX.C1234XX, ...",
         policyExpressionTimeRestriction: "Time Restriction",
         policyExpressionTimeRestrictionTooltip: "Time at which the policy is evaluated. This can be used to restrict the data offer to certain time periods",
@@ -346,7 +346,8 @@ export const en = {
         assetCreateSuccess: "Asset was created successfully!",
         assetUpdateSuccess: "Successfully saved asset",
         dataOfferCreateSuccess: "Data offer was published successfully!",
-        dataOfferCreateError: "Failed to create data offer. Please try again later."
+        dataOfferCreateError: "Failed to create data offer. Please try again later.",
+        policyExpressionConsumerParticipantIdLabel: "Consumer's Participants IDs"
       },
     },
     contractDefinitions: {
