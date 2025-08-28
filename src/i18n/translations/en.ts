@@ -58,7 +58,7 @@ export const en = {
       dapsTokenUrl: "DAPS Token URL",
       dapsJwksUrl: "DAPS JWKS URL",
       versionInformation: "VERSION INFORMATION",
-      connector: "MDS CONNECTOR", 
+      connector: "MDS CONNECTOR",
       uiVersion: "MDS EDC UI VERSION",
       maintainerUrl: "Maintainer URL",
       maintainerName: "Maintainer Organization Name",
@@ -346,7 +346,8 @@ export const en = {
         assetCreateSuccess: "Asset was created successfully!",
         assetUpdateSuccess: "Successfully saved asset",
         dataOfferCreateSuccess: "Data offer was published successfully!",
-        dataOfferCreateError: "Failed to create data offer. Please try again later."
+        dataOfferCreateError: "Failed to create data offer. Please try again later.",
+        policyExpressionConsumerParticipantIdLabel: "Consumer's Participants IDs"
       },
     },
     contractDefinitions: {
