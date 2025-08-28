@@ -36,11 +36,15 @@ export function View<T>({
   );
 }
 
+interface ViewLoadingProps {
+  fallback?: JSX.Element
+}
+
 View.Loading = function ViewLoading(
-  { children = <div>Loading...</div> }: PropsWithChildren,
+  { fallback = <div>Loading...</div>, children }: PropsWithChildren<ViewLoadingProps>,
 ) {
   const { isLoading } = useViewContext();
-  return isLoading ? children : null;
+  return isLoading ? fallback : children;
 };
 
 View.Error = function ViewError({ children }: {
