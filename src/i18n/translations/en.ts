@@ -328,7 +328,7 @@ export const en = {
         policyExpression: "Policy Expression",
         policyExpressionOperator: "Operator",
         policyExpressionConsumerParticipantId: "Consumer's Participant Id",
-        policyExpressionConsumerParticipantIdTooltip: "Consumer's Participant ID, also called Connector ID, of the counter-party connector. You can find the connector's Participant ID under Connector Properties on its dashboard. Ask for it from the data consumers you want to share you data offer with",
+        policyExpressionConsumerParticipantIdTooltip: "You can find the connector's Participant ID under \"Connector Properties\" on its dashboard. Ask for it from the data consumers you want to share your data offer with",
         policyExpressionConsumerParticipantIdExamples: "MDSL1234XX.C1234XX, ...",
         policyExpressionTimeRestriction: "Time Restriction",
         policyExpressionTimeRestrictionTooltip: "Time at which the policy is evaluated. This can be used to restrict the data offer to certain time periods",
