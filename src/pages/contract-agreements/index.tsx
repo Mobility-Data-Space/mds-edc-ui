@@ -76,10 +76,6 @@ export default function ContractAgreementsListPage() {
     setOpenContractAgreementData({ contractAgreement });
   };
 
-  if (!connector) {
-    return "No connector";
-  }
-
   const openContractAgreementInfo = contractAgreementInfo[openContractAgreementData.contractAgreement.id];
 
   const getFilterExpression = useMemo(() => {
@@ -108,6 +104,10 @@ export default function ContractAgreementsListPage() {
 
     return filters
   }, [statusFilterExpression, selectedOwnershipFilter, connector.id])
+
+  if (!connector) {
+    return "No connector";
+  }
 
   return (
     <SideDrawer title={<T string="contractAgreements.title" />}>
