@@ -56,7 +56,7 @@ export const SUBCATEGORIES = {
     'Vehicle Information ',
     'Availability',
     'Location',
-    'Range ',
+    'Range',
   ],
   [INFRASTRUCTURE_AND_LOGISTICS]: [
     'General Information About Planning Of Routes',
