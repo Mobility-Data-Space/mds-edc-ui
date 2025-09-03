@@ -151,7 +151,7 @@ test.describe("Data Offer Tests", () => {
         await dataOfferPage.searchDataOffers(searchTerm);
 
         const searchResults = await dataOfferPage.getDataOfferCards();
-        await expect(searchResults).toBeVisible();
+        await expect(searchResults.first()).toBeVisible();
 
         const results = await searchResults.allTextContents();
         const hasMatchingResult = results.some((result: string) =>
@@ -166,6 +166,9 @@ test.describe("Data Offer Tests", () => {
 
       await dataOfferPage.clearDataOfferSearch();
 
+      // Wait for the page to reload after clearing search
+      await page.waitForTimeout(1000);
+      
       const allDataOffers = await dataOfferPage.getDataOfferCards();
       await expect(allDataOffers.first()).toBeVisible();
     });
