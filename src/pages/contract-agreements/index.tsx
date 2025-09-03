@@ -43,11 +43,11 @@ export default function ContractAgreementsListPage() {
   const statusFilterExpression = useMemo(() => ({
     [StatusFilter.All]: undefined,
     [StatusFilter.Active]: undefined,
-    [StatusFilter.Terminated]: retiredContractAgreementIds.length ? {
+    [StatusFilter.Terminated]: {
       operandLeft: "id",
       operator: operatorIn.value,
-      operandRight: retiredContractAgreementIds,
-    } : undefined,
+      operandRight: retiredContractAgreementIds.length ? retiredContractAgreementIds : [""],
+    },
   }), [retiredContractAgreementIds]);
 
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
