@@ -3,13 +3,21 @@ import { proxyConnectorManagement } from "@/constants/proxy";
 import { STATE_RUNNING } from "@/constants/transfer-process";
 import { useTranslator } from "@/i18n";
 import { AgreementsRetirementController, AGREEMENT_RETIREMENT_DATE, AGREEMENT_RETIREMENT_REASON } from "@/utilities/contract-agreement";
-import { TransferProcessStates } from "@think-it-labs/edc-connector-client";
+import { EdcConnectorClient, TransferProcessStates } from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 import { enqueueSnackbar, SnackbarKey, closeSnackbar } from "notistack";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 export const useTerminatedContractAgreements = () => {
-  const edcClient = useEdcConnectorClient({ management: proxyConnectorManagement });
+
+  const edcClient = useMemo(() => {
+    return new EdcConnectorClient
+      .Builder()
+      .managementUrl(proxyConnectorManagement)
+      .use("retiredAgreements", AgreementsRetirementController)
+      .build()
+  }, [proxyConnectorManagement])
+
   const { translator } = useTranslator();
 
   const [retiredContractAgreementIds, setRetiredContractAgreementIds] = useState<string[]>([]);
@@ -18,7 +26,7 @@ export const useTerminatedContractAgreements = () => {
 
   const populateRetired = useCallback(async () => {
     setLoading(true);
-    const controller = new AgreementsRetirementController(proxyConnectorManagement);
+    const controller = edcClient.retiredAgreements
 
     try {
       const retiredAgreements = await controller.retiredAgreementsRequest();

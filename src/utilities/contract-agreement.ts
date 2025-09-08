@@ -1,6 +1,6 @@
 import { FieldShowProps } from "@/components/molecules/field-show";
 import { CONTEXT_EDC, TRACTUS_X_CONTEXT } from "@/jsonld/context";
-import { ContractAgreement } from "@think-it-labs/edc-connector-client";
+import { ContractAgreement, EdcConnectorClientContext, EdcController } from "@think-it-labs/edc-connector-client";
 import { Inner } from "@think-it-labs/edc-connector-client/dist/src/inner";
 import { formatDateTime } from "@/utilities/date.ts";
 
@@ -48,26 +48,25 @@ export interface RetiredContractAgreement {
   [AGREEMENT_RETIREMENT_REASON]: string;
 }
 
-export class AgreementsRetirementController {
-  #inner: Inner;
-  #management: string;
+export class AgreementsRetirementController extends EdcController {
   #pathPrefix = "/v3/contractagreements/retirements";
   protocol: String = "dataspace-protocol-http";
 
-  constructor(management: string) {
-    this.#inner = new Inner();
-    this.#management = management;
+  constructor(inner: Inner, context?: EdcConnectorClientContext) {
+    super(inner, context)
   }
 
-  async retiredAgreementsRequest(): Promise<RetiredContractAgreement[]> {
-    return this.#inner.request(this.#management, {
+  async retiredAgreementsRequest(context?: EdcConnectorClientContext): Promise<RetiredContractAgreement[]> {
+    const actualContext = this.context || context!
+    return this.inner.request(actualContext.management, {
       path: `${this.#pathPrefix}/request`,
       method: "POST",
     });
   }
 
-  async retireAgreement(contractAgreementId: string, reason: string) {
-    return this.#inner.request(this.#management, {
+  async retireAgreement(contractAgreementId: string, reason: string, context?: EdcConnectorClientContext) {
+    const actualContext = this.context || context!
+    return this.inner.request(actualContext.management, {
       path: `${this.#pathPrefix}`,
       method: "POST",
       body: {
@@ -81,8 +80,9 @@ export class AgreementsRetirementController {
     });
   }
 
-  async reactivateRetired(contractAgreementId: string) {
-    return this.#inner.request(this.#management, {
+  async reactivateRetired(contractAgreementId: string, context?: EdcConnectorClientContext) {
+    const actualContext = this.context || context!
+    return this.inner.request(actualContext.management, {
       path: `${this.#pathPrefix}/${contractAgreementId}`,
       method: "DELETE"
     });
