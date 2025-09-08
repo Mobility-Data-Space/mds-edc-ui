@@ -105,54 +105,55 @@ export default function CatalogPage() {
             shouldFetch={!!counterPartyAddress}
           >
             <div className="w-full grid grid-rows-1 grid-cols-5 gap-x-3.5 py-4 items-center">
-              <div className="col-span-2">
-                <div>
-                  <Badge badgeContent={1} color="error" invisible={!hasBadUrlError}>
-                    <Input
-                      id="catalog-url"
-                      fullWidth
-                      data-testid="catalog-url"
-                      type="text"
-                      label={<T string="catalog.connectorEndpoints" />}
-                      placeholder="https://other-connector.com/api/dsp"
-                      value={counterPartyAddressToSearch}
-                      slotProps={{
-                        input: {
-                          classes: { root: "flex-grow" },
-                          startAdornment: <Icon className="mr-2">link</Icon>,
-                          endAdornment: hasBadUrlError ?
-                            <Icon color="error">warning</Icon> :
-                            <Tooltip title={translator("catalog.clickForDetails")}>
-                              <IconButton onClick={() => setIsCounterPartyAddressDialogOpen(true)}>
-                                <Icon color="primary">info</Icon>
-                              </IconButton>
-                            </Tooltip>
-                        }
-                      }}
-                      onChange={(event) => {
-                        setCounterPartyAddressToSearch(event.target.value);
-                        debouncedSetCounterPartyAddress(event.target.value);
-                      }}
-                    />
-                  </Badge>
-                </div>
-              </div>
+              <Badge badgeContent={1} color="error" invisible={!hasBadUrlError} className="col-span-2">
+                <Input
+                  id="catalog-url"
+                  fullWidth
+                  data-testid="catalog-url"
+                  type="text"
+                  label={<T string="catalog.connectorEndpoints" />}
+                  placeholder="https://other-connector.com/api/dsp"
+                  value={counterPartyAddressToSearch ? counterPartyAddressToSearch : null}
+                  slotProps={{
+                    inputLabel: {
+                      shrink: true
+                    },
+                    input: {
+                      classes: { root: "flex-grow" },
+                      startAdornment: <Icon className="mr-2">link</Icon>,
+                      endAdornment: hasBadUrlError ?
+                        <Icon color="error">warning</Icon> :
+                        <Tooltip title={translator("catalog.clickForDetails")}>
+                          <IconButton onClick={() => setIsCounterPartyAddressDialogOpen(true)}>
+                            <Icon color="primary">info</Icon>
+                          </IconButton>
+                        </Tooltip>
+                    }
+                  }}
+                  onChange={(event) => {
+                    setCounterPartyAddressToSearch(event.target.value);
+                    debouncedSetCounterPartyAddress(event.target.value);
+                  }}
+                />
+              </Badge>
               <div className="col-span-2">
                 <SearchBar searchTarget="http://purl.org/dc/terms/title" placeholder={translator("catalog.searchPlaceholder")} searchOperator="ilike" />
               </div>
-              <ContractOffersList.Pagination>
-                {({ decrementPage, hasPrev, hasNext, incrementPage, page, itemsCount }) =>
-                  <PaginationControls
-                    page={page}
-                    hasPrev={hasPrev}
-                    hasNext={hasNext}
-                    decrementPage={decrementPage}
-                    incrementPage={incrementPage}
-                    maxItems={MAX_ITEMS}
-                    itemsCount={itemsCount}
-                  />
-                }
-              </ContractOffersList.Pagination>
+              <div className="justify-self-center">
+                <ContractOffersList.Pagination>
+                  {({ decrementPage, hasPrev, hasNext, incrementPage, page, itemsCount }) =>
+                    <PaginationControls
+                      page={page}
+                      hasPrev={hasPrev}
+                      hasNext={hasNext}
+                      decrementPage={decrementPage}
+                      incrementPage={incrementPage}
+                      maxItems={MAX_ITEMS}
+                      itemsCount={itemsCount}
+                    />
+                  }
+                </ContractOffersList.Pagination>
+              </div>
             </div>
 
             <div className="flex flex-wrap gap-2.5 h-full" data-testid="catalog-list">
