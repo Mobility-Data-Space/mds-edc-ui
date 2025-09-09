@@ -5,19 +5,19 @@ export const STATE_ERROR = "ERROR";
 export const STATE_FINALIZED = "FINALIZED";
 
 export const COLORS: { [key: string]: string } = {
-  [STATE_RUNNING]: "#7eb0d5",
-  [TransferProcessStates.STARTED]: "#7eb0d5",
-  [TransferProcessStates.DEPROVISIONED]: "#B91C1C",
+  [STATE_RUNNING]: "#FFFF00",
+  [TransferProcessStates.STARTED]: "#FFFF00",
+  [TransferProcessStates.DEPROVISIONED]: "#6E7378",
   [STATE_ERROR]: "#B91C1C",
-  [TransferProcessStates.TERMINATED]: "#FF8C00",
+  [TransferProcessStates.TERMINATED]: "#000000",
   [STATE_FINALIZED]: "#96D200",
 };
 
 export const HOVER_COLORS: { [key: string]: string } = {
-  [STATE_RUNNING]: "#719ec0",
-  [TransferProcessStates.STARTED]: "#719ec0",
-  [TransferProcessStates.DEPROVISIONED]: "#A11818",
+  [STATE_RUNNING]: "#E0E000",
+  [TransferProcessStates.STARTED]: "#E0E000",
+  [TransferProcessStates.DEPROVISIONED]: "#C8CACC",
   [STATE_ERROR]: "#A11818",
-  [TransferProcessStates.TERMINATED]: "#E67E00",
+  [TransferProcessStates.TERMINATED]: "#000000",
   [STATE_FINALIZED]: "#87BD00",
 };
