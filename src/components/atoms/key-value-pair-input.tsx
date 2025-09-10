@@ -71,7 +71,7 @@ export function KeyValuePairInput({
           placeholder={valuePlaceholder}
           value={value?.value}
           onChange={(event) => {
-            onChange({ input: { value: event.target.value }, valid: !!value.value })
+            textInputHandler(event.target.value, "value");
           }}
           variant="outlined"
           error={!valid}
