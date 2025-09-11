@@ -11,7 +11,7 @@ export const TEXT_COLORS: { [key: string]: string } = {
   [STATE_ERROR]: "black",
   [TransferProcessStates.TERMINATED]: "white",
   [STATE_FINALIZED]: "black",
-  [TransferProcessStates.COMPLETED]: "balck",
+  [TransferProcessStates.COMPLETED]: "black",
 };
 
 export const BG_COLORS: { [key: string]: string } = {
