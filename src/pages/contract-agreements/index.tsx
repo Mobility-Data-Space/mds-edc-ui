@@ -103,7 +103,7 @@ export default function ContractAgreementsListPage() {
     }
 
     return filters
-  }, [statusFilterExpression, selectedOwnershipFilter, connector.id])
+  }, [statusFilterExpression, selectedOwnershipFilter, selectedStatusFilter, connector.id])
 
   if (!connector) {
     return "No connector";
