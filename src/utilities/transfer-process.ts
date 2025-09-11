@@ -1,22 +1,22 @@
-import {ContractAgreement, DataAddress, TransferProcessInput} from "@think-it-labs/edc-connector-client";
+import { ContractAgreement, DataAddress, TransferProcessInput } from "@think-it-labs/edc-connector-client";
 import { DataAddressTypes } from "./data-address";
-import {transformDataAddress} from "@/utilities/asset.ts";
-import {COLORS, HOVER_COLORS} from "@/constants/transfer-process.ts";
-import {theme} from "@/theme/ThemeProvider.tsx";
+import { transformDataAddress } from "@/utilities/asset.ts";
+import { BG_COLORS, BG_HOVER_COLORS, TEXT_COLORS } from "@/constants/transfer-process.ts";
+import { theme } from "@/theme/ThemeProvider.tsx";
 
-export const TRANSFER_TYPE_PULL = "-PULL" ;
-export const TRANSFER_TYPE_PUSH = "-PUSH" ;
+export const TRANSFER_TYPE_PULL = "-PULL";
+export const TRANSFER_TYPE_PUSH = "-PUSH";
 
-export const createTransferProcessRequest = (agreement: ContractAgreement, dataDestination: DataAddress, counterPartyAddress: string) : TransferProcessInput => {
+export const createTransferProcessRequest = (agreement: ContractAgreement, dataDestination: DataAddress, counterPartyAddress: string): TransferProcessInput => {
   let transferProcess: TransferProcessInput = {} as TransferProcessInput;
 
-  const transferType = dataDestination.type + (dataDestination.isPull ? TRANSFER_TYPE_PULL : TRANSFER_TYPE_PUSH) ;
+  const transferType = dataDestination.type + (dataDestination.isPull ? TRANSFER_TYPE_PULL : TRANSFER_TYPE_PUSH);
 
   transferProcess.counterPartyAddress = counterPartyAddress,
-  transferProcess.contractId = agreement.contractId,
-  transferProcess.transferType = transferType
+    transferProcess.contractId = agreement.contractId,
+    transferProcess.transferType = transferType
 
-  if (!dataDestination.isPull){
+  if (!dataDestination.isPull) {
     transferProcess.dataDestination = transformDataAddress(dataDestination)
   }
 
@@ -27,11 +27,16 @@ export const createTransferProcessRequest = (agreement: ContractAgreement, dataD
   return transferProcess;
 }
 
-export const transferProcessStateColor = (state: string) => {
-    return COLORS[state] || theme.palette.info.main;
+export const transferProcessStateBgColor = (state: string) => {
+  return BG_COLORS[state] || theme.palette.info.contrastText;
+}
+
+
+export const transferProcessStateTextColor = (state: string) => {
+  return TEXT_COLORS[state] || theme.palette.info.main;
 }
 
 
 export const transferProcessStateHoverColor = (state: string) => {
-    return HOVER_COLORS[state] || theme.palette.info.main;
+  return BG_HOVER_COLORS[state] || theme.palette.info.main;
 }
