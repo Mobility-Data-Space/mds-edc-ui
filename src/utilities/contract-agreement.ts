@@ -1,40 +1,47 @@
 import { FieldShowProps } from "@/components/molecules/field-show";
 import { CONTEXT_EDC, TRACTUS_X_CONTEXT } from "@/jsonld/context";
-import { ContractAgreement, EdcConnectorClientContext, EdcController } from "@think-it-labs/edc-connector-client";
+import { ContractAgreement } from "@think-it-labs/edc-connector-client";
 import { Inner } from "@think-it-labs/edc-connector-client/dist/src/inner";
 import { formatDateTime } from "@/utilities/date.ts";
 
-export const contractAgreementFieldsToShow = (contractAgreement: ContractAgreement, participantId: string, counterPartyAddress: string): FieldShowProps[] => {
+export const contractAgreementFieldsToShow = (
+  contractAgreement: ContractAgreement,
+  participantId: string,
+  counterPartyAddress: string,
+): FieldShowProps[] => {
   return [
     {
       label: "contractAgreements.signed",
       value: formatDateTime(contractAgreement.contractSigningDate * 1000),
-      icon: "category"
+      icon: "category",
     },
     {
       label: "contractAgreements.direction",
-      value: contractAgreement.providerId === participantId ? "contractAgreements.providing" : "contractAgreements.consuming",
-      icon: "policy"
+      value:
+        contractAgreement.providerId === participantId
+          ? "contractAgreements.providing"
+          : "contractAgreements.consuming",
+      icon: "policy",
     },
     {
       label: "contractAgreements.contractAgreementId",
       value: contractAgreement.id,
-      icon: "category"
+      icon: "category",
     },
     {
       label: "contractAgreements.otherConnectorId",
       value: participantId,
-      icon: "link"
+      icon: "link",
     },
     {
       label: "contractAgreements.counterPartyConnectorEndpoint",
       value: counterPartyAddress,
-      icon: "link"
+      icon: "link",
     },
     {
       label: "contractAgreements.status",
       value: "",
-      icon: "sync"
+      icon: "sync",
     },
   ];
 };
@@ -48,43 +55,43 @@ export interface RetiredContractAgreement {
   [AGREEMENT_RETIREMENT_REASON]: string;
 }
 
-export class AgreementsRetirementController extends EdcController {
+export class AgreementsRetirementController {
+  #inner: Inner;
+  #management: string;
   #pathPrefix = "/v3/contractagreements/retirements";
   protocol: String = "dataspace-protocol-http";
 
-  constructor(inner: Inner, context?: EdcConnectorClientContext) {
-    super(inner, context)
+  constructor(management: string) {
+    this.#inner = new Inner();
+    this.#management = management;
   }
 
-  async retiredAgreementsRequest(context?: EdcConnectorClientContext): Promise<RetiredContractAgreement[]> {
-    const actualContext = this.context || context!
-    return this.inner.request(actualContext.management, {
+  async retiredAgreementsRequest(): Promise<RetiredContractAgreement[]> {
+    return this.#inner.request(this.#management, {
       path: `${this.#pathPrefix}/request`,
       method: "POST",
     });
   }
 
-  async retireAgreement(contractAgreementId: string, reason: string, context?: EdcConnectorClientContext) {
-    const actualContext = this.context || context!
-    return this.inner.request(actualContext.management, {
+  async retireAgreement(contractAgreementId: string, reason: string) {
+    return this.#inner.request(this.#management, {
       path: `${this.#pathPrefix}`,
       method: "POST",
       body: {
         "@context": {
-          "tx": TRACTUS_X_CONTEXT.value,
-          "edc": CONTEXT_EDC.value
+          tx: TRACTUS_X_CONTEXT.value,
+          edc: CONTEXT_EDC.value,
         },
         "edc:agreementId": contractAgreementId,
-        "tx:reason": reason
-      }
+        "tx:reason": reason,
+      },
     });
   }
 
-  async reactivateRetired(contractAgreementId: string, context?: EdcConnectorClientContext) {
-    const actualContext = this.context || context!
-    return this.inner.request(actualContext.management, {
+  async reactivateRetired(contractAgreementId: string) {
+    return this.#inner.request(this.#management, {
       path: `${this.#pathPrefix}/${contractAgreementId}`,
-      method: "DELETE"
+      method: "DELETE",
     });
   }
 }
