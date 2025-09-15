@@ -67,9 +67,12 @@ jobs:
           --cache-to type=gha,mode=max \
           .
 
-    - name: Pre-pull Playwright base image
+    - name: Pre-pull and cache images for test jobs
       run: |
+        # Pull Playwright base image
         docker pull mcr.microsoft.com/playwright:v1.54.2-jammy
+        # Pull the test image we just built to ensure it's cached
+        docker pull ${{ steps.set-image.outputs.image }}
 
   # Test Phase - Run tests in parallel using matrix strategy
   test:
@@ -164,10 +167,6 @@ jobs:
         registry: ${{ env.REGISTRY }}
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Pull test image
-      run: |
-        docker pull ${{ needs.setup.outputs.test-image }}
 
     - name: Run Playwright tests for ${{ matrix.test-group.name }}
       run: |
