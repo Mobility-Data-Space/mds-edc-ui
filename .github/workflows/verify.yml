@@ -55,24 +55,27 @@ jobs:
         CMD ["yarn", "playwright", "test"]
         EOF
 
-    - name: Build and push custom test image
+    - name: Build custom test image
       run: |
         docker buildx build \
           --platform linux/amd64 \
           --file Dockerfile.test \
           --tag ${{ steps.set-image.outputs.image }} \
-          --tag ${{ steps.set-image.outputs.image-latest }} \
-          --push \
+          --load \
           --cache-from type=gha \
           --cache-to type=gha,mode=max \
           .
 
-    - name: Pre-pull and cache images for test jobs
-      run: |
-        # Pull Playwright base image
-        docker pull mcr.microsoft.com/playwright:v1.54.2-jammy
-        # Pull the test image we just built to ensure it's cached
-        docker pull ${{ steps.set-image.outputs.image }}
+    - name: Save Docker image as tarball
+      run: docker save ${{ steps.set-image.outputs.image }} -o test-image.tar
+
+    - name: Upload Docker image as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-image
+        path: test-image.tar
+        retention-days: 1
+
 
   # Test Phase - Run tests in parallel using matrix strategy
   test:
@@ -161,12 +164,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v5
 
-    - name: Log in to GitHub Container Registry
-      uses: docker/login-action@v3
+    - name: Download Docker image artifact
+      uses: actions/download-artifact@v4
       with:
-        registry: ${{ env.REGISTRY }}
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+        name: test-image
+
+    - name: Load Docker image
+      run: docker load -i test-image.tar
 
     - name: Run Playwright tests for ${{ matrix.test-group.name }}
       run: |
