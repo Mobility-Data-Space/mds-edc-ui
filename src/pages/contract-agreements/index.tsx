@@ -8,7 +8,6 @@ import ContractAgreementDialog from "@/components/organisms/contract-agreement-d
 import SideDrawer from "@/components/organisms/side-drawer";
 import { proxyConnectorManagement } from "@/constants/proxy";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
-import { useTerminatedContractAgreements } from "@/hooks/use-terminated-contract-agreements";
 import { useUpdateQueryParams } from "@/hooks/use-update-query-params";
 import { T, useTranslator } from "@/i18n";
 import { theme } from "@/theme/ThemeProvider.tsx";
@@ -38,12 +37,6 @@ export default function ContractAgreementsListPage() {
   const { connector } = useParticipantConnectorState();
   const { translator } = useTranslator();
 
-  const {
-    contractAgreementInfo,
-    retiredContractAgreementIds,
-    rePopulateRetired,
-  } = useTerminatedContractAgreements();
-
   const updateQueryParams = useUpdateQueryParams();
 
   const selectedStatusFilter: StatusFilter =
@@ -55,12 +48,10 @@ export default function ContractAgreementsListPage() {
       [StatusFilter.Terminated]: {
         operandLeft: "id",
         operator: operatorIn.value,
-        operandRight: retiredContractAgreementIds.length
-          ? retiredContractAgreementIds
-          : [""],
+        operandRight: [""],
       },
     }),
-    [retiredContractAgreementIds],
+    [],
   );
 
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -99,8 +90,7 @@ export default function ContractAgreementsListPage() {
     setOpenContractAgreementData({ contractAgreement });
   };
 
-  const openContractAgreementInfo =
-    contractAgreementInfo[openContractAgreementData.contractAgreement.id];
+  // const openContractAgreementInfo = contractAgreementInfo[openContractAgreementData.contractAgreement.id];
 
   const getFilterExpression = useMemo(() => {
     const filters: CriterionInput[] = [];
@@ -127,12 +117,7 @@ export default function ContractAgreementsListPage() {
     }
 
     return filters;
-  }, [
-    statusFilterExpression,
-    selectedOwnershipFilter,
-    selectedStatusFilter,
-    connector.id,
-  ]);
+  }, [statusFilterExpression, selectedOwnershipFilter, connector.id]);
 
   if (!connector) {
     return "No connector";
@@ -144,29 +129,30 @@ export default function ContractAgreementsListPage() {
         key={openContractAgreementData.contractAgreement.id}
         open={isDetailsModalOpen}
         contractAgreement={openContractAgreementData.contractAgreement}
-        retirementReason={openContractAgreementInfo?.retirementReason}
-        isTerminated={openContractAgreementInfo?.isTerminated}
-        isTerminatedAt={openContractAgreementInfo?.isTerminatedAt}
-        isRunning={openContractAgreementInfo?.isRunning}
+        // retirementReason={openContractAgreementInfo?.retirementReason}
+        // isTerminated={openContractAgreementInfo?.isTerminated}
+        // isTerminatedAt={openContractAgreementInfo?.isTerminatedAt}
+        // isRunning={openContractAgreementInfo?.isRunning}
+        retirementReason={""}
+        isTerminated={false}
+        isTerminatedAt={0}
+        isRunning={true}
         onClose={() => setIsDetailsModalOpen(false)}
         onInitSuccess={(contractAgreement: ContractAgreement) => {
-          if (!contractAgreementInfo[contractAgreement.id]) {
-            contractAgreementInfo[contractAgreement.id] = {
-              transfersCount: 0,
-              isRunning: true,
-              retirementReason: "",
-              isTerminatedAt: 0,
-              isTerminated: false,
-            };
-          }
-
-          const count =
-            contractAgreementInfo[contractAgreement.id]?.transfersCount || 0;
-          contractAgreementInfo[contractAgreement.id].transfersCount =
-            count + 1;
+          // if (!contractAgreementInfo[contractAgreement.id]) {
+          //   contractAgreementInfo[contractAgreement.id] = {
+          //     transfersCount: 0,
+          //     isRunning: true,
+          //     retirementReason: "",
+          //     isTerminatedAt: 0,
+          //     isTerminated: false,
+          //   }
+          // }
+          // const count = contractAgreementInfo[contractAgreement.id]?.transfersCount || 0
+          // contractAgreementInfo[contractAgreement.id].transfersCount = count + 1
         }}
         onTerminateSuccess={() => {
-          rePopulateRetired();
+          // rePopulateRetired()
           enqueueSnackbar(translator("contractAgreements.terminationSuccess"), {
             variant: "success",
             content: (key: SnackbarKey) => (
@@ -293,27 +279,26 @@ export default function ContractAgreementsListPage() {
               }
             >
               {({ item, index }) => {
+                // if (selectedStatusFilter === StatusFilter.Active && retiredContractAgreementIds.includes(item.id)) {
                 if (
                   selectedStatusFilter === StatusFilter.Active &&
-                  retiredContractAgreementIds.includes(item.id)
+                  [""].includes(item.id)
                 ) {
                   return <></>;
                 }
-
                 return (
-                  <div className="flex-[0_0_300px] max-w-[300px]">
-                    <ContractAgreementCard
-                      key={index}
-                      contractAgreement={item}
-                      onClick={() => openDetailsModal(item)}
-                      isTerminated={retiredContractAgreementIds.includes(item.id)}
-                      isRunning={contractAgreementInfo[item.id]?.isRunning}
-                      transferCount={
-                        contractAgreementInfo[item.id]?.transfersCount
+                  <ContractAgreementCard
+                    key={index}
+                    contractAgreement={
+                      item as ContractAgreement & {
+                        isTerminated: boolean;
+                        isRunning: boolean;
+                        transferCount: number;
                       }
-                      data-testid="contract-agreement-card"
-                    />
-                  </div>
+                    }
+                    onClick={() => openDetailsModal(item)}
+                    data-testid="contract-agreement-card"
+                  />
                 );
               }}
             </ContractAgreementsList.Items>
@@ -341,6 +326,10 @@ export default function ContractAgreementsListPage() {
             />
           </div>
         </div>
+
+        <ContractAgreementsList.Loading>
+          <LoadingSpinner />
+        </ContractAgreementsList.Loading>
       </ContractAgreementsList>
     </SideDrawer>
   );

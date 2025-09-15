@@ -6,11 +6,13 @@ interface ViewProps<T> {
   get: () => Promise<T>;
   delete?: () => Promise<void>;
   managementUrl: string;
+  cacheKey?: string;
 }
 
 export function View<T>({
   children,
   get,
+  cacheKey,
   delete: del = async () => {
     console.warn("delete method not defined");
   },
@@ -18,6 +20,7 @@ export function View<T>({
 }: PropsWithChildren<ViewProps<T>>) {
   const { item, deleteAsset, isLoading, error } = useView({
     get,
+    cacheKey,
     delete: del,
   });
 
@@ -37,17 +40,20 @@ export function View<T>({
 }
 
 interface ViewLoadingProps {
-  fallback?: JSX.Element
+  fallback?: JSX.Element;
 }
 
-View.Loading = function ViewLoading(
-  { fallback = <div>Loading...</div>, children }: PropsWithChildren<ViewLoadingProps>,
-) {
+View.Loading = function ViewLoading({
+  fallback = <div>Loading...</div>,
+  children,
+}: PropsWithChildren<ViewLoadingProps>) {
   const { isLoading } = useViewContext();
   return isLoading ? fallback : children;
 };
 
-View.Error = function ViewError({ children }: {
+View.Error = function ViewError({
+  children,
+}: {
   children: (props: { error: Error | null }) => JSX.Element;
 }) {
   const { error } = useViewContext();
@@ -58,5 +64,5 @@ View.Error = function ViewError({ children }: {
     };
   }, [children]);
 
-  return <ErrorComponent error={error} />
-}
+  return <ErrorComponent error={error} />;
+};
