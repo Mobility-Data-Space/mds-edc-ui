@@ -5,8 +5,11 @@ import {
   AGREEMENT_RETIREMENT_REASON,
   AgreementsRetirementController,
 } from "@/utilities/contract-agreement";
+import { operatorIn } from "@/utilities/data-offer";
 import {
+  CriterionInput,
   EdcConnectorClient,
+  QuerySpec,
   TransferProcessStates,
 } from "@think-it-labs/edc-connector-client";
 import { NextRequest, NextResponse } from "next/server";
@@ -54,7 +57,25 @@ const handlePost = async (req: NextRequest): Promise<NextResponse> => {
     return response;
   }
 
-  const body = await req.json();
+  const body = (await req.json()) as QuerySpec;
+
+  const statusFilterIndex = body.filterExpression?.findIndex(
+    (filterExpression) => filterExpression.operandLeft === "isTerminated",
+  );
+
+  let statusFilter: CriterionInput | null = null;
+
+  if (statusFilterIndex !== undefined && statusFilterIndex !== -1) {
+    statusFilter = body.filterExpression?.splice(statusFilterIndex, 1)[0]!;
+  }
+
+  // Don't use optional chaining here, statusFilter needs to exist first
+  if (statusFilter && statusFilter.operator !== "=") {
+    return new NextResponse(
+      `Operator ${statusFilter?.operator} not supported`,
+      { status: 501 },
+    );
+  }
 
   const retiredAgreements =
     await agreementsRetirementController.retiredAgreementsRequest();
@@ -111,20 +132,35 @@ const handlePost = async (req: NextRequest): Promise<NextResponse> => {
     retiredContractAgreementsToSave.keys(),
   );
 
+  if (statusFilter && statusFilter.operandRight) {
+    body.filterExpression?.push({
+      operandLeft: "id",
+      operator: operatorIn.value,
+      operandRight: retiredContractAgreementIds,
+    });
+  }
+
   const contractAgreements =
     await client.management.contractAgreements.queryAll(body);
 
-  const result = contractAgreements.map((contractAgreement) => {
-    return {
-      ...contractAgreement,
-      isTerminated:
-        retiredContractAgreementIds.includes(contractAgreement.id) || false,
-      isRunning:
-        contractAgreementInfo[contractAgreement.id]?.isRunning || false,
-      transferCount:
-        contractAgreementInfo[contractAgreement.id]?.transfersCount || 0,
-    };
-  });
+  const result = contractAgreements
+    .map((contractAgreement) => {
+      return {
+        ...contractAgreement,
+        isTerminated:
+          retiredContractAgreementIds.includes(contractAgreement.id) || false,
+        isRunning:
+          contractAgreementInfo[contractAgreement.id]?.isRunning || false,
+        transferCount:
+          contractAgreementInfo[contractAgreement.id]?.transfersCount || 0,
+      };
+    })
+    .filter((contractAgreement) => {
+      if (statusFilter && !statusFilter.operandRight) {
+        return !contractAgreement.isTerminated;
+      }
+      return true;
+    });
 
   return new NextResponse(JSON.stringify(result), { status: 200 });
 };
