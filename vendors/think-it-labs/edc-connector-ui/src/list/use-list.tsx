@@ -48,7 +48,10 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
       return { ...state, baseQuery: action.payload };
 
     case "SET_SEARCH_FILTER":
-      return { ...state, searchFilter: { ...state.searchFilter, ...action.payload } };
+      return {
+        ...state,
+        searchFilter: { ...state.searchFilter, ...action.payload },
+      };
 
     case "TRIGGER_SEARCH":
       return { ...state, shouldSearch: true };
@@ -57,10 +60,20 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
       return { ...state, isLoading: true, errors: null };
 
     case "FETCH_SUCCESS":
-      return { ...state, isLoading: false, shouldSearch: false, items: action.payload };
+      return {
+        ...state,
+        isLoading: false,
+        shouldSearch: false,
+        items: action.payload,
+      };
 
     case "FETCH_ERROR":
-      return { ...state, isLoading: false, shouldSearch: false, errors: action.payload };
+      return {
+        ...state,
+        isLoading: false,
+        shouldSearch: false,
+        errors: action.payload,
+      };
 
     default:
       return state;
@@ -69,7 +82,7 @@ function reducer<T>(state: State<T>, action: Action<T>): State<T> {
 
 function wrapSearchOperandRight(
   operator: SearchSpec["operator"],
-  value: string | string[]
+  value: string | string[],
 ): string | string[] {
   const shouldWrap = operator === "like" || operator === "ilike";
   if (!shouldWrap) return value;
@@ -77,7 +90,10 @@ function wrapSearchOperandRight(
   return `%${value}%`;
 }
 
-function buildFinalQuery(baseQuery: QuerySpec, searchFilter: SearchSpec): QuerySpec[] {
+function buildFinalQuery(
+  baseQuery: QuerySpec,
+  searchFilter: SearchSpec,
+): QuerySpec[] {
   const baseFilters = baseQuery.filterExpression ?? [];
   const andFilters: CriterionInput[] = baseFilters
     .filter((f) => !Array.isArray(f.operandLeft))
@@ -88,7 +104,9 @@ function buildFinalQuery(baseQuery: QuerySpec, searchFilter: SearchSpec): QueryS
     }));
 
   const orGroups: CriterionInput[][] = baseFilters
-    .filter((f): f is CriterionInput & { operandLeft: string[] } => Array.isArray(f.operandLeft))
+    .filter((f): f is CriterionInput & { operandLeft: string[] } =>
+      Array.isArray(f.operandLeft),
+    )
     .map((f) => {
       const uniqueLefts = Array.from(new Set(f.operandLeft));
       return uniqueLefts.map((operandLeft) => ({
@@ -100,7 +118,10 @@ function buildFinalQuery(baseQuery: QuerySpec, searchFilter: SearchSpec): QueryS
     .filter((group) => group.length > 0);
 
   let hasSearch = false;
-  if (searchFilter.operandRight !== undefined && searchFilter.operandRight !== null) {
+  if (
+    searchFilter.operandRight !== undefined &&
+    searchFilter.operandRight !== null
+  ) {
     if (typeof searchFilter.operandRight === "string") {
       hasSearch = searchFilter.operandRight.trim() !== "";
     } else if (Array.isArray(searchFilter.operandRight)) {
@@ -110,7 +131,10 @@ function buildFinalQuery(baseQuery: QuerySpec, searchFilter: SearchSpec): QueryS
 
   let operandRight: string | string[] | undefined = undefined;
   if (hasSearch) {
-    operandRight = wrapSearchOperandRight(searchFilter.operator, searchFilter.operandRight);
+    operandRight = wrapSearchOperandRight(
+      searchFilter.operator,
+      searchFilter.operandRight,
+    );
   }
 
   const searchAnd: CriterionInput[] = [];
@@ -145,7 +169,7 @@ function buildFinalQuery(baseQuery: QuerySpec, searchFilter: SearchSpec): QueryS
       acc.length === 0
         ? group.map((choice) => [choice])
         : acc.flatMap((prefix) => group.map((choice) => [...prefix, choice])),
-    []
+    [],
   );
 
   return combinations.map((combo) => ({
@@ -163,15 +187,13 @@ function getId(value: unknown): string | undefined {
 
 function mergeAndDedupeById<T>(lists: T[][]): T[] {
   const seenIds = new Set<string>();
-  return lists
-    .flat()
-    .filter((item) => {
-      const id = getId(item);
-      if (id === undefined) return true;
-      if (seenIds.has(id)) return false;
-      seenIds.add(id);
-      return true;
-    });
+  return lists.flat().filter((item) => {
+    const id = getId(item);
+    if (id === undefined) return true;
+    if (seenIds.has(id)) return false;
+    seenIds.add(id);
+    return true;
+  });
 }
 
 function toError(err: unknown): Error {
@@ -181,9 +203,8 @@ function toError(err: unknown): Error {
 export function useList<T>({
   queryAll,
   delete: deleteApi,
-  shouldFetch = true
+  shouldFetch = true,
 }: UseListOptions<T>): ListHook<T> {
-
   const [state, dispatch] = useReducer(reducer<T>, {
     baseQuery: {},
     searchFilter: initialSearchFilter,
@@ -193,35 +214,38 @@ export function useList<T>({
     shouldSearch: false,
   });
 
-  const fetchData = useCallback(async (queries: QuerySpec[]) => {
-    if (!shouldFetch) return;
+  const fetchData = useCallback(
+    async (queries: QuerySpec[]) => {
+      if (!shouldFetch) return;
 
-    dispatch({ type: "FETCH_START" });
+      dispatch({ type: "FETCH_START" });
 
-    const settled = await Promise.allSettled(queries.map((q) => queryAll(q)));
+      const settled = await Promise.allSettled(queries.map((q) => queryAll(q)));
 
-    const fulfilledValues = settled
-      .filter((r): r is PromiseFulfilledResult<T[]> => r.status === "fulfilled")
-      .map((r) => r.value);
+      const fulfilledValues = settled
+        .filter(
+          (r): r is PromiseFulfilledResult<T[]> => r.status === "fulfilled",
+        )
+        .map((r) => r.value);
 
-    const errorMessages = settled
-      .filter((r): r is PromiseRejectedResult => r.status === "rejected")
-      .map(({ reason }) => {
-        return (reason instanceof Error ? reason : new Error(reason))
+      const errorMessages = settled
+        .filter((r): r is PromiseRejectedResult => r.status === "rejected")
+        .map(({ reason }) => {
+          return reason instanceof Error ? reason : new Error(reason);
+        });
+
+      const merged = mergeAndDedupeById<T>(fulfilledValues);
+      dispatch({ type: "FETCH_SUCCESS", payload: merged });
+
+      if (errorMessages.length > 0) {
+        dispatch({
+          type: "FETCH_ERROR",
+          payload: errorMessages,
+        });
       }
-
-      );
-
-    const merged = mergeAndDedupeById<T>(fulfilledValues);
-    dispatch({ type: "FETCH_SUCCESS", payload: merged });
-
-    if (errorMessages.length > 0) {
-      dispatch({
-        type: "FETCH_ERROR",
-        payload: errorMessages
-      });
-    }
-  }, [queryAll, shouldFetch]);
+    },
+    [queryAll, shouldFetch],
+  );
 
   useEffect(() => {
     const query = buildFinalQuery(state.baseQuery, state.searchFilter);
@@ -253,15 +277,18 @@ export function useList<T>({
     dispatch({ type: "TRIGGER_SEARCH" });
   }, []);
 
-  const deleteItem = useCallback(async (id: string) => {
-    try {
-      await deleteApi(id);
-      const query = buildFinalQuery(state.baseQuery, state.searchFilter);
-      fetchData(query);
-    } catch (err) {
-      dispatch({ type: "FETCH_ERROR", payload: [toError(err)] });
-    }
-  }, [deleteApi, state.baseQuery, state.searchFilter, fetchData]);
+  const deleteItem = useCallback(
+    async (id: string) => {
+      try {
+        await deleteApi(id);
+        const query = buildFinalQuery(state.baseQuery, state.searchFilter);
+        fetchData(query);
+      } catch (err) {
+        dispatch({ type: "FETCH_ERROR", payload: [toError(err)] });
+      }
+    },
+    [deleteApi, state.baseQuery, state.searchFilter, fetchData],
+  );
 
   return {
     items: state.items,

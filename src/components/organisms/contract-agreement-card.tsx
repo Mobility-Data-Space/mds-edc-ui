@@ -8,20 +8,11 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 import FileUploadOffIcon from "@mui/icons-material/FileUploadOff";
 import { Card, CardContent, LinearProgress, Skeleton } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import {
-  ContractAgreement,
-  TransferProcess,
-} from "@think-it-labs/edc-connector-client";
+import { ContractAgreement } from "@think-it-labs/edc-connector-client";
 import { ContractAgreementView } from "@think-it-labs/edc-connector-ui/contract-agreement-view";
-import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
-import { use } from "react";
 
 export interface ContractAgreementCard {
-  contractAgreement: ContractAgreement & {
-    isTerminated: boolean;
-    isRunning: boolean;
-    transferCount: number; //TODO: Remove this
-  };
+  contractAgreement: ContractAgreement;
   onClick: () => void;
 }
 
@@ -36,31 +27,27 @@ const contractIcons = {
   },
 } as const;
 
-let transfersPromisesMap: Map<string, Promise<TransferProcess[]>> = new Map();
-
 export default function ContractAgreementCard({
   contractAgreement,
   onClick,
 }: ContractAgreementCard) {
   const { connector } = useParticipantConnectorState();
-  // const edcClient = useEdcConnectorClient({ management: proxyConnectorManagement });
-
-  // if (!transfersPromisesMap.has(contractAgreement.id)) {
-  //   transfersPromisesMap.set(contractAgreement.id,
-  //     edcClient.management.transferProcesses.queryAll({
-  //       filterExpression: [{
-  //         operandLeft: "contractId",
-  //         operator: "=",
-  //         operandRight: contractAgreement.id
-  //       }]
-  //     }))
-  // }
-
-  // const transfers = use(transfersPromisesMap.get(contractAgreement.id)!)
+  const isTerminated = contractAgreement.mandatoryValue<boolean>(
+    "edc",
+    "isTerminated",
+  );
+  const isRunning = contractAgreement.mandatoryValue<boolean>(
+    "edc",
+    "isRunning",
+  );
+  const transferCount = contractAgreement.mandatoryValue<number>(
+    "edc",
+    "transferCount",
+  );
 
   const isConsumer = contractAgreement.consumerId === connector.id;
   const Icon =
-    contractIcons[contractAgreement.isTerminated ? "terminated" : "active"][
+    contractIcons[isTerminated ? "terminated" : "active"][
       isConsumer ? "consumer" : "provider"
     ];
 
@@ -140,7 +127,7 @@ export default function ContractAgreementCard({
                 <div className="flex items-center">
                   <Icon
                     fontSize="large"
-                    color={contractAgreement.isTerminated ? "error" : "inherit"}
+                    color={isTerminated ? "error" : "inherit"}
                   />
                 </div>
                 <div>
@@ -156,9 +143,7 @@ export default function ContractAgreementCard({
                   </Typography>
                 </div>
 
-                {contractAgreement.isRunning && (
-                  <LinearProgress className="my-3" />
-                )}
+                {isRunning && <LinearProgress className="my-3" />}
               </div>
 
               <div className="grid grid-cols-2 gap-y-4 py-4">
@@ -185,9 +170,7 @@ export default function ContractAgreementCard({
                   <Typography variant="body2" color="textDisabled">
                     <T string="contractAgreements.transfers" />
                   </Typography>
-                  <Typography variant="body2">
-                    {contractAgreement.transferCount}
-                  </Typography>
+                  <Typography variant="body2">{transferCount}</Typography>
                 </div>
 
                 <div className="">
@@ -207,10 +190,10 @@ export default function ContractAgreementCard({
                   </Typography>
                   <Typography
                     variant="body2"
-                    color={contractAgreement.isTerminated ? "error" : "inherit"}
+                    color={isTerminated ? "error" : "inherit"}
                   >
                     <T
-                      string={`contractAgreements.[id].status${contractAgreement.isTerminated ? "Terminated" : "Active"}`}
+                      string={`contractAgreements.[id].status${isTerminated ? "Terminated" : "Active"}`}
                     />
                   </Typography>
                 </div>

@@ -279,13 +279,7 @@ export default function ContractAgreementsListPage() {
               {({ item, index }) => (
                 <ContractAgreementCard
                   key={index}
-                  contractAgreement={
-                    item as ContractAgreement & {
-                      isTerminated: boolean;
-                      isRunning: boolean;
-                      transferCount: number;
-                    }
-                  }
+                  contractAgreement={item}
                   onClick={() => openDetailsModal(item)}
                   data-testid="contract-agreement-card"
                 />
