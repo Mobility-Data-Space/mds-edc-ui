@@ -147,17 +147,20 @@ const handlePost = async (req: NextRequest): Promise<NextResponse> => {
     .map((contractAgreement) => {
       return {
         ...contractAgreement,
-        isTerminated:
+
+        "https://w3id.org/edc/v0.0.1/ns/isTerminated":
           retiredContractAgreementIds.includes(contractAgreement.id) || false,
-        isRunning:
+        "https://w3id.org/edc/v0.0.1/ns/isRunning":
           contractAgreementInfo[contractAgreement.id]?.isRunning || false,
-        transferCount:
+        "https://w3id.org/edc/v0.0.1/ns/transferCount":
           contractAgreementInfo[contractAgreement.id]?.transfersCount || 0,
       };
     })
     .filter((contractAgreement) => {
       if (statusFilter && !statusFilter.operandRight) {
-        return !contractAgreement.isTerminated;
+        return !contractAgreement[
+          "https://w3id.org/edc/v0.0.1/ns/isTerminated"
+        ];
       }
       return true;
     });
