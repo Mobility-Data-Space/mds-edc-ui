@@ -192,6 +192,7 @@ export const de = {
       headingContractSigningDate: "Datum der Vertragsunterzeichnung",
       searchPlaceholder: "Vertragsvereinbarungen suchen",
       terminationSuccess: "Vertrag erfolgreich beendet",
+      noContractsFound: "Keine Vertragsvereinbarungen gefunden",
       "[id]": {
         title: "Vertragsvereinbarung ansehen",
         description: "Eine einzige Vertragsvereinbarung",

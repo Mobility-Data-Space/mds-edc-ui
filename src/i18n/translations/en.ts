@@ -554,6 +554,7 @@ export const en = {
       retiredFetchError: "Error while fetching retired contract agreements",
       searchPlaceholder: "Search Contract Agreements by Asset ID",
       terminationSuccess: "Contract terminated successful",
+      noContractsFound: "No Contracts Found",
       "[id]": {
         title: "View contract agreement",
         description: "A single contract agreement",
