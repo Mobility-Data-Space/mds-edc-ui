@@ -1,4 +1,5 @@
 import { proxyConnectorManagement } from "@/constants/proxy";
+import { requireAuth } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 
 function connectorApiKey() {
@@ -23,6 +24,10 @@ const setResponseHeaders = (proxy: Response, response: NextResponse): void => {
 
 // Handler for GET requests
 const handleGet = async (req: NextRequest): Promise<NextResponse> => {
+  // Check authentication first
+  const authError = await requireAuth(req);
+  if (authError) return authError;
+
   const url = buildUrl(req);
   const proxy = await fetchProxy(url, {
     method: "GET",
@@ -40,6 +45,10 @@ const handleGet = async (req: NextRequest): Promise<NextResponse> => {
 
 // Handler for POST requests
 const handlePost = async (req: NextRequest): Promise<NextResponse> => {
+  // Check authentication first
+  const authError = await requireAuth(req);
+  if (authError) return authError;
+
   const url = buildUrl(req);
   const requestBody = await req.text();
 
@@ -63,6 +72,10 @@ const handlePost = async (req: NextRequest): Promise<NextResponse> => {
 
 // Handler for PUT requests
 const handlePut = async (req: NextRequest): Promise<NextResponse> => {
+  // Check authentication first
+  const authError = await requireAuth(req);
+  if (authError) return authError;
+
   const url = buildUrl(req);
   const requestBody = await req.text();
 
@@ -86,6 +99,10 @@ const handlePut = async (req: NextRequest): Promise<NextResponse> => {
 
 // Handler for DELETE requests
 const handleDelete = async (req: NextRequest): Promise<NextResponse> => {
+  // Check authentication first
+  const authError = await requireAuth(req);
+  if (authError) return authError;
+
   const url = buildUrl(req);
 
   const proxy = await fetchProxy(url, {

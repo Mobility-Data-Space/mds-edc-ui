@@ -1,4 +1,5 @@
 import { Participant } from "@/utilities/participant";
+import { requireAuth } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 
 function participantConfig(): Participant {
@@ -19,6 +20,10 @@ function participantConfig(): Participant {
 }
 
 async function handler(req: NextRequest): Promise<NextResponse> {
+  // Check authentication first
+  const authError = await requireAuth(req);
+  if (authError) return authError;
+
   const response = NextResponse.json(participantConfig());
   response.headers.set("Allow", "GET");
   return response;

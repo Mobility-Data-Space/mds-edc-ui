@@ -19,6 +19,8 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import {SvgIconProps} from "@mui/material";
 import {useTranslator} from "@/i18n";
+import { useSession } from "next-auth/react";
+import { useKeycloakLogout } from "../../hooks/use-keycloak-logout";
 
 const drawerWidth = 300;
 
@@ -48,6 +50,60 @@ const RouteNode = ({ href, title, icon, className = "" }: RouteProps) => {
 }
 
 const iconsProps: SvgIconProps = { className: "size-7", color: "secondary" };
+
+// Logout component
+const LogoutSection = () => {
+  const { data: session } = useSession();
+  const { translator } = useTranslator();
+  const logout = useKeycloakLogout();
+
+  const handleLogout = async () => {
+    console.log('🚪 Starting complete logout from side drawer...');
+    await logout();
+  };
+
+  if (!session) return null;
+
+  return (
+    <div className="mt-auto border-t border-gray-200">
+      {/* User Info */}
+      <div className="p-4 border-b border-gray-100">
+        <div className="flex items-center space-x-3">
+          <div className="flex-shrink-0">
+            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+              <span className="text-white text-sm font-medium">
+                {session.user?.name?.[0]?.toUpperCase() || session.user?.email?.[0]?.toUpperCase() || 'U'}
+              </span>
+            </div>
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-gray-900 truncate">
+              {session.user?.name || 'User'}
+            </p>
+            <p className="text-xs text-gray-500 truncate">
+              {session.user?.email || 'Authenticated'}
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      {/* Logout Button */}
+      <ListItem disablePadding>
+        <ListItemButton onClick={handleLogout} className="!py-3">
+          <ListItemIcon className="!min-w-6">
+            <Icon className="size-7 !text-red-600">
+              logout
+            </Icon>
+          </ListItemIcon>
+          <ListItemText 
+            primary={translator("Sign Out")} 
+            classes={{ primary: "!font-medium !text-red-600" }} 
+          />
+        </ListItemButton>
+      </ListItem>
+    </div>
+  );
+};
 const routes: ReactNode[] = [
   <RouteNode
     key="dashboard"
@@ -138,7 +194,7 @@ export default function SideDrawer(props: Props) {
   };
   const currentHref = router.route;
   const drawer = (
-    <div>
+    <div className="h-full flex flex-col">
       <Toolbar >
         <Image
           src="/mds_logo.svg"
@@ -149,9 +205,10 @@ export default function SideDrawer(props: Props) {
           fetchPriority="high"
           style={{ height: "57px", width: "70%" }}
         />
-
       </Toolbar>
-      <List>
+      
+      {/* Main Navigation */}
+      <List className="flex-1">
         {routes.map((route: any) => {
           if (!route || !route.props || route.props.href !== currentHref) {
             return route;
@@ -165,6 +222,9 @@ export default function SideDrawer(props: Props) {
           };
         })}
       </List>
+      
+      {/* Logout Section at Bottom */}
+      <LogoutSection />
     </div>
   );
 

@@ -13,6 +13,8 @@ import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/enti
 import {useEffect, useState} from "react";
 import { TransferProcessStatusChartCard } from "@/components/molecules/transfer-process-status-chart-card.tsx";
 import { proxyConnectorManagement } from "@/constants/proxy";
+import { GetServerSideProps } from "next";
+import { getSession } from "next-auth/react";
 
 export default function ConnectorPage() {
   const { connector } = useParticipantConnectorState();
@@ -61,4 +63,24 @@ export default function ConnectorPage() {
       </div>
     </SideDrawer>
   );
+}
+
+// Server-side authentication check
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession(context)
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/auth/signin',
+        permanent: false,
+      },
+    }
+  }
+
+  return {
+    props: {
+      session,
+    },
+  }
 }
