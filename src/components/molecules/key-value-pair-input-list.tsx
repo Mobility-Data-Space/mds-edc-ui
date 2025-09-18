@@ -1,9 +1,9 @@
-import {TextFieldProps} from "@mui/material/TextField";
-import {Button, FormHelperText} from "@mui/material";
-import {KeyValuePairInput, Tag} from "@/components/atoms/key-value-pair-input";
-import {uid} from "@/utilities/utilities.ts";
+import { KeyValuePairInput, Tag } from "@/components/atoms/key-value-pair-input";
+import { uid } from "@/utilities/utilities.ts";
+import { Button, FormHelperText } from "@mui/material";
+import { TextFieldProps } from "@mui/material/TextField";
 
-export type KeyValuePairInputListProps =  Omit<TextFieldProps, "onChange"> & {
+export type KeyValuePairInputListProps = Omit<TextFieldProps, "onChange"> & {
   addText?: string;
   removeText?: string;
   errorText?: string;
@@ -86,7 +86,7 @@ export function KeyValuePairInputList({
           keyPlaceholder={keyPlaceholder}
           valueLabel={valueLabel}
           valuePlaceholder={valuePlaceholder}
-          key={tagInput.id}
+          key={tagInput.id || index}
           onChange={({ input, valid }) => {
             onChange(withUpdatedTag(value, { input, valid }, tagInput, index));
           }}

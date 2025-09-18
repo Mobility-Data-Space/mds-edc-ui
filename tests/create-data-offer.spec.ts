@@ -99,4 +99,35 @@ test.describe('Create Data Offer Tests', () => {
 
     await expect(submitButton).toBeEnabled();
   });
+
+  test('should generate data offer ID with mds-data-offer- prefix', async ({ page }) => {
+    const title = `Test Naming Convention ${Date.now()}`;
+    const assetId = `naming-convention-test-${Date.now()}`;
+    await createDataOfferPage.fillCreateDataOfferForm(title, assetId, "https://google.com")
+
+    await createDataOfferPage.getDataOfferPublishMode("PUBLISH_UNRESTRICTED").check()
+    await createDataOfferPage.submitButton().click();
+
+    const toast = createDataOfferPage.getSuccessMessage();
+    await expect(toast).toBeVisible();
+    await expect(toast).toContainText(unrestrictedSuccessMsg);
+
+    await page.waitForURL('/data-offers', { timeout: 10000 });
+
+    // Navigate to data offers page and check the newly created data offer has the correct naming convention
+    const dataOfferCards = page.locator('[data-testid="data-offer-card"]');
+    await expect(dataOfferCards.first()).toBeVisible();
+    
+    // Find the newly created data offer by looking for the contract definition ID
+    const contractIdElements = page.locator('[data-testid="contract-definition-id"]');
+    const contractIds = await contractIdElements.allTextContents();
+    
+    // Check that at least one data offer has the mds-data-offer- prefix
+    const hasCorrectPrefix = contractIds.some(id => id.startsWith('mds-data-offer-'));
+    expect(hasCorrectPrefix).toBeTruthy();
+    
+    // Verify the format: mds-data-offer-DDMMYYYY_UID
+    const correctFormatIds = contractIds.filter(id => /^mds-data-offer-\d{8}_\d+$/.test(id));
+    expect(correctFormatIds.length).toBeGreaterThan(0);
+  });
 });

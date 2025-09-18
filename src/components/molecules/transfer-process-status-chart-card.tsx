@@ -1,12 +1,11 @@
-import React, {useMemo, useState} from 'react';
-import {Cell, Pie, PieChart, ResponsiveContainer} from 'recharts';
-import {COLORS, HOVER_COLORS} from "@/constants/transfer-process.ts";
-import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/entities";
-import {TitleWithIcon} from "@/components/atoms/TitleWithIcon.tsx";
-import {T} from "@/i18n";
-import {Card, CardContent, Typography} from "@mui/material";
-import {theme} from "@/theme/ThemeProvider.tsx";
-import {transferProcessStateColor, transferProcessStateHoverColor} from "@/utilities/transfer-process.ts";
+import React, { useMemo, useState } from 'react';
+import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts';
+import { TransferProcess } from "@think-it-labs/edc-connector-client/dist/src/entities";
+import { TitleWithIcon } from "@/components/atoms/TitleWithIcon.tsx";
+import { T } from "@/i18n";
+import { Card, CardContent, Typography } from "@mui/material";
+import { theme } from "@/theme/ThemeProvider.tsx";
+import { transferProcessStateBgColor, transferProcessStateHoverColor } from "@/utilities/transfer-process.ts";
 
 interface TransferProcessStatusChartCardProps {
   title: string;
@@ -28,7 +27,7 @@ function CustomLegend({ data }: { data: Entry[] }) {
         <div key={index} className="flex items-center gap-2">
           <div
             className="w-8 h-3"
-            style={{backgroundColor: entry.color}}
+            style={{ backgroundColor: entry.color }}
           />
           <span className="text-[10px] text-gray-600">
             {entry.name}
@@ -73,10 +72,10 @@ function HoverEntry({ isHovered, entry, mousePosition, onHoverEnd }: HoverEntryP
       <div className="flex gap-x-1 items-center">
         <div
           className="w-3 h-3 border-2 border-white"
-          style={{backgroundColor: entry.color}}
+          style={{ backgroundColor: entry.color }}
         />
         <Typography color="white" variant="body2">
-          <T string="dashboard.numberTransferProcesses"/>
+          <T string="dashboard.numberTransferProcesses" />
           <span> : </span>
           <span>{entry.value}</span>
         </Typography>
@@ -99,7 +98,7 @@ export function TransferProcessStatusChartCard({ title, transferProcesses, "data
     return Object.entries(data).map(([state, count]) => ({
       name: state,
       value: count,
-      color: transferProcessStateColor(state),
+      color: transferProcessStateBgColor(state),
       hoverColor: transferProcessStateHoverColor(state),
     }));
   }, [transferProcesses]);
@@ -114,14 +113,14 @@ export function TransferProcessStatusChartCard({ title, transferProcesses, "data
   };
 
   const handleMouseMove = (entry: Entry, event: React.MouseEvent<SVGElement, MouseEvent>) => {
-    setMousePosition({x: event.clientX, y: event.clientY});
+    setMousePosition({ x: event.clientX, y: event.clientY });
   };
 
   return (
     <Card data-testid={dataTestId} >
       <CardContent className="flex flex-col gap-y-4">
         <TitleWithIcon
-          title={<T string={title}/>}
+          title={<T string={title} />}
           subtitle={<T string="dashboard.transferProcesses" />}
         />
 

@@ -16,7 +16,8 @@ export const participantConfig = {
   EDC_CURATOR_URL: "https://think-it.io",
   EDC_MAINTAINER_ORGANIZATION: "Think-it GmbH",
   EDC_MAINTAINER_URL: "https://think-it.io",
-  MDS_DAPS_URL: "https://daps.mobility-dataspace.eu"
+  MDS_DAPS_URL: "https://daps.mobility-dataspace.eu",
+  MDS_DAPS_JWKS_URL: "https://daps.mobility-dataspace.eu/.well-known/jwks.json"
 }
 
 export const counterPartyParticipantConfig = {
@@ -32,6 +33,7 @@ export const counterPartyParticipantConfig = {
   EDC_CURATOR_URL: "https://think-it.io",
   EDC_MAINTAINER_ORGANIZATION: "Think-it GmbH",
   EDC_MAINTAINER_URL: "https://think-it.io",
-  MDS_DAPS_URL: "https://daps.mobility-dataspace.eu"
+  MDS_DAPS_URL: "https://daps.mobility-dataspace.eu",
+  MDS_DAPS_JWKS_URL: "https://daps.mobility-dataspace.eu/.well-known/jwks.json"
 }
 

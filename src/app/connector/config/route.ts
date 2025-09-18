@@ -15,7 +15,8 @@ function participantConfig(): Participant {
     curatorUrl: process.env.EDC_CURATOR_URL || "",
     maintainerName: process.env.EDC_MAINTAINER_ORGANIZATION || "",
     maintainerUrl: process.env.EDC_MAINTAINER_URL || "",
-    dapsUrl: process.env.MDS_DAPS_URL || ""
+    dapsUrl: process.env.MDS_DAPS_URL || "",
+    dapsJwksUrl: process.env.MDS_DAPS_JWKS_URL || ""
   };
 }
 

@@ -14,66 +14,80 @@ export const useTerminatedContractAgreements = () => {
 
   const [retiredContractAgreementIds, setRetiredContractAgreementIds] = useState<string[]>([]);
   const [contractAgreementInfo, setContractAgreementInfo] = useState<Record<string, ContractAgreementInfo>>({});
+  const [loading, setLoading] = useState<boolean>(false);
 
   const populateRetired = useCallback(async () => {
-    const controller = new AgreementsRetirementController(proxyConnectorManagement)
+    setLoading(true);
+    const controller = new AgreementsRetirementController(proxyConnectorManagement);
 
     try {
-      const retiredAgreements = await controller.retiredAgreementsRequest()
+      const retiredAgreements = await controller.retiredAgreementsRequest();
 
-      const retiredContractAgreementsToSave = new Map(retiredAgreements.map(retiredAgreement => [retiredAgreement.agreementId, retiredAgreement] as const))
+      const retiredContractAgreementsToSave = new Map(
+        retiredAgreements.map(retiredAgreement => [retiredAgreement.agreementId, retiredAgreement] as const)
+      );
 
-      const transferProcesses = await edcClient.management.transferProcesses.queryAll({ offset: 0 })
+      const transferProcesses = await edcClient.management.transferProcesses.queryAll({ offset: 0 });
 
       const contractAgreementInfoToSave = new Map<string, ContractAgreementInfo>();
 
       transferProcesses.forEach(transferProcess => {
         const contractAgreementId = transferProcess.contractId;
-        const contractAgreement = contractAgreementInfoToSave.get(contractAgreementId)
+        const contractAgreement = contractAgreementInfoToSave.get(contractAgreementId);
 
         if (contractAgreement) {
-          contractAgreement.transfersCount++
+          contractAgreement.transfersCount++;
 
           if (contractAgreement.isRunning !== true) {
-            contractAgreement.isRunning = transferProcess.state === STATE_RUNNING
+            contractAgreement.isRunning = transferProcess.state === STATE_RUNNING;
           }
-
         } else {
-          const retiredContractAgreement = retiredContractAgreementsToSave.get(contractAgreementId)
+          const retiredContractAgreement = retiredContractAgreementsToSave.get(contractAgreementId);
 
           if (retiredContractAgreement) {
             contractAgreementInfoToSave.set(contractAgreementId, {
               isTerminated: retiredContractAgreementsToSave.has(contractAgreementId),
-              isRunning: transferProcess.state !== TransferProcessStates.TERMINATED && transferProcess.state === STATE_RUNNING,
+              isRunning:
+                transferProcess.state !== TransferProcessStates.TERMINATED &&
+                transferProcess.state === STATE_RUNNING,
               isTerminatedAt: retiredContractAgreement[AGREEMENT_RETIREMENT_DATE] as number,
               retirementReason: retiredContractAgreement[AGREEMENT_RETIREMENT_REASON] as string,
               transfersCount: 1,
-            })
+            });
           }
-        };
-      })
+        }
+      });
 
       setContractAgreementInfo(Object.fromEntries(contractAgreementInfoToSave));
-      setRetiredContractAgreementIds(retiredContractAgreementsToSave.keys().toArray());
-
+      setRetiredContractAgreementIds(Array.from(retiredContractAgreementsToSave.keys()));
     } catch (error) {
-      enqueueSnackbar(translator("contractAgreements.retiredFetchError"),
-        {
-          variant: "error",
-          content: (key: SnackbarKey) =>
-            <Snackbar
-              type="error"
-              message={translator('contractAgreements.retiredFetchError')}
-              content={"Failed to Fetch Retired Agreements"}
-              onClose={() => { closeSnackbar(key); }}
-            />
-        })
-    };
+      enqueueSnackbar(translator("contractAgreements.retiredFetchError"), {
+        variant: "error",
+        content: (key: SnackbarKey) => (
+          <Snackbar
+            type="error"
+            message={translator("contractAgreements.retiredFetchError")}
+            content={"Failed to Fetch Retired Agreements"}
+            onClose={() => {
+              closeSnackbar(key);
+            }}
+          />
+        ),
+      });
+    } finally {
+      setLoading(false);
+    }
   }, [edcClient, translator]);
 
   useEffect(() => {
-    populateRetired()
-  }, [populateRetired])
+    populateRetired();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [populateRetired]);
 
-  return { retiredContractAgreementIds, contractAgreementInfo, rePopulateRetired: populateRetired }
-}
+  return {
+    retiredContractAgreementIds,
+    contractAgreementInfo,
+    rePopulateRetired: populateRetired,
+    loading,
+  };
+};

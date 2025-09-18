@@ -3,7 +3,7 @@ const nextConfig = {
   output: "standalone",
   i18n: {
     defaultLocale: "en",
-    locales: ["en", "de", "cn"],
+    locales: ["en"],
   },
   reactStrictMode: true,
   transpilePackages: ["@think-it-labs/edc-connector-ui", "mui-chips-input"],

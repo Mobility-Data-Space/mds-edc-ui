@@ -7,7 +7,7 @@ function connectorApiKey() {
 }
 
 const buildUrl = (req: NextRequest): string => {
-  const connectorManagementUrl = process.env.EDC_MANAGEMENT_URL || "" ;
+  const connectorManagementUrl = process.env.EDC_MANAGEMENT_URL || "";
   return connectorManagementUrl + req.nextUrl.pathname.replace(proxyConnectorManagement, "");
 };
 

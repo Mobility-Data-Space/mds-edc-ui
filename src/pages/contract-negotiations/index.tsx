@@ -43,7 +43,6 @@ export default function ContractNegotiationsListPage() {
   const { connector } = useParticipantConnectorState();
   const managementUrl = connector?.managementUrl as string;
   const { translator } = useTranslator();
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
   const [openContractNegotiationData, setOpenContractNegotiationData] = useState({
@@ -169,7 +168,7 @@ export default function ContractNegotiationsListPage() {
                     <Table.Cell>
                       {!item.contractAgreementId ? "" :
                         <ContractAgreementView
-                          managementUrl={managementUrl}
+                          managementUrl={proxyConnectorManagement}
                           id={item.contractAgreementId}
                         >
                           <p className="text-xs italic mb-1 text-gray-800">

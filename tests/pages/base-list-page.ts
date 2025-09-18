@@ -16,6 +16,29 @@ export class BaseListPage {
         this.page = page;
     }
 
+    async waitForApiResponse(apiEndpoint: string, options?: { timeout?: number, retries?: number }): Promise<boolean> {
+        const timeout = options?.timeout || 45000;
+        const retries = options?.retries || 3;
+        
+        for (let attempt = 1; attempt <= retries; attempt++) {
+            try {
+                await this.page.waitForResponse(
+                    (response) => response.url().includes(apiEndpoint) && response.status() < 400,
+                    { timeout: timeout / retries }
+                );
+                return true;
+            } catch (error) {
+                console.log(`API response attempt ${attempt}/${retries} failed for ${apiEndpoint}`);
+                if (attempt === retries) {
+                    console.warn(`Failed to get response from ${apiEndpoint} after ${retries} attempts`);
+                    return false;
+                }
+                await this.page.waitForTimeout(1000 * attempt); // Exponential backoff
+            }
+        }
+        return false;
+    }
+
     async getToastMessage(type: SnackbarType) {
         const locatorMap: Record<SnackbarType, string> = {
             success: this.successMessageLocator,
@@ -30,14 +53,15 @@ export class BaseListPage {
         const searchInput = this.page.locator(this.searchInputLocator);
         await searchInput.fill(searchTerm);
         await this.page.locator(this.searchTriggerLocator).click();
-        await this.page.waitForLoadState("networkidle");
+        // Wait for API response instead of networkidle
+        await this.waitForApiResponse(apiEndpoint);
     }
 
     async clearSearch(apiEndpoint: string) {
         const searchInput = this.page.locator(this.searchInputLocator);
         await searchInput.clear();
         await this.page.locator(this.searchTriggerLocator).click();
-        await this.page.waitForResponse((response) => response.url().includes(apiEndpoint));
+        await this.waitForApiResponse(apiEndpoint);
     }
 
     async getSearchInput() {
@@ -53,7 +77,7 @@ export class BaseListPage {
         const nextButton = this.page.locator(this.paginationNextLocator);
         if (await nextButton.isEnabled()) {
             await nextButton.click();
-            await this.page.waitForResponse((response) => response.url().includes(apiEndpoint));
+            await this.waitForApiResponse(apiEndpoint);
         }
     }
 
@@ -61,7 +85,7 @@ export class BaseListPage {
         const prevButton = this.page.locator(this.paginationPrevLocator);
         if (await prevButton.isEnabled()) {
             await prevButton.click();
-            await this.page.waitForResponse((response) => response.url().includes(apiEndpoint));
+            await this.waitForApiResponse(apiEndpoint);
         }
     }
 
