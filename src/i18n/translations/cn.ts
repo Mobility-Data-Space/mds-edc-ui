@@ -188,6 +188,7 @@ export const cn = {
       headingContractSigningDate: "合同签订日期",
       searchPlaceholder: "搜索合同协议",
       terminationSuccess: "合同终止成功",
+      noContractsFound: "未找到合同协议",
       "[id]": {
         title: "查看合同协议",
         description: "单一合同协议",
