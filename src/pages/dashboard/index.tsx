@@ -1,20 +1,20 @@
-import SideDrawer from "@/components/organisms/side-drawer";
-import { T, useTranslator } from "@/i18n";
-import { EdcInfoCard } from "@/components/molecules/edc-info-card.tsx";
-import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state.ts";
 import { EdcAboutCard } from "@/components/molecules/edc-about-card.tsx";
-import { EdcUIAboutCard } from "@/components/molecules/edc-ui-about-card.tsx";
-import { EdcProperties } from "@/components/molecules/edc-properties.tsx";
-import { useEdcEntitiesCount } from "@/hooks/use-edc-entities-count.ts";
 import { EdcEntitiesCountGrid } from "@/components/molecules/edc-entities-count-grid.tsx";
-import { useEdcFields } from "@/hooks/use-edc-fields.ts";
-import { useVersionFields } from "@/hooks/use-version-fields.ts";
-import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
-import { TransferProcess } from "@think-it-labs/edc-connector-client/dist/src/entities";
-import { useEffect, useState } from "react";
+import { EdcInfoCard } from "@/components/molecules/edc-info-card.tsx";
+import { EdcProperties } from "@/components/molecules/edc-properties.tsx";
+import { EdcUIAboutCard } from "@/components/molecules/edc-ui-about-card.tsx";
 import { TransferProcessStatusChartCard } from "@/components/molecules/transfer-process-status-chart-card.tsx";
+import SideDrawer from "@/components/organisms/side-drawer";
 import { proxyConnectorManagement } from "@/constants/proxy";
 import { GetManagedEDC } from "@/components/molecules/get-managed-edc-card";
+import { useEdcEntitiesCount } from "@/hooks/use-edc-entities-count.ts";
+import { useEdcFields } from "@/hooks/use-edc-fields.ts";
+import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state.ts";
+import { useVersionFields } from "@/hooks/use-version-fields.ts";
+import { T, useTranslator } from "@/i18n";
+import { TransferProcess } from "@think-it-labs/edc-connector-client/dist/src/entities";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
+import { useEffect, useState } from "react";
 
 export default function ConnectorPage() {
   const { connector } = useParticipantConnectorState();
@@ -49,10 +49,12 @@ export default function ConnectorPage() {
               transferProcesses={transferProcesses.filter(
                 (transferProcess) => transferProcess.type === "CONSUMER",
               )}
+              emptyMessage="dashboard.noConsumingTransferProcesses"
             />
             <TransferProcessStatusChartCard
               data-testid="dashboard-outgoing-data"
               title="dashboard.outgoingData"
+              emptyMessage="dashboard.noProvidingTransferProcesses"
               transferProcesses={transferProcesses.filter(
                 (transferProcess) => transferProcess.type === "PROVIDER",
               )}

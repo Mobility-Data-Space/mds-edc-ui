@@ -233,6 +233,10 @@ export const cn = {
         fieldErrorDetail: "错误详情",
       },
     },
+    dashboard: {
+      noConsumingTransferProcesses: "没有消费传输进程",
+      noProvidingTransferProcesses: "没有提供传输进程"
+    },
     common: {
       listLoadError: "加载列表失败。请再试一次。",
       catalogLoadError: "加载目录失败。请再试一次。",

@@ -238,6 +238,10 @@ export const de = {
         fieldErrorDetail: "Fehlerdetails",
       },
     },
+    dashboard: {
+      noConsumingTransferProcesses: "Keine verbrauchenden Übertragungsvorgänge",
+      noProvidingTransferProcesses: "Keine bereitstellenden Übertragungsvorgänge"
+    },
     common: {
       listLoadError: "Fehler beim Laden der Liste. Bitte versuchen Sie es erneut.",
       catalogLoadError: "Fehler beim Laden des Katalogs. Bitte versuchen Sie es erneut.",
