@@ -28,11 +28,14 @@ export default function ConnectorPage() {
   const [transferProcesses, setTransferProcesses] = useState<TransferProcess[]>(
     [],
   );
+  const [isLoadingTransferProcesses, setIsLoadingTransferProcesses] = useState(true);
 
   useEffect(() => {
+    setIsLoadingTransferProcesses(true);
     edcClient.management.transferProcesses
       .queryAll({ offset: 0 })
-      .then(setTransferProcesses);
+      .then(setTransferProcesses)
+      .finally(() => setIsLoadingTransferProcesses(false));
   }, [edcClient]);
 
   return (
@@ -50,6 +53,7 @@ export default function ConnectorPage() {
                 (transferProcess) => transferProcess.type === "CONSUMER",
               )}
               emptyMessage="dashboard.noConsumingTransferProcesses"
+              isLoading={isLoadingTransferProcesses}
             />
             <TransferProcessStatusChartCard
               data-testid="dashboard-outgoing-data"
@@ -58,6 +62,7 @@ export default function ConnectorPage() {
               transferProcesses={transferProcesses.filter(
                 (transferProcess) => transferProcess.type === "PROVIDER",
               )}
+              isLoading={isLoadingTransferProcesses}
             />
           </div>
           <EdcEntitiesCountGrid entitiesCount={entitiesCount} />
