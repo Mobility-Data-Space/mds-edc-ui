@@ -112,6 +112,8 @@ export const en = {
       outgoingData: "Outgoing Data",
       transferProcesses: "Transfer Processes",
       numberTransferProcesses: "Number of Transfer Processes",
+      noConsumingTransferProcesses: "No consuming transfer processes",
+      noProvidingTransferProcesses: "No providing transfer processes",
     },
     assets: {
       title: "My assets",
