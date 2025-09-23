@@ -116,7 +116,7 @@ export default function ContractAgreementsListPage() {
         open={isDetailsModalOpen}
         contractAgreement={openContractAgreementData.contractAgreement}
         retirementReason={openContractAgreementInfo?.retirementReason}
-        isTerminated={openContractAgreementInfo?.isTerminated}
+        isTerminated={retiredContractAgreementIds.includes(openContractAgreementData.contractAgreement.id)}
         isTerminatedAt={openContractAgreementInfo?.isTerminatedAt}
         isRunning={openContractAgreementInfo?.isRunning}
         onClose={() => setIsDetailsModalOpen(false)}
