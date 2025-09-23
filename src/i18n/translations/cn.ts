@@ -16,6 +16,67 @@ export const cn = {
         production: "生产",
       },
     },
+    dashboard: {
+      title: "仪表盘",
+      edcDescription:
+        "共享以下连接器端点，以便他人访问您的 EDC 连接器目录。对于在代理中不会显示的受连接器限制的数据产品，这尤其有用。",
+      edcConnector: "EDC 连接器",
+      edcId: "连接器 ID",
+      curatorOrganizationName: "策展机构名称",
+      curatorUrl: "策展机构 URL",
+      dapsTokenUrl: "DAPS 令牌 URL",
+      dapsJwksUrl: "DAPS JWKS URL",
+      versionInformation: "版本信息",
+      connector: "MDS CONNECTOR",
+      uiVersion: "MDS EDC UI 版本",
+      maintainerUrl: "维护方 URL",
+      maintainerName: "维护组织名称",
+      connectorEndpoint: "连接器端点",
+      managementApiUrl: "管理 API URL",
+      connectorProperties: "连接器属性",
+      additionalProperties: "附加属性",
+      edcAbout1:
+        "Eclipse Dataspace Components 框架促进主权的、跨组织的数据交换。",
+      edcAbout2:
+        "它实现了 International Data Spaces (IDS) 标准以及与 GAIA-X 相关的协议。",
+      edcAbout3:
+        "该框架尽可能设计为可扩展，以鼓励与各种数据生态系统集成。",
+      aboutEdc: "关于 EDC",
+      edcComponents: "Eclipse Dataspace Components",
+      aboutEdcUi: "关于 EDC UI",
+      getManagedEdc: "获取托管版 EDC",
+      caas: "Connector-as-a-Service",
+      caasDescription1:
+        "要在几分钟内加入如 <strong>Mobility Data Space</strong> 等数据空间，可考虑由 Think-it GmbH 提供的托管解决方案。",
+      caasDescription2:
+        "\\- 基于开源软件的 <strong>Connector-as-a-Service (CaaS)</strong>，并补充了<strong>关键企业功能</strong>。",
+      dataDashboard: "Eclipse Dataspace Components",
+      aboutUi:
+        "您可以使用此应用尝试的示例用例如下：",
+      aboutUiAssetsViewAndCreate: "查看并创建资产，使用 ",
+      aboutUiCatalogNegotiate:
+        "在您的数据空间中就数据共享协商合同，使用 ",
+      aboutUiCatalogViewOffers:
+        "在您的数据空间中查看可用的资产目录，使用 ",
+      aboutUiContractDefinitionsViewAndCreate:
+        "在您的数据空间中发布资产，使用 ",
+      aboutUiContractsTransfer:
+        "在您的数据空间中传输资产，使用 ",
+      aboutUiContractsViewExisting: "在 中查看您现有的合同",
+      aboutUiPoliciesViewAndCreate:
+        "在您的数据空间中查看并创建策略，并将其应用于资产，使用 ",
+      aboutUiTransferHistoryView:
+        "在您的数据空间中查看已传输的资产，使用 ",
+      yourDataOffers: "您的数据产品",
+      yourAssets: "您的资产",
+      yourPolicies: "您的策略",
+      preconfiguredCatalogs: "预配置目录",
+      contractAgreements: "合同协议",
+      incomingData: "传入数据",
+      outgoingData: "传出数据",
+      transferProcesses: "传输进程",
+      numberTransferProcesses: "传输进程数量",
+    },
     assets: {
       title: "列出所有资产",
       description:
