@@ -30,7 +30,7 @@ export function GetManagedEDC() {
               component="span"
               className="!bg-[#FFFF00] !px-4 !py-1.5 !bg-mds-yellow" //!TODO: Remove hex after #307
             >
-              <Link href="https://think-it.io/contact">
+              <Link href="mailto:partner@think-it.io">
                 <Typography
                   color="main"
                   variant="subtitle1"
@@ -47,7 +47,7 @@ export function GetManagedEDC() {
             className="inline-flex rounded"
           >
             <ButtonBase component="span" className="!px-4 !py-1.5">
-              <Link href="https://think-it.io">
+              <Link href="https://think-it.io" target="_blank">
                 <Typography
                   color="secondary"
                   variant="subtitle1"
