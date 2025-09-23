@@ -16,6 +16,67 @@ export const de = {
         production: "Produktion",
       },
     },
+    dashboard: {
+      title: "Dashboard",
+      edcDescription:
+        "Teilen Sie den folgenden Connector-Endpunkt, damit andere auf den Katalog Ihres EDC-Connectors zugreifen können. Dies ist insbesondere bei connector-beschränkten Datenangeboten nützlich, die in Brokern nicht angezeigt werden.",
+      edcConnector: "EDC-Connector",
+      edcId: "Connector-ID",
+      curatorOrganizationName: "Name der kuratierenden Organisation",
+      curatorUrl: "Kurator-URL",
+      dapsTokenUrl: "DAPS-Token-URL",
+      dapsJwksUrl: "DAPS-JWKS-URL",
+      versionInformation: "VERSIONSINFORMATIONEN",
+      connector: "MDS CONNECTOR",
+      uiVersion: "MDS EDC UI VERSION",
+      maintainerUrl: "Maintainer-URL",
+      maintainerName: "Name der betreibenden Organisation",
+      connectorEndpoint: "Connector-Endpunkt",
+      managementApiUrl: "Management-API-URL",
+      connectorProperties: "Connector-Eigenschaften",
+      additionalProperties: "Zusätzliche Eigenschaften",
+      edcAbout1:
+        "Das Eclipse Dataspace Components Framework ermöglicht souveränen, interorganisationalen Datenaustausch.",
+      edcAbout2:
+        "Es implementiert den International Data Spaces (IDS) Standard sowie relevante, mit GAIA-X verbundene Protokolle.",
+      edcAbout3:
+        "Das Framework ist so erweiterbar wie möglich gestaltet, um Integrationen in verschiedene Datenökosysteme zu fördern.",
+      aboutEdc: "Über EDC",
+      edcComponents: "Eclipse Dataspace Components",
+      aboutEdcUi: "Über EDC UI",
+      getManagedEdc: "Managed EDC beziehen",
+      caas: "Connector-as-a-Service",
+      caasDescription1:
+        "Um Datenräumen wie dem <strong>Mobility Data Space</strong> innerhalb von Minuten beizutreten, ziehen Sie die Managed-Lösung der Think-it GmbH in Betracht.",
+      caasDescription2:
+        "\\- Der <strong>Connector-as-a-Service (CaaS)</strong> basiert auf Open-Source-Software und wird um <strong>wichtige Enterprise-Funktionen</strong> ergänzt.",
+      dataDashboard: "Eclipse Dataspace Components",
+      aboutUi:
+        "Beispielanwendungsfälle, die Sie mit dieser Anwendung ausprobieren können, sind:",
+      aboutUiAssetsViewAndCreate: "Assets anzeigen und erstellen mit der ",
+      aboutUiCatalogNegotiate:
+        "Einen Vertrag für Datenaustausch in Ihrem Dataspace verhandeln mit der ",
+      aboutUiCatalogViewOffers:
+        "Den Ihnen in Ihrem Dataspace verfügbaren Asset-Katalog anzeigen mit der ",
+      aboutUiContractDefinitionsViewAndCreate:
+        "Ein Asset in Ihrem Dataspace veröffentlichen mit der ",
+      aboutUiContractsTransfer:
+        "Ein Asset in Ihrem Dataspace übertragen mit der ",
+      aboutUiContractsViewExisting: "Ihre bestehenden Verträge anzeigen in der ",
+      aboutUiPoliciesViewAndCreate:
+        "Richtlinien anzeigen und erstellen und auf Assets anwenden in Ihrem Dataspace mit der ",
+      aboutUiTransferHistoryView:
+        "Ansehen, welche Assets in Ihrem Dataspace übertragen wurden, in der ",
+      yourDataOffers: "Ihre Datenangebote",
+      yourAssets: "Ihre Assets",
+      yourPolicies: "Ihre Richtlinien",
+      preconfiguredCatalogs: "Vorkonfigurierte Kataloge",
+      contractAgreements: "Vertragsvereinbarungen",
+      incomingData: "Eingehende Daten",
+      outgoingData: "Ausgehende Daten",
+      transferProcesses: "Übertragungsvorgänge",
+      numberTransferProcesses: "Anzahl der Übertragungsvorgänge",
+    },
     assets: {
       title: "Listen Sie alle Vermögenswerte auf",
       description:
