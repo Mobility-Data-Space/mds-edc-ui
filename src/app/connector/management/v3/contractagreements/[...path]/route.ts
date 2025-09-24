@@ -28,12 +28,11 @@ const client = new EdcConnectorClient.Builder()
   .managementUrl(connectorManagmentUrl())
   .build();
 
-const agreementsRetirementController = new AgreementsRetirementController(
-  `${process.env.NEXT_PUBLIC_BASE_URL}${proxyConnectorManagement}`,
-);
+const getAgreementsRetirementController = (host: string) =>
+  new AgreementsRetirementController(`${host}${proxyConnectorManagement}`);
 
 const handlePost = async (req: NextRequest): Promise<NextResponse> => {
-  const { pathname } = req.nextUrl;
+  const { pathname, origin } = req.nextUrl;
   const pathParam = pathname.split("/contractagreements")[1] || "";
 
   if (pathParam.startsWith("/retirements")) {
@@ -77,6 +76,8 @@ const handlePost = async (req: NextRequest): Promise<NextResponse> => {
     );
   }
 
+  const agreementsRetirementController =
+    getAgreementsRetirementController(origin);
   const retiredAgreements =
     await agreementsRetirementController.retiredAgreementsRequest();
 
