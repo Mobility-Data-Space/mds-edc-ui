@@ -112,6 +112,8 @@ export const en = {
       outgoingData: "Outgoing Data",
       transferProcesses: "Transfer Processes",
       numberTransferProcesses: "Number of Transfer Processes",
+      noConsumingTransferProcesses: "No consuming transfer processes",
+      noProvidingTransferProcesses: "No providing transfer processes",
     },
     assets: {
       title: "My assets",
@@ -552,6 +554,7 @@ export const en = {
       retiredFetchError: "Error while fetching retired contract agreements",
       searchPlaceholder: "Search Contract Agreements by Asset ID",
       terminationSuccess: "Contract terminated successful",
+      noContractsFound: "No Contracts Found",
       "[id]": {
         title: "View contract agreement",
         description: "A single contract agreement",
