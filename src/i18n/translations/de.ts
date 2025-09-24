@@ -76,6 +76,8 @@ export const de = {
       outgoingData: "Ausgehende Daten",
       transferProcesses: "Übertragungsvorgänge",
       numberTransferProcesses: "Anzahl der Übertragungsvorgänge",
+      noConsumingTransferProcesses: "Keine verbrauchenden Übertragungsvorgänge",
+      noProvidingTransferProcesses: "Keine bereitstellnden Übertragungsvorgänge"
     },
     assets: {
       title: "Listen Sie alle Vermögenswerte auf",
@@ -238,10 +240,6 @@ export const de = {
         fieldCorrelationId: "Korrelations-ID",
         fieldErrorDetail: "Fehlerdetails",
       },
-    },
-    dashboard: {
-      noConsumingTransferProcesses: "Keine verbrauchenden Übertragungsvorgänge",
-      noProvidingTransferProcesses: "Keine bereitstellenden Übertragungsvorgänge"
     },
     common: {
       listLoadError: "Fehler beim Laden der Liste. Bitte versuchen Sie es erneut.",
