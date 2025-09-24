@@ -188,6 +188,7 @@ export const cn = {
       headingContractSigningDate: "合同签订日期",
       searchPlaceholder: "搜索合同协议",
       terminationSuccess: "合同终止成功",
+      noContractsFound: "未找到合同协议",
       "[id]": {
         title: "查看合同协议",
         description: "单一合同协议",
@@ -232,6 +233,10 @@ export const cn = {
         fieldCorrelationId: "相关 ID",
         fieldErrorDetail: "错误详情",
       },
+    },
+    dashboard: {
+      noConsumingTransferProcesses: "没有消费传输进程",
+      noProvidingTransferProcesses: "没有提供传输进程"
     },
     common: {
       listLoadError: "加载列表失败。请再试一次。",

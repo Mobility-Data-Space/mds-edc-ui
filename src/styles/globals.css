@@ -7,6 +7,15 @@
 @theme {
   --color-active: #dedede;
   --color-background: #fafafa;
+  --color-mds-yellow: #FFFF00;
+  --color-mds-yellow-hover: #E0E000;
+  --color-mds-green: #96D200;
+  --color-mds-green-hover: #87BD00;
+  --color-mds-gray: #6E7378;
+  --color-mds-gray-hover: #C8CACC;
+  --color-mds-red: #B91C1C;
+  --color-mds-red-hover: #A11818;
+  --color-mds-black: #000000;
 }
 
 .bg-color-hover:hover {

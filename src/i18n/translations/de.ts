@@ -192,6 +192,7 @@ export const de = {
       headingContractSigningDate: "Datum der Vertragsunterzeichnung",
       searchPlaceholder: "Vertragsvereinbarungen suchen",
       terminationSuccess: "Vertrag erfolgreich beendet",
+      noContractsFound: "Keine Vertragsvereinbarungen gefunden",
       "[id]": {
         title: "Vertragsvereinbarung ansehen",
         description: "Eine einzige Vertragsvereinbarung",
@@ -237,6 +238,10 @@ export const de = {
         fieldCorrelationId: "Korrelations-ID",
         fieldErrorDetail: "Fehlerdetails",
       },
+    },
+    dashboard: {
+      noConsumingTransferProcesses: "Keine verbrauchenden Übertragungsvorgänge",
+      noProvidingTransferProcesses: "Keine bereitstellenden Übertragungsvorgänge"
     },
     common: {
       listLoadError: "Fehler beim Laden der Liste. Bitte versuchen Sie es erneut.",
