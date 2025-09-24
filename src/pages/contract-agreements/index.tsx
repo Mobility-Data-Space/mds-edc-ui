@@ -309,10 +309,6 @@ export default function ContractAgreementsListPage() {
             />
           </div>
         </div>
-
-        <ContractAgreementsList.Loading>
-          <LoadingSpinner />
-        </ContractAgreementsList.Loading>
       </ContractAgreementsList>
     </SideDrawer>
   );
