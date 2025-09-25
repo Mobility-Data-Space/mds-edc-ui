@@ -76,6 +76,8 @@ export const cn = {
       outgoingData: "传出数据",
       transferProcesses: "传输进程",
       numberTransferProcesses: "传输进程数量",
+      noConsumingTransferProcesses: "没有消费传输进程",
+      noProvidingTransferProcesses: "没有提供传输进程"
     },
     assets: {
       title: "列出所有资产",
@@ -233,10 +235,6 @@ export const cn = {
         fieldCorrelationId: "相关 ID",
         fieldErrorDetail: "错误详情",
       },
-    },
-    dashboard: {
-      noConsumingTransferProcesses: "没有消费传输进程",
-      noProvidingTransferProcesses: "没有提供传输进程"
     },
     common: {
       listLoadError: "加载列表失败。请再试一次。",
