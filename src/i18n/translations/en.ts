@@ -43,14 +43,19 @@ export const en = {
       catalogLoadError: "Failed to load Catalog. Please try again.",
       assetsLoadError: "Failed to load Assets. Please try again.",
       dataOffersLoadError: "Failed to load Data Offers. Please try again.",
-      contractAgreementsLoadError: "Failed to load Contract Agreements. Please try again.",
-      contractNegotiationsLoadError: "Failed to load Contract Negotiations. Please try again.",
-      transferProcessesLoadError: "Failed to load Transfer Processes. Please try again.",
-      policyDefinitionsLoadError: "Failed to load Policy Definitions. Please try again.",
+      contractAgreementsLoadError:
+        "Failed to load Contract Agreements. Please try again.",
+      contractNegotiationsLoadError:
+        "Failed to load Contract Negotiations. Please try again.",
+      transferProcessesLoadError:
+        "Failed to load Transfer Processes. Please try again.",
+      policyDefinitionsLoadError:
+        "Failed to load Policy Definitions. Please try again.",
     },
     dashboard: {
       title: "Dashboard",
-      edcDescription: "Share the following Connector Endpoint to let others access your EDC Connector's catalog. This is especially useful when using connector-restricted data offers which won't show up in brokers.",
+      edcDescription:
+        "Share the following Connector Endpoint to let others access your EDC Connector's catalog. This is especially useful when using connector-restricted data offers which won't show up in brokers.",
       edcConnector: "EDC Connector",
       edcId: "Connector ID",
       curatorOrganizationName: "Curator Organization Name",
@@ -66,22 +71,38 @@ export const en = {
       managementApiUrl: "Management API URL",
       connectorProperties: "Connector Properties",
       additionalProperties: "Additional Properties",
-      edcAbout1: "The Eclipse Dataspace Components framework facilitates sovereign, inter-organizational data exchange.",
-      edcAbout2: "It implements the International Data Spaces standard (IDS) as well as relevant protocols associated with GAIA-X.",
-      edcAbout3: "The framework is designed as extensible as possible to encourage integrations into various data ecosystems.",
+      edcAbout1:
+        "The Eclipse Dataspace Components framework facilitates sovereign, inter-organizational data exchange.",
+      edcAbout2:
+        "It implements the International Data Spaces standard (IDS) as well as relevant protocols associated with GAIA-X.",
+      edcAbout3:
+        "The framework is designed as extensible as possible to encourage integrations into various data ecosystems.",
       aboutEdc: "About EDC",
       edcComponents: "Eclipse Dataspace Components",
       aboutEdcUi: "About EDC UI",
+      getManagedEdc: "Get Managed EDC",
+      caas: "Connector-as-a-Service",
+      caasDescription1:
+        "To join data spaces like <strong>Mobility Data Space</strong> within minutes, consider the managed solution by Think-it GmbH.",
+      caasDescription2:
+        "\\- The <strong>Connector-as-a-Service (CaaS)</strong> based on open-source software enriched with <strong>key enterprise features</strong>.",
       dataDashboard: "Eclipse Dataspace Components",
-      aboutUi: "Example use cases, that you can try out with this application, are:",
+      aboutUi:
+        "Example use cases, that you can try out with this application, are:",
       aboutUiAssetsViewAndCreate: "View and create assets using the ",
-      aboutUiCatalogNegotiate: "Negotiate a contract for data sharing in your Dataspace using the ",
-      aboutUiCatalogViewOffers: "View the asset catalog available to you in your Dataspace using the ",
-      aboutUiContractDefinitionsViewAndCreate: "Publish an asset into your Dataspace using the ",
-      aboutUiContractsTransfer: "Transfer an asset in your Dataspace using the ",
+      aboutUiCatalogNegotiate:
+        "Negotiate a contract for data sharing in your Dataspace using the ",
+      aboutUiCatalogViewOffers:
+        "View the asset catalog available to you in your Dataspace using the ",
+      aboutUiContractDefinitionsViewAndCreate:
+        "Publish an asset into your Dataspace using the ",
+      aboutUiContractsTransfer:
+        "Transfer an asset in your Dataspace using the ",
       aboutUiContractsViewExisting: "View your existing contracts in the ",
-      aboutUiPoliciesViewAndCreate: "View and create policies and apply these to assets in your Dataspace using the ",
-      aboutUiTransferHistoryView: "View which assets have been transferred in your Dataspace in the ",
+      aboutUiPoliciesViewAndCreate:
+        "View and create policies and apply these to assets in your Dataspace using the ",
+      aboutUiTransferHistoryView:
+        "View which assets have been transferred in your Dataspace in the ",
       yourDataOffers: "Your Data Offers",
       yourAssets: "Your Assets",
       yourPolicies: "Your Policies",
@@ -90,7 +111,9 @@ export const en = {
       incomingData: "Incoming Data",
       outgoingData: "Outgoing Data",
       transferProcesses: "Transfer Processes",
-      numberTransferProcesses: "Number of Transfer Processes"
+      numberTransferProcesses: "Number of Transfer Processes",
+      noConsumingTransferProcesses: "No consuming transfer processes",
+      noProvidingTransferProcesses: "No providing transfer processes",
     },
     assets: {
       title: "My assets",
@@ -130,7 +153,8 @@ export const en = {
         fieldContentType: "Content type",
         fieldDescription: "Description",
         fieldCustomDataSourceConfig: "Custom Data Source Config (JSON)",
-        fieldCustomDataDestintationConfig: "Custom Data Destination Config (JSON)",
+        fieldCustomDataDestintationConfig:
+          "Custom Data Destination Config (JSON)",
         fieldKeywords: "Keywords",
         fieldLanguage: "Language",
         fieldEndpointDocumentation: "Endpoint Documentation",
@@ -140,12 +164,16 @@ export const en = {
         fieldIdPlaceholder: "Asset ID",
         fieldVersionPlaceholder: "Asset version",
         fieldTitlePlaceholder: "My Asset",
-        fieldDescriptionPlaceholder: "# My Asset\n\nAt vero eos et accusam et justo duo dolores et ea rebum.\n\n## Details\n\nAt vero eos et accusam et justo duo dolores et ea **rebum**.",
+        fieldDescriptionPlaceholder:
+          "# My Asset\n\nAt vero eos et accusam et justo duo dolores et ea rebum.\n\n## Details\n\nAt vero eos et accusam et justo duo dolores et ea **rebum**.",
         fieldDescriptionSupport: "The description supports",
         fieldKeywordsPlaceholder: "Add keyword ...",
-        fieldKeywordsTooltip: "Keywords make the data offer easier to find. They appear as tags on 'Assets' and 'Catalog Browser' pages.",
-        fieldContentTypeSupport: "Describes the content type of the data as a MIME type, see",
-        fieldPrivateNotesPlaceholder: "Some notes which won't be shared with external participants",
+        fieldKeywordsTooltip:
+          "Keywords make the data offer easier to find. They appear as tags on 'Assets' and 'Catalog Browser' pages.",
+        fieldContentTypeSupport:
+          "Describes the content type of the data as a MIME type, see",
+        fieldPrivateNotesPlaceholder:
+          "Some notes which won't be shared with external participants",
 
         fieldAdvancedInfoDataCategory: "Data Category",
         fieldAdvancedInfoDataCategoryPlaceholder: "Select data category",
@@ -153,39 +181,53 @@ export const en = {
         fieldAdvancedInfoDataSubcategoryPlaceholder: "Select data subcategory",
         fieldAdvancedInfoDataModel: "Data Model",
         fieldAdvancedInfoDataModelPlaceholder: "proprietary",
-        fieldAdvancedInfoDataModelTooltip: "Model for data exchange, e.g. DATEX II, TPEG for traffic and travel information, etc.",
+        fieldAdvancedInfoDataModelTooltip:
+          "Model for data exchange, e.g. DATEX II, TPEG for traffic and travel information, etc.",
         fieldAdvancedInfoTransportMode: "Transport Mode",
         fieldAdvancedInfoTransportModePlaceholder: "Select transport mode...",
         fieldAdvancedInfoGeoReferenceMethod: "Geo reference method",
         fieldAdvancedInfoGeoReferenceMethodPlaceholder: "Lat/Lon",
-        fieldAdvancedInfoGeoReferenceMethodTooltip: "The method used for representing of geographical data, e.g GeoJSON, OpenLR, etc.",
+        fieldAdvancedInfoGeoReferenceMethodTooltip:
+          "The method used for representing of geographical data, e.g GeoJSON, OpenLR, etc.",
         fieldAdvancedInfoSovereignLegalName: "Sovereign",
-        fieldAdvancedInfoSovereignLegalNamePlaceholder: "Data Owning Company GMBH",
-        fieldAdvancedInfoSovereignLegalNameTooltip: "Legal name of the data owner",
+        fieldAdvancedInfoSovereignLegalNamePlaceholder:
+          "Data Owning Company GMBH",
+        fieldAdvancedInfoSovereignLegalNameTooltip:
+          "Legal name of the data owner",
         fieldAdvancedDataUpdateFrequency: "Data update frequency",
         fieldAdvancedDataUpdateFrequencyPlaceholder: "every month",
-        fieldAdvancedDataUpdateFrequencyTooltip: "How often is the dataset updated, e.g\t'Every 5 min.",
+        fieldAdvancedDataUpdateFrequencyTooltip:
+          "How often is the dataset updated, e.g\t'Every 5 min.",
         fieldAdvancedGeoLocation: "Geo location",
-        fieldAdvancedGeoLocationTooltip: "Simple description of the relevant geolocation, e.g. Hamburg and vicinity.",
+        fieldAdvancedGeoLocationTooltip:
+          "Simple description of the relevant geolocation, e.g. Hamburg and vicinity.",
         fieldAdvancedInfoNutsLocation: "NUTS locations",
-        fieldAdvancedInfoNutsLocationTooltip: "NUTS codes are regional identifiers in Germany used for statistical and administrative purposes, covering states, districts, and municipalities. (e.g DE60)",
+        fieldAdvancedInfoNutsLocationTooltip:
+          "NUTS codes are regional identifiers in Germany used for statistical and administrative purposes, covering states, districts, and municipalities. (e.g DE60)",
         fieldAdvancedInfoNutsLocationAddText: "Add location",
         fieldAdvancedInfoNutsLocationValueLabel: "NUTS location",
         fieldAdvancedInfoDataSampleUrl: "Data Samples",
         fieldAdvancedInfoDataSampleUrlAddText: "Add data sample",
         fieldAdvancedInfoDataSampleUrlValueLabel: "URL",
-        fieldAdvancedInfoDataSampleUrlTooltip: "URLs of Dataset samples if available",
+        fieldAdvancedInfoDataSampleUrlTooltip:
+          "URLs of Dataset samples if available",
         fieldAdvancedInfoReferenceFileUrls: "Reference files",
-        fieldAdvancedInfoReferenceFileUrlsTooltip: "URLs of Dataset schemas or other references",
+        fieldAdvancedInfoReferenceFileUrlsTooltip:
+          "URLs of Dataset schemas or other references",
         fieldAdvancedInfoReferenceFileUrlsAddText: "Add reference file",
         fieldAdvancedInfoReferenceFileUrlsValueLabel: "URL",
-        fieldAdvancedInfoReferenceFileDescription: "Reference files description",
-        fieldAdvancedInfoReferenceFileDescriptionSupport: "Additional information regarding the reference files. Supports",
-        fieldAdvancedInfoConditionsForUsePlaceholder: "Please cite the dataset as...",
+        fieldAdvancedInfoReferenceFileDescription:
+          "Reference files description",
+        fieldAdvancedInfoReferenceFileDescriptionSupport:
+          "Additional information regarding the reference files. Supports",
+        fieldAdvancedInfoConditionsForUsePlaceholder:
+          "Please cite the dataset as...",
         fieldAdvancedInfoConditionsForUse: "Conditions for use",
-        fieldAdvancedInfoConditionsForUseSupport: "Additional not legally relevant usage instructions (e.g. how to cite the dataset). The field supports",
+        fieldAdvancedInfoConditionsForUseSupport:
+          "Additional not legally relevant usage instructions (e.g. how to cite the dataset). The field supports",
         fieldAdvancedInfoTemporalCoverage: "Temporal coverage",
-        fieldAdvancedInfoTemporalCoverageHelper: "Start and/or end date when the dataset is available for consumption. DD/MM/YYYY (optional) – DD/MM/YYYY (optional)",
+        fieldAdvancedInfoTemporalCoverageHelper:
+          "Start and/or end date when the dataset is available for consumption. DD/MM/YYYY (optional) – DD/MM/YYYY (optional)",
 
         fieldDataAddressType: "Type",
         fieldDataAddressMethodAndContentType: "Method",
@@ -200,16 +242,21 @@ export const en = {
         fieldDataAddressAuth: "Authorization",
         fieldDataAddressAuthKeyPlaceholder: "Authorization header",
         fieldDataAddressAuthCodePlaceholder: "Secret code",
-        fieldVersionTooltip: "Asset ID, used internally, is an auto-generated string in a URL-compatible format, combining the asset name and version with a urn:artifact: prefix. You can customize it if needed.",
-        fieldEndpointDocumentationTooltip: "URL to the technical documentation about the data to be received.",
+        fieldVersionTooltip:
+          "Asset ID, used internally, is an auto-generated string in a URL-compatible format, combining the asset name and version with a urn:artifact: prefix. You can customize it if needed.",
+        fieldEndpointDocumentationTooltip:
+          "URL to the technical documentation about the data to be received.",
         fieldPublisherTooltip: "URL of the original publisher of the data",
-        fieldStandardLicenseTooltip: "URL of the license under which the data is offered.",
+        fieldStandardLicenseTooltip:
+          "URL of the license under which the data is offered.",
 
-        fieldDataAddressHttpProxyMethodHelper: "The consuming side must provide a Custom HTTP Method with method parameterization enabled.",
+        fieldDataAddressHttpProxyMethodHelper:
+          "The consuming side must provide a Custom HTTP Method with method parameterization enabled.",
         fieldDataAddressMethod: "Method",
         fieldDataAddressHttpProxyMethodTrue: "Disable Proxy Method",
         fieldDataAddressHttpProxyMethodFalse: "Enable Proxy Method",
-        fieldDataAddressHttpProxyPathHelper: "The consuming side must provide a Custom HTTP Subpath with method parameterization is enabled. The Custom HTTP Subpath will be appended to the base path.",
+        fieldDataAddressHttpProxyPathHelper:
+          "The consuming side must provide a Custom HTTP Subpath with method parameterization is enabled. The Custom HTTP Subpath will be appended to the base path.",
         fieldDataAddressHttpProxyPathTrue: "Disable Proxy Path",
         fieldDataAddressHttpProxyPathFalse: "Enable Proxy Path",
         fieldDataAddressHttpProxyBodyTrue: "Disable Proxy Body",
@@ -220,13 +267,17 @@ export const en = {
         fieldDataAddressQueryParamsAddText: "Add Query Param",
         fieldDataAddressQueryParams: "Query Params",
         fieldDataAddressDefaultQueryParams: "Default Query Params",
-        fieldDataAddressQueryParamsHelper: "With query param parameterization enabled, the default query params and the query params provided by the consumer will be merged.",
+        fieldDataAddressQueryParamsHelper:
+          "With query param parameterization enabled, the default query params and the query params provided by the consumer will be merged.",
         fieldDataAddressQueryParamsKeyLabel: "Query Param Name",
         fieldDataAddressQueryParamsKeyPlaceholder: "Key",
         fieldDataAddressQueryParamsValueLabel: "Value",
-        fieldDataAddressQueryParameterizationTrue: "Disable Query Param Parameterization",
-        fieldDataAddressQueryParameterizationFalse: "Enable Query Param Parameterization",
-        fieldDataAddressQueryParameterizationDescription: "With query param parameterization enabled, the default query params and the query params provided by the consumer will be merged.",
+        fieldDataAddressQueryParameterizationTrue:
+          "Disable Query Param Parameterization",
+        fieldDataAddressQueryParameterizationFalse:
+          "Enable Query Param Parameterization",
+        fieldDataAddressQueryParameterizationDescription:
+          "With query param parameterization enabled, the default query params and the query params provided by the consumer will be merged.",
         fieldDataAddressHeaderAuth: "Authentication",
         fieldDataAddressHeaderTypeTrue: "Remove Authentication",
         fieldDataAddressHeaderTypeFalse: "Add Authentication",
@@ -246,7 +297,8 @@ export const en = {
         fieldDataAddressContentType: "Request Body Content Type",
         fieldDataAddressProxyBody: "Proxy Request Body",
         fieldEnableProxyBody: "Request Body",
-        fieldEnableProxyBodyDescription: "The request body can only be set from the consumer side, if parameterization is enabled.",
+        fieldEnableProxyBodyDescription:
+          "The request body can only be set from the consumer side, if parameterization is enabled.",
 
         fieldContainer: "Container",
         fieldAccount: "Account",
@@ -297,8 +349,10 @@ export const en = {
       contactInformation: "Contact information",
       contactEmailAddress: "Contact E-mail Address",
       onRequestDataOfferTitle: "On Request Data Offer",
-      onRequestDataOfferDescription1: "This data offer is not available for immediate consumption. However, the creator left an email address to contact them if interested.",
-      onRequestDataOfferDescription2: "Click <strong>Contact</strong> to email the data offer provider. Alternatively, you can also copy the contact email address from the Contact Information section above.",
+      onRequestDataOfferDescription1:
+        "This data offer is not available for immediate consumption. However, the creator left an email address to contact them if interested.",
+      onRequestDataOfferDescription2:
+        "Click <strong>Contact</strong> to email the data offer provider. Alternatively, you can also copy the contact email address from the Contact Information section above.",
       new: {
         title: "Create Data Offer",
         dataOfferTypeTitle: "Data offer type",
@@ -308,46 +362,63 @@ export const en = {
         typeDataSource: "Available (with data source)",
         typeOnRequest: "On Request (without data source)",
         contactEmail: "Contact E-mail",
-        contactEmailTooltip: "This email address will be offered to potential consumers for contacting you. This is done in place of having an actual data source connected.",
+        contactEmailTooltip:
+          "This email address will be offered to potential consumers for contacting you. This is done in place of having an actual data source connected.",
         dataOfferContactPreferredEmailSubject: "Preferred E-mail subject",
-        dataOfferContactPreferredEmailSubjectTooltip: "When potential customers reach out to you via email, you'll receive messages with this subject line.",
+        dataOfferContactPreferredEmailSubjectTooltip:
+          "When potential customers reach out to you via email, you'll receive messages with this subject line.",
         dataOfferMobilityInfoTitle: "Mobility Information",
-        dataOfferMobilityInfoDescription: "Fill out the asset's mobility information",
+        dataOfferMobilityInfoDescription:
+          "Fill out the asset's mobility information",
         dataOfferPublishingTitle: "Publishing",
-        dataOfferPublishingDescription: "Publish data offer to other data space participants",
+        dataOfferPublishingDescription:
+          "Publish data offer to other data space participants",
         dataOfferGeneralInfoTitle: "General Information",
-        dataOfferGeneralInfoDescription: "Fill out general information about the asset.",
+        dataOfferGeneralInfoDescription:
+          "Fill out general information about the asset.",
         showAdvancedFields: "Show Advanced Fields",
         dataOfferDocumentationTitle: "Documentation",
-        dataOfferDocumentationDescription: "Provide context information about the datasource",
+        dataOfferDocumentationDescription:
+          "Provide context information about the datasource",
         dataOfferLocationTimeTitle: "Location / Time",
-        dataOfferLocationTimeDescription: "Fill out location and time information about the asset",
+        dataOfferLocationTimeDescription:
+          "Fill out location and time information about the asset",
         dataOfferLegalInfoTitle: "Legal Information",
-        dataOfferLegalInfoDescription: "Provide legal information and define the conditions for use",
+        dataOfferLegalInfoDescription:
+          "Provide legal information and define the conditions for use",
         publish: "Publish",
         policyExpression: "Policy Expression",
         policyExpressionOperator: "Operator",
         policyExpressionConsumerParticipantId: "Consumer's Participant Id",
-        policyExpressionConsumerParticipantIdTooltip: "You can find the connector's Participant ID under \"Connector Properties\" on its dashboard. Ask for it from the data consumers you want to share your data offer with",
-        policyExpressionConsumerParticipantIdExamples: "MDSL1234XX.C1234XX, ...",
+        policyExpressionConsumerParticipantIdTooltip:
+          'You can find the connector\'s Participant ID under "Connector Properties" on its dashboard. Ask for it from the data consumers you want to share your data offer with',
+        policyExpressionConsumerParticipantIdExamples:
+          "MDSL1234XX.C1234XX, ...",
         policyExpressionTimeRestriction: "Time Restriction",
-        policyExpressionTimeRestrictionTooltip: "Time at which the policy is evaluated. This can be used to restrict the data offer to certain time periods",
+        policyExpressionTimeRestrictionTooltip:
+          "Time at which the policy is evaluated. This can be used to restrict the data offer to certain time periods",
         policyExpressionTimeSpanRestriction: "Timespan Restriction",
-        policyExpressionTimeSpanRestrictionTooltip: "Timespan at which the policy is evaluated. This can be used to restrict the data offer to certain time periods",
+        policyExpressionTimeSpanRestrictionTooltip:
+          "Timespan at which the policy is evaluated. This can be used to restrict the data offer to certain time periods",
         policyExpressionCombine: "Combine",
         policyExpressionAnd: "AND",
-        policyExpressionAndTooltip: "Conjunction of several expressions. Evaluates to true if and only if all child expressions are true",
+        policyExpressionAndTooltip:
+          "Conjunction of several expressions. Evaluates to true if and only if all child expressions are true",
         policyExpressionOr: "OR",
-        policyExpressionOrTooltip: "Disjunction of several expressions. Evaluates to true if and only if at least one child expression is true",
+        policyExpressionOrTooltip:
+          "Disjunction of several expressions. Evaluates to true if and only if at least one child expression is true",
         policyExpressionXone: "XONE",
-        policyExpressionXoneTooltip: "XONE operation. Evaluates to true if and only if exactly one child expression is true",
+        policyExpressionXoneTooltip:
+          "XONE operation. Evaluates to true if and only if exactly one child expression is true",
         dataOfferTimespanRestriction: "Timespan Restriction",
         dataOfferDateRange: "Date Range",
         assetCreateSuccess: "Asset was created successfully!",
         assetUpdateSuccess: "Successfully saved asset",
         dataOfferCreateSuccess: "Data offer was published successfully!",
-        dataOfferCreateError: "Failed to create data offer. Please try again later.",
-        policyExpressionConsumerParticipantIdLabel: "Consumer's Participants IDs"
+        dataOfferCreateError:
+          "Failed to create data offer. Please try again later.",
+        policyExpressionConsumerParticipantIdLabel:
+          "Consumer's Participants IDs",
       },
     },
     contractDefinitions: {
@@ -379,7 +450,8 @@ export const en = {
       },
       new: {
         title: "Create a data offer",
-        description: "Describe a new policy by defining rules which ensure owned data is accessed in a specific way, following strict requirements.",
+        description:
+          "Describe a new policy by defining rules which ensure owned data is accessed in a specific way, following strict requirements.",
         id: "ID",
         publishNewDataOffer: "Publish New Data Offer",
         accessPolicy: "Access Policy",
@@ -413,22 +485,26 @@ export const en = {
         buttonCancel: "Cancel",
         buttonSave: "Save changes",
         policyId: "Policy ID",
-        policyExpression: "Policy Expression"
+        policyExpression: "Policy Expression",
       },
       constraint: {
         POLICY_EVALUATION_TIME: "Time Restriction",
-        POLICY_EVALUATION_TIMETooltip: "POLICY_EVALUATION_TIME: Time at which the policy is evaluated. This can be used to restrict the data offer to certain time periods",
+        POLICY_EVALUATION_TIMETooltip:
+          "POLICY_EVALUATION_TIME: Time at which the policy is evaluated. This can be used to restrict the data offer to certain time periods",
         REFERRING_CONNECTOR: "Consumer's Participant ID",
-        REFERRING_CONNECTORTooltip: "REFERRING_CONNECTOR: Consumer's Participant ID, also called Connector ID, of the counter-party connector.",
-        andTooltip: "AND: Conjunction of several expressions. Evaluates to true if and only if all child expressions are true",
-        orTooltip: "OR: Disjunction of several expressions. Evaluates to true if and only if at least one child expression is true",
-        xoneTooltip: "XONE: XONE operation. Evaluates to true if and only if exactly one child expression is true"
-      }
+        REFERRING_CONNECTORTooltip:
+          "REFERRING_CONNECTOR: Consumer's Participant ID, also called Connector ID, of the counter-party connector.",
+        andTooltip:
+          "AND: Conjunction of several expressions. Evaluates to true if and only if all child expressions are true",
+        orTooltip:
+          "OR: Disjunction of several expressions. Evaluates to true if and only if at least one child expression is true",
+        xoneTooltip:
+          "XONE: XONE operation. Evaluates to true if and only if exactly one child expression is true",
+      },
     },
     catalog: {
       title: "Catalog Browser",
-      description:
-        "List all participants which you can check their catalogs.",
+      description: "List all participants which you can check their catalogs.",
       headingName: "Name",
       headingStatus: "Status",
       connectorEndpoints: "Connector Endpoints",
@@ -436,9 +512,11 @@ export const en = {
       fetchStatus: "Fetch Status",
       searchPlaceholder: "Search Catalog By Asset Title",
       otherConnectorEndpointCatalogs: "Other Connector Endpoint Catalogs",
-      negotiationConfirmationCheckbox: "I agree to the Data Offer Terms & Conditions",
+      negotiationConfirmationCheckbox:
+        "I agree to the Data Offer Terms & Conditions",
       failedFetchingCatalog: "Failed Fetching Catalog",
-      emptyCounterPartyUrl: "Please enter a connector endpoint to fetch its catalog.",
+      emptyCounterPartyUrl:
+        "Please enter a connector endpoint to fetch its catalog.",
       "[participant]": {
         title: "List contract offers for ",
         description: "List participants for the selected participant.",
@@ -476,6 +554,7 @@ export const en = {
       retiredFetchError: "Error while fetching retired contract agreements",
       searchPlaceholder: "Search Contract Agreements by Asset ID",
       terminationSuccess: "Contract terminated successful",
+      noContractsFound: "No Contracts Found",
       "[id]": {
         title: "View contract agreement",
         description: "A single contract agreement",
@@ -486,7 +565,8 @@ export const en = {
         fieldContractSigningDate: "Contract Signing Date",
         fieldPolicy: "Policy",
         terminateContractAgreementTitle: "Terminate Contract Agreement",
-        terminateContractAgreementDescription: "By clicking the 'Terminate Contract' button, you will terminate the contract agreement. New data transfers via this agreement will no longer be possible and current transfer processes will be canceled.",
+        terminateContractAgreementDescription:
+          "By clicking the 'Terminate Contract' button, you will terminate the contract agreement. New data transfers via this agreement will no longer be possible and current transfer processes will be canceled.",
         actionIrreversible: "This action is irreversible.",
         terminateContractAgreementDetails: "Termination Details",
         reason: "Reason",
@@ -494,7 +574,8 @@ export const en = {
         detailedReasonRequiredError: "Field is required.",
         detailedReasonMaxLengthError: "Maximum 1000 characters allowed.",
         detailedReasonPlaceholder: "You can enter a detailed explanation here",
-        confirmTermination: "I understand the consequences of terminating a contract.",
+        confirmTermination:
+          "I understand the consequences of terminating a contract.",
         terminationError: "Failed to retire contract agreement",
         statusActive: "Active",
         statusTerminated: "Terminated",
@@ -521,10 +602,13 @@ export const en = {
       approveError: "Contract Agreement Approval Failed",
       rejectSuccess: "Contract Agreement Rejected",
       rejectError: "Contract Agreement Rejection Failed",
-      cannotNegotiateOwnedConnectors: "Cannot negotiate contracts with your own connector.",
+      cannotNegotiateOwnedConnectors:
+        "Cannot negotiate contracts with your own connector.",
       negotiateConfirmTitle: "Data Offer Terms & Conditions",
-      negotiateConfirmContent: "Hereby I agree that by pressing the 'Confirm' button, I accept the license\n    terms, policies, and additional conditions for use, including any copyright\n    notices, associated with the provider's offer.",
-      searchPlaceholder: "Search Contract Negotiations by CounterParty Connector ID",
+      negotiateConfirmContent:
+        "Hereby I agree that by pressing the 'Confirm' button, I accept the license\n    terms, policies, and additional conditions for use, including any copyright\n    notices, associated with the provider's offer.",
+      searchPlaceholder:
+        "Search Contract Negotiations by CounterParty Connector ID",
       "[id]": {
         title: "View contract negotiation",
         description: "A single contract negotiation",
@@ -567,9 +651,12 @@ export const en = {
       },
       new: {
         httpParameterizationTitle: "Http Datasource Parameterization",
-        httpParameterizationDescription: "When the data offer on the provider side is of the type HttpData and certain data source fields are set, certain parts of the request to the data source can be customized from the consumer side and will be passed to the other connector when initiating the transfer. This allows an asset to contain more than just one kind of data, allowing additional filtering or even sharing of entire APIs with multiple data sets via a single asset and a single contract.",
-        showHttpParameterization: "Show Http Datasource Parameterization Fields",
-        hideHttpParameterization: "Hide Http Datasource Parameterization Fields",
+        httpParameterizationDescription:
+          "When the data offer on the provider side is of the type HttpData and certain data source fields are set, certain parts of the request to the data source can be customized from the consumer side and will be passed to the other connector when initiating the transfer. This allows an asset to contain more than just one kind of data, allowing additional filtering or even sharing of entire APIs with multiple data sets via a single asset and a single contract.",
+        showHttpParameterization:
+          "Show Http Datasource Parameterization Fields",
+        hideHttpParameterization:
+          "Hide Http Datasource Parameterization Fields",
         customMethod: "Custom Method",
         customSubpath: "Custom Subpath",
         addCustomQueryParam: "Add Custom Query Param",

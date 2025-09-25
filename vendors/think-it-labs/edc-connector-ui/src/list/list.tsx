@@ -10,18 +10,18 @@ type ListProps<T> = {
   delete?: (id: string) => Promise<void>;
   getId: (item: T) => string;
   managementUrl: string;
-  usePagination?: boolean
-  page?: number
-  navigate?: (newPage: number) => void
-  firstPage?: number,
+  usePagination?: boolean;
+  page?: number;
+  navigate?: (newPage: number) => void;
+  firstPage?: number;
   sections?: {
     key: string;
     title: ReactNode;
     condition: (item: T) => boolean;
     containerClassName?: string;
-  }[]
-  shouldFetch?: boolean
-}
+  }[];
+  shouldFetch?: boolean;
+};
 
 export interface ListProviderProps {
   page: number;
@@ -44,7 +44,7 @@ export function List<T>({
   navigate,
   firstPage,
   sections,
-  shouldFetch = true
+  shouldFetch = true,
 }: PropsWithChildren<ListProps<T>>) {
   const {
     items,
@@ -61,25 +61,31 @@ export function List<T>({
     queryAll,
   });
 
-  const pagination = usePagination({ navigate: navigate || function () { }, page: page || 0, firstPage })
+  const pagination = usePagination({
+    navigate: navigate || function () {},
+    page: page || 0,
+    firstPage,
+  });
 
   return (
     <ListContext.Provider
-      value={{
-        isLoading,
-        errors,
-        items,
-        setQuerySpec,
-        searchSpec,
-        setSearchSpec,
-        deleteItem: (id: string) => deleteItem(id),
-        setSearchQuery: setSearchSpec,
-        triggerSearch: () => triggerSearch(),
-        getId,
-        managementUrl,
-        pagination: _usePagination ? pagination : null,
-        sections
-      } as any}
+      value={
+        {
+          isLoading,
+          errors,
+          items,
+          setQuerySpec,
+          searchSpec,
+          setSearchSpec,
+          deleteItem: (id: string) => deleteItem(id),
+          setSearchQuery: setSearchSpec,
+          triggerSearch: () => triggerSearch(),
+          getId,
+          managementUrl,
+          pagination: _usePagination ? pagination : null,
+          sections,
+        } as any
+      }
     >
       {children}
     </ListContext.Provider>
@@ -98,16 +104,18 @@ export interface ListItemsProps<T> {
   filterExpression?: CriterionInput[];
   sortField?: string;
   sortOrder?: "ASC" | "DESC";
+  emptyMessage?: JSX.Element;
   children: (props: ListItemProps<T>) => JSX.Element;
 }
 
-List.Items = function ListItems<T,>({
+List.Items = function ListItems<T>({
   children,
   limit: clientLimit,
   offset,
   filterExpression,
   sortField,
   sortOrder,
+  emptyMessage = <>No Items</>,
 }: ListItemsProps<T>) {
   let {
     items,
@@ -116,10 +124,10 @@ List.Items = function ListItems<T,>({
     deleteItem,
     getId,
     pagination,
-    sections
+    sections,
   } = useListContext<T>();
 
-  let limit = clientLimit
+  let limit = clientLimit;
 
   useEffect(() => {
     if (clientLimit) {
@@ -137,7 +145,7 @@ List.Items = function ListItems<T,>({
       items = items.slice(0, limit);
     }
 
-    limit++
+    limit++;
   }
 
   useEffect(() => {
@@ -173,31 +181,41 @@ List.Items = function ListItems<T,>({
     };
   }, [children]);
 
-  if (!isLoading && sections && sections.length) {
+  if (isLoading) {
+    return <></>;
+  }
+
+  if (!items.length) {
+    return emptyMessage;
+  }
+
+  if (sections && sections.length) {
     const result: ReactNode[] = [];
-    sections.forEach(section => {
-      result.push(<div key={section.key} >
-        {section.title}
-        <div className={section.containerClassName || ""}>
-          {items.filter(section.condition).map((item, index) => (
-            <Item
-              key={getId(item)}
-              item={item}
-              deleteItem={async () => {
-                deleteItem(getId(item));
-                setQuerySpec({
-                  limit,
-                  offset,
-                  filterExpression,
-                  sortField,
-                  sortOrder,
-                });
-              }}
-              index={index}
-            />
-          ))}
-        </div>
-      </div>);
+    sections.forEach((section) => {
+      result.push(
+        <div key={section.key}>
+          {section.title}
+          <div className={section.containerClassName || ""}>
+            {items.filter(section.condition).map((item, index) => (
+              <Item
+                key={getId(item)}
+                item={item}
+                deleteItem={async () => {
+                  deleteItem(getId(item));
+                  setQuerySpec({
+                    limit,
+                    offset,
+                    filterExpression,
+                    sortField,
+                    sortOrder,
+                  });
+                }}
+                index={index}
+              />
+            ))}
+          </div>
+        </div>,
+      );
     });
 
     return result;
@@ -205,7 +223,7 @@ List.Items = function ListItems<T,>({
 
   return (
     <>
-      {!isLoading && items.map((item, index) => (
+      {items.map((item, index) => (
         <Item
           key={getId(item)}
           item={item}
@@ -226,13 +244,11 @@ List.Items = function ListItems<T,>({
   );
 };
 
-export interface ListLoadingProps { }
+export interface ListLoadingProps {}
 
-List.Loading = function ListLoading(
-  { children = <div>Loading...</div> }: PropsWithChildren<
-    ListLoadingProps
-  >,
-) {
+List.Loading = function ListLoading({
+  children = <div>Loading...</div>,
+}: PropsWithChildren<ListLoadingProps>) {
   const { isLoading } = useListContext();
   return isLoading ? children : null;
 };
@@ -241,18 +257,22 @@ export interface ListSearchProps {
   placeholder?: string;
   name?: string;
   className?: string;
-  searchTarget?: string
-  searchOperation?: SearchSpec["operator"]
+  searchTarget?: string;
+  searchOperation?: SearchSpec["operator"];
 }
 
-List.Search = function ListSearch(
-  { placeholder, name, className, searchTarget, searchOperation }: ListSearchProps,
-) {
+List.Search = function ListSearch({
+  placeholder,
+  name,
+  className,
+  searchTarget,
+  searchOperation,
+}: ListSearchProps) {
   const { searchSpec, setSearchSpec, triggerSearch } = useListContext();
 
   useEffect(() => {
-    setSearchSpec({ operator: searchOperation, operandLeft: searchTarget })
-  }, [searchTarget, searchOperation])
+    setSearchSpec({ operator: searchOperation, operandLeft: searchTarget });
+  }, [searchTarget, searchOperation]);
 
   return (
     <input
@@ -266,7 +286,9 @@ List.Search = function ListSearch(
           triggerSearch();
         }
       }}
-      onChange={(event) => setSearchSpec({ operandRight: event.currentTarget.value })}
+      onChange={(event) =>
+        setSearchSpec({ operandRight: event.currentTarget.value })
+      }
     />
   );
 };
@@ -275,18 +297,14 @@ export interface ListSearchTriggerProps {
   className?: string;
 }
 
-List.SearchTrigger = function ListSearchTrigger(
-  { className, children = "Search" }: PropsWithChildren<
-    ListSearchTriggerProps
-  >,
-) {
+List.SearchTrigger = function ListSearchTrigger({
+  className,
+  children = "Search",
+}: PropsWithChildren<ListSearchTriggerProps>) {
   const { triggerSearch } = useListContext();
 
   return (
-    <span
-      className={className}
-      onClick={() => triggerSearch()}
-    >
+    <span className={className} onClick={() => triggerSearch()}>
       {children}
     </span>
   );
@@ -297,24 +315,22 @@ export interface PaginationProps {
 }
 
 export interface PaginationControlsProps {
-  page: number
-  itemsCount: number
-  hasNext: boolean
-  hasPrev: boolean
-  decrementPage: () => void
-  incrementPage: () => void
+  page: number;
+  itemsCount: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+  decrementPage: () => void;
+  incrementPage: () => void;
 }
 
-List.Pagination = function Pagination({
-  children,
-}: PaginationProps) {
-  const { pagination, items } = useListContext()
+List.Pagination = function Pagination({ children }: PaginationProps) {
+  const { pagination, items } = useListContext();
 
   if (!pagination) {
-    throw Error("Need to use usePagination=true on provider")
+    throw Error("Need to use usePagination=true on provider");
   }
 
-  let itemsCount = Math.min(items.length, pagination.maxItems)
+  let itemsCount = Math.min(items.length, pagination.maxItems);
 
   const PaginationControls = useMemo(() => {
     return function PaginationControls(props: PaginationControlsProps) {
@@ -322,20 +338,24 @@ List.Pagination = function Pagination({
     };
   }, [children]);
 
-  return <PaginationControls
-    page={pagination.page}
-    itemsCount={itemsCount}
-    hasNext={pagination.hasNext}
-    hasPrev={pagination.hasPrev}
-    decrementPage={pagination.decrementPage}
-    incrementPage={pagination.incrementPage}
-  />
-}
+  return (
+    <PaginationControls
+      page={pagination.page}
+      itemsCount={itemsCount}
+      hasNext={pagination.hasNext}
+      hasPrev={pagination.hasPrev}
+      decrementPage={pagination.decrementPage}
+      incrementPage={pagination.incrementPage}
+    />
+  );
+};
 
-List.Error = function ListError({ children }: {
+List.Error = function ListError({
+  children,
+}: {
   children: (props: { errors: Error[] | null }) => JSX.Element;
 }) {
-  const { errors } = useListContext()
+  const { errors } = useListContext();
 
   const ErrorComponent = useMemo(() => {
     return function (props: { errors: Error[] | null }) {
@@ -343,5 +363,5 @@ List.Error = function ListError({ children }: {
     };
   }, [children]);
 
-  return <ErrorComponent errors={errors} />
-}
+  return <ErrorComponent errors={errors} />;
+};
