@@ -1,6 +1,6 @@
 # Search Across Multiple Columns for Entities
 
-## Overview 
+## Overview
 
 This document outlines a proposal for implementing a mechanism for searching for entities with multiple criteria. In this document, the application refers to the user-facing MDS Next.js application, and vendor refers to the EDC headless UI library that lives in the `/vendor` directory.
 
@@ -55,29 +55,29 @@ const searchQuery = ""; // this state has to be tracked on the application side
 const filteredById = await client.management.assets.queryAll(context, {
   filterExpression: [
     {
-      "operandLeft": "https://w3id.org/edc/v0.0.1/ns/id",
-      "operator": "ilike",
-      "operandRight": `%${searchQuery}%`
-    }
+      operandLeft: "https://w3id.org/edc/v0.0.1/ns/id",
+      operator: "ilike",
+      operandRight: `%${searchQuery}%`,
+    },
   ],
   limit: 25,
   offset: 0,
   sortField: "createdAt",
-  sortOrder: "DESC"
+  sortOrder: "DESC",
 });
 
 const filteredByDescription = await client.management.assets.queryAll(context, {
   filterExpression: [
     {
-      "operandLeft": "http://purl.org/dc/terms/description",
-      "operator": "ilike",
-      "operandRight": `%${searchQuery}%`
-    }
+      operandLeft: "http://purl.org/dc/terms/description",
+      operator: "ilike",
+      operandRight: `%${searchQuery}%`,
+    },
   ],
   limit: 25,
   offset: 0,
   sortField: "createdAt",
-  sortOrder: "DESC"
+  sortOrder: "DESC",
 });
 
 const result = merge(filteredById, filteredByDescription); // a utility function to remove duplicates and keep the order consistent
@@ -86,7 +86,9 @@ const result = merge(filteredById, filteredByDescription); // a utility function
 
 return (
   <>
-    {result.map(asset => <AssetCard {...asset} />)}
+    {result.map((asset) => (
+      <AssetCard {...asset} />
+    ))}
   </>
 );
 ```
@@ -104,15 +106,15 @@ const searchQuery = ""; // this state has to be tracked on the application side
 const filteredById = await client.management.assets.queryAll(context, {
   filterExpression: [
     {
-      "operandLeft": "https://w3id.org/edc/v0.0.1/ns/id",
-      "operator": "ilike",
-      "operandRight": `%${searchQuery}%`
-    }
+      operandLeft: "https://w3id.org/edc/v0.0.1/ns/id",
+      operator: "ilike",
+      operandRight: `%${searchQuery}%`,
+    },
   ],
   limit: 25,
   offset: 0,
   sortField: "createdAt",
-  sortOrder: "DESC"
+  sortOrder: "DESC",
 });
 
 // ... //
@@ -126,9 +128,7 @@ return (
       sortField="createdAt"
       sortOrder="DESC"
     >
-      {({ item, index }) => (
-        <AssetCard asset={item} key={index} />
-      )}
+      {({ item, index }) => <AssetCard asset={item} key={index} />}
     </AssetsList.Items>
   </>
 );
@@ -170,7 +170,7 @@ const MAX_ITEMS = 5;
 const assets = await client.management.assets.queryAll(context, {
   limit: 50000, // a very high limit
   sortField: "createdAt",
-  sortOrder: "DESC"
+  sortOrder: "DESC",
 });
 
 // ... //
@@ -178,10 +178,15 @@ const assets = await client.management.assets.queryAll(context, {
 return (
   <>
     {assets
-      .filter(asset => hasMatchingId(asset, searchQuery) || hasMatchingDescription(asset, searchQuery))
+      .filter(
+        (asset) =>
+          hasMatchingId(asset, searchQuery) ||
+          hasMatchingDescription(asset, searchQuery),
+      )
       .slice(currentPage * MAX_ITEMS, MAX_ITEMS)
-      .map(asset => <AssetCard {...asset} />)
-    }
+      .map((asset) => (
+        <AssetCard {...asset} />
+      ))}
   </>
 );
 ```
@@ -199,22 +204,22 @@ We'll send multiple requests from the vendor side to fetch all the requests and 
 
 return (
   <>
-    <SearchBar 
-      searchTarget={["https://w3id.org/edc/v0.0.1/ns/id", "http://purl.org/dc/terms/description"]} 
-      searchOperator="ilike" 
-    /> {/* no uplifting the search state here */}
-
+    <SearchBar
+      searchTarget={[
+        "https://w3id.org/edc/v0.0.1/ns/id",
+        "http://purl.org/dc/terms/description",
+      ]}
+      searchOperator="ilike"
+    />{" "}
+    {/* no uplifting the search state here */}
     {/* ... */}
-
     <AssetsList.Items
       limit={25}
       offset={0}
       sortField="createdAt"
       sortOrder="DESC"
     >
-      {({ item, index }) => (
-        <AssetCard asset={item} key={index} />
-      )}
+      {({ item, index }) => <AssetCard asset={item} key={index} />}
     </AssetsList.Items>
   </>
 );
@@ -226,14 +231,14 @@ return (
 const buildQuerySpec = useCallback(() => {
   const { querySpecBase, committedSearchSpec } = state;
   let filterExpression = [];
-  
+
   if (Array.isArray(querySpecBase.filterExpression)) {
     if (Array.isArray(querySpecBase.filterExpression.operandLeft)) {
       return querySpecBase.filterExpression.operandLeft.map((operand) => ({
         ...state.querySpecBase,
-        filterExpression: { 
-          ...querySpecBase.filterExpression, 
-          operandLeft: operand 
+        filterExpression: {
+          ...querySpecBase.filterExpression,
+          operandLeft: operand
         }
       }));
     } else {
@@ -289,19 +294,19 @@ const filteredById = await client.management.assets.queryAll(context, {
   ...querySpecs,
   filterExpression: [
     {
-      "operandLeft": "https://w3id.org/edc/v0.0.1/ns/id",
-      "operator": "ilike",
-      "operandRight": `%${querySpecs.filterExpression.operandRight}%`
-    }
+      operandLeft: "https://w3id.org/edc/v0.0.1/ns/id",
+      operator: "ilike",
+      operandRight: `%${querySpecs.filterExpression.operandRight}%`,
+    },
   ],
 });
 
 return (
   <>
-    <SearchBar 
-      searchTarget={"http://purl.org/dc/terms/description"} 
-      searchOperator="ilike" 
-    /> 
+    <SearchBar
+      searchTarget={"http://purl.org/dc/terms/description"}
+      searchOperator="ilike"
+    />
 
     {/* ... */}
 
@@ -311,9 +316,7 @@ return (
       sortField="createdAt"
       sortOrder="DESC"
     >
-      {({ item, index }) => (
-        <AssetCard asset={item} key={index} />
-      )}
+      {({ item, index }) => <AssetCard asset={item} key={index} />}
     </AssetsList.Items>
   </>
 );
@@ -325,13 +328,13 @@ The code above needs to be within the ListContextProvider, so we need to split e
 
 ## Comparison
 
-| Approach | Application Refactor | Vendor Refactor | Performance | Upstream Compatibility | Notes |
-|----------|---------------------|-----------------|-------------|----------------------|-------|
-| Application-side querying | High | None | Good | High | Lose vendor features, every page needs changes |
-| Initial array supply | Medium | Low | Good | Medium | Requires state lifting, coordination complexity |
-| Query all data | High | Medium | Poor | Low | Scalability issues, memory intensive |
-| Multiple vendor requests | Low | Medium | Good | High | Clean API, maintains existing features |
-| Vendor internal state | High | Low | Medium to Poor | Medium |  Minimal vendor changes, screen jitter, component splitting |
+| Approach                  | Application Refactor | Vendor Refactor | Performance    | Upstream Compatibility | Notes                                                      |
+| ------------------------- | -------------------- | --------------- | -------------- | ---------------------- | ---------------------------------------------------------- |
+| Application-side querying | High                 | None            | Good           | High                   | Lose vendor features, every page needs changes             |
+| Initial array supply      | Medium               | Low             | Good           | Medium                 | Requires state lifting, coordination complexity            |
+| Query all data            | High                 | Medium          | Poor           | Low                    | Scalability issues, memory intensive                       |
+| Multiple vendor requests  | Low                  | Medium          | Good           | High                   | Clean API, maintains existing features                     |
+| Vendor internal state     | High                 | Low             | Medium to Poor | Medium                 | Minimal vendor changes, screen jitter, component splitting |
 
 ## Conclusion
 
