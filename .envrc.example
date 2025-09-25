@@ -17,3 +17,4 @@ export MDS_DAPS_URL="https://daps.mobility-dataspace.eu"
 export MDS_DAPS_JWKS_URL="https://daps.mobility-dataspace.eu/.well-known/jwks.json"
 // Test Config
 export TEST_API_KEY="TEST_API_KEY"
+export APP_URL="http://localhost:3000"
