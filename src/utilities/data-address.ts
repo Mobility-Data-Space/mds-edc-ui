@@ -1,4 +1,7 @@
-import { BaseDataAddress, HttpDataAddress } from "@think-it-labs/edc-connector-client";
+import {
+  BaseDataAddress,
+  HttpDataAddress,
+} from "@think-it-labs/edc-connector-client";
 
 export type DataAddressErrors<T> = {
   [K in keyof Partial<T>]: boolean | string;
@@ -9,37 +12,37 @@ export enum DataAddressTypes {
   AmazonS3 = "AmazonS3",
   AzureStorage = "AzureStorage",
   HttpData = "HttpData",
-  CustomJson = "CustomJson"
+  CustomJson = "CustomJson",
 }
 
 export const remoteTypes = [
   DataAddressTypes.AzureStorage,
-  DataAddressTypes.AmazonS3
+  DataAddressTypes.AmazonS3,
 ];
 
 export interface OnRequestDataAddress extends BaseDataAddress {
-  type: DataAddressTypes.MDSOnRequestOffer,
-  email?: string,
-  preferred_subject?: string
+  type: DataAddressTypes.MDSOnRequestOffer;
+  email?: string;
+  preferred_subject?: string;
 }
 
 export interface AmazonS3DataAddress extends BaseDataAddress {
-  type: DataAddressTypes.AmazonS3,
-  bucketName: string,
-  region: string,
-  keyname: string,
-  objectName?: string,
-  objectPrefix?: string
-  folderName?: string
+  type: DataAddressTypes.AmazonS3;
+  bucketName: string;
+  region: string;
+  keyName: string;
+  objectName?: string;
+  objectPrefix?: string;
+  folderName?: string;
 }
 
 export interface AzureBlobDataAddress extends BaseDataAddress {
-  type: DataAddressTypes.AzureStorage,
-  bucketName: string,
-  region: string,
-  keyname: string,
-  objectName?: string,
-  objectPrefix?: string
+  type: DataAddressTypes.AzureStorage;
+  bucketName: string;
+  region: string;
+  keyName: string;
+  objectName?: string;
+  objectPrefix?: string;
 }
 
 export const defaultHttpSourceDataAddress: HttpDataAddress = {
@@ -54,5 +57,5 @@ export const defaultHttpDestinationDataAddress: HttpDataAddress = {
 };
 
 export const defaultOnRequestDataAddress: OnRequestDataAddress = {
-  type: DataAddressTypes.MDSOnRequestOffer
+  type: DataAddressTypes.MDSOnRequestOffer,
 };
