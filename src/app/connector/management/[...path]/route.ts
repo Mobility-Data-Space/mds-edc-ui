@@ -8,10 +8,16 @@ function connectorApiKey() {
 
 const buildUrl = (req: NextRequest): string => {
   const connectorManagementUrl = process.env.EDC_MANAGEMENT_URL || "";
-  return connectorManagementUrl + req.nextUrl.pathname.replace(proxyConnectorManagement, "");
+  return (
+    connectorManagementUrl +
+    req.nextUrl.pathname.replace(proxyConnectorManagement, "")
+  );
 };
 
-const fetchProxy = async (url: string, options: RequestInit): Promise<Response> => {
+const fetchProxy = async (
+  url: string,
+  options: RequestInit,
+): Promise<Response> => {
   return await fetch(url, options);
 };
 
@@ -62,7 +68,6 @@ const handlePost = async (req: NextRequest): Promise<NextResponse> => {
     body: requestBody && requestBody !== "{}" ? requestBody : undefined,
   });
 
-
   const readableStream = proxy.body;
   const response = new NextResponse(readableStream, { status: proxy.status });
   setResponseHeaders(proxy, response);
@@ -88,7 +93,6 @@ const handlePut = async (req: NextRequest): Promise<NextResponse> => {
     credentials: "same-origin",
     body: requestBody && requestBody !== "{}" ? requestBody : undefined,
   });
-
 
   const readableStream = proxy.body;
   const response = new NextResponse(readableStream, { status: proxy.status });

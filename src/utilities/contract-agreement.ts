@@ -4,37 +4,44 @@ import { ContractAgreement } from "@think-it-labs/edc-connector-client";
 import { Inner } from "@think-it-labs/edc-connector-client/dist/src/inner";
 import { formatDateTime } from "@/utilities/date.ts";
 
-export const contractAgreementFieldsToShow = (contractAgreement: ContractAgreement, participantId: string, counterPartyAddress: string): FieldShowProps[] => {
+export const contractAgreementFieldsToShow = (
+  contractAgreement: ContractAgreement,
+  participantId: string,
+  counterPartyAddress: string,
+): FieldShowProps[] => {
   return [
     {
       label: "contractAgreements.signed",
       value: formatDateTime(contractAgreement.contractSigningDate * 1000),
-      icon: "category"
+      icon: "category",
     },
     {
       label: "contractAgreements.direction",
-      value: contractAgreement.providerId === participantId ? "contractAgreements.providing" : "contractAgreements.consuming",
-      icon: "policy"
+      value:
+        contractAgreement.providerId === participantId
+          ? "contractAgreements.providing"
+          : "contractAgreements.consuming",
+      icon: "policy",
     },
     {
       label: "contractAgreements.contractAgreementId",
       value: contractAgreement.id,
-      icon: "category"
+      icon: "category",
     },
     {
       label: "contractAgreements.otherConnectorId",
       value: participantId,
-      icon: "link"
+      icon: "link",
     },
     {
       label: "contractAgreements.counterPartyConnectorEndpoint",
       value: counterPartyAddress,
-      icon: "link"
+      icon: "link",
     },
     {
       label: "contractAgreements.status",
       value: "",
-      icon: "sync"
+      icon: "sync",
     },
   ];
 };
@@ -72,19 +79,19 @@ export class AgreementsRetirementController {
       method: "POST",
       body: {
         "@context": {
-          "tx": TRACTUS_X_CONTEXT.value,
-          "edc": CONTEXT_EDC.value
+          tx: TRACTUS_X_CONTEXT.value,
+          edc: CONTEXT_EDC.value,
         },
         "edc:agreementId": contractAgreementId,
-        "tx:reason": reason
-      }
+        "tx:reason": reason,
+      },
     });
   }
 
   async reactivateRetired(contractAgreementId: string) {
     return this.#inner.request(this.#management, {
       path: `${this.#pathPrefix}/${contractAgreementId}`,
-      method: "DELETE"
+      method: "DELETE",
     });
   }
 }

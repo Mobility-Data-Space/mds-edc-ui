@@ -1,5 +1,14 @@
-import { ContractAgreement, JsonLdObject, Policy } from "@think-it-labs/edc-connector-client";
-import React, { PropsWithChildren, ReactNode, useCallback, useMemo } from "react";
+import {
+  ContractAgreement,
+  JsonLdObject,
+  Policy,
+} from "@think-it-labs/edc-connector-client";
+import React, {
+  PropsWithChildren,
+  ReactNode,
+  useCallback,
+  useMemo,
+} from "react";
 import { useEdcConnectorClient } from "./hooks/use-edc-connector-client";
 import { Local, useLocalContext } from "./local";
 import { useViewContext, View } from "./view";
@@ -12,27 +21,26 @@ interface ContractAgreementProps {
   managementUrl: string;
 }
 
-export function ContractAgreementView(
-  { children, id, managementUrl }: PropsWithChildren<ContractAgreementProps>,
-) {
+export function ContractAgreementView({
+  children,
+  id,
+  managementUrl,
+}: PropsWithChildren<ContractAgreementProps>) {
   const client = useEdcConnectorClient({
     management: managementUrl,
   });
 
-  const get = useCallback(
-    () => {
-      if (id != undefined)
-        return client.management.contractAgreements.get(id)
+  const get = useCallback(() => {
+    if (id != undefined) return client.management.contractAgreements.get(id);
 
-      return Promise.resolve(new ContractAgreement())
-    },
-    [client, id],
-  );
+    return Promise.resolve(new ContractAgreement());
+  }, [client, id]);
 
   return (
     <View<ContractAgreement>
       get={get}
       managementUrl={managementUrl}
+      cacheKey={id}
     >
       {children}
     </View>
@@ -64,15 +72,26 @@ ContractAgreementView.Item = function ContractAgreementViewItem() {
   return item;
 };
 
-ContractAgreementView.ContractSigningDate = function ContractAgreementViewContractSigningDate() {
-  const { item } = useContractAgreementContext();
-  return <>{item?.contractSigningDate && (new Date(item.contractSigningDate * 1000).toString())}</>;
-};
+ContractAgreementView.ContractSigningDate =
+  function ContractAgreementViewContractSigningDate() {
+    const { item } = useContractAgreementContext();
+    return (
+      <>
+        {item?.contractSigningDate &&
+          new Date(item.contractSigningDate * 1000).toString()}
+      </>
+    );
+  };
 
-ContractAgreementView.PolicyPermissions = function ContractAgreementViewContractSigningDate({ children }: { children: ({ item }: { item?: JsonLdObject[] }) => ReactNode }) {
-  const { item } = useContractAgreementContext();
-  return children({ item: item?.policy?.permissions });
-};
+ContractAgreementView.PolicyPermissions =
+  function ContractAgreementViewContractSigningDate({
+    children,
+  }: {
+    children: ({ item }: { item?: JsonLdObject[] }) => ReactNode;
+  }) {
+    const { item } = useContractAgreementContext();
+    return children({ item: item?.policy?.permissions });
+  };
 
 ContractAgreementView.Loading = View.Loading;
 
@@ -80,24 +99,15 @@ interface ContractAgreementViewPolicyProps {
   policy?: Policy;
 }
 
-function ContractAgreementViewPolicy(
-  { policy, children }: PropsWithChildren<
-    ContractAgreementViewPolicyProps
-  >,
-) {
-  return (
-    <Local
-      item={policy}
-    >
-      {children}
-    </Local>
-  );
+function ContractAgreementViewPolicy({
+  policy,
+  children,
+}: PropsWithChildren<ContractAgreementViewPolicyProps>) {
+  return <Local item={policy}>{children}</Local>;
 }
 
 ContractAgreementViewPolicy.Obbligations =
-  function ContractAgreementViewPolicyObbligations(
-    { children }: any,
-  ) {
+  function ContractAgreementViewPolicyObbligations({ children }: any) {
     const { item } = useLocalContext<Policy>();
 
     const Item = useMemo(() => {
@@ -106,21 +116,17 @@ ContractAgreementViewPolicy.Obbligations =
       };
     }, [children]);
 
-    return (<>
-      {item?.obligations.map((item, index) => (
-        <Item
-          key={item}
-          item={item}
-          index={index}
-        />
-      ))}
-    </>);
+    return (
+      <>
+        {item?.obligations.map((item, index) => (
+          <Item key={item} item={item} index={index} />
+        ))}
+      </>
+    );
   };
 
 ContractAgreementViewPolicy.Prohibitions =
-  function ContractAgreementViewPolicyProhibitions(
-    { children }: any,
-  ) {
+  function ContractAgreementViewPolicyProhibitions({ children }: any) {
     const { item } = useLocalContext<Policy>();
 
     const Item = useMemo(() => {
@@ -129,21 +135,17 @@ ContractAgreementViewPolicy.Prohibitions =
       };
     }, [children]);
 
-    return (<>
-      {item?.prohibitions.map((item, index) => (
-        <Item
-          key={item}
-          item={item}
-          index={index}
-        />
-      ))}
-    </>);
+    return (
+      <>
+        {item?.prohibitions.map((item, index) => (
+          <Item key={item} item={item} index={index} />
+        ))}
+      </>
+    );
   };
 
 ContractAgreementViewPolicy.Permissions =
-  function ContractAgreementViewPolicyPermissions(
-    { children }: any,
-  ) {
+  function ContractAgreementViewPolicyPermissions({ children }: any) {
     const { item } = useLocalContext<Policy>();
 
     const Item = useMemo(() => {
@@ -152,17 +154,15 @@ ContractAgreementViewPolicy.Permissions =
       };
     }, [children]);
 
-    return (<>
-      {item?.permissions.map((item, index) => (
-        <Item
-          key={item}
-          item={item}
-          index={index}
-        />
-      ))}
-    </>);
+    return (
+      <>
+        {item?.permissions.map((item, index) => (
+          <Item key={item} item={item} index={index} />
+        ))}
+      </>
+    );
   };
 
 ContractAgreementView.Policy = ContractAgreementViewPolicy;
 
-ContractAgreementView.Error = View.Error
+ContractAgreementView.Error = View.Error;
