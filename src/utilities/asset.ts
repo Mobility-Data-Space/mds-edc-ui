@@ -61,6 +61,7 @@ import jsonld from "jsonld";
 import { Tag } from "@/components/atoms/key-value-pair-input.tsx";
 import { EDC_ID_FIELD } from "@/utilities/data-offer.ts";
 import { dateToString } from "./date";
+import { JsonLdObj } from "jsonld/jsonld-spec";
 
 const temporalCoverageValue = ([start, end]: [string, string]) => {
   if (!start && !end) {
@@ -445,17 +446,23 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
     asset.properties,
     ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE,
   );
-  if (temporalCoverage) {
+
+  const startDate = readValue(
+    temporalCoverage[0],
+    `${CONTEXT_DCAT.value}startDate`,
+  );
+  const endDate = readValue(
+    temporalCoverage[0],
+    `${CONTEXT_DCAT.value}endDate`,
+  );
+
+  if (temporalCoverage && startDate && endDate) {
     advancedFields.push({
       icon: "today",
       label: "assets.new.fieldAdvancedInfoTemporalCoverage",
       value: temporalCoverageValue([
-        dateToString(
-          readValue(temporalCoverage[0], `${CONTEXT_DCAT.value}startDate`),
-        ),
-        dateToString(
-          readValue(temporalCoverage[0], `${CONTEXT_DCAT.value}endDate`),
-        ),
+        dateToString(startDate),
+        dateToString(endDate),
       ]),
     });
   }
