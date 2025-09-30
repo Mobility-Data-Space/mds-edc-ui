@@ -1,13 +1,18 @@
-import React, {useMemo} from "react";
-import {Chip} from "@mui/material";
+import React, { useMemo } from "react";
+import { Chip } from "@mui/material";
 import Divider from "@mui/material/Divider";
-import {Asset} from "@think-it-labs/edc-connector-client";
-import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
-import {MarkdownCollapsableText} from "@/components/molecules/markdown-collapsable-text";
+import { Asset } from "@think-it-labs/edc-connector-client";
+import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
+import { MarkdownCollapsableText } from "@/components/molecules/markdown-collapsable-text";
 import FieldGrid from "@/components/molecules/field-grid";
-import {T} from "@/i18n";
-import {ASSET_KEYWORDS, ASSET_DESCRIPTION} from "@/jsonld/asset";
-import {assetDataAddressFieldsTitle, assetDataAddressFieldsToShow, assetFieldsToShow, assetPrivateFieldsToShow} from "@/utilities/asset";
+import { T } from "@/i18n";
+import { ASSET_KEYWORDS, ASSET_DESCRIPTION } from "@/jsonld/asset";
+import {
+  assetDataAddressFieldsTitle,
+  assetDataAddressFieldsToShow,
+  assetFieldsToShow,
+  assetPrivateFieldsToShow,
+} from "@/utilities/asset";
 
 interface AssetDetailsProps {
   asset: Asset;
@@ -15,36 +20,53 @@ interface AssetDetailsProps {
   connectorEndpoint: string;
 }
 
-export default function AssetDetails({ asset, participantId, connectorEndpoint }: AssetDetailsProps) {
+export default function AssetDetails({
+  asset,
+  participantId,
+  connectorEndpoint,
+}: AssetDetailsProps) {
   const keywords = asset.properties[ASSET_KEYWORDS] || [];
   const description = readValue(asset.properties, ASSET_DESCRIPTION);
   const dataAddressTitle = assetDataAddressFieldsTitle(asset);
 
-  const [shownFields, dataAddress, privateFields] = useMemo(() => [
-    assetFieldsToShow(asset, participantId, connectorEndpoint),
-    assetDataAddressFieldsToShow(asset),
-    assetPrivateFieldsToShow(asset)
-  ], [asset, participantId, connectorEndpoint]);
+  const [shownFields, dataAddress, privateFields] = useMemo(
+    () => [
+      assetFieldsToShow(asset, participantId, connectorEndpoint),
+      assetDataAddressFieldsToShow(asset),
+      assetPrivateFieldsToShow(asset),
+    ],
+    [asset, participantId, connectorEndpoint],
+  );
 
   return (
     <div className="asset-details flex flex-col gap-y-2.5">
       <div>
-        {description ?
-          <MarkdownCollapsableText data={description}/> :
+        {description ? (
+          <MarkdownCollapsableText data={description} />
+        ) : (
           <T string="assets.new.noDescription" />
-        }
+        )}
       </div>
       <Divider />
       <div className="flex flex-wrap gap-2">
-        {keywords.map((keyword: { "@value": string }, index: number) =>
-          <Chip className="font-medium text-sm !cursor-default" color="info" clickable label={keyword["@value"]} key={index} />
-        )}
+        {keywords.map((keyword: { "@value": string }, index: number) => (
+          <Chip
+            className="font-medium text-sm !cursor-default"
+            color="info"
+            clickable
+            label={keyword["@value"]}
+            key={index}
+          />
+        ))}
       </div>
 
       <div className="flex flex-col gap-y-9">
-        <FieldGrid fields={shownFields}/>
+        <FieldGrid fields={shownFields} />
         <FieldGrid fields={dataAddress} label={dataAddressTitle} />
-        <FieldGrid fields={privateFields} label="assets.new.privateProperties"/>
+        <FieldGrid
+          fields={privateFields}
+          label="assets.new.privateProperties"
+        />
       </div>
     </div>
   );
