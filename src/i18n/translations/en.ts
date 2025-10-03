@@ -667,5 +667,15 @@ export const en = {
         success: "Transfer Process Initiated Successfully",
       },
     },
+    edrs: {
+      title: "List all EDRs",
+      edrsLoadError: "Failed to Load EDRs",
+      noEdrsFound: "No EDRs found",
+      assetId: "Asset ID",
+      createdAt: "Created At",
+      providerId: "Provider ID",
+      endpoint: "Endpoint",
+      authorization: "Authorization Token",
+    },
   },
 };
