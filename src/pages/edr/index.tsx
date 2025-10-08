@@ -4,7 +4,7 @@ import SideDrawer from "@/components/organisms/side-drawer";
 import { proxyConnectorManagement } from "@/constants/proxy";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { useUpdateQueryParams } from "@/hooks/use-update-query-params";
-import { T } from "@/i18n";
+import { T, useTranslator } from "@/i18n";
 import { EdrsList } from "@think-it-labs/edc-connector-ui/edr-list";
 import { useRouter } from "next/router";
 import { useCallback } from "react";
@@ -12,10 +12,12 @@ import { Table } from "../../components/atoms/table";
 import { ErrorPopup } from "../../components/molecules/error-popup";
 import EdrTableRow from "../../components/organisms/edr-table-row";
 import { MAX_ITEMS } from "../../constants/lists";
+import SearchBar from "@/components/molecules/search-bar";
 
 export default function EdrsListPage() {
   const { query } = useRouter();
   const { connector } = useParticipantConnectorState();
+  const { translator } = useTranslator();
 
   const updateQueryParams = useUpdateQueryParams();
 
@@ -39,7 +41,16 @@ export default function EdrsListPage() {
         currentPage={parseInt(query.page as string) || 0}
         firstPage={0}
       >
-        <div className="flex flex-wrap justify-end gap-4 pb-6 min-h-[56px]">
+        <div className="flex justify-between pb-6">
+          <div className="flex justify-start gap-x-5 items-center">
+            <div className="min-w-xl">
+              <SearchBar
+                searchTarget="assetId"
+                placeholder={translator("edrs.searchPlaceholder")}
+                searchOperator="ilike"
+              />
+            </div>
+          </div>
           <div className="flex justify-end items-center">
             <EdrsList.Pagination>
               {({
@@ -57,7 +68,6 @@ export default function EdrsListPage() {
                   decrementPage={decrementPage}
                   incrementPage={incrementPage}
                   maxItems={MAX_ITEMS}
-                  dataTestIdPrefix="pagination"
                   itemsCount={itemsCount}
                 />
               )}
@@ -79,43 +89,47 @@ export default function EdrsListPage() {
             <Table className="w-full">
               <Table.Head>
                 <Table.Row>
-                  <Table.Heading className="min-w-0">
+                  <Table.Heading className="w-1/8">
                     <T string="edrs.assetId" />
                   </Table.Heading>
 
-                  <Table.Heading className="min-w-0">
+                  <Table.Heading className="w-1/8">
                     <T string="edrs.createdAt" />
                   </Table.Heading>
 
-                  <Table.Heading className="min-w-0">
+                  <Table.Heading className="w-1/8">
                     <T string="edrs.providerId" />
                   </Table.Heading>
 
-                  <Table.Heading className="min-w-0">
+                  <Table.Heading className="w-2/8">
                     <T string="edrs.endpoint" />
                   </Table.Heading>
 
-                  <Table.Heading className="min-w-0">
+                  <Table.Heading className="w-2/8">
                     <T string="edrs.authorization" />
                   </Table.Heading>
+
+                  <Table.Heading className="w-1/8">Details</Table.Heading>
                 </Table.Row>
               </Table.Head>
 
               <Table.Body>
                 <EdrsList.Items
-                  limit={30}
+                  limit={MAX_ITEMS}
                   sortOrder="DESC"
                   sortField="createdAt"
                 >
                   {({ item, index }) => <EdrTableRow key={index} edr={item} />}
                 </EdrsList.Items>
+                <EdrsList.Loading>
+                  <Table.Row>
+                    <Table.Cell colSpan={6} className="text-center py-16">
+                      <LoadingSpinner />
+                    </Table.Cell>
+                  </Table.Row>
+                </EdrsList.Loading>
               </Table.Body>
             </Table>
-            <EdrsList.Loading>
-              <div className="size-full min-h-[60vh] flex items-center justify-center">
-                <LoadingSpinner />
-              </div>
-            </EdrsList.Loading>
           </div>
         </div>
       </EdrsList>

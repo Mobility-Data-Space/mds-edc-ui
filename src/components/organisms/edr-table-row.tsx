@@ -1,82 +1,93 @@
 import { Table } from "@/components/atoms/table.tsx";
+import { T } from "@/i18n";
 import { Edr } from "@think-it-labs/edc-connector-client";
-import { Copy, Eye, EyeOff } from "lucide-react";
-import React, { PropsWithChildren, useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
+import { PropsWithChildren, useState } from "react";
 import { EdrView } from "../../../vendors/think-it-labs/edc-connector-ui/src/edr-view";
 import { proxyConnectorManagement } from "../../constants/proxy";
+import EdrDialog from "./edr-dialog";
 
 export default function EdrTableRow({ edr }: { edr: Edr }) {
+  const [isEdrDialogOpen, setIsEdrDialogOpen] = useState(false);
   return (
-    <Table.Row className="edr-row">
-      <Table.Cell className="min-w-0">
-        <div className="text-xs mb-1">
-          <p className="text-xs mb-1">{edr.assetId}</p>
-        </div>
-      </Table.Cell>
-      <Table.Cell className="min-w-0">
-        <div className="text-xs mb-1">
-          <p className="text-xs mb-1">{edr.createdAt}</p>
-        </div>
-      </Table.Cell>
-      <Table.Cell className="min-w-0">
-        <div className="text-xs mb-1">
-          <p className="text-xs mb-1">{edr.providerId}</p>
-        </div>
-      </Table.Cell>
+    <>
+      <EdrDialog
+        edr={edr}
+        open={isEdrDialogOpen}
+        onClose={() => setIsEdrDialogOpen(false)}
+      />
 
-      <Table.Cell className="min-w-0">
-        <div className="flex flex-col gap-y-2">
-          <HiddenDetails>
-            <EdrView id={edr.id} managementUrl={proxyConnectorManagement}>
-              <EdrView.Loading fallback={<div>Loading...</div>}>
-                <EdrView.Properties.Endpoint />
-              </EdrView.Loading>
-            </EdrView>
-          </HiddenDetails>
-        </div>
-      </Table.Cell>
+      <Table.Row className="edr-row">
+        <Table.Cell className="w-1/8">
+          <div className="text-xs mb-1">
+            <p className="text-xs mb-1">{edr.assetId}</p>
+          </div>
+        </Table.Cell>
+        <Table.Cell className="w-1/8">
+          <div className="text-xs mb-1">
+            <p className="text-xs mb-1">{edr.createdAt}</p>
+          </div>
+        </Table.Cell>
+        <Table.Cell className="w-1/8">
+          <div className="text-xs mb-1">
+            <p className="text-xs mb-1">{edr.providerId}</p>
+          </div>
+        </Table.Cell>
 
-      <Table.Cell className="min-w-0">
-        <div className="flex flex-col gap-y-2">
-          <HiddenDetails>
+        <Table.Cell className="w-2/8">
+          <div className="flex flex-col gap-y-2">
+            <HiddenDetails>
+              <EdrView id={edr.id} managementUrl={proxyConnectorManagement}>
+                <EdrView.Loading
+                  fallback={
+                    <div>
+                      <T string="common.loading" />
+                    </div>
+                  }
+                >
+                  <EdrView.Properties.Endpoint />
+                </EdrView.Loading>
+              </EdrView>
+            </HiddenDetails>
+          </div>
+        </Table.Cell>
+
+        <Table.Cell className="w-2/8">
+          <div className="flex flex-col gap-y-2">
             <EdrView id={edr.id} managementUrl={proxyConnectorManagement}>
-              <EdrView.Loading fallback={<div>Loading...</div>}>
-                <EdrView.Properties.Authorization />
-              </EdrView.Loading>
+              <HiddenDetails>
+                <EdrView.Loading
+                  fallback={
+                    <div>
+                      <T string="common.loading" />
+                    </div>
+                  }
+                >
+                  <EdrView.Properties.Authorization />
+                </EdrView.Loading>
+              </HiddenDetails>
             </EdrView>
-          </HiddenDetails>
-        </div>
-      </Table.Cell>
-    </Table.Row>
+          </div>
+        </Table.Cell>
+
+        <Table.Cell className="w-1/8">
+          <button
+            onClick={() => setIsEdrDialogOpen(true)}
+            className="hover:underline cursor-pointer"
+          >
+            <T string="common.showDetails" />
+          </button>
+        </Table.Cell>
+      </Table.Row>
+    </>
   );
 }
 
 function HiddenDetails({ children }: PropsWithChildren) {
   const [isDetailsShown, setIsDetailsShown] = useState(false);
 
-  const copyToClipboard = async (content: string) => {
-    try {
-      await navigator.clipboard.writeText(content);
-    } catch (err) {
-      console.error("Failed to copy to clipboard:", err);
-    }
-  };
-
-  const extractTextFromChildren = (children: React.ReactNode): string => {
-    if (typeof children === "string") {
-      return children;
-    }
-    if (React.isValidElement(children)) {
-      return extractTextFromChildren(children.props.children);
-    }
-    if (Array.isArray(children)) {
-      return children.map(extractTextFromChildren).join("");
-    }
-    return "";
-  };
-
   return (
-    <div className="flex items-start gap-2">
+    <div className="flex items-center gap-2">
       <button
         className="p-1 hover:bg-gray-100 rounded cursor-pointer"
         onClick={() => setIsDetailsShown(!isDetailsShown)}
@@ -85,17 +96,11 @@ function HiddenDetails({ children }: PropsWithChildren) {
         {isDetailsShown ? <EyeOff size={16} /> : <Eye size={16} />}
       </button>
 
-      <button
-        className="p-1 hover:bg-gray-100 rounded cursor-pointer"
-        onClick={() => copyToClipboard(extractTextFromChildren(children))}
-        title="Copy to clipboard"
-      >
-        <Copy size={16} />
-      </button>
-
       {isDetailsShown && (
-        <div className="break-all font-mono text-xs w-full min-w-0">
-          {children}
+        <div className="font-mono text-xs w-full min-w-0 max-w-xs">
+          <div className="whitespace-pre-wrap break-words bg-gray-50 p-2 rounded border">
+            {children}
+          </div>
         </div>
       )}
     </div>
