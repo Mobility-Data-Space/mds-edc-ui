@@ -17,19 +17,20 @@ export default function TransferProcessesListPage() {
   const { connector } = useParticipantConnectorState();
   const { translator } = useTranslator();
 
-  const currentPage = parseInt(router.query.page as string) || 0
+  const currentPage = parseInt(router.query.page as string) || 0;
 
-  const navigate = useCallback((newPage: number) => {
-    router.push(
-      {
+  const navigate = useCallback(
+    (newPage: number) => {
+      router.push({
         href: window.location.href,
         query: {
           ...router.query,
           page: newPage,
         },
-      },
-    );
-  }, [router])
+      });
+    },
+    [router],
+  );
 
   return (
     <SideDrawer title={<T string="transferProcesses.title" />}>
@@ -43,12 +44,23 @@ export default function TransferProcessesListPage() {
         <div className="flex justify-between pb-6">
           <div className="flex justify-start gap-x-5 items-center">
             <div className="min-w-xl">
-              <SearchBar searchTarget="assetId" placeholder={translator("transferProcesses.searchPlaceholder")} searchOperator="ilike" />
+              <SearchBar
+                searchTarget="assetId"
+                placeholder={translator("transferProcesses.searchPlaceholder")}
+                searchOperator="ilike"
+              />
             </div>
           </div>
           <div className="flex justify-end items-center">
             <TransferProcessesList.Pagination>
-              {({ decrementPage, hasPrev, hasNext, incrementPage, page, itemsCount }) =>
+              {({
+                decrementPage,
+                hasPrev,
+                hasNext,
+                incrementPage,
+                page,
+                itemsCount,
+              }) => (
                 <PaginationControls
                   page={page}
                   hasPrev={hasPrev}
@@ -59,12 +71,15 @@ export default function TransferProcessesListPage() {
                   dataTestIdPrefix="pagination"
                   itemsCount={itemsCount}
                 />
-              }
+              )}
             </TransferProcessesList.Pagination>
           </div>
         </div>
 
-        <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200" data-testid="transfer-processes-list">
+        <div
+          className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200"
+          data-testid="transfer-processes-list"
+        >
           <Table>
             <Table.Head>
               <Table.Row>
