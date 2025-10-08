@@ -20,53 +20,69 @@ import { ErrorPopup } from "../../components/molecules/error-popup";
 import { MAX_ITEMS } from "../../constants/lists";
 
 const CreatedAt = ({ item }: { item: ContractNegotiation }) => {
-  const createdAtValue = readValue(item, "https://w3id.org/edc/v0.0.1/ns/createdAt");
-  return <Tooltip title={formatDateTime(createdAtValue, { showSeconds: true, showDayOfWeek: true })}>
-    <span>
-      {formatDateTimeAgo(createdAtValue)}
-    </span>
-  </Tooltip>;
-}
+  const createdAtValue = readValue(
+    item,
+    "https://w3id.org/edc/v0.0.1/ns/createdAt",
+  );
+  return (
+    <Tooltip
+      title={formatDateTime(createdAtValue, {
+        showSeconds: true,
+        showDayOfWeek: true,
+      })}
+    >
+      <span>{formatDateTimeAgo(createdAtValue)}</span>
+    </Tooltip>
+  );
+};
 
 const CounterPartyId = ({ item }: { item: ContractNegotiation }) => {
-  const counterPartyIdValue = readValue(item, "https://w3id.org/edc/v0.0.1/ns/counterPartyId");
-  return <>{counterPartyIdValue}</>
-}
+  const counterPartyIdValue = readValue(
+    item,
+    "https://w3id.org/edc/v0.0.1/ns/counterPartyId",
+  );
+  return <>{counterPartyIdValue}</>;
+};
 
 const CounterPartyAddress = ({ item }: { item: ContractNegotiation }) => {
-  const counterPartyAddressValue = readValue(item, "https://w3id.org/edc/v0.0.1/ns/counterPartyAddress");
-  return <>{counterPartyAddressValue}</>
-}
+  const counterPartyAddressValue = readValue(
+    item,
+    "https://w3id.org/edc/v0.0.1/ns/counterPartyAddress",
+  );
+  return <>{counterPartyAddressValue}</>;
+};
 
 export default function ContractNegotiationsListPage() {
-  const { push, query } = useRouter()
+  const { push, query } = useRouter();
   const { connector } = useParticipantConnectorState();
   const managementUrl = connector?.managementUrl as string;
   const { translator } = useTranslator();
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
-  const [openContractNegotiationData, setOpenContractNegotiationData] = useState({
-    contractNegotiation: {} as ContractNegotiation,
-  });
+  const [openContractNegotiationData, setOpenContractNegotiationData] =
+    useState({
+      contractNegotiation: {} as ContractNegotiation,
+    });
 
   const openDetailsModal = (contractNegotiation: ContractNegotiation) => {
     setIsDetailsModalOpen(true);
     setOpenContractNegotiationData({ contractNegotiation });
   };
 
-  const currentPage = parseInt(query.page as string) || 0
+  const currentPage = parseInt(query.page as string) || 0;
 
-  const navigate = useCallback((newPage: number) => {
-    push(
-      {
+  const navigate = useCallback(
+    (newPage: number) => {
+      push({
         href: window.location.href,
         query: {
           ...query,
           page: newPage,
         },
-      },
-    );
-  }, [push, query])
+      });
+    },
+    [push, query],
+  );
 
   return (
     <SideDrawer title={<T string="contractNegotiations.title" />}>
@@ -86,22 +102,35 @@ export default function ContractNegotiationsListPage() {
         firstPage={0}
       >
         <ContractNegotiationsList.Error>
-          {({ errors }) =>
+          {({ errors }) => (
             <ErrorPopup
               errors={errors}
               errorMessageKey="common.contractNegotiationsLoadError"
             />
-          }
+          )}
         </ContractNegotiationsList.Error>
         <div className="flex justify-between pb-6">
           <div className="flex justify-start gap-x-5 items-center">
             <div className="min-w-xl">
-              <SearchBar searchTarget="counterPartyId" placeholder={translator("contractNegotiations.searchPlaceholder")} searchOperator="ilike" />
+              <SearchBar
+                searchTarget="counterPartyId"
+                placeholder={translator(
+                  "contractNegotiations.searchPlaceholder",
+                )}
+                searchOperator="ilike"
+              />
             </div>
           </div>
           <div className="flex justify-end items-center">
             <ContractNegotiationsList.Pagination>
-              {({ decrementPage, hasPrev, hasNext, incrementPage, page, itemsCount }) =>
+              {({
+                decrementPage,
+                hasPrev,
+                hasNext,
+                incrementPage,
+                page,
+                itemsCount,
+              }) => (
                 <PaginationControls
                   page={page}
                   hasPrev={hasPrev}
@@ -111,17 +140,18 @@ export default function ContractNegotiationsListPage() {
                   maxItems={MAX_ITEMS}
                   itemsCount={itemsCount}
                 />
-              }
+              )}
             </ContractNegotiationsList.Pagination>
           </div>
         </div>
-        <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200" data-testid="negotiations-list">
+        <div
+          className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200"
+          data-testid="negotiations-list"
+        >
           <Table>
             <Table.Head>
               <Table.Row>
-                <Table.Heading className="w-16">
-                  #
-                </Table.Heading>
+                <Table.Heading className="w-16">#</Table.Heading>
 
                 <Table.Heading>
                   <T string="contractNegotiations.headingState" />
@@ -159,14 +189,19 @@ export default function ContractNegotiationsListPage() {
                         type="button"
                         className="flex items-center gap-x-2 text-gray-800"
                       >
-                        {(currentPage * 10) + (index + 1)}
+                        {currentPage * 10 + (index + 1)}
                       </button>
                     </Table.Cell>
                     <Table.Cell>
-                      <StateChip state={item.state} />
+                      <StateChip
+                        state={item.state}
+                        didError={!!item.errorDetail}
+                      />
                     </Table.Cell>
                     <Table.Cell>
-                      {!item.contractAgreementId ? "" :
+                      {!item.contractAgreementId ? (
+                        ""
+                      ) : (
                         <ContractAgreementView
                           managementUrl={proxyConnectorManagement}
                           id={item.contractAgreementId}
@@ -179,7 +214,7 @@ export default function ContractNegotiationsListPage() {
                             <ContractAgreementView.Id />
                           </p>
                         </ContractAgreementView>
-                      }
+                      )}
                     </Table.Cell>
                     <Table.Cell>
                       <CounterPartyAddress item={item} />
@@ -206,6 +241,6 @@ export default function ContractNegotiationsListPage() {
           </div>
         </ContractNegotiationsList.Loading>
       </ContractNegotiationsList>
-    </SideDrawer >
+    </SideDrawer>
   );
 }

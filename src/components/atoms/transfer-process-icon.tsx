@@ -1,4 +1,3 @@
-import React from "react";
 import { Icon, IconProps } from "@mui/material";
 
 import { TransferProcess } from "@think-it-labs/edc-connector-client/dist/src/entities";
