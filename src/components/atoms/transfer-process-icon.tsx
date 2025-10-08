@@ -1,21 +1,20 @@
 import React from "react";
-import {Icon, IconProps} from "@mui/material";
+import { Icon, IconProps } from "@mui/material";
 
-import {Asset} from "@think-it-labs/edc-connector-client";
-import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
+import { TransferProcess } from "@think-it-labs/edc-connector-client/dist/src/entities";
 
-import { DataAddressTypes } from "@/utilities/data-address";
-import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/entities";
-
-export function TransferProcessIcon({ transferProcess, ...rest }: { transferProcess: TransferProcess } & IconProps): JSX.Element {
+export function TransferProcessIcon({
+  transferProcess,
+  ...rest
+}: { transferProcess: TransferProcess } & IconProps): JSX.Element {
   let icon;
 
-  if (transferProcess.type === "CONSUMER") {
+  if (transferProcess.type === "PROVIDER") {
     icon = "upload";
-  } else if (transferProcess.type === "PROVIDER") {
+  } else if (transferProcess.type === "CONSUMER") {
     icon = "download";
   } else {
-    icon = ""
+    icon = "";
   }
 
   return <Icon {...rest}>{icon}</Icon>;
