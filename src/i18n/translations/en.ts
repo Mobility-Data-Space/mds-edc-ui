@@ -51,6 +51,7 @@ export const en = {
         "Failed to load Transfer Processes. Please try again.",
       policyDefinitionsLoadError:
         "Failed to load Policy Definitions. Please try again.",
+      loading: "Loading...",
     },
     dashboard: {
       title: "Dashboard",
@@ -676,6 +677,14 @@ export const en = {
       providerId: "Provider ID",
       endpoint: "Endpoint",
       authorization: "Authorization Token",
+      searchPlaceholder: "Search EDRs by Asset ID",
+      "[id]": {
+        type: "Type",
+        authType: "Authentication Type",
+        endpointType: "Endpoint Type",
+        endpoint: "Endpoint",
+        authorization: "Authorization Token",
+      },
     },
   },
 };

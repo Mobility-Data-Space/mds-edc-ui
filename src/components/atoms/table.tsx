@@ -1,15 +1,19 @@
 import clsx from "clsx";
 import {
   BaseHTMLAttributes,
+  DetailedHTMLProps,
   PropsWithChildren,
   TableHTMLAttributes,
+  TdHTMLAttributes,
 } from "react";
 
 interface TableProps extends TableHTMLAttributes<HTMLTableElement> {}
 
-export function Table(
-  { children, className, ...rest }: PropsWithChildren<TableProps>,
-) {
+export function Table({
+  children,
+  className,
+  ...rest
+}: PropsWithChildren<TableProps>) {
   return (
     <div className="overflow-x-auto">
       <table
@@ -25,9 +29,11 @@ export function Table(
 interface TableSectionProps
   extends BaseHTMLAttributes<HTMLTableSectionElement> {}
 
-function TableHead(
-  { children, className, ...rest }: PropsWithChildren<TableSectionProps>,
-) {
+function TableHead({
+  children,
+  className,
+  ...rest
+}: PropsWithChildren<TableSectionProps>) {
   return (
     <thead {...rest} className={clsx("bg-gray-50", className)}>
       {children}
@@ -36,11 +42,17 @@ function TableHead(
 }
 Table.Head = TableHead;
 
-interface TableCellProps extends BaseHTMLAttributes<HTMLTableCellElement> {}
+interface TableCellProps
+  extends DetailedHTMLProps<
+    TdHTMLAttributes<HTMLTableDataCellElement>,
+    HTMLTableDataCellElement
+  > {}
 
-Table.Heading = function TableHeading(
-  { children, className, ...rest }: PropsWithChildren<TableCellProps>,
-) {
+Table.Heading = function TableHeading({
+  children,
+  className,
+  ...rest
+}: PropsWithChildren<TableCellProps>) {
   return (
     <th
       scope="col"
@@ -55,17 +67,13 @@ Table.Heading = function TableHeading(
   );
 };
 
-Table.Body = function TableBody(
-  { children, className, ...rest }: PropsWithChildren<TableSectionProps>,
-) {
+Table.Body = function TableBody({
+  children,
+  className,
+  ...rest
+}: PropsWithChildren<TableSectionProps>) {
   return (
-    <tbody
-      className={clsx(
-        "divide-y divide-gray-200",
-        className,
-      )}
-      {...rest}
-    >
+    <tbody className={clsx("divide-y divide-gray-200", className)} {...rest}>
       {children}
     </tbody>
   );
@@ -73,17 +81,18 @@ Table.Body = function TableBody(
 
 interface TableRowProps extends BaseHTMLAttributes<HTMLTableRowElement> {}
 
-Table.Row = function TableBodyRow(
-  { children, ...rest }: PropsWithChildren<
-    TableRowProps
-  >,
-) {
+Table.Row = function TableBodyRow({
+  children,
+  ...rest
+}: PropsWithChildren<TableRowProps>) {
   return <tr {...rest}>{children}</tr>;
 };
 
-Table.Cell = function TableBodyCell(
-  { children, className, ...rest }: PropsWithChildren<TableCellProps>,
-) {
+Table.Cell = function TableBodyCell({
+  children,
+  className,
+  ...rest
+}: PropsWithChildren<TableCellProps>) {
   return (
     <td
       className={clsx(
