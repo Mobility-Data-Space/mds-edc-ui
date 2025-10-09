@@ -115,6 +115,16 @@ export default function EdrsListPage() {
 
               <Table.Body>
                 <EdrsList.Items
+                  emptyMessage={
+                    <Table.Row>
+                      <Table.Cell
+                        colSpan={6}
+                        className="text-center py-16 !text-2xl"
+                      >
+                        <T string="edrs.noEdrsFound" />
+                      </Table.Cell>
+                    </Table.Row>
+                  }
                   limit={MAX_ITEMS}
                   sortOrder="DESC"
                   sortField="createdAt"
