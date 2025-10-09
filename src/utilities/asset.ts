@@ -447,12 +447,14 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
     ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE,
   );
 
+  console.log(temporalCoverage);
+
   const startDate = readValue(
-    temporalCoverage[0],
+    temporalCoverage?.[0],
     `${CONTEXT_DCAT.value}startDate`,
   );
   const endDate = readValue(
-    temporalCoverage[0],
+    temporalCoverage?.[0],
     `${CONTEXT_DCAT.value}endDate`,
   );
 
