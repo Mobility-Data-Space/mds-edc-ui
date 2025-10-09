@@ -19,6 +19,8 @@ const EDC_NAMESPACE = {
   IS_TERMINATED: "https://w3id.org/edc/v0.0.1/ns/isTerminated",
   IS_RUNNING: "https://w3id.org/edc/v0.0.1/ns/isRunning",
   TRANSFER_COUNT: "https://w3id.org/edc/v0.0.1/ns/transferCount",
+  IS_TERMINATED_AT: "https://w3id.org/edc/v0.0.1/ns/isTerminatedAt",
+  RETIREMENT_REASON: "https://w3id.org/edc/v0.0.1/ns/terminatedReason",
 } as const;
 
 // TODO: to be moved
@@ -45,15 +47,21 @@ const enrichContractAgreement = (
   contractAgreement: ContractAgreement,
   retiredContractAgreementIds: string[],
   contractAgreementInfo: Record<string, ContractAgreementInfo>,
-) => ({
-  ...contractAgreement,
-  [EDC_NAMESPACE.IS_TERMINATED]:
-    retiredContractAgreementIds.includes(contractAgreement.id) || false,
-  [EDC_NAMESPACE.IS_RUNNING]:
-    contractAgreementInfo[contractAgreement.id]?.isRunning || false,
-  [EDC_NAMESPACE.TRANSFER_COUNT]:
-    contractAgreementInfo[contractAgreement.id]?.transfersCount || 0,
-});
+) => {
+  return {
+    ...contractAgreement,
+    [EDC_NAMESPACE.IS_TERMINATED]:
+      retiredContractAgreementIds.includes(contractAgreement.id) || false,
+    [EDC_NAMESPACE.IS_RUNNING]:
+      contractAgreementInfo[contractAgreement.id]?.isRunning || false,
+    [EDC_NAMESPACE.TRANSFER_COUNT]:
+      contractAgreementInfo[contractAgreement.id]?.transfersCount || 0,
+    [EDC_NAMESPACE.IS_TERMINATED_AT]:
+      contractAgreementInfo[contractAgreement.id]?.isTerminatedAt || 0,
+    [EDC_NAMESPACE.RETIREMENT_REASON]:
+      contractAgreementInfo[contractAgreement.id]?.retirementReason || "",
+  };
+};
 
 const shouldIncludeAgreement = (
   contractAgreement: {
@@ -205,7 +213,13 @@ const handleContractAgreementsQuery = async (
       await client.management.contractAgreements.queryAll(body);
 
     const result = contractAgreements
-      .map((agreement) => enrichContractAgreement(agreement, retiredContractAgreementIds, contractAgreementInfo))
+      .map((agreement) =>
+        enrichContractAgreement(
+          agreement,
+          retiredContractAgreementIds,
+          contractAgreementInfo,
+        ),
+      )
       .filter((agreement) => shouldIncludeAgreement(agreement, statusFilter));
 
     return new NextResponse(JSON.stringify(result), { status: 200 });
