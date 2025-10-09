@@ -136,21 +136,11 @@ export default function ContractAgreementsListPage() {
         isTerminatedAt={0}
         isRunning={true}
         onClose={() => setIsDetailsModalOpen(false)}
-        onInitSuccess={(contractAgreement: ContractAgreement) => {
-          // if (!contractAgreementInfo[contractAgreement.id]) {
-          //   contractAgreementInfo[contractAgreement.id] = {
-          //     transfersCount: 0,
-          //     isRunning: true,
-          //     retirementReason: "",
-          //     isTerminatedAt: 0,
-          //     isTerminated: false,
-          //   }
-          // }
-          // const count = contractAgreementInfo[contractAgreement.id]?.transfersCount || 0
-          // contractAgreementInfo[contractAgreement.id].transfersCount = count + 1
+        onInitSuccess={() => {
+          window.dispatchEvent(new Event("list-refetch"));
         }}
         onTerminateSuccess={() => {
-          // rePopulateRetired()
+          window.dispatchEvent(new Event("list-refetch"));
           enqueueSnackbar(translator("contractAgreements.terminationSuccess"), {
             variant: "success",
             content: (key: SnackbarKey) => (
