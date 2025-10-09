@@ -85,13 +85,12 @@ export default function ContractAgreementsListPage() {
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
-  const [openContractAgreementData, setOpenContractAgreementData] = useState({
-    contractAgreement: {} as ContractAgreement,
-  });
+  const [openContractAgreementData, setOpenContractAgreementData] =
+    useState<ContractAgreement | null>(null);
 
   const openDetailsModal = (contractAgreement: ContractAgreement) => {
     setIsDetailsModalOpen(true);
-    setOpenContractAgreementData({ contractAgreement });
+    setOpenContractAgreementData(contractAgreement);
   };
 
   const getFilterExpression = useMemo(() => {
@@ -127,40 +126,43 @@ export default function ContractAgreementsListPage() {
 
   return (
     <SideDrawer title={<T string="contractAgreements.title" />}>
-      <ContractAgreementDialog
-        key={openContractAgreementData.contractAgreement.id}
-        open={isDetailsModalOpen}
-        contractAgreement={openContractAgreementData.contractAgreement}
-        retirementReason={""}
-        isTerminated={false}
-        isTerminatedAt={0}
-        isRunning={true}
-        onClose={() => setIsDetailsModalOpen(false)}
-        onInitSuccess={() => {
-          window.dispatchEvent(new Event("list-refetch"));
-        }}
-        onTerminateSuccess={() => {
-          window.dispatchEvent(new Event("list-refetch"));
-          enqueueSnackbar(translator("contractAgreements.terminationSuccess"), {
-            variant: "success",
-            content: (key: SnackbarKey) => (
-              <Snackbar
-                type="success"
-                message={translator("contractAgreements.terminationSuccess")}
-                onClose={() => {
-                  closeSnackbar(key);
-                }}
-              />
-            ),
-          });
-          setIsDetailsModalOpen(false);
-        }}
-        participantId={connector.id}
-        connectorEndpoint={connector.protocolUrl}
-        managementUrl={proxyConnectorManagement}
-        contentStyle={{ maxWidth: "90vw", width: "1000px" }}
-        translator={translator}
-      />
+      {openContractAgreementData && (
+        <ContractAgreementDialog
+          key={openContractAgreementData.id}
+          open={isDetailsModalOpen}
+          contractAgreement={openContractAgreementData}
+          onClose={() => setIsDetailsModalOpen(false)}
+          onInitSuccess={() => {
+            window.dispatchEvent(new Event("list-refetch"));
+          }}
+          onTerminateSuccess={() => {
+            window.dispatchEvent(new Event("list-refetch"));
+            enqueueSnackbar(
+              translator("contractAgreements.terminationSuccess"),
+              {
+                variant: "success",
+                content: (key: SnackbarKey) => (
+                  <Snackbar
+                    type="success"
+                    message={translator(
+                      "contractAgreements.terminationSuccess",
+                    )}
+                    onClose={() => {
+                      closeSnackbar(key);
+                    }}
+                  />
+                ),
+              },
+            );
+            setIsDetailsModalOpen(false);
+          }}
+          participantId={connector.id}
+          connectorEndpoint={connector.protocolUrl}
+          managementUrl={proxyConnectorManagement}
+          contentStyle={{ maxWidth: "90vw", width: "1000px" }}
+          translator={translator}
+        />
+      )}
 
       <ContractAgreementsList
         managementUrl={proxyConnectorManagement}
