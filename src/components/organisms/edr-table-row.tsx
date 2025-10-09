@@ -6,6 +6,8 @@ import { PropsWithChildren, useState } from "react";
 import { EdrView } from "../../../vendors/think-it-labs/edc-connector-ui/src/edr-view";
 import { proxyConnectorManagement } from "../../constants/proxy";
 import EdrDialog from "./edr-dialog";
+import { formatDateTime, formatDateTimeAgo } from "@/utilities/date";
+import { Tooltip } from "@mui/material";
 
 export default function EdrTableRow({ edr }: { edr: Edr }) {
   const [isEdrDialogOpen, setIsEdrDialogOpen] = useState(false);
@@ -23,10 +25,13 @@ export default function EdrTableRow({ edr }: { edr: Edr }) {
             <p className="text-xs mb-1">{edr.assetId}</p>
           </div>
         </Table.Cell>
+
         <Table.Cell className="w-1/8">
-          <div className="text-xs mb-1">
-            <p className="text-xs mb-1">{edr.createdAt}</p>
-          </div>
+          <Tooltip
+            title={formatDateTime(+edr.createdAt, { showDayOfWeek: true })}
+          >
+            <span>{formatDateTimeAgo(+edr.createdAt)}</span>
+          </Tooltip>
         </Table.Cell>
         <Table.Cell className="w-1/8">
           <div className="text-xs mb-1">
