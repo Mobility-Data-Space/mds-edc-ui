@@ -115,7 +115,7 @@ List.Items = function ListItems<T>({
   filterExpression,
   sortField,
   sortOrder,
-  emptyMessage = <>No Items</>,
+  emptyMessage = <></>,
 }: ListItemsProps<T>) {
   let {
     items,
