@@ -159,6 +159,7 @@ export const en = {
         fieldKeywords: "Keywords",
         fieldLanguage: "Language",
         fieldEndpointDocumentation: "Endpoint Documentation",
+        fieldEndpointDocumentationPlaceholder: "Endpoint Documentation",
         fieldPublisher: "Publisher",
         fieldStandardLicense: "Standard License",
         fieldPrivateNotes: "Private notes",
