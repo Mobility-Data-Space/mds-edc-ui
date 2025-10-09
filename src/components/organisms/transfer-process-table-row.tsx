@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from "react";
+import { StateChip } from "@/components/atoms/state-chip.tsx";
+import { Table } from "@/components/atoms/table.tsx";
+import { TransferProcessIcon } from "@/components/atoms/transfer-process-icon.tsx";
+import { TransferProcessStateIcon } from "@/components/atoms/transfer-process-state-icon.tsx";
+import { JsonLdDialog } from "@/components/molecules/JsonLdDialog.tsx";
+import AssetDialog from "@/components/organisms/asset-dialog.tsx";
+import { useTransferProcessJsonLd } from "@/hooks/use-transfer-process-json-ld.ts";
+import { T } from "@/i18n";
+import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog.ts";
+import { formatDateTime, formatDateTimeAgo } from "@/utilities/date.ts";
 import { Icon, Tooltip } from "@mui/material";
 import {
   Asset,
   ContractAgreement,
   ContractNegotiation,
 } from "@think-it-labs/edc-connector-client";
-import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
-import { T } from "@/i18n";
-import { Table } from "@/components/atoms/table.tsx";
-import { TransferProcessIcon } from "@/components/atoms/transfer-process-icon.tsx";
-import { TransferProcessStateIcon } from "@/components/atoms/transfer-process-state-icon.tsx";
 import { TransferProcess } from "@think-it-labs/edc-connector-client/dist/src/entities";
-import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog.ts";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
-import AssetDialog from "@/components/organisms/asset-dialog.tsx";
-import { JsonLdDialog } from "@/components/molecules/JsonLdDialog.tsx";
-import { useTransferProcessJsonLd } from "@/hooks/use-transfer-process-json-ld.ts";
-import { formatDateTime, formatDateTimeAgo } from "@/utilities/date.ts";
-import { StateChip } from "@/components/atoms/state-chip.tsx";
+import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
+import { useEffect, useState } from "react";
 
 interface AssetDetailsProps {
   transferProcess: TransferProcess;
@@ -135,6 +135,7 @@ export default function TransferProcessTableRow({
           <div className="flex gap-x-1 items-center">
             <StateChip
               state={transferProcess.state}
+              didError={!!transferProcess.errorDetail}
               icon={
                 <TransferProcessStateIcon transferProcess={transferProcess} />
               }
