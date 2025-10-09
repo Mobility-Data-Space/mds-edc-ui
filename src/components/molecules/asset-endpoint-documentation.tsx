@@ -1,11 +1,11 @@
 import React from "react";
 
-import {Input} from "@/components/atoms/input";
+import { Input } from "@/components/atoms/input";
 
-import {T} from "@/i18n";
+import { T } from "@/i18n";
 
-import {ASSET_ENDPOINT_DOCUMENTATION} from "@/jsonld/asset";
-import {AssetProperties} from "@/utilities/asset";
+import { ASSET_ENDPOINT_DOCUMENTATION } from "@/jsonld/asset";
+import { AssetProperties } from "@/utilities/asset";
 
 export interface AssetEndpointDocumentationProps {
   translator: (key: string) => string;
@@ -15,8 +15,12 @@ export interface AssetEndpointDocumentationProps {
   required?: boolean;
 }
 
-export function AssetEndpointDocumentation({ translator, formData, onChange, errors }: AssetEndpointDocumentationProps): JSX.Element {
-
+export function AssetEndpointDocumentation({
+  translator,
+  formData,
+  onChange,
+  errors,
+}: AssetEndpointDocumentationProps): JSX.Element {
   return (
     <Input
       name={ASSET_ENDPOINT_DOCUMENTATION}
@@ -27,7 +31,12 @@ export function AssetEndpointDocumentation({ translator, formData, onChange, err
       tooltip={translator("assets.new.fieldEndpointDocumentationTooltip")}
       value={formData[ASSET_ENDPOINT_DOCUMENTATION]}
       error={errors[ASSET_ENDPOINT_DOCUMENTATION]}
-      onChange={(event) => onChange({ ...formData, [ASSET_ENDPOINT_DOCUMENTATION]: event.target.value })}
+      onChange={(event) =>
+        onChange({
+          ...formData,
+          [ASSET_ENDPOINT_DOCUMENTATION]: event.target.value,
+        })
+      }
     />
   );
 }
