@@ -78,7 +78,7 @@ export class AgreementsRetirementController {
   #inner: Inner;
   #management: string;
   #pathPrefix = "/v3/contractagreements/retirements";
-  protocol: String = "dataspace-protocol-http";
+  protocol: String = "dataspace-protocol-http:2025-1";
 
   constructor(management: string) {
     this.#inner = new Inner();
