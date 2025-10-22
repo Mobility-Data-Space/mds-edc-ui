@@ -13,6 +13,8 @@ export enum DataAddressTypes {
   AzureStorage = "AzureStorage",
   HttpData = "HttpData",
   CustomJson = "CustomJson",
+  Kafka = "Kafka",
+  CallbackAddress = "CallbackAddress",
 }
 
 export const remoteTypes = [

@@ -61,7 +61,6 @@ import jsonld from "jsonld";
 import { Tag } from "@/components/atoms/key-value-pair-input.tsx";
 import { EDC_ID_FIELD } from "@/utilities/data-offer.ts";
 import { dateToString } from "./date";
-import { JsonLdObj } from "jsonld/jsonld-spec";
 
 const temporalCoverageValue = ([start, end]: [string, string]) => {
   if (!start && !end) {
@@ -728,7 +727,10 @@ export const assetToAssetInput = async (asset: Asset) => {
   } as AssetInput;
 };
 
-export const transformDataAddress = (formDataToTransform: DataAddress) => {
+export const transformDataAddress = (
+  formDataToTransform: DataAddress,
+  isTransfer?: boolean,
+) => {
   if (formDataToTransform.type === DataAddressTypes.CustomJson) {
     try {
       return JSON.parse(formDataToTransform.dataAddress as string);
@@ -817,6 +819,26 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
       blobName: formDataToTransform?.blobName,
       blobPrefix: formDataToTransform?.blobPrefix,
       keyName: formDataToTransform.keyName,
+    });
+  }
+
+  if (formDataToTransform.type === DataAddressTypes.Kafka) {
+    if (isTransfer) {
+      return removeEmptyFields({
+        type: DataAddressTypes.CallbackAddress,
+        uri: formDataToTransform.uri,
+        events: "transfer.process.start",
+      });
+    }
+
+    return removeEmptyFields({
+      type: DataAddressTypes.Kafka,
+      mechanism: formDataToTransform.mechanism,
+      protocol: formDataToTransform.protocol,
+      topic: formDataToTransform.topic,
+      endpoint: formDataToTransform.endpoint,
+      oidcToken: formDataToTransform.oidcToken,
+      adminPropertiesKey: formDataToTransform.adminPropertiesKey,
     });
   }
 
