@@ -441,6 +441,8 @@ export const en = {
       publishDataOffer: "Publish Data Offer",
       searchPlaceholder: "Search Data Offers by Offer ID",
       deleteSuccess: "Data offer deleted successfully!",
+      failedToFetch:
+        "failed to load contract definitions, Please try again later",
       "[id]": {
         title: "View data offer",
         deleteButton: "Delete",
