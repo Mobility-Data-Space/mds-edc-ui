@@ -24,7 +24,6 @@ import {
   Dataset,
 } from "@think-it-labs/edc-connector-client";
 import { TransferProcess } from "@think-it-labs/edc-connector-client/dist/src/entities";
-import { useConnectorContext } from "@think-it-labs/edc-connector-ui/connector";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
 import { Timestamp } from "@think-it-labs/edc-connector-ui/timestamp";
@@ -77,7 +76,8 @@ export default function ContractAgreementDialog({
     "providerId",
   );
 
-  const canTransfer = !isTerminated || participantId !== providerId;
+  const canTransfer = participantId !== providerId && !isTerminated;
+  const canTerminate = participantId !== providerId && !isTerminated;
 
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [isTerminateModalOpen, setIsTerminateModalOpen] = useState(false);
@@ -253,7 +253,7 @@ export default function ContractAgreementDialog({
         </DialogContent>
         <DialogActions>
           <div className="flex justify-between flex-grow p-3">
-            {!isTerminated && (
+            {canTerminate && (
               <Button
                 data-testid="transfer-process-terminate"
                 variant="contained"
@@ -267,7 +267,7 @@ export default function ContractAgreementDialog({
               <Button color="secondary" onClick={onClose} className="self-end">
                 <T string="common.close" />
               </Button>
-              {!canTransfer && (
+              {canTransfer && (
                 <Button
                   data-testid="transfer-process-submit"
                   variant="contained"
