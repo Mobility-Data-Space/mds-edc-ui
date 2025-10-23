@@ -61,7 +61,6 @@ import jsonld from "jsonld";
 import { Tag } from "@/components/atoms/key-value-pair-input.tsx";
 import { EDC_ID_FIELD } from "@/utilities/data-offer.ts";
 import { dateToString } from "./date";
-import { JsonLdObj } from "jsonld/jsonld-spec";
 
 const temporalCoverageValue = ([start, end]: [string, string]) => {
   if (!start && !end) {
@@ -817,6 +816,18 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
       blobName: formDataToTransform?.blobName,
       blobPrefix: formDataToTransform?.blobPrefix,
       keyName: formDataToTransform.keyName,
+    });
+  }
+
+  if (formDataToTransform.type === DataAddressTypes.Kafka) {
+    return removeEmptyFields({
+      type: DataAddressTypes.Kafka,
+      mechanism: formDataToTransform.mechanism,
+      protocol: formDataToTransform.protocol,
+      topic: formDataToTransform.topic,
+      endpoint: formDataToTransform.endpoint,
+      oidcToken: formDataToTransform.oidcToken,
+      adminPropertiesKey: formDataToTransform.adminPropertiesKey,
     });
   }
 

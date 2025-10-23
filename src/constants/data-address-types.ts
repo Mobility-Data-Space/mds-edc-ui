@@ -2,22 +2,22 @@ import { DataAddressTypes } from "@/utilities/data-address";
 
 export const DATA_ADDRESS_TYPE_HTTP = {
   value: DataAddressTypes.HttpData,
-  text: 'REST-API Endpoint',
+  text: "REST-API Endpoint",
 };
 
 export const DATA_ADDRESS_TYPE_S3 = {
   value: DataAddressTypes.AmazonS3,
-  text: 'Amazon S3',
+  text: "Amazon S3",
 };
 
 export const DATA_ADDRESS_TYPE_AZURE = {
   value: DataAddressTypes.AzureStorage,
-  text: 'Azure Blob Storage',
+  text: "Azure Blob Storage",
 };
 
 export const DATA_ADDRESS_TYPE_ON_REQUEST = {
   value: DataAddressTypes.MDSOnRequestOffer,
-  text: 'On Request',
+  text: "On Request",
 };
 
 export const DATA_ADDRESS_TYPE_CUSTOM_JSON = {
@@ -25,34 +25,41 @@ export const DATA_ADDRESS_TYPE_CUSTOM_JSON = {
   text: `Custom Json Data Address (JSON)`,
 };
 
+export const DATA_ADDRESS_TYPE_KAFKA = {
+  value: DataAddressTypes.Kafka,
+  text: "Kafka Streaming",
+};
+
 export const DATA_ADDRESS_SELECT_DATA = [
   DATA_ADDRESS_TYPE_HTTP,
   DATA_ADDRESS_TYPE_S3,
   DATA_ADDRESS_TYPE_AZURE,
   DATA_ADDRESS_TYPE_CUSTOM_JSON,
-  DATA_ADDRESS_TYPE_ON_REQUEST
+  DATA_ADDRESS_TYPE_ON_REQUEST,
+  DATA_ADDRESS_TYPE_KAFKA,
 ];
 
 export const DATA_ADDRESS_DESTINATION_SELECT_DATA = [
   DATA_ADDRESS_TYPE_HTTP,
   DATA_ADDRESS_TYPE_S3,
   DATA_ADDRESS_TYPE_AZURE,
-  DATA_ADDRESS_TYPE_CUSTOM_JSON
+  DATA_ADDRESS_TYPE_CUSTOM_JSON,
+  DATA_ADDRESS_TYPE_KAFKA,
 ];
 
 export const DATA_OFFER_TYPE_DATA_SOURCE = {
-  text: 'Available (with data source)',
-  value: 'Datasource',
+  text: "Available (with data source)",
+  value: "Datasource",
 };
 
 export const DATA_OFFER_TYPE_ON_REQUEST = {
-  text: 'On Request (without data source)',
-  value: 'On-Request',
+  text: "On Request (without data source)",
+  value: "On-Request",
 };
 
 export const DATA_OFFER_TYPE_LIVE = {
-  text: 'LIVE',
-  value: 'LIVE',
+  text: "LIVE",
+  value: "LIVE",
 };
 
 export const PUBLISH_MODE_PUBLISH_UNRESTRICTED = {
@@ -70,7 +77,12 @@ export const PUBLISH_MODE_PUBLISH_RESTRICTED = {
 export const PUBLISH_MODE_DO_NOT_PUBLISH = {
   text: "Create asset only (without data offer)",
   value: "DO_NOT_PUBLISH",
-  tooltip: "Create the asset but do not publish your data offer. You can do it later.",
+  tooltip:
+    "Create the asset but do not publish your data offer. You can do it later.",
 } as const;
 
-export const PUBLISH_MODES = [PUBLISH_MODE_PUBLISH_UNRESTRICTED, PUBLISH_MODE_PUBLISH_RESTRICTED, PUBLISH_MODE_DO_NOT_PUBLISH];
+export const PUBLISH_MODES = [
+  PUBLISH_MODE_PUBLISH_UNRESTRICTED,
+  PUBLISH_MODE_PUBLISH_RESTRICTED,
+  PUBLISH_MODE_DO_NOT_PUBLISH,
+];
