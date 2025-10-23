@@ -76,6 +76,10 @@ export default function ContractAgreementDialog({
     "providerId",
   );
 
+  const assetTitle =
+    contractAgreement.optionalValue<string>("edc", "assetTitle") ||
+    "No Title!!";
+
   const canTransfer = participantId !== providerId && !isTerminated;
   const canTerminate = participantId !== providerId && !isTerminated;
 
@@ -195,7 +199,7 @@ export default function ContractAgreementDialog({
                   : "file_upload") + (isTerminated ? "_off" : "")}
               </Icon>
             }
-            title={contractAgreement.assetId}
+            title={assetTitle}
             subtitle={participantId}
           />
         </DialogTitle>
