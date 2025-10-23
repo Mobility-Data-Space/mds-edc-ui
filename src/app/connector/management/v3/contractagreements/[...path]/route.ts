@@ -1,5 +1,6 @@
 import { proxyConnectorManagement } from "@/constants/proxy";
 import { STATE_RUNNING } from "@/constants/transfer-process";
+import { ASSET_TITLE } from "@/jsonld/asset";
 import {
   AGREEMENT_RETIREMENT_DATE,
   AGREEMENT_RETIREMENT_REASON,
@@ -21,6 +22,7 @@ const EDC_NAMESPACE = {
   TRANSFER_COUNT: "https://w3id.org/edc/v0.0.1/ns/transferCount",
   IS_TERMINATED_AT: "https://w3id.org/edc/v0.0.1/ns/isTerminatedAt",
   RETIREMENT_REASON: "https://w3id.org/edc/v0.0.1/ns/terminatedReason",
+  ASSET_TITLE: "https://w3id.org/edc/v0.0.1/ns/assetTitle",
 } as const;
 
 // TODO: to be moved
@@ -47,6 +49,7 @@ const enrichContractAgreement = (
   contractAgreement: ContractAgreement,
   retiredContractAgreementIds: string[],
   contractAgreementInfo: Record<string, ContractAgreementInfo>,
+  assetTitleMap: Map<string, string>,
 ) => {
   return {
     ...contractAgreement,
@@ -60,6 +63,8 @@ const enrichContractAgreement = (
       contractAgreementInfo[contractAgreement.id]?.isTerminatedAt || 0,
     [EDC_NAMESPACE.RETIREMENT_REASON]:
       contractAgreementInfo[contractAgreement.id]?.retirementReason || "",
+    [EDC_NAMESPACE.ASSET_TITLE]:
+      assetTitleMap.get(contractAgreement.assetId) || null,
   };
 };
 
@@ -212,12 +217,34 @@ const handleContractAgreementsQuery = async (
     const contractAgreements =
       await client.management.contractAgreements.queryAll(body);
 
+    const assets = await client.management.assets.queryAll({
+      limit: 100,
+      offset: 0,
+      filterExpression: [
+        {
+          operandLeft: "id",
+          operator: "in",
+          operandRight: contractAgreements.map(
+            (contractAgreement) => contractAgreement.assetId,
+          ),
+        },
+      ],
+    });
+
+    const assetIdTitleMap = new Map(
+      assets.map((asset) => [
+        asset.id,
+        asset.properties[ASSET_TITLE][0]["@value"],
+      ]),
+    );
+
     const result = contractAgreements
       .map((agreement) =>
         enrichContractAgreement(
           agreement,
           retiredContractAgreementIds,
           contractAgreementInfo,
+          assetIdTitleMap,
         ),
       )
       .filter((agreement) => shouldIncludeAgreement(agreement, statusFilter));

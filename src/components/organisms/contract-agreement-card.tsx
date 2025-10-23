@@ -44,6 +44,9 @@ export default function ContractAgreementCard({
     "edc",
     "transferCount",
   );
+  const assetTitle =
+    contractAgreement.optionalValue<string>("edc", "assetTitle") ||
+    "No Title!!";
 
   const isConsumer = contractAgreement.consumerId === connector.id;
   const Icon =
@@ -136,7 +139,7 @@ export default function ContractAgreementCard({
                     variant="h4"
                     className="!leading-none hover:underline cursor-pointer [word-break:break-word]"
                   >
-                    <ContractAgreementView.AssetId />
+                    {assetTitle}
                   </Typography>
                   <Typography variant="body1" color="textSecondary">
                     <ContractAgreementView.ProviderId />
