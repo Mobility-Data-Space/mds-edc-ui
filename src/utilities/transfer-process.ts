@@ -15,12 +15,22 @@ import { theme } from "@/theme/ThemeProvider.tsx";
 export const TRANSFER_TYPE_PULL = "-PULL";
 export const TRANSFER_TYPE_PUSH = "-PUSH";
 
+type TransferProcessInputWithCallback = TransferProcessInput & {
+  callbackAddresses: {
+    "@type": "CallbackAddress";
+    transactional: boolean;
+    uri: string;
+    events: string;
+  }[];
+};
+
 export const createTransferProcessRequest = (
   agreement: ContractAgreement,
   dataDestination: DataAddress,
   counterPartyAddress: string,
 ): TransferProcessInput => {
-  let transferProcess: TransferProcessInput = {} as TransferProcessInput;
+  let transferProcess: TransferProcessInputWithCallback =
+    {} as TransferProcessInputWithCallback;
 
   const transferType =
     dataDestination.type +
@@ -31,10 +41,18 @@ export const createTransferProcessRequest = (
     (transferProcess.transferType = transferType));
 
   if (!dataDestination.isPull) {
-    transferProcess.dataDestination = transformDataAddress(
-      dataDestination,
-      true,
-    );
+    transferProcess.dataDestination = transformDataAddress(dataDestination);
+  }
+
+  if (transferType === DataAddressTypes.Kafka + TRANSFER_TYPE_PULL) {
+    transferProcess.callbackAddresses = [
+      {
+        "@type": "CallbackAddress",
+        transactional: dataDestination.isTransactional,
+        uri: dataDestination.uri,
+        events: "transfer.process.start",
+      },
+    ];
   }
 
   if (dataDestination.type === DataAddressTypes.CustomJson) {
