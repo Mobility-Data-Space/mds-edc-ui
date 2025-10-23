@@ -727,10 +727,7 @@ export const assetToAssetInput = async (asset: Asset) => {
   } as AssetInput;
 };
 
-export const transformDataAddress = (
-  formDataToTransform: DataAddress,
-  isTransfer?: boolean,
-) => {
+export const transformDataAddress = (formDataToTransform: DataAddress) => {
   if (formDataToTransform.type === DataAddressTypes.CustomJson) {
     try {
       return JSON.parse(formDataToTransform.dataAddress as string);
@@ -823,14 +820,6 @@ export const transformDataAddress = (
   }
 
   if (formDataToTransform.type === DataAddressTypes.Kafka) {
-    if (isTransfer) {
-      return removeEmptyFields({
-        type: DataAddressTypes.CallbackAddress,
-        uri: formDataToTransform.uri,
-        events: "transfer.process.start",
-      });
-    }
-
     return removeEmptyFields({
       type: DataAddressTypes.Kafka,
       mechanism: formDataToTransform.mechanism,

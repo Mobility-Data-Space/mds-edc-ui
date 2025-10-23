@@ -10,6 +10,7 @@ export interface FormDataAddressKafkaProps {
   formData: KafkaDataAddress;
   isDestination?: boolean;
   onChange: any;
+
   errors: { [key: string]: boolean | string };
 }
 export function FormDataAddressKafka({
@@ -29,10 +30,13 @@ export function ConsumerFormDataAddressKafka({
   onChange,
   translator,
 }: FormDataAddressKafkaProps): JSX.Element {
+  if (!formData.isPull) {
+    onChange({ ...formData, isPull: true });
+  }
   return (
     <div className="flex flex-col gap-y-5">
       <Checkbox
-        label={<T string="Is Transactional" />}
+        label={<T string="Provide Callback Address" />}
         value={formData.isTransactional}
         onChange={(event) =>
           onChange({ ...formData, isTransactional: event.target.checked })
