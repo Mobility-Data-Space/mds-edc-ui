@@ -83,6 +83,7 @@ import {
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useGenerateNextContractDefinitionId } from "@/hooks/use-generate-next-contract-definition-id";
 
 interface DataOffer {
   asset: AssetInput;
@@ -136,14 +137,30 @@ export default function CreateDataOfferPage() {
       );
   }, [client, setExistingIds, setExistingContractIds]);
 
+  const { nextId, error: generateIdError } =
+    useGenerateNextContractDefinitionId();
+
   // Update contract ID when existing contracts are loaded
   useEffect(() => {
-    if (existingContractIds) {
-      setFormData((prev) => ({
-        ...prev,
-        contract: createDefaultContractDefinitionFormData(existingContractIds),
-      }));
+    if (generateIdError) {
+      enqueueSnackbar("", {
+        content: (key) => (
+          <Snackbar
+            type="error"
+            message={translator("contractDefinitions.failedToFetch")}
+            onClose={() => {
+              closeSnackbar(key);
+            }}
+          />
+        ),
+      });
+      return;
     }
+
+    setFormData((prev) => ({
+      ...prev,
+      contract: createDefaultContractDefinitionFormData(nextId),
+    }));
   }, [existingContractIds]);
 
   const generalInfoIsNotValid = () => {
