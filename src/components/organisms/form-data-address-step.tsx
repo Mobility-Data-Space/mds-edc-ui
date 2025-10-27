@@ -11,10 +11,7 @@ import { FormDataAddressAmazonS3 } from "@/components/organisms/form-data-addres
 import { AssetContactEmailAndSubject } from "@/components/molecules/asset-contact-email-and-subject.tsx";
 import { FormDataAddressHttp } from "@/components/organisms/form-data-address-http";
 import { FormDataAddressAzure } from "@/components/organisms/form-data-address-azure";
-import {
-  DataAddress,
-  KafkaDataAddress,
-} from "@think-it-labs/edc-connector-client";
+import { DataAddress } from "@think-it-labs/edc-connector-client";
 import { T } from "@/i18n";
 import { FormDataAddressKafka } from "./form-data-address-kafka";
 
@@ -134,7 +131,7 @@ export function FormDataAddressStep({
       {formData.type === DataAddressTypes.Kafka && (
         <FormDataAddressKafka
           translator={translator}
-          formData={formData as KafkaDataAddress}
+          formData={formData}
           onChange={onChange}
           errors={errors}
           isDestination={isDestination}
