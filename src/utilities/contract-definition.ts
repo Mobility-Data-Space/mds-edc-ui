@@ -1,6 +1,5 @@
 import { removeEmptyFields } from "@/utilities/form";
 import { ContractDefinitionInput } from "@think-it-labs/edc-connector-client";
-import { generateDataOfferId } from "@/utilities/data-offer";
 
 export type MdsContractDefinitionInput = ContractDefinitionInput & {
   privateProperties: { manualApproval: boolean };
