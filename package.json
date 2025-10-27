@@ -21,7 +21,7 @@
     "@mui/icons-material": "^7.3.2",
     "@mui/material": "^7.3.4",
     "@mui/x-date-pickers": "^7.28.3",
-    "@tailwindcss/typography": "^0.5.16",
+    "@tailwindcss/typography": "^0.5.19",
     "@think-it-labs/edc-connector-client": "^0.8.0",
     "clsx": "^2.1.0",
     "date-fns": "2.0.0",
