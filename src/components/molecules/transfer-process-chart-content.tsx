@@ -14,6 +14,7 @@ interface Entry {
   value?: number;
   color?: string;
   hoverColor?: string;
+  [key: string]: unknown;
 }
 
 interface MousePosition {
