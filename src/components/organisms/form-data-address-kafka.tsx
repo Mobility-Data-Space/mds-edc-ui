@@ -37,7 +37,7 @@ export function ConsumerFormDataAddressKafka({
     <div className="flex flex-col gap-y-5">
       <Checkbox
         label={<T string="Provide Callback Address" />}
-        value={formData.isTransactional}
+        value={!!formData.isTransactional}
         onChange={(event) =>
           onChange({ ...formData, isTransactional: event.target.checked })
         }
