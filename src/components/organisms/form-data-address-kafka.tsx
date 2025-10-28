@@ -1,5 +1,5 @@
 import React from "react";
-import { KafkaDataAddress } from "@think-it-labs/edc-connector-client";
+import { DataAddress } from "@think-it-labs/edc-connector-client";
 import { T } from "@/i18n";
 import { Input } from "@/components/atoms/input";
 import { Checkbox } from "../atoms/checkbox";
@@ -7,7 +7,7 @@ import { MuiSelect } from "../atoms/mui-select";
 
 export interface FormDataAddressKafkaProps {
   translator: (key: string) => string;
-  formData: KafkaDataAddress;
+  formData: DataAddress;
   isDestination?: boolean;
   onChange: any;
 
