@@ -46,7 +46,7 @@ export default function ContractAgreementCard({
   );
   const assetTitle =
     contractAgreement.optionalValue<string>("edc", "assetTitle") ||
-    "No Title!!";
+    contractAgreement.assetId;
 
   const isConsumer = contractAgreement.consumerId === connector.id;
   const Icon =
