@@ -1,5 +1,9 @@
+import { CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS } from "@/constants/contract-agreement";
 import { proxyConnectorManagement } from "@/constants/proxy";
 import { STATE_RUNNING } from "@/constants/transfer-process";
+import { ASSET_TITLE } from "@/jsonld/asset";
+import { EnrichedContractAgreement } from "@/types/enriched-contract-agreement";
+import { cache } from "@/utilities/cache";
 import {
   AGREEMENT_RETIREMENT_DATE,
   AGREEMENT_RETIREMENT_REASON,
@@ -7,21 +11,15 @@ import {
 } from "@/utilities/contract-agreement";
 import { operatorIn } from "@/utilities/data-offer";
 import {
+  Catalog,
   ContractAgreement,
   CriterionInput,
   EdcConnectorClient,
+  expand,
   QuerySpec,
   TransferProcessStates,
 } from "@think-it-labs/edc-connector-client";
 import { NextRequest, NextResponse } from "next/server";
-
-const EDC_NAMESPACE = {
-  IS_TERMINATED: "https://w3id.org/edc/v0.0.1/ns/isTerminated",
-  IS_RUNNING: "https://w3id.org/edc/v0.0.1/ns/isRunning",
-  TRANSFER_COUNT: "https://w3id.org/edc/v0.0.1/ns/transferCount",
-  IS_TERMINATED_AT: "https://w3id.org/edc/v0.0.1/ns/isTerminatedAt",
-  RETIREMENT_REASON: "https://w3id.org/edc/v0.0.1/ns/terminatedReason",
-} as const;
 
 // TODO: to be moved
 function connectorApiKey() {
@@ -30,6 +28,11 @@ function connectorApiKey() {
 
 function connectorManagementUrl() {
   return process.env.EDC_MANAGEMENT_URL || "";
+}
+
+function connectorId() {
+  if (!process.env.EDC_ID) throw new Error("Connector ID is missing");
+  return process.env.EDC_ID;
 }
 
 const client = new EdcConnectorClient.Builder()
@@ -47,34 +50,35 @@ const enrichContractAgreement = (
   contractAgreement: ContractAgreement,
   retiredContractAgreementIds: string[],
   contractAgreementInfo: Record<string, ContractAgreementInfo>,
+  assetTitleMap: Map<string, string>,
 ) => {
-  return {
-    ...contractAgreement,
-    [EDC_NAMESPACE.IS_TERMINATED]:
-      retiredContractAgreementIds.includes(contractAgreement.id) || false,
-    [EDC_NAMESPACE.IS_RUNNING]:
-      contractAgreementInfo[contractAgreement.id]?.isRunning || false,
-    [EDC_NAMESPACE.TRANSFER_COUNT]:
-      contractAgreementInfo[contractAgreement.id]?.transfersCount || 0,
-    [EDC_NAMESPACE.IS_TERMINATED_AT]:
-      contractAgreementInfo[contractAgreement.id]?.isTerminatedAt || 0,
-    [EDC_NAMESPACE.RETIREMENT_REASON]:
-      contractAgreementInfo[contractAgreement.id]?.retirementReason || "",
-  };
+  return expand(
+    {
+      ...contractAgreement,
+      [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.IS_TERMINATED]:
+        retiredContractAgreementIds.includes(contractAgreement.id) || false,
+      [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.IS_RUNNING]:
+        contractAgreementInfo[contractAgreement.id]?.isRunning || false,
+      [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.TRANSFER_COUNT]:
+        contractAgreementInfo[contractAgreement.id]?.transfersCount || 0,
+      [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.IS_TERMINATED_AT]:
+        contractAgreementInfo[contractAgreement.id]?.isTerminatedAt || 0,
+      [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.RETIREMENT_REASON]:
+        contractAgreementInfo[contractAgreement.id]?.retirementReason || "",
+      [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.ASSET_TITLE]:
+        assetTitleMap.get(contractAgreement.assetId) || null,
+    },
+    () => new EnrichedContractAgreement(),
+  );
 };
 
 const shouldIncludeAgreement = (
-  contractAgreement: {
-    "https://w3id.org/edc/v0.0.1/ns/isTerminated": boolean;
-    "https://w3id.org/edc/v0.0.1/ns/isRunning": boolean;
-    "https://w3id.org/edc/v0.0.1/ns/transferCount": number;
-    "@id": string;
-  },
+  contractAgreement: EnrichedContractAgreement,
   statusFilter: CriterionInput | null,
 ) => {
   //NOTE: this is inefficient and should be replace when this is closed https://github.com/eclipse-edc/Connector/issues/5132
   if (statusFilter && !statusFilter.operandRight) {
-    return !contractAgreement[EDC_NAMESPACE.IS_TERMINATED];
+    return !contractAgreement.isTerminated;
   }
   return true;
 };
@@ -212,15 +216,113 @@ const handleContractAgreementsQuery = async (
     const contractAgreements =
       await client.management.contractAgreements.queryAll(body);
 
-    const result = contractAgreements
-      .map((agreement) =>
-        enrichContractAgreement(
-          agreement,
-          retiredContractAgreementIds,
-          contractAgreementInfo,
+    const assets = await client.management.assets.queryAll({
+      limit: 100,
+      offset: 0,
+      filterExpression: [
+        {
+          operandLeft: "id",
+          operator: "in",
+          operandRight: contractAgreements.map(
+            (contractAgreement) => contractAgreement.assetId,
+          ),
+        },
+      ],
+    });
+
+    const assetIdTitleMap = new Map(
+      assets.map((asset) => [
+        asset.id,
+        asset.properties[ASSET_TITLE][0]["@value"],
+      ]),
+    );
+
+    const finalContractAgreements = (
+      await Promise.all(
+        contractAgreements.map((agreement) =>
+          enrichContractAgreement(
+            agreement,
+            retiredContractAgreementIds,
+            contractAgreementInfo,
+            assetIdTitleMap,
+          ),
         ),
       )
-      .filter((agreement) => shouldIncludeAgreement(agreement, statusFilter));
+    ).filter((agreement) => shouldIncludeAgreement(agreement, statusFilter));
+
+    // get contracts with no asset title
+    const foreignContracts = contractAgreements.filter(
+      (ca) => ca.providerId !== connectorId(),
+    );
+    // group assets by connector id
+    const connectorContractsMap = Map.groupBy(
+      foreignContracts,
+      (ca) => ca.providerId,
+    );
+    // fetch connector dsp
+    const dsps = await Promise.all(
+      Array.from(connectorContractsMap, async ([connectorId, cas]) => [
+        connectorId,
+        await cache.get(
+          connectorId,
+          async () =>
+            (
+              await client.management.contractAgreements.getNegotiation(
+                cas[0].id,
+              )
+            ).optionalValue("edc", "counterPartyAddress") as string,
+        ),
+      ]),
+    );
+    // fetch the asset titles using the dsp
+    const assetsConnectorMap = await Promise.all(
+      dsps.map(async ([connectorId, dsp]): Promise<[string, Catalog]> => {
+        return [
+          connectorId,
+          await client.management.catalog.request({
+            counterPartyAddress: dsp,
+            querySpec: {
+              limit: 1000,
+              offset: 0,
+              filterExpression: [
+                {
+                  operandLeft: "id",
+                  operator: "in",
+                  operandRight: connectorContractsMap
+                    .get(connectorId)
+                    ?.map((ca) => ca.assetId),
+                },
+              ],
+            },
+          }),
+        ];
+      }),
+    );
+
+    const catalogConnectorMap = new Map(
+      assetsConnectorMap.flatMap(([connectorId, catalog]) => {
+        return catalog.datasets.map((dataset) => {
+          return [
+            `${connectorId}-${dataset.id}`,
+            dataset["http://purl.org/dc/terms/title"]?.[0]?.["@value"] as
+              | string
+              | undefined,
+          ];
+        });
+      }),
+    );
+
+    // enrich all the contracts
+    const result = finalContractAgreements.map((ca) => {
+      if (!ca.assetTitle) {
+        ca.setValue(
+          "edc",
+          "assetTitle",
+          catalogConnectorMap.get(`${ca.providerId}-${ca.assetId}`) || null,
+        );
+      }
+      return ca;
+    });
 
     return new NextResponse(JSON.stringify(result), { status: 200 });
   } catch (error) {
