@@ -4,6 +4,7 @@ import ContractAgreementTerminateDialog from "@/components/organisms/contract-ag
 import { TransferFormDialog } from "@/components/templates/transfer-form-dialog";
 import { TERMINATION_REASON_BY_USER } from "@/constants/contract-agreement.ts";
 import { T } from "@/i18n";
+import { EnrichedContractAgreement } from "@/types/enriched-contract-agreement";
 import {
   datasetToAsset,
   removeJsonLdSchemaFromProperties,
@@ -31,7 +32,7 @@ import { enqueueSnackbar } from "notistack";
 import { useCallback, useEffect, useState } from "react";
 
 interface ContractAgreementDialogProps {
-  contractAgreement: ContractAgreement;
+  contractAgreement: EnrichedContractAgreement;
   open: boolean;
   onClose: () => void;
   participantId: string;
@@ -55,29 +56,14 @@ export default function ContractAgreementDialog({
   onTerminateSuccess = () => {},
   onInitSuccess = () => {},
 }: ContractAgreementDialogProps) {
-  const retirementReason = contractAgreement.optionalValue<string>(
-    "edc",
-    "terminatedReason",
-  );
-  const isTerminated = contractAgreement.optionalValue<boolean>(
-    "edc",
-    "isTerminated",
-  );
-  const isRunning = contractAgreement.optionalValue<boolean>(
-    "edc",
-    "isRunning",
-  );
-  const isTerminatedAt = contractAgreement.optionalValue<number>(
-    "edc",
-    "isTerminatedAt",
-  );
-  const providerId = contractAgreement.optionalValue<string>(
-    "edc",
-    "providerId",
-  );
+  const assetTitle = contractAgreement.assetId || contractAgreement.assetId;
 
-  const canTransfer = participantId !== providerId && !isTerminated;
-  const canTerminate = participantId !== providerId && !isTerminated;
+  const canTransfer =
+    participantId !== contractAgreement.providerId &&
+    !contractAgreement.isTerminated;
+  const canTerminate =
+    participantId !== contractAgreement.providerId &&
+    !contractAgreement.isTerminated;
 
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [isTerminateModalOpen, setIsTerminateModalOpen] = useState(false);
@@ -189,21 +175,25 @@ export default function ContractAgreementDialog({
         <DialogTitle>
           <TitleWithIcon
             icon={
-              <Icon fontSize="large" color={isTerminated ? "error" : "inherit"}>
+              <Icon
+                fontSize="large"
+                color={contractAgreement.isTerminated ? "error" : "inherit"}
+              >
                 {(contractAgreement.consumerId === participantId
                   ? "file_download"
-                  : "file_upload") + (isTerminated ? "_off" : "")}
+                  : "file_upload") +
+                  (contractAgreement.isTerminated ? "_off" : "")}
               </Icon>
             }
-            title={contractAgreement.assetId}
+            title={assetTitle}
             subtitle={participantId}
           />
         </DialogTitle>
         <DialogContent style={contentStyle}>
           <div className="flex flex-col gapy-y-3">
-            {isRunning && <LinearProgress className="my-3" />}
+            {contractAgreement.isRunning && <LinearProgress className="my-3" />}
 
-            {isTerminated && (
+            {contractAgreement.isTerminated && (
               <div className="flex gap-x-3 p-4 mb-3 rounded bg-red-50">
                 <svg
                   viewBox="0 0 20 20"
@@ -221,15 +211,15 @@ export default function ContractAgreementDialog({
                   <Typography variant="subtitle1" className="text-red-800">
                     {TERMINATION_REASON_BY_USER}
                   </Typography>
-                  {retirementReason && (
+                  {contractAgreement.retirementReason && (
                     <Typography variant="body2" className="text-red-800">
-                      {retirementReason}
+                      {contractAgreement.retirementReason}
                     </Typography>
                   )}
-                  {!!isTerminatedAt && (
+                  {!!contractAgreement.isTerminatedAt && (
                     <Typography variant="body2" className="text-red-800">
                       <Timestamp
-                        milliseconds={isTerminatedAt}
+                        milliseconds={contractAgreement.isTerminatedAt}
                         year="numeric"
                         month="2-digit"
                         day="2-digit"
