@@ -38,6 +38,7 @@ function connectorId() {
 const client = new EdcConnectorClient.Builder()
   .apiToken(connectorApiKey())
   .managementUrl(connectorManagementUrl())
+  .protocolVersion("dataspace-protocol-http:2025-1")
   .build();
 
 const getAgreementsRetirementController = () => {

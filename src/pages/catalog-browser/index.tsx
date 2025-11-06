@@ -63,9 +63,10 @@ export default function CatalogPage() {
     {} as Dataset,
   );
 
-  const client = useEdcConnectorClient({
-    management: proxyConnectorManagement,
-  });
+  const client = useEdcConnectorClient(
+    { management: proxyConnectorManagement },
+    "dataspace-protocol-http",
+  );
   useEffect(() => {
     if (counterPartyAddress) {
       client.management.catalog
