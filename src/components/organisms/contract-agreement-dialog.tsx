@@ -32,7 +32,7 @@ import { enqueueSnackbar } from "notistack";
 import { useCallback, useEffect, useState } from "react";
 
 interface ContractAgreementDialogProps {
-  contractAgreement: EnrichedContractAgreement;
+  contractAgreement: ContractAgreement;
   open: boolean;
   onClose: () => void;
   participantId: string;
@@ -47,7 +47,7 @@ interface ContractAgreementDialogProps {
 export default function ContractAgreementDialog({
   open,
   onClose,
-  contractAgreement,
+  contractAgreement: _contractAgreement,
   participantId,
   managementUrl,
   connectorEndpoint,
@@ -56,6 +56,10 @@ export default function ContractAgreementDialog({
   onTerminateSuccess = () => {},
   onInitSuccess = () => {},
 }: ContractAgreementDialogProps) {
+  const contractAgreement = Object.assign(
+    new EnrichedContractAgreement(),
+    _contractAgreement,
+  );
   const assetTitle = contractAgreement.assetId || contractAgreement.assetId;
 
   const canTransfer =
@@ -115,7 +119,7 @@ export default function ContractAgreementDialog({
     }
   }, [
     edcClient,
-    contractAgreement,
+    _contractAgreement,
     participantId,
     connectorEndpoint,
     translator,
