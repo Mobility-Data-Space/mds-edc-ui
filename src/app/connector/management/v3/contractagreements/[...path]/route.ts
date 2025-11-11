@@ -8,6 +8,7 @@ import {
   AGREEMENT_RETIREMENT_DATE,
   AGREEMENT_RETIREMENT_REASON,
   AgreementsRetirementController,
+  RetiredContractAgreement,
 } from "@/utilities/contract-agreement";
 import { operatorIn } from "@/utilities/data-offer";
 import {
@@ -48,7 +49,7 @@ const getAgreementsRetirementController = () => {
 // Utility functions for contract agreement processing
 const enrichContractAgreement = (
   contractAgreement: ContractAgreement,
-  retiredContractAgreementIds: string[],
+  retiredContractAgreementMap: Map<string, RetiredContractAgreement>,
   contractAgreementInfo: Record<string, ContractAgreementInfo>,
   assetTitleMap: Map<string, string>,
 ) => {
@@ -56,15 +57,20 @@ const enrichContractAgreement = (
     {
       ...contractAgreement,
       [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.IS_TERMINATED]:
-        retiredContractAgreementIds.includes(contractAgreement.id) || false,
+        retiredContractAgreementMap.has(contractAgreement.id) || false,
       [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.IS_RUNNING]:
         contractAgreementInfo[contractAgreement.id]?.isRunning || false,
       [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.TRANSFER_COUNT]:
         contractAgreementInfo[contractAgreement.id]?.transfersCount || 0,
       [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.IS_TERMINATED_AT]:
-        contractAgreementInfo[contractAgreement.id]?.isTerminatedAt || 0,
+        contractAgreementInfo[contractAgreement.id]?.isTerminatedAt ||
+        retiredContractAgreementMap.get(contractAgreement.id)?.isTerminatedAt ||
+        0,
       [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.RETIREMENT_REASON]:
-        contractAgreementInfo[contractAgreement.id]?.retirementReason || "",
+        contractAgreementInfo[contractAgreement.id]?.retirementReason ||
+        retiredContractAgreementMap.get(contractAgreement.id)
+          ?.retirementReason ||
+        "",
       [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.ASSET_TITLE]:
         assetTitleMap.get(contractAgreement.assetId) || null,
     },
@@ -157,10 +163,11 @@ const handleContractAgreementsQuery = async (
       ),
     );
 
+    // should fetch only the needed ones
     const transferProcesses =
       await client.management.transferProcesses.queryAll({
         offset: 0,
-        limit: 100,
+        limit: 10000,
       });
 
     const contractAgreementInfoToIdMap = transferProcesses.reduce(
@@ -242,7 +249,7 @@ const handleContractAgreementsQuery = async (
         contractAgreements.map((agreement) =>
           enrichContractAgreement(
             agreement,
-            retiredContractAgreementIds,
+            retiredAgreementToIdMap,
             contractAgreementInfo,
             assetIdTitleMap,
           ),
