@@ -64,12 +64,15 @@ const enrichContractAgreement = (
         contractAgreementInfo[contractAgreement.id]?.transfersCount || 0,
       [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.IS_TERMINATED_AT]:
         contractAgreementInfo[contractAgreement.id]?.isTerminatedAt ||
-        retiredContractAgreementMap.get(contractAgreement.id)?.isTerminatedAt ||
+        retiredContractAgreementMap.get(contractAgreement.id)?.[
+          AGREEMENT_RETIREMENT_DATE
+        ] ||
         0,
       [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.RETIREMENT_REASON]:
         contractAgreementInfo[contractAgreement.id]?.retirementReason ||
-        retiredContractAgreementMap.get(contractAgreement.id)
-          ?.retirementReason ||
+        retiredContractAgreementMap.get(contractAgreement.id)?.[
+          AGREEMENT_RETIREMENT_REASON
+        ] ||
         "",
       [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.ASSET_TITLE]:
         assetTitleMap.get(contractAgreement.assetId) || null,
