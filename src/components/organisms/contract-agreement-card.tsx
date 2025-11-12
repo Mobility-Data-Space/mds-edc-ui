@@ -1,6 +1,7 @@
 import { proxyConnectorManagement } from "@/constants/proxy";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T } from "@/i18n";
+import { EnrichedContractAgreement } from "@/types/enriched-contract-agreement";
 import { formatDateTimeAgo } from "@/utilities/date.ts";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import FileDownloadOffIcon from "@mui/icons-material/FileDownloadOff";
@@ -28,30 +29,20 @@ const contractIcons = {
 } as const;
 
 export default function ContractAgreementCard({
-  contractAgreement,
+  contractAgreement: _contractAgreement,
   onClick,
 }: ContractAgreementCard) {
   const { connector } = useParticipantConnectorState();
-  const isTerminated = contractAgreement.mandatoryValue<boolean>(
-    "edc",
-    "isTerminated",
+  const contractAgreement = Object.assign(
+    new EnrichedContractAgreement(),
+    _contractAgreement,
   );
-  const isRunning = contractAgreement.mandatoryValue<boolean>(
-    "edc",
-    "isRunning",
-  );
-  const transferCount = contractAgreement.mandatoryValue<number>(
-    "edc",
-    "transferCount",
-  );
-  const assetTitle =
-    contractAgreement.optionalValue<string>("edc", "assetTitle") ||
-    contractAgreement.assetId;
+  const assetTitle = contractAgreement.assetTitle || contractAgreement.assetId;
 
   const isConsumer = contractAgreement.consumerId === connector.id;
   const Icon =
-    contractIcons[isTerminated ? "terminated" : "active"][
-      isConsumer ? "consumer" : "provider"
+    contractIcons[contractAgreement.isTerminated ? "terminated" : "active"][
+    isConsumer ? "consumer" : "provider"
     ];
 
   return (
@@ -130,7 +121,7 @@ export default function ContractAgreementCard({
                 <div className="flex items-center">
                   <Icon
                     fontSize="large"
-                    color={isTerminated ? "error" : "inherit"}
+                    color={contractAgreement.isTerminated ? "error" : "inherit"}
                   />
                 </div>
                 <div>
@@ -146,7 +137,9 @@ export default function ContractAgreementCard({
                   </Typography>
                 </div>
 
-                {isRunning && <LinearProgress className="my-3" />}
+                {contractAgreement.isRunning && (
+                  <LinearProgress className="my-3" />
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-y-4 py-4">
@@ -173,7 +166,9 @@ export default function ContractAgreementCard({
                   <Typography variant="body2" color="textDisabled">
                     <T string="contractAgreements.transfers" />
                   </Typography>
-                  <Typography variant="body2">{transferCount}</Typography>
+                  <Typography variant="body2">
+                    {contractAgreement.transferCount}
+                  </Typography>
                 </div>
 
                 <div className="">
@@ -193,10 +188,10 @@ export default function ContractAgreementCard({
                   </Typography>
                   <Typography
                     variant="body2"
-                    color={isTerminated ? "error" : "inherit"}
+                    color={contractAgreement.isTerminated ? "error" : "inherit"}
                   >
                     <T
-                      string={`contractAgreements.[id].status${isTerminated ? "Terminated" : "Active"}`}
+                      string={`contractAgreements.[id].status${contractAgreement.isTerminated ? "Terminated" : "Active"}`}
                     />
                   </Typography>
                 </div>
