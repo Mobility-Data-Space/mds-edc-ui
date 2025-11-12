@@ -3,13 +3,24 @@ import { TitleWithIcon } from "@/components/atoms/TitleWithIcon";
 import { DeleteDialog } from "@/components/molecules/delete-dialog";
 import { Snackbar } from "@/components/molecules/snackbar";
 import AssetDetails from "@/components/organisms/asset-details";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, IconButton, Tooltip} from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Icon,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
 import { T, useTranslator } from "@/i18n";
 import { ASSET_TITLE } from "@/jsonld/asset";
-import { Asset } from "@think-it-labs/edc-connector-client";
+import { Asset, EdcConnectorClient } from "@think-it-labs/edc-connector-client";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
-import { enqueueSnackbar, useSnackbar } from 'notistack';
-import { useState } from "react";
+import { enqueueSnackbar, useSnackbar } from "notistack";
+import { useCallback, useState } from "react";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
+import { proxyConnectorManagement } from "@/constants/proxy";
 
 interface AssetDialogProps {
   asset: Asset;
@@ -22,32 +33,71 @@ interface AssetDialogProps {
   deleteEnabled?: boolean;
   deleteItem?: () => Promise<void>;
   onDeleteSuccess?: () => void;
-  contentStyle?: { [key: string]: string }
+  contentStyle?: { [key: string]: string };
 }
-export default function AssetDialog({ open, onClose, asset, onEditClick, deleteEnabled = false, participantId, connectorEndpoint, deleteItem, onDeleteSuccess, contentStyle = {} }: AssetDialogProps) {
+
+const hasContract = async (client: EdcConnectorClient, assetId: string) => {
+  const agreements = await client.management.contractAgreements.queryAll({
+    filterExpression: [
+      { operandLeft: "assetId", operator: "=", operandRight: assetId },
+    ],
+  });
+  return agreements.length > 0;
+};
+export default function AssetDialog({
+  open,
+  onClose,
+  asset,
+  onEditClick,
+  deleteEnabled = false,
+  participantId,
+  connectorEndpoint,
+  deleteItem,
+  onDeleteSuccess,
+  contentStyle = {},
+}: AssetDialogProps) {
   const id = asset["@id"];
   const title = readValue(asset.properties, ASSET_TITLE) || "";
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const { closeSnackbar } = useSnackbar();
   const { translator } = useTranslator();
 
+  const client = useEdcConnectorClient({
+    management: proxyConnectorManagement,
+  });
+
   const onDeleteConfirm = async () => {
     try {
-      deleteItem && await deleteItem();
+      const assetHasContracts = await hasContract(client, id);
+      if (assetHasContracts) {
+        throw new Error(
+          "Asset that is referenced in at least one Contract cannot be deleted"
+        );
+      }
+      if (deleteItem) {
+        await deleteItem();
+      }
       onClose();
       if (onDeleteSuccess) {
         onDeleteSuccess();
       }
     } catch (error) {
+      let message = `Failed deleting asset ${id}`;
+
+      if (error instanceof Error) {
+        message = error.message;
+      }
       /* TODO: translate */
       enqueueSnackbar("", {
         content: (key) => (
           <Snackbar
             type="error"
-            message={`Failed deleting asset ${id}`}
-            onClose={() => { closeSnackbar(key); }}
+            message={message}
+            onClose={() => {
+              closeSnackbar(key);
+            }}
           />
-        )
+        ),
       });
     }
   };
@@ -70,28 +120,42 @@ export default function AssetDialog({ open, onClose, asset, onEditClick, deleteE
       >
         <DialogTitle>
           <div className="flex flex-row justify-between">
-            <TitleWithIcon icon={<AssetIcon asset={asset} fontSize="large" />} title={title} subtitle={id} />
+            <TitleWithIcon
+              icon={<AssetIcon asset={asset} fontSize="large" />}
+              title={title}
+              subtitle={id}
+            />
 
             <div>
-              {onEditClick &&
-                <Tooltip title={translator("common.edit")} >
-                  <IconButton data-testid="edit-asset-button" onClick={onEditClick}>
-                    <Icon color="secondary" >edit</Icon>
+              {onEditClick && (
+                <Tooltip title={translator("common.edit")}>
+                  <IconButton
+                    data-testid="edit-asset-button"
+                    onClick={onEditClick}
+                  >
+                    <Icon color="secondary">edit</Icon>
                   </IconButton>
                 </Tooltip>
-              }
-              {deleteEnabled &&
-                <Tooltip title={translator("common.delete")} >
-                  <IconButton data-testid="delete-asset-modal-btn" onClick={() => setDeleteDialogOpen(true)}>
-                    <Icon color="secondary" >delete</Icon>
+              )}
+              {deleteEnabled && (
+                <Tooltip title={translator("common.delete")}>
+                  <IconButton
+                    data-testid="delete-asset-modal-btn"
+                    onClick={() => setDeleteDialogOpen(true)}
+                  >
+                    <Icon color="secondary">delete</Icon>
                   </IconButton>
                 </Tooltip>
-              }
+              )}
             </div>
           </div>
         </DialogTitle>
         <DialogContent style={contentStyle}>
-          <AssetDetails asset={asset} participantId={participantId} connectorEndpoint={connectorEndpoint} />
+          <AssetDetails
+            asset={asset}
+            participantId={participantId}
+            connectorEndpoint={connectorEndpoint}
+          />
         </DialogContent>
         <DialogActions>
           <Button color="secondary" onClick={onClose}>
