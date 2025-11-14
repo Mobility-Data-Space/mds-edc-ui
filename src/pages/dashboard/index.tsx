@@ -13,7 +13,7 @@ import { useParticipantConnectorState } from "@/hooks/use-participant-connector-
 import { useVersionFields } from "@/hooks/use-version-fields.ts";
 import { T, useTranslator } from "@/i18n";
 import { TransferProcess } from "@think-it-labs/edc-connector-client/dist/src/entities";
-import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
 import { useEffect, useState } from "react";
 
 export default function ConnectorPage() {
@@ -28,7 +28,8 @@ export default function ConnectorPage() {
   const [transferProcesses, setTransferProcesses] = useState<TransferProcess[]>(
     [],
   );
-  const [isLoadingTransferProcesses, setIsLoadingTransferProcesses] = useState(true);
+  const [isLoadingTransferProcesses, setIsLoadingTransferProcesses] =
+    useState(true);
 
   useEffect(() => {
     setIsLoadingTransferProcesses(true);

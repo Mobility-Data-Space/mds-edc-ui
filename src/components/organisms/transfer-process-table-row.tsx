@@ -15,7 +15,7 @@ import {
   ContractNegotiation,
 } from "@think-it-labs/edc-connector-client";
 import { TransferProcess } from "@think-it-labs/edc-connector-client/dist/src/entities";
-import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
 import { useEffect, useState } from "react";
 

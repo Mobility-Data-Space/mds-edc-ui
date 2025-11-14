@@ -10,7 +10,7 @@ import { useParticipantConnectorState } from "@/hooks/use-participant-connector-
 import { T, useTranslator } from "@/i18n";
 import { Icon, Button as MuiButton } from "@mui/material";
 import { PolicyDefinition } from "@think-it-labs/edc-connector-client";
-import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
 import { PolicyDefinitionsList } from "@think-it-labs/edc-connector-ui/policy-definitions-list";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
@@ -19,52 +19,62 @@ import { ErrorPopup } from "../../components/molecules/error-popup";
 import { MAX_ITEMS } from "../../constants/lists";
 
 export default function PolicyDefinitionListPage() {
-  const router = useRouter()
+  const router = useRouter();
   const { push } = useParticipantConnectorState();
   const { translator } = useTranslator();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-  const edcClient = useEdcConnectorClient({ management: proxyConnectorManagement })
+  const edcClient = useEdcConnectorClient({
+    management: proxyConnectorManagement,
+  });
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
   const [openPolicyDefinitionData, setOpenPolicyDefinitionData] = useState({
     policyDefinition: {} as PolicyDefinition,
-    deleteItem: async () => { },
+    deleteItem: async () => {},
   });
 
   const openDetailsModal = (policyDefinition: PolicyDefinition) => {
     setIsDetailsModalOpen(true);
     setOpenPolicyDefinitionData({
-      policyDefinition, deleteItem: () => {
-        return edcClient.management.policyDefinitions.delete(policyDefinition?.id)
-      }
+      policyDefinition,
+      deleteItem: () => {
+        return edcClient.management.policyDefinitions.delete(
+          policyDefinition?.id,
+        );
+      },
     });
   };
 
-  const navigate = useCallback((newPage: number) => {
-    router.push(
-      {
+  const navigate = useCallback(
+    (newPage: number) => {
+      router.push({
         href: window.location.href,
         query: {
           ...router.query,
           page: newPage,
         },
-      },
-    );
-  }, [router])
+      });
+    },
+    [router],
+  );
 
   return (
     <SideDrawer title={<T string="policyDefinitions.title" />}>
       <JsonLdDialog
         isOpen={isDetailsModalOpen}
         dataTestId="policy-dialog"
-        jsonLdObject={openPolicyDefinitionData.policyDefinition?.policy?.permissions}
+        jsonLdObject={
+          openPolicyDefinitionData.policyDefinition?.policy?.permissions
+        }
         onClose={() => setIsDetailsModalOpen(false)}
-        title={<TitleWithIcon
-          title={openPolicyDefinitionData.policyDefinition?.id}
-          subtitle={<T string="policyDefinitions.policy" />}
-          icon={<Icon fontSize="large">policy</Icon>}
-        />}
+        title={
+          <TitleWithIcon
+            title={openPolicyDefinitionData.policyDefinition?.id}
+            subtitle={<T string="policyDefinitions.policy" />}
+            icon={<Icon fontSize="large">policy</Icon>}
+          />
+        }
         deleteConfirmationMessage={`Please confirm you want to delete Policy ${openPolicyDefinitionData.policyDefinition?.id}. This action cannot be undone.`}
         deleteFailMessage={`Failed deleting policy ${openPolicyDefinitionData.policyDefinition?.id}`}
         deleteButtonTestId="delete-policy-modal-btn"
@@ -74,10 +84,12 @@ export default function PolicyDefinitionListPage() {
             content: (key) => (
               <Snackbar
                 type="success"
-                message={translator('policyDefinitions.deleteSuccess')}
-                onClose={() => { closeSnackbar(key); }}
+                message={translator("policyDefinitions.deleteSuccess")}
+                onClose={() => {
+                  closeSnackbar(key);
+                }}
               />
-            )
+            ),
           });
           setTimeout(() => push("/policy-definitions"), 1000);
         }}
@@ -92,18 +104,35 @@ export default function PolicyDefinitionListPage() {
         <div className="flex justify-between pb-6">
           <div className="flex justify-start gap-x-5">
             <div className="min-w-xl h-full">
-              <SearchBar searchTarget="id" placeholder={translator("policyDefinitions.searchPlaceholder")} searchOperator="ilike" />
+              <SearchBar
+                searchTarget="id"
+                placeholder={translator("policyDefinitions.searchPlaceholder")}
+                searchOperator="ilike"
+              />
             </div>
             <div className="flex gap-x-4">
-              <MuiButton className="min-h-12" onClick={() => push("/policy-definitions/new")} variant="contained">
-                <Icon fontSize="medium" className="mr-2">add_circle_outline</Icon>
+              <MuiButton
+                className="min-h-12"
+                onClick={() => push("/policy-definitions/new")}
+                variant="contained"
+              >
+                <Icon fontSize="medium" className="mr-2">
+                  add_circle_outline
+                </Icon>
                 <T string="policyDefinitions.createPolicy" />
               </MuiButton>
             </div>
           </div>
           <div className="flex justify-end items-center">
             <PolicyDefinitionsList.Pagination>
-              {({ decrementPage, page, hasNext, hasPrev, incrementPage, itemsCount }) => (
+              {({
+                decrementPage,
+                page,
+                hasNext,
+                hasPrev,
+                incrementPage,
+                itemsCount,
+              }) => (
                 <PaginationControls
                   page={page}
                   hasPrev={hasPrev}
@@ -120,12 +149,12 @@ export default function PolicyDefinitionListPage() {
         </div>
 
         <PolicyDefinitionsList.Error>
-          {({ errors }) =>
+          {({ errors }) => (
             <ErrorPopup
               errors={errors}
               errorMessageKey="common.policyDefinitionsLoadError"
             />
-          }
+          )}
         </PolicyDefinitionsList.Error>
 
         <div className="flex flex-wrap gap-4 py-4" data-testid="policies-list">

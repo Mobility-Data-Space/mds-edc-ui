@@ -1,6 +1,6 @@
 import { T } from "@/i18n";
 import { ContractNegotiation } from "@think-it-labs/edc-connector-client";
-import { readValue } from "@think-it-labs/edc-connector-ui/json-ld.tsx";
+import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
 import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog.ts";
 import { formatDateTime } from "@/utilities/date.ts";
 import { StateChip } from "@/components/atoms/state-chip.tsx";

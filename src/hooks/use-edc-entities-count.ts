@@ -1,14 +1,14 @@
-import {useEdcConnectorClient} from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
-import {useEffect, useState} from "react";
-import {ManagementController} from "@think-it-labs/edc-connector-client/dist/src/facades/management";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
+import { useEffect, useState } from "react";
+import { ManagementController } from "@think-it-labs/edc-connector-client/dist/src/facades/management";
 import { proxyConnectorManagement } from "@/constants/proxy";
 
 export interface EdcEntitiesCount {
-  dataOffers: number,
-  assets: number,
-  policies: number,
-  preconfiguredCatalogs: number,
-  contractAgreements: number,
+  dataOffers: number;
+  assets: number;
+  policies: number;
+  preconfiguredCatalogs: number;
+  contractAgreements: number;
 }
 
 const defaultEdcEntitiesCount = {
@@ -17,7 +17,7 @@ const defaultEdcEntitiesCount = {
   policies: 0,
   preconfiguredCatalogs: 0,
   contractAgreements: 0,
-}
+};
 
 const endpoints: [string, keyof ManagementController][] = Object.entries({
   dataOffers: "contractDefinitions",
@@ -27,20 +27,20 @@ const endpoints: [string, keyof ManagementController][] = Object.entries({
 });
 
 export const useEdcEntitiesCount = (): EdcEntitiesCount => {
-  const edcClient = useEdcConnectorClient({ management: proxyConnectorManagement });
+  const edcClient = useEdcConnectorClient({
+    management: proxyConnectorManagement,
+  });
   const [count, setCount] = useState<EdcEntitiesCount>(defaultEdcEntitiesCount);
 
   useEffect(() => {
     endpoints.forEach(([countEntryName, endpoint]) => {
-      (edcClient.management[endpoint] as any).queryAll({ offset: 0 })
-      .then((result: any[]) => setCount(
-        count => ({ ...count, [countEntryName]: result.length })
-      ))
-      .catch((error: any) => setCount(
-        count => ({ ...count, [countEntryName]: 0 })
-      ));
+      (edcClient.management[endpoint] as any)
+        .queryAll({ offset: 0 })
+        .then((result: any[]) =>
+          setCount((count) => ({ ...count, [countEntryName]: result.length })),
+        )
+        .catch(() => setCount((count) => ({ ...count, [countEntryName]: 0 })));
     });
-
   }, [edcClient]);
 
   return count;

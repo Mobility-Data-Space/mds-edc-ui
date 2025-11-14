@@ -11,7 +11,7 @@ import { useParticipantConnectorState } from "@/hooks/use-participant-connector-
 import { T, useTranslator } from "@/i18n";
 import { Icon, Button as MuiButton } from "@mui/material";
 import { ContractDefinition } from "@think-it-labs/edc-connector-client";
-import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
 import { ContractDefinitionsList } from "@think-it-labs/edc-connector-ui/contract-definitions-list";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
@@ -20,11 +20,13 @@ import { ErrorPopup } from "../../components/molecules/error-popup";
 import { MAX_ITEMS } from "../../constants/lists";
 
 export default function DataOffersPage() {
-  const { push, query } = useRouter()
+  const { push, query } = useRouter();
   const { connector } = useParticipantConnectorState();
   const { translator } = useTranslator();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-  const edcClient = useEdcConnectorClient({ management: proxyConnectorManagement });
+  const edcClient = useEdcConnectorClient({
+    management: proxyConnectorManagement,
+  });
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -32,7 +34,7 @@ export default function DataOffersPage() {
 
   const [openDataOfferData, setOpenDataOfferData] = useState({
     contractDefinition: {} as ContractDefinition,
-    deleteItem: async () => { },
+    deleteItem: async () => {},
   });
 
   const openDetailsModal = (contractDefinition: ContractDefinition) => {
@@ -40,22 +42,25 @@ export default function DataOffersPage() {
     setOpenDataOfferData({
       contractDefinition,
       deleteItem: () => {
-        return edcClient.management.contractDefinitions.delete(contractDefinition?.id)
-      }
+        return edcClient.management.contractDefinitions.delete(
+          contractDefinition?.id,
+        );
+      },
     });
   };
 
-  const navigate = useCallback((newPage: number) => {
-    push(
-      {
+  const navigate = useCallback(
+    (newPage: number) => {
+      push({
         href: window.location.href,
         query: {
           ...query,
           page: newPage,
         },
-      },
-    );
-  }, [push, query])
+      });
+    },
+    [push, query],
+  );
 
   return (
     <SideDrawer title={<T string="contractDefinitions.title" />}>
@@ -67,18 +72,20 @@ export default function DataOffersPage() {
         connectorEndpoint={connector.protocolUrl}
         managementUrl={proxyConnectorManagement}
         translator={translator}
-        onSuccess={() => setListKey(key => key + 1)}
+        onSuccess={() => setListKey((key) => key + 1)}
       />
       <JsonLdDialog
         dataTestId="data-offer-dialog"
         isOpen={isDetailsModalOpen}
         jsonLdObject={openDataOfferData.contractDefinition}
         onClose={() => setIsDetailsModalOpen(false)}
-        title={<TitleWithIcon
-          title={openDataOfferData.contractDefinition?.id}
-          subtitle={<T string="contractDefinitions.dataOffer" />}
-          icon={<Icon fontSize="large">policy</Icon>}
-        />}
+        title={
+          <TitleWithIcon
+            title={openDataOfferData.contractDefinition?.id}
+            subtitle={<T string="contractDefinitions.dataOffer" />}
+            icon={<Icon fontSize="large">policy</Icon>}
+          />
+        }
         deleteConfirmationMessage={`Please confirm you want to delete Data Offer ${openDataOfferData.contractDefinition?.id}. This action cannot be undone.`}
         deleteFailMessage={`Failed deleting data offer ${openDataOfferData.contractDefinition?.id}`}
         deleteButtonTestId="delete-data-offer-modal-btn"
@@ -88,10 +95,12 @@ export default function DataOffersPage() {
             content: (key) => (
               <Snackbar
                 type="success"
-                message={translator('contractDefinitions.deleteSuccess')}
-                onClose={() => { closeSnackbar(key); }}
+                message={translator("contractDefinitions.deleteSuccess")}
+                onClose={() => {
+                  closeSnackbar(key);
+                }}
               />
-            )
+            ),
           });
           setTimeout(() => push("/data-offers"), 1000);
         }}
@@ -104,28 +113,47 @@ export default function DataOffersPage() {
         firstPage={0}
       >
         <ContractDefinitionsList.Error>
-          {({ errors }) =>
+          {({ errors }) => (
             <ErrorPopup
               errors={errors}
               errorMessageKey="common.dataOffersLoadError"
             />
-          }
+          )}
         </ContractDefinitionsList.Error>
         <div className="flex justify-between pb-6">
           <div className="flex justify-start gap-x-5">
             <div className="min-w-xl h-full">
-              <SearchBar searchTarget="id" placeholder={translator("contractDefinitions.searchPlaceholder")} searchOperator="ilike" />
+              <SearchBar
+                searchTarget="id"
+                placeholder={translator(
+                  "contractDefinitions.searchPlaceholder",
+                )}
+                searchOperator="ilike"
+              />
             </div>
             <div className="flex gap-x-4">
-              <MuiButton className="min-h-12" onClick={() => setIsCreateModalOpen(true)} variant="contained">
-                <Icon fontSize="medium" className="mr-2">add_circle_outline</Icon>
+              <MuiButton
+                className="min-h-12"
+                onClick={() => setIsCreateModalOpen(true)}
+                variant="contained"
+              >
+                <Icon fontSize="medium" className="mr-2">
+                  add_circle_outline
+                </Icon>
                 <T string="contractDefinitions.publishDataOffer" />
               </MuiButton>
             </div>
           </div>
           <div className="flex justify-end items-center">
             <ContractDefinitionsList.Pagination>
-              {({ decrementPage, hasPrev, hasNext, incrementPage, page, itemsCount }) =>
+              {({
+                decrementPage,
+                hasPrev,
+                hasNext,
+                incrementPage,
+                page,
+                itemsCount,
+              }) => (
                 <PaginationControls
                   page={page}
                   hasPrev={hasPrev}
@@ -136,16 +164,16 @@ export default function DataOffersPage() {
                   dataTestIdPrefix="pagination"
                   itemsCount={itemsCount}
                 />
-              }
+              )}
             </ContractDefinitionsList.Pagination>
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-4 py-4" data-testid="data-offers-list">
-          <ContractDefinitionsList.Items
-            key={listKey}
-            limit={MAX_ITEMS}
-          >
+        <div
+          className="flex flex-wrap gap-4 py-4"
+          data-testid="data-offers-list"
+        >
+          <ContractDefinitionsList.Items key={listKey} limit={MAX_ITEMS}>
             {({ item, index }) => (
               <ContractDefinitionCard
                 key={index}
