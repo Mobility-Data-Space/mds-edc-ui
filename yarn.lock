@@ -1067,6 +1067,11 @@
     jsonld "^8.2.1"
     type-fest "^4.20.0"
 
+"@think-it-labs/edc-connector-ui@^0.2.5":
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/@think-it-labs/edc-connector-ui/-/edc-connector-ui-0.2.5.tgz#ebd0b865945766a4de4750f8d64bd2b1d9c200f8"
+  integrity sha512-EQ97/cSXXJ0U6B3SzSFadC/d7V54hZ2xljWKN2O/6/jDQQBEs1J+vL2rY6ZFsHVjtkdup5ALeROAr0EZfEmwBg==
+
 "@think-it-labs/typed-error@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@think-it-labs/typed-error/-/typed-error-0.3.0.tgz#2848387998029d584ff8532b2ff0e32631d22c97"
