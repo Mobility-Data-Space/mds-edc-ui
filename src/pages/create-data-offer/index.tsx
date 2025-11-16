@@ -912,6 +912,15 @@ export default function CreateDataOfferPage() {
                       onChange={(event) => {
                         onChange({
                           ...formData,
+                          asset: {
+                              ...formData.asset,
+                              properties: {
+                                ...formData.asset.properties,
+                                additionalProperties: {
+                                  manual_approval: event.target.checked.toString(),
+                                },
+                              }
+                          },
                           contract: {
                             ...formData.contract,
                             privateProperties: {

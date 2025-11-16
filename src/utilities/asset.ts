@@ -143,7 +143,9 @@ export const fromAssetForm = (
   if (
     cleanFormDataObject.dataAddress.type == DataAddressTypes.MDSOnRequestOffer
   ) {
-    cleanFormDataObject.properties.additionalProperties = {};
+    cleanFormDataObject.properties.additionalProperties = {
+      ...cleanFormDataObject.properties.additionalProperties,
+    };
     cleanFormDataObject.properties.additionalProperties.onrequest = "true";
     cleanFormDataObject.properties.additionalProperties.email =
       cleanFormDataObject.dataAddress.email;
@@ -218,6 +220,13 @@ export const assetGeneralFieldsToShow = (
   connectorEndpoint: string,
 ): FieldShowProps[] => {
   const assetLanguage = readValue(asset.properties, ASSET_LANGUAGE);
+  const additionalProperties = readValue(
+    asset.properties,
+    "additionalProperties",
+  )?.[0];
+  const manualApproval =
+    readValue(additionalProperties, "manual_approval") == "true";
+
   const emptyValue = "-";
 
   const result = [
@@ -270,6 +279,11 @@ export const assetGeneralFieldsToShow = (
       value: connectorEndpoint || emptyValue,
       icon: "link",
     },
+    {
+      label: "assets.new.fieldManualApproval",
+      value: manualApproval ? "Yes" : "No",
+      icon: "approval",
+    },
   ];
 
   const contentType = readValue(asset.properties, ASSET_CONTENT_TYPE);
@@ -290,7 +304,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
 
   const transportMode = readValue(
     asset.properties,
-    ASSET_ADVANCED_INFO_TRANSPORT_MODE,
+    ASSET_ADVANCED_INFO_TRANSPORT_MODE
   );
   if (transportMode) {
     advancedFields.push({
@@ -302,12 +316,12 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
 
   const mobilityThemeArray = readValue(
     asset.properties,
-    ASSET_ADVANCED_INFO_MOBILITY_THEME,
+    ASSET_ADVANCED_INFO_MOBILITY_THEME
   );
   const mobilityTheme = mobilityThemeArray && mobilityThemeArray[0];
   const dataCategory = readValue(
     mobilityTheme,
-    ASSET_ADVANCED_INFO_DATA_CATEGORY,
+    ASSET_ADVANCED_INFO_DATA_CATEGORY
   );
   if (dataCategory) {
     advancedFields.push({
@@ -318,7 +332,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
   }
   const dataSubcategory = readValue(
     mobilityTheme,
-    ASSET_ADVANCED_INFO_DATA_SUBCATEGORY,
+    ASSET_ADVANCED_INFO_DATA_SUBCATEGORY
   );
   if (dataSubcategory) {
     advancedFields.push({
@@ -329,7 +343,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
   }
   const dataModel = readValue(
     asset.properties,
-    ASSET_ADVANCED_INFO_DATA_MODEL_ID,
+    ASSET_ADVANCED_INFO_DATA_MODEL_ID
   );
   if (dataModel) {
     advancedFields.push({
@@ -340,7 +354,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
   }
   const geoReferenceMethod = readValue(
     asset.properties,
-    ASSET_ADVANCED_INFO_GEO_REFERENCE_METHOD,
+    ASSET_ADVANCED_INFO_GEO_REFERENCE_METHOD
   );
   if (geoReferenceMethod) {
     advancedFields.push({
@@ -351,7 +365,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
   }
   const geoLocation = readValue(
     asset.properties,
-    ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL,
+    ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL
   );
   if (geoLocation) {
     advancedFields.push({
@@ -363,7 +377,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
 
   const nutsLocations = readValue(
     asset.properties,
-    ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS,
+    ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS
   );
   if (nutsLocations?.length) {
     advancedFields.push({
@@ -374,7 +388,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
   }
   const sovereignLegalName = readValue(
     asset.properties,
-    ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME,
+    ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME
   );
   if (sovereignLegalName) {
     advancedFields.push({
@@ -385,7 +399,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
   }
   const dataSampleUrls = readValue(
     asset.properties,
-    ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS,
+    ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS
   );
   if (dataSampleUrls?.length) {
     advancedFields.push({
@@ -399,7 +413,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
   }
   const referenceFileUrls = readValue(
     asset.properties,
-    ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS,
+    ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS
   );
   if (referenceFileUrls?.length) {
     advancedFields.push({
@@ -419,7 +433,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
   }
   const conditionsForUse = readValue(
     asset.properties,
-    ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE,
+    ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE
   );
   if (conditionsForUse) {
     advancedFields.push({
@@ -432,7 +446,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
   }
   const dataUpdateFrequency = readValue(
     asset.properties,
-    ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY,
+    ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY
   );
   if (dataUpdateFrequency) {
     advancedFields.push({
@@ -443,18 +457,18 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
   }
   const temporalCoverage = readValue(
     asset.properties,
-    ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE,
+    ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE
   );
 
   console.log(temporalCoverage);
 
   const startDate = readValue(
     temporalCoverage?.[0],
-    `${CONTEXT_DCAT.value}startDate`,
+    `${CONTEXT_DCAT.value}startDate`
   );
   const endDate = readValue(
     temporalCoverage?.[0],
-    `${CONTEXT_DCAT.value}endDate`,
+    `${CONTEXT_DCAT.value}endDate`
   );
 
   if (temporalCoverage && startDate && endDate) {
@@ -474,7 +488,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
 export const assetFieldsToShow = (
   asset: Asset,
   participantId: string,
-  connectorEndpoint: string,
+  connectorEndpoint: string
 ): FieldShowProps[] => {
   return [
     ...assetGeneralFieldsToShow(asset, participantId, connectorEndpoint),
