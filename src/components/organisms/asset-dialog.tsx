@@ -37,12 +37,16 @@ interface AssetDialogProps {
 }
 
 const hasContract = async (client: EdcConnectorClient, assetId: string) => {
-  const agreements = await client.management.contractAgreements.queryAll({
-    filterExpression: [
-      { operandLeft: "assetId", operator: "=", operandRight: assetId },
-    ],
-  });
-  return agreements.length > 0;
+  try {
+    const agreements = await client.management.contractAgreements.queryAll({
+      filterExpression: [
+        { operandLeft: "assetId", operator: "=", operandRight: assetId },
+      ],
+    });
+    return agreements.length > 0;
+  } catch (error) {
+    return false;
+  }
 };
 export default function AssetDialog({
   open,
