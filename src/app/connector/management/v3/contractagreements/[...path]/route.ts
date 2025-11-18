@@ -12,6 +12,7 @@ import {
 } from "@/utilities/contract-agreement";
 import { operatorIn } from "@/utilities/data-offer";
 import {
+  Asset,
   Catalog,
   ContractAgreement,
   CriterionInput,
@@ -215,7 +216,11 @@ const handleContractAgreementsQuery = async (
     );
 
     // NOTE: has to specificly be true
-    if (statusFilter && statusFilter.operandRight === true) {
+    if (
+      statusFilter &&
+      statusFilter.operandRight === true &&
+      retiredAgreements.length
+    ) {
       body.filterExpression?.push({
         operandLeft: "id",
         operator: operatorIn.value,
@@ -226,19 +231,22 @@ const handleContractAgreementsQuery = async (
     const contractAgreements =
       await client.management.contractAgreements.queryAll(body);
 
-    const assets = await client.management.assets.queryAll({
-      limit: 100,
-      offset: 0,
-      filterExpression: [
-        {
-          operandLeft: "id",
-          operator: "in",
-          operandRight: contractAgreements.map(
-            (contractAgreement) => contractAgreement.assetId,
-          ),
-        },
-      ],
-    });
+    let assets: Asset[] = [];
+
+    if (contractAgreements.length)
+      assets = await client.management.assets.queryAll({
+        limit: 100,
+        offset: 0,
+        filterExpression: [
+          {
+            operandLeft: "id",
+            operator: "in",
+            operandRight: contractAgreements.map(
+              (contractAgreement) => contractAgreement.assetId,
+            ),
+          },
+        ],
+      });
 
     const assetIdTitleMap = new Map(
       assets.map((asset) => [
