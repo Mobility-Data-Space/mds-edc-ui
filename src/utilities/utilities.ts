@@ -7,6 +7,26 @@ export const truncate = (string: string, length: number = 10) => {
   return string.length > length ? string.substring(0, length) + "..." : string;
 }
 
+/**
+ * Converts a string to Title Case.
+ *
+ * Examples:
+ *   "HELLO WORLD" → "Hello World"
+ *   "RAIL WAY"    → "Rail Way"
+ *
+ * Trims extra spaces, lowercases the input, and capitalizes each word.
+ *
+ * @param str - The input string to transform.
+ * @returns The title-cased string.
+ */
+export const toTitleCase = (str: string) =>
+  str
+    .toLowerCase()
+    .split(/\s+/)
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+    
+
 export const extractArrayValues = (array: any[]) => {
   if (!Array.isArray(array)) {
     return [array];
