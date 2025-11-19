@@ -50,7 +50,7 @@ import {
   OnRequestDataAddress,
   AmazonS3DataAddress,
 } from "./data-address";
-import { CONTEXT_DCAT, contextWithNoPrefixToCompact } from "@/jsonld/context";
+import { CONTEXT_DCAT, CONTEXT_EDC, contextWithNoPrefixToCompact } from "@/jsonld/context";
 import { HttpDataAddress } from "@think-it-labs/edc-connector-client/dist/src/entities/data-address";
 import {
   dataCategoryValueToText,
@@ -85,7 +85,8 @@ export const fromAssetForm = (
   const properties = { ...formData.properties };
   delete properties["@id"];
   delete properties[EDC_ID_FIELD];
-
+  delete properties[`${CONTEXT_EDC.value}additionalProperties`];
+  
   const cleanFormDataObject = removeEmptyFields({
     ...formData,
     "@id": formData.properties["@id"],
