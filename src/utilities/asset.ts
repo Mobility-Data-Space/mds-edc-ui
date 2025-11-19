@@ -8,7 +8,7 @@ import { FieldShowProps } from "@/components/molecules/field-show";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
 import { ENGLISH_SELECT_DATA, LANGUAGES } from "@/constants/languages";
 import { DELIMITER } from "@/i18n";
-import { extractArrayValues, isEmail, isUrl, uid } from "@/utilities/utilities";
+import { extractArrayValues, isEmail, isUrl, toTitleCase, uid } from "@/utilities/utilities";
 import {
   ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE,
   ASSET_ADVANCED_INFO_DATA_CATEGORY,
@@ -297,7 +297,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
     advancedFields.push({
       icon: "commute",
       label: "assets.new.fieldAdvancedInfoTransportMode",
-      value: transportMode,
+      value: toTitleCase(transportMode),
     });
   }
 
