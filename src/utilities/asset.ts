@@ -8,7 +8,13 @@ import { FieldShowProps } from "@/components/molecules/field-show";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
 import { ENGLISH_SELECT_DATA, LANGUAGES } from "@/constants/languages";
 import { DELIMITER } from "@/i18n";
-import { extractArrayValues, isEmail, isUrl, toTitleCase, uid } from "@/utilities/utilities";
+import {
+  extractArrayValues,
+  isEmail,
+  isUrl,
+  toTitleCase,
+  uid,
+} from "@/utilities/utilities";
 import {
   ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE,
   ASSET_ADVANCED_INFO_DATA_CATEGORY,
@@ -50,7 +56,11 @@ import {
   OnRequestDataAddress,
   AmazonS3DataAddress,
 } from "./data-address";
-import { CONTEXT_DCAT, CONTEXT_EDC, contextWithNoPrefixToCompact } from "@/jsonld/context";
+import {
+  CONTEXT_DCAT,
+  CONTEXT_EDC,
+  contextWithNoPrefixToCompact,
+} from "@/jsonld/context";
 import { HttpDataAddress } from "@think-it-labs/edc-connector-client/dist/src/entities/data-address";
 import {
   dataCategoryValueToText,
@@ -80,13 +90,13 @@ const temporalCoverageValue = ([start, end]: [string, string]) => {
 
 export const fromAssetForm = (
   formData: AssetInput,
-  organizationName: string,
+  organizationName: string
 ) => {
   const properties = { ...formData.properties };
   delete properties["@id"];
   delete properties[EDC_ID_FIELD];
   delete properties[`${CONTEXT_EDC.value}additionalProperties`];
-  
+
   const cleanFormDataObject = removeEmptyFields({
     ...formData,
     "@id": formData.properties["@id"],
@@ -218,16 +228,17 @@ export type AssetProperties = typeof defaultCreateAssetFormData.properties;
 export const assetGeneralFieldsToShow = (
   asset: Asset,
   participantId: string,
-  connectorEndpoint: string,
+  connectorEndpoint: string
 ): FieldShowProps[] => {
   const assetLanguage = readValue(asset.properties, ASSET_LANGUAGE);
-  const additionalProperties = readValue(
-    asset.properties,
-    "additionalProperties",
-  )?.[0];
-  const manualApproval =
-    readValue(additionalProperties, "manual_approval") == "true";
 
+  const properties = removeJsonLdSchemaFromProperties(asset.properties);
+  const additionalProperties = readValue(
+    properties,
+    "additionalProperties"
+  )?.[0];
+
+  const manualApproval = readValue(additionalProperties, "manual_approval");
   const emptyValue = "-";
 
   const result = [
@@ -280,12 +291,16 @@ export const assetGeneralFieldsToShow = (
       value: connectorEndpoint || emptyValue,
       icon: "link",
     },
-    {
-      label: "assets.new.fieldManualApproval",
-      value: manualApproval ? "Yes" : "No",
-      icon: "approval",
-    },
   ];
+
+  const validManualApproval = new Set(["true", "false"]);
+  if (validManualApproval.has(manualApproval)) {
+    result.push({
+      label: "assets.new.fieldManualApproval",
+      value: manualApproval === "true" ? "Yes" : "No",
+      icon: "approval",
+    });
+  }
 
   const contentType = readValue(asset.properties, ASSET_CONTENT_TYPE);
   if (contentType) {
@@ -508,12 +523,12 @@ export const assetDataAddressFieldsTitle = (asset: Asset) => {
 };
 
 export const assetDataAddressFieldsToShow = (
-  asset: Asset,
+  asset: Asset
 ): FieldShowProps[] => {
   const properties = removeJsonLdSchemaFromProperties(asset.properties);
   const additionalProperties = readValue(
     properties,
-    "additionalProperties",
+    "additionalProperties"
   )?.[0];
   const onrequest = readValue(additionalProperties, "onrequest") == "true";
 
@@ -568,7 +583,7 @@ export const transformForId = (str?: string) => {
 export const validateDataAddress = (
   formDataToValidate: DataAddress,
   translator: (str: string) => string,
-  isDestination = false,
+  isDestination = false
 ) => {
   if (formDataToValidate.type === DataAddressTypes.CustomJson) {
     if (!formDataToValidate.dataAddress) {
@@ -642,7 +657,7 @@ export const validateDataAddress = (
 };
 
 export const toKeyValueInput = (
-  value: string | { key: string; value: string },
+  value: string | { key: string; value: string }
 ) => {
   return {
     input: typeof value === "string" ? { value } : value,
@@ -666,7 +681,7 @@ export const fromKeyValueInput = (value: {
 export const assetToAssetInput = async (asset: Asset) => {
   const removedJsonLd = await jsonld.compact(
     asset,
-    contextWithNoPrefixToCompact,
+    contextWithNoPrefixToCompact
   );
   const properties: any = {
     ...defaultCreateAssetFormData.properties,
@@ -694,7 +709,7 @@ export const assetToAssetInput = async (asset: Asset) => {
       (queryParam: string) => {
         const [key, value] = queryParam.split("=");
         return { input: { key, value }, valid: true };
-      },
+      }
     );
   }
 
@@ -755,17 +770,17 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
     const headers = (formDataToTransform.headers || [])
       .filter(
         (value: { input: { key: string; value: string } }) =>
-          value?.input?.key && value?.input?.value,
+          value?.input?.key && value?.input?.value
       )
       .reduce(
         (
           acc: Record<string, string>,
-          value: { input: { key: string; value: string } },
+          value: { input: { key: string; value: string } }
         ) => {
           acc[`header:${value.input.key}`] = value.input.value;
           return acc;
         },
-        {},
+        {}
       );
 
     let queryParams: string;
@@ -775,11 +790,11 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
       queryParams = (formDataToTransform.queryParams || [])
         .filter(
           (value: { input: { key: string; value: string } }) =>
-            value?.input?.key && value?.input?.value,
+            value?.input?.key && value?.input?.value
         )
         .map(
           (value: { input: { key: string; value: string } }) =>
-            `${value.input.key}=${value.input.value}`,
+            `${value.input.key}=${value.input.value}`
         )
         .join("&");
     }
