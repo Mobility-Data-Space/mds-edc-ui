@@ -43,7 +43,7 @@
     "react-i18next": "^16.2.4",
     "react-json-view": "^1.21.3",
     "react-markdown": "^10.1.0",
-    "recharts": "^3.3.0",
+    "recharts": "^3.5.0",
     "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.1"
   },
