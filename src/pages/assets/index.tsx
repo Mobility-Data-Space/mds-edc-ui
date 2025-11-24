@@ -8,7 +8,7 @@ import AssetFormDialog from "@/components/templates/asset-form-dialog";
 import { proxyConnectorManagement } from "@/constants/proxy";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
-import { Icon, Button as MuiButton } from '@mui/material';
+import { Icon, Button as MuiButton } from "@mui/material";
 import { Asset } from "@think-it-labs/edc-connector-client";
 import { AssetsList } from "@think-it-labs/edc-connector-ui/assets-list";
 import { useRouter } from "next/router";
@@ -28,25 +28,29 @@ export default function AssetListPage() {
 
   const [openAssetData, setOpenAssetData] = useState({
     asset: {} as Asset,
-    deleteItem: async () => { },
+    deleteItem: async () => {},
   });
 
-  const openDetailsModal = (asset: Asset, deleteItem: () => Promise<void> = async () => { }) => {
+  const openDetailsModal = (
+    asset: Asset,
+    deleteItem: () => Promise<void> = async () => {},
+  ) => {
     setIsDetailsModalOpen(true);
     setOpenAssetData({ asset, deleteItem });
   };
 
-  const navigate = useCallback((newPage: number) => {
-    router.push(
-      {
+  const navigate = useCallback(
+    (newPage: number) => {
+      router.push({
         href: window.location.href,
         query: {
           ...router.query,
           page: newPage,
         },
-      },
-    );
-  }, [router])
+      });
+    },
+    [router],
+  );
 
   return (
     <>
@@ -61,7 +65,9 @@ export default function AssetListPage() {
         onClose={() => setIsDetailsModalOpen(false)}
         deleteEnabled
         deleteItem={openAssetData.deleteItem}
-        onEditClick={() => router.push(`/assets/${openAssetData.asset.id}/edit`)}
+        onEditClick={() =>
+          router.push(`/assets/${openAssetData.asset.id}/edit`)
+        }
         participantId={connector.id}
         connectorEndpoint={connector.protocolUrl}
         contentStyle={{ maxWidth: "90vw", width: "1000px" }}
@@ -70,10 +76,12 @@ export default function AssetListPage() {
             content: (key) => (
               <Snackbar
                 type="success"
-                message={translator('assets.deleteSuccess')}
-                onClose={() => { closeSnackbar(key); }}
+                message={translator("assets.deleteSuccess")}
+                onClose={() => {
+                  closeSnackbar(key);
+                }}
               />
-            )
+            ),
           });
         }}
       />
@@ -87,17 +95,25 @@ export default function AssetListPage() {
           firstPage={0}
         >
           <AssetsList.Error>
-            {({ errors }) =>
+            {({ errors }) => (
               <ErrorPopup
                 errors={errors}
                 errorMessageKey="common.assetsLoadError"
               />
-            }
+            )}
           </AssetsList.Error>
           <div className="flex justify-between pb-6">
             <div className="flex justify-start gap-x-5 items-center">
               <div className="min-w-xl h-full">
-                <SearchBar searchTarget={["id", "http://purl.org/dc/terms/title", "http://purl.org/dc/terms/description"]} placeholder={translator("assets.searchPlaceholder")} searchOperator="ilike" />
+                <SearchBar
+                  searchTarget={[
+                    "id",
+                    "http://purl.org/dc/terms/title",
+                    "http://purl.org/dc/terms/description",
+                  ]}
+                  placeholder={translator("assets.searchPlaceholder")}
+                  searchOperator="ilike"
+                />
               </div>
               <div className="flex gap-x-4">
                 <MuiButton
@@ -106,14 +122,23 @@ export default function AssetListPage() {
                   className="gap-x-2 font-medium min-h-14"
                   onClick={() => setIsCreateModalOpen(true)}
                 >
-                  <Icon fontSize="medium" className="mr-2">add_circle_outline</Icon>
+                  <Icon fontSize="medium" className="mr-2">
+                    add_circle_outline
+                  </Icon>
                   <T string="assets.buttonAdd" />
                 </MuiButton>
               </div>
             </div>
             <div className="flex justify-end items-center">
               <AssetsList.Pagination>
-                {({ decrementPage, hasPrev, page, hasNext, incrementPage, itemsCount }) =>
+                {({
+                  decrementPage,
+                  hasPrev,
+                  page,
+                  hasNext,
+                  incrementPage,
+                  itemsCount,
+                }) => (
                   <PaginationControls
                     page={page}
                     hasPrev={hasPrev}
@@ -124,7 +149,7 @@ export default function AssetListPage() {
                     dataTestIdPrefix="pagination"
                     itemsCount={itemsCount}
                   />
-                }
+                )}
               </AssetsList.Pagination>
             </div>
           </div>
@@ -137,7 +162,13 @@ export default function AssetListPage() {
                 sortField="createdAt"
               >
                 {({ item, index, deleteItem }) => (
-                  <AssetCard asset={item} key={index} onClick={() => openDetailsModal(item, deleteItem)} participantId={connector.id} data-testid="asset-card" />
+                  <AssetCard
+                    asset={item}
+                    key={index}
+                    onClick={() => openDetailsModal(item, deleteItem)}
+                    participantId={connector.id}
+                    data-testid="asset-card"
+                  />
                 )}
               </AssetsList.Items>
             </div>

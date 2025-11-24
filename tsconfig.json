@@ -21,9 +21,6 @@
     "paths": {
       "@/*": [
         "./src/*"
-      ],
-      "@think-it-labs/edc-connector-ui/*": [
-        "./vendors/think-it-labs/edc-connector-ui/src/*"
       ]
     },
     "plugins": [

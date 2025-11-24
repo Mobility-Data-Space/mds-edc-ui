@@ -46,12 +46,8 @@ import {
   FormControlLabel,
   Typography,
 } from "@mui/material";
-import {
-  AssetInput,
-  DataAddress,
-  PolicyDefinitionInput,
-} from "@think-it-labs/edc-connector-client";
-import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client.ts";
+import { AssetInput, DataAddress } from "@think-it-labs/edc-connector-client";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
 import { useSnackbar } from "notistack";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
