@@ -107,6 +107,7 @@ export const de = {
         fieldDescription: "Beschreibung",
         fieldPrivateNotes: "Private Notizen",
         fieldIdPlaceholder: "Eindeutige Kennung",
+        fieldManualApproval: "Manuelle Genehmigung",
         fieldNamePlaceholder: "Von Menschen lesbarer Bezeichner",
         fieldDescriptionPlaceholder:
           "Beschreiben Sie den Inhalt und Zweck des Vermögenswerts",
