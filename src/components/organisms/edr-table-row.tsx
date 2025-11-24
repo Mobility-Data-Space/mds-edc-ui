@@ -3,11 +3,11 @@ import { T } from "@/i18n";
 import { Edr } from "@think-it-labs/edc-connector-client";
 import { Eye, EyeOff } from "lucide-react";
 import { PropsWithChildren, useState } from "react";
-import { EdrView } from "../../../vendors/think-it-labs/edc-connector-ui/src/edr-view";
 import { proxyConnectorManagement } from "../../constants/proxy";
 import EdrDialog from "./edr-dialog";
 import { formatDateTime, formatDateTimeAgo } from "@/utilities/date";
 import { Tooltip } from "@mui/material";
+import { EdrView } from "@think-it-labs/edc-connector-ui/edr-view";
 
 export default function EdrTableRow({ edr }: { edr: Edr }) {
   const [isEdrDialogOpen, setIsEdrDialogOpen] = useState(false);

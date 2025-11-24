@@ -6,7 +6,7 @@ const nextConfig = {
     locales: ["en"],
   },
   reactStrictMode: true,
-  transpilePackages: ["@think-it-labs/edc-connector-ui", "mui-chips-input"],
+  transpilePackages: ["mui-chips-input"],
   async redirects() {
     return [
       {

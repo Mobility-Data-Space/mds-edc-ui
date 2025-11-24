@@ -9,9 +9,12 @@ import { T, useTranslator } from "@/i18n";
 import { MDSManualApprovalController } from "@/utilities/contract-negotiations";
 import { formatDateTime, formatDateTimeAgo } from "@/utilities/date.ts";
 import { Button, Icon, Tooltip } from "@mui/material";
-import { ContractNegotiation, CriterionInput } from "@think-it-labs/edc-connector-client";
+import {
+  ContractNegotiation,
+  CriterionInput,
+} from "@think-it-labs/edc-connector-client";
 import { ContractNegotiationsList } from "@think-it-labs/edc-connector-ui/contract-negotiations-list";
-import { readValue } from "@think-it-labs/edc-connector-ui/json-ld.tsx";
+import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { MouseEvent, useCallback, useMemo, useState } from "react";
@@ -19,94 +22,120 @@ import { ErrorPopup } from "../../components/molecules/error-popup";
 import { MAX_ITEMS } from "../../constants/lists";
 
 const CreatedAt = ({ item }: { item: ContractNegotiation }) => {
-  const createdAtValue = readValue(item, "https://w3id.org/edc/v0.0.1/ns/createdAt");
-  return <Tooltip title={formatDateTime(createdAtValue, { showSeconds: true, showDayOfWeek: true })}>
-    <span>
-      {formatDateTimeAgo(createdAtValue)}
-    </span>
-  </Tooltip>;
-}
+  const createdAtValue = readValue(
+    item,
+    "https://w3id.org/edc/v0.0.1/ns/createdAt",
+  );
+  return (
+    <Tooltip
+      title={formatDateTime(createdAtValue, {
+        showSeconds: true,
+        showDayOfWeek: true,
+      })}
+    >
+      <span>{formatDateTimeAgo(createdAtValue)}</span>
+    </Tooltip>
+  );
+};
 
 const CounterPartyId = ({ item }: { item: ContractNegotiation }) => {
-  const counterPartyId = readValue(item, "https://w3id.org/edc/v0.0.1/ns/counterPartyId") ||
-                        readValue(item, "counterPartyId") ||
-                        item.counterPartyId;
-  return <>{counterPartyId}</>
-}
+  const counterPartyId =
+    readValue(item, "https://w3id.org/edc/v0.0.1/ns/counterPartyId") ||
+    readValue(item, "counterPartyId") ||
+    item.counterPartyId;
+  return <>{counterPartyId}</>;
+};
 
 const AssetName = ({ item }: { item: ContractNegotiation }) => {
-  const assetId = readValue(item, "https://w3id.org/edc/v0.0.1/ns/assetId") || 
-                 readValue(item, "assetId") || 
-                 item.assetId;
-  return <>{assetId}</>
-}
+  const assetId =
+    readValue(item, "https://w3id.org/edc/v0.0.1/ns/assetId") ||
+    readValue(item, "assetId") ||
+    item.assetId;
+  return <>{assetId}</>;
+};
 
 const NegotiationId = ({ item }: { item: ContractNegotiation }) => {
-  return <>{item["@id"]}</>
-}
-
+  return <>{item["@id"]}</>;
+};
 
 export default function ContractNegotiationsManualApprovalListPage() {
-  const { query, push } = useRouter()
+  const { query, push } = useRouter();
   const { connector } = useParticipantConnectorState();
   const { translator } = useTranslator();
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
-  const [openContractNegotiationData, setOpenContractNegotiationData] = useState({
-    contractNegotiation: {} as ContractNegotiation,
-  });
+  const [openContractNegotiationData, setOpenContractNegotiationData] =
+    useState({
+      contractNegotiation: {} as ContractNegotiation,
+    });
 
-  const mdsManualApprovalController = useMemo(() => new MDSManualApprovalController(proxyConnectorManagement), []);
+  const mdsManualApprovalController = useMemo(
+    () => new MDSManualApprovalController(proxyConnectorManagement),
+    [],
+  );
 
   const openDetailsModal = (contractNegotiation: ContractNegotiation) => {
     setIsDetailsModalOpen(true);
     setOpenContractNegotiationData({ contractNegotiation });
   };
 
-  const onApproveClick = (item: ContractNegotiation, event: MouseEvent<HTMLButtonElement>) => {
+  const onApproveClick = (
+    item: ContractNegotiation,
+    event: MouseEvent<HTMLButtonElement>,
+  ) => {
     event.stopPropagation();
 
-    mdsManualApprovalController.approve(item["@id"])
+    mdsManualApprovalController
+      .approve(item["@id"])
       .then(() => {
         enqueueSnackbar(translator("contractNegotiations.approveSuccess"));
-        setTimeout(() => push("/negotiation-manual-approval"), 1200)
+        setTimeout(() => push("/negotiation-manual-approval"), 1200);
       })
-      .catch(() => enqueueSnackbar(translator("contractNegotiations.approveError")))
+      .catch(() =>
+        enqueueSnackbar(translator("contractNegotiations.approveError")),
+      );
   };
 
-  const onRejectClick = (item: ContractNegotiation, event: MouseEvent<HTMLButtonElement>) => {
+  const onRejectClick = (
+    item: ContractNegotiation,
+    event: MouseEvent<HTMLButtonElement>,
+  ) => {
     event.stopPropagation();
 
-    mdsManualApprovalController.reject(item["@id"])
+    mdsManualApprovalController
+      .reject(item["@id"])
       .then(() => {
-        enqueueSnackbar(translator("contractNegotiations.rejectSuccess"))
-        setTimeout(() => push("/negotiation-manual-approval"), 1200)
+        enqueueSnackbar(translator("contractNegotiations.rejectSuccess"));
+        setTimeout(() => push("/negotiation-manual-approval"), 1200);
       })
-      .catch(() => enqueueSnackbar(translator("contractNegotiations.rejectError")))
+      .catch(() =>
+        enqueueSnackbar(translator("contractNegotiations.rejectError")),
+      );
   };
 
   const pendingFilter: CriterionInput[] = [
     {
       operandLeft: "pending",
       operator: "=",
-      operandRight: true
-    }
+      operandRight: true,
+    },
   ];
 
-  const currentPage = parseInt(query.page as string) || 0
+  const currentPage = parseInt(query.page as string) || 0;
 
-  const navigate = useCallback((newPage: number) => {
-    push(
-      {
+  const navigate = useCallback(
+    (newPage: number) => {
+      push({
         href: window.location.href,
         query: {
           ...query,
           page: newPage,
         },
-      },
-    );
-  }, [push, query])
+      });
+    },
+    [push, query],
+  );
 
   return (
     <SideDrawer title={<T string="contractNegotiations.manualApprovalTitle" />}>
@@ -126,12 +155,12 @@ export default function ContractNegotiationsManualApprovalListPage() {
         firstPage={0}
       >
         <ContractNegotiationsList.Error>
-          {({ errors }) =>
+          {({ errors }) => (
             <ErrorPopup
               errors={errors}
               errorMessageKey="common.contractNegotiationsLoadError"
             />
-          }
+          )}
         </ContractNegotiationsList.Error>
         <div className="flex gap-x-5">
           <div className="flex-grow">
@@ -143,7 +172,9 @@ export default function ContractNegotiationsManualApprovalListPage() {
             </label>
             <div className="min-w-xl">
               <SearchBar
-                placeholder={translator("contractNegotiations.searchPlaceholder")}
+                placeholder={translator(
+                  "contractNegotiations.searchPlaceholder",
+                )}
                 searchTarget="counterPartyId"
                 searchOperator="ilike"
               />
@@ -151,7 +182,14 @@ export default function ContractNegotiationsManualApprovalListPage() {
           </div>
           <div className="flex justify-end items-center">
             <ContractNegotiationsList.Pagination>
-              {({ decrementPage, hasPrev, hasNext, incrementPage, page, itemsCount }) =>
+              {({
+                decrementPage,
+                hasPrev,
+                hasNext,
+                incrementPage,
+                page,
+                itemsCount,
+              }) => (
                 <PaginationControls
                   page={page}
                   hasPrev={hasPrev}
@@ -161,17 +199,18 @@ export default function ContractNegotiationsManualApprovalListPage() {
                   maxItems={MAX_ITEMS}
                   itemsCount={itemsCount}
                 />
-              }
+              )}
             </ContractNegotiationsList.Pagination>
           </div>
         </div>
-        <div data-testid="approval-list" className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200">
+        <div
+          data-testid="approval-list"
+          className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200"
+        >
           <Table>
             <Table.Head>
               <Table.Row>
-                <Table.Heading className="w-16">
-                  #
-                </Table.Heading>
+                <Table.Heading className="w-16">#</Table.Heading>
 
                 <Table.Heading>
                   <T string="contractNegotiations.headingCreatedAt" />
@@ -217,7 +256,7 @@ export default function ContractNegotiationsManualApprovalListPage() {
                         type="button"
                         className="flex items-center gap-x-2 text-gray-800"
                       >
-                        {(currentPage * 10) + (index + 1)}
+                        {currentPage * 10 + (index + 1)}
                       </button>
                     </Table.Cell>
                     <Table.Cell>
