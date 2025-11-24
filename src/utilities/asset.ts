@@ -293,8 +293,7 @@ export const assetGeneralFieldsToShow = (
     },
   ];
 
-  const validManualApproval = new Set(["true", "false"]);
-  if (validManualApproval.has(manualApproval)) {
+  if (manualApproval) {
     result.push({
       label: "assets.new.fieldManualApproval",
       value: manualApproval === "true" ? "Yes" : "No",
