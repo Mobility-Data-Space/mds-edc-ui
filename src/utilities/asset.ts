@@ -8,7 +8,7 @@ import { FieldShowProps } from "@/components/molecules/field-show";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
 import { ENGLISH_SELECT_DATA, LANGUAGES } from "@/constants/languages";
 import { DELIMITER } from "@/i18n";
-import { extractArrayValues, isEmail, isUrl, uid } from "@/utilities/utilities";
+import { extractArrayValues, isEmail, isUrl, toTitleCase, uid } from "@/utilities/utilities";
 import {
   ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE,
   ASSET_ADVANCED_INFO_DATA_CATEGORY,
@@ -50,7 +50,7 @@ import {
   OnRequestDataAddress,
   AmazonS3DataAddress,
 } from "./data-address";
-import { CONTEXT_DCAT, contextWithNoPrefixToCompact } from "@/jsonld/context";
+import { CONTEXT_DCAT, CONTEXT_EDC, contextWithNoPrefixToCompact } from "@/jsonld/context";
 import { HttpDataAddress } from "@think-it-labs/edc-connector-client/dist/src/entities/data-address";
 import {
   dataCategoryValueToText,
@@ -85,7 +85,8 @@ export const fromAssetForm = (
   const properties = { ...formData.properties };
   delete properties["@id"];
   delete properties[EDC_ID_FIELD];
-
+  delete properties[`${CONTEXT_EDC.value}additionalProperties`];
+  
   const cleanFormDataObject = removeEmptyFields({
     ...formData,
     "@id": formData.properties["@id"],
@@ -296,7 +297,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
     advancedFields.push({
       icon: "commute",
       label: "assets.new.fieldAdvancedInfoTransportMode",
-      value: transportMode,
+      value: toTitleCase(transportMode),
     });
   }
 

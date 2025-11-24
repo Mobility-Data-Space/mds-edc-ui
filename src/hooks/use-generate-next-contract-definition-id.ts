@@ -1,5 +1,5 @@
 import { proxyConnectorManagement } from "@/constants/proxy";
-import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
 
 import { useState, useEffect } from "react";
 

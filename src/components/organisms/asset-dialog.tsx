@@ -18,9 +18,9 @@ import { ASSET_TITLE } from "@/jsonld/asset";
 import { Asset, EdcConnectorClient } from "@think-it-labs/edc-connector-client";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
 import { enqueueSnackbar, useSnackbar } from "notistack";
-import { useCallback, useState } from "react";
-import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
+import { useState } from "react";
 import { proxyConnectorManagement } from "@/constants/proxy";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
 
 interface AssetDialogProps {
   asset: Asset;
@@ -71,7 +71,7 @@ export default function AssetDialog({
       const assetHasContracts = await hasContract(client, id);
       if (assetHasContracts) {
         throw new Error(
-          "Asset that is referenced in at least one Contract cannot be deleted"
+          "Asset that is referenced in at least one Contract cannot be deleted",
         );
       }
       if (deleteItem) {
