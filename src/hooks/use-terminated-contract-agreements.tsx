@@ -8,7 +8,7 @@ import {
   AGREEMENT_RETIREMENT_REASON,
 } from "@/utilities/contract-agreement";
 import { TransferProcessStates } from "@think-it-labs/edc-connector-client";
-import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/hooks/use-edc-connector-client";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
 import { enqueueSnackbar, SnackbarKey, closeSnackbar } from "notistack";
 import { useCallback, useEffect, useState } from "react";
 
