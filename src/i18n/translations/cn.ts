@@ -107,6 +107,7 @@ export const cn = {
         fieldDescription: "描述",
         fieldPrivateNotes: "私人笔记",
         fieldIdPlaceholder: "唯一标识符",
+        ieldManualApproval: "人工审批",
         fieldNamePlaceholder: "人类可读标识符",
         fieldDescriptionPlaceholder: "描述资产的内容和用途",
         fieldPrivateNotesPlaceholder: "一些不会与外部参与者共享的笔记",

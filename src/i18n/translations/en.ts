@@ -164,6 +164,7 @@ export const en = {
         fieldStandardLicense: "Standard License",
         fieldPrivateNotes: "Private notes",
         fieldIdPlaceholder: "Asset ID",
+        fieldManualApproval: "Manual Approval",
         fieldVersionPlaceholder: "Asset version",
         fieldTitlePlaceholder: "My Asset",
         fieldDescriptionPlaceholder:
