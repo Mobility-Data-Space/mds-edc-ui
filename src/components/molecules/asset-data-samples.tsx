@@ -40,6 +40,8 @@ export function AssetDataSamples({ translator, formData, onChange, errors }: Ass
       error={errors[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS]}
       value={formData[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS] as []}
       valueOnly
+      errorText="This field cannot be empty"
+      ignoreRegexCheck
       onChange={(value) => onChange({...formData, [ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS]: value})}
     />
   </>);
