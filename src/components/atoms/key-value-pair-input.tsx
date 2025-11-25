@@ -36,7 +36,7 @@ export function KeyValuePairInput({
   ignoreRegexCheck,
   valid,
 }: KeyValuePairInputProps) {
-  const regex = /^[a-zA-Z0-9][a-zA-Z0-9-_\.\/]+$/;
+  const regex = /^[a-zA-Z0-9][a-zA-Z0-9-_\.]{0,49}$/;
 
   function textInputHandler(text: string, label: string) {
     onChange({
