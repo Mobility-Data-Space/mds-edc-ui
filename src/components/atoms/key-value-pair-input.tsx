@@ -11,6 +11,7 @@ export type KeyValuePairInputProps = Omit<TextFieldProps, "onChange"> & {
   onChange: ({ input, valid }: { input: Partial<Tag>; valid: boolean }) => void;
   onRemove: (event: any) => void;
   value: Tag;
+  ignoreRegexCheck?: boolean;
   removeText?: string;
   errorText?: string;
   keyLabel?: string;
@@ -32,21 +33,24 @@ export function KeyValuePairInput({
   valueLabel = "Value",
   valuePlaceholder = "Value",
   valueOnly = false,
+  ignoreRegexCheck,
   valid,
 }: KeyValuePairInputProps) {
-  const regex = /^[a-zA-Z0-9][a-zA-Z0-9-_\.]{0,49}$/;
+  const regex = /^[a-zA-Z0-9][a-zA-Z0-9-_\.\/]+$/;
 
   function textInputHandler(text: string, label: string) {
     onChange({
       input: { [label]: text },
-      valid: regex.test(text),
+      valid: ignoreRegexCheck ? !!text : regex.test(text),
     });
   }
 
   return (
     <div className="mb-2">
       <div className={`grid grid-cols-9 gap-x-5`}>
-        {valueOnly ? "" :
+        {valueOnly ? (
+          ""
+        ) : (
           <TextField
             color="secondary"
             className="col-span-2"
@@ -61,7 +65,7 @@ export function KeyValuePairInput({
             variant="outlined"
             error={!valid}
           />
-        }
+        )}
         <TextField
           color="secondary"
           className={valueOnly ? "col-span-8" : "col-span-6"}
@@ -76,11 +80,15 @@ export function KeyValuePairInput({
           variant="outlined"
           error={!valid}
         />
-        <Button onClick={onRemove} color="error" className="col-span-1 font-bold">
+        <Button
+          onClick={onRemove}
+          color="error"
+          className="col-span-1 font-bold"
+        >
           {removeText}
         </Button>
       </div>
-      {!valid && (<FormHelperText error={!valid}>{errorText}</FormHelperText>)}
+      {!valid && <FormHelperText error={!valid}>{errorText}</FormHelperText>}
     </div>
   );
 }

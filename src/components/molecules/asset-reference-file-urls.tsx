@@ -41,6 +41,8 @@ export function AssetReferenceFileUrls({ translator, formData, onChange, errors 
       error={errors[ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS]}
       value={formData[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] as []}
       valueOnly
+      ignoreRegexCheck
+      errorText="This field is required"
       onChange={(value) => onChange(
         {
           ...formData,
