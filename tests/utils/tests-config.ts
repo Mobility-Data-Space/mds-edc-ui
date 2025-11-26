@@ -4,6 +4,7 @@ const participantProtocolUrl = "http://" + SERVICES[0] + ":8183/api/dsp" ;
 const couterPartyparticipantProtocolUrl = "http://" + SERVICES[1] + ":8183/api/dsp" ;
 
 export const participantConfig = {
+  APP_URL: "http://127.0.0.1:3000",
   EDC_ID: "MDSXXXXXXX.YYYYYYY",
   EDC_NAME: "Think-it Test Connector 1",
   EDC_DESCRIPTION: "Think-it GmbH MDS EDC Test Connector 1",
