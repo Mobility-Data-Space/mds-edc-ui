@@ -22,8 +22,6 @@ import { Checkbox } from "@/components/atoms/checkbox";
 import { idMultipleReader, idMultipleSelector } from "@/utilities/data-offer";
 import { Asset } from "@think-it-labs/edc-connector-client";
 import AssetDialog from "@/components/organisms/asset-dialog.tsx";
-import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog";
-import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
 import { assetToAssetInput, fromAssetForm } from "@/utilities/asset";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 
@@ -45,7 +43,7 @@ const optionsGenerator = (data: { "@id": string }[]) => {
 
 const validateId = (
   id: string | undefined,
-  translator: (str: string) => string
+  translator: (str: string) => string,
 ) => {
   if (!id) {
     return true;
@@ -103,7 +101,7 @@ export default function DataOfferCreateDialog({
   }, [edcClient]);
 
   const [formData, setFormData] = useState<MdsContractDefinitionInput>(
-    defaultCreateContractDefinitionFormData
+    defaultCreateContractDefinitionFormData,
   );
   const validateForm = () => true;
 
@@ -160,7 +158,7 @@ export default function DataOfferCreateDialog({
   const onFormSubmitFail = (error: Error) => {
     const match = /"message":"(.*?)"/.exec(error.message);
     enqueueSnackbar(
-      (match && match[1]) || translator("policyDefinition.new.saveFail")
+      (match && match[1]) || translator("policyDefinition.new.saveFail"),
     );
   };
 
