@@ -1,6 +1,6 @@
-import React from "react";
 import { TextFieldProps } from "@mui/material/TextField";
 import { Button, FormHelperText, TextField } from "@mui/material";
+import { isUrl } from "@/utilities/utilities";
 
 export type Tag = {
   key: string;
@@ -11,7 +11,7 @@ export type KeyValuePairInputProps = Omit<TextFieldProps, "onChange"> & {
   onChange: ({ input, valid }: { input: Partial<Tag>; valid: boolean }) => void;
   onRemove: (event: any) => void;
   value: Tag;
-  ignoreRegexCheck?: boolean;
+  ensureValueIsALink?: boolean;
   removeText?: string;
   errorText?: string;
   keyLabel?: string;
@@ -33,7 +33,7 @@ export function KeyValuePairInput({
   valueLabel = "Value",
   valuePlaceholder = "Value",
   valueOnly = false,
-  ignoreRegexCheck,
+  ensureValueIsALink,
   valid,
 }: KeyValuePairInputProps) {
   const regex = /^[a-zA-Z0-9][a-zA-Z0-9-_\.]{0,49}$/;
@@ -41,7 +41,7 @@ export function KeyValuePairInput({
   function textInputHandler(text: string, label: string) {
     onChange({
       input: { [label]: text },
-      valid: ignoreRegexCheck ? !!text : regex.test(text),
+      valid: ensureValueIsALink ? isUrl(text) : regex.test(text),
     });
   }
 
