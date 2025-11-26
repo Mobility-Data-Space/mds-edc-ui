@@ -80,10 +80,14 @@ export class DashboardPage {
   }
 
   async waitForDataLoaded() {
-    // Wait until data offers count is loaded (not "0" or empty)
+    // Wait until all dashboard counts are loaded (not "0" or empty)
     await this.page.waitForFunction(() => {
-      const el = document.querySelector('[data-testid="dashboard-your-data-offers"] h2');
-      return el && parseInt(el.textContent || '0') > 0;
+      const dataOffers = document.querySelector('[data-testid="dashboard-your-data-offers"] h2');
+      const assets = document.querySelector('[data-testid="dashboard-your-assets"] h2');
+      const policies = document.querySelector('[data-testid="dashboard-your-policies"] h2');
+      return dataOffers && parseInt(dataOffers.textContent || '0') > 0
+        && assets && parseInt(assets.textContent || '0') > 0
+        && policies && parseInt(policies.textContent || '0') > 0;
     }, { timeout: 30000 });
   }
 
