@@ -24,8 +24,11 @@ test.describe("Contract Agreements Page Tests", () => {
 
   test.describe("View Functionality and Transfer Process Initiation", () => {
     test("Displays agreement details and initiate HTTP Push transfer processes", async ({ page }) => {
+      // Wait for cards to be fully loaded (not skeletons)
+      await agreementsPage.waitForAgreementCardsLoaded();
+
       // Select an agreement
-      const agreementCards = await agreementsPage.getAgreementCards();
+      const agreementCards = await agreementsPage.getLoadedAgreementCards();
       const agreementCard = agreementCards.first();
       await agreementCard.click();
 
@@ -43,8 +46,11 @@ test.describe("Contract Agreements Page Tests", () => {
     });
 
     test("Displays agreement details and initiate S3 Push transfer processes", async ({ page }) => {
+      // Wait for cards to be fully loaded (not skeletons)
+      await agreementsPage.waitForAgreementCardsLoaded();
+
       // Select an agreement
-      const agreementCards = await agreementsPage.getAgreementCards();
+      const agreementCards = await agreementsPage.getLoadedAgreementCards();
       const agreementCard = agreementCards.first();
       await agreementCard.click();
 
@@ -62,8 +68,11 @@ test.describe("Contract Agreements Page Tests", () => {
     });
 
     test("Displays agreement details and initiate Azure Push transfer processes", async ({ page }) => {
+      // Wait for cards to be fully loaded (not skeletons)
+      await agreementsPage.waitForAgreementCardsLoaded();
+
       // Select an agreement
-      const agreementCards = await agreementsPage.getAgreementCards();
+      const agreementCards = await agreementsPage.getLoadedAgreementCards();
       const agreementCard = agreementCards.first();
       await agreementCard.click();
 
@@ -81,8 +90,11 @@ test.describe("Contract Agreements Page Tests", () => {
     });
 
     test("Displays agreement details when an agreement is selected and initiate a custom JSON (HTTP Push) transfer processes", async ({ page }) => {
+      // Wait for cards to be fully loaded (not skeletons)
+      await agreementsPage.waitForAgreementCardsLoaded();
+
       // Select an agreement
-      const agreementCards = await agreementsPage.getAgreementCards();
+      const agreementCards = await agreementsPage.getLoadedAgreementCards();
       const agreementCard = agreementCards.first();
       await agreementCard.click();
 
@@ -253,12 +265,10 @@ test.describe("Contract Agreements Page Tests", () => {
     test("Terminates a contract, shows success message, and closes modal", async ({ page }) => {
       await page.getByRole('button', { name: /Active Contracts/i }).click();
 
-      await page.waitForFunction(async () => {
-        const items = document.querySelectorAll(".contract-agreement-card");
-        return items.length > 0;
-      }, { timeout: 30000 });
+      // Wait for cards to be fully loaded (not skeletons)
+      await agreementsPage.waitForAgreementCardsLoaded();
 
-      const agreementCards = await agreementsPage.getAgreementCards();
+      const agreementCards = await agreementsPage.getLoadedAgreementCards();
       const firstCard = agreementCards.first();
       await firstCard.click();
       const agreementDialog = await agreementsPage.getAgreementDialog();
