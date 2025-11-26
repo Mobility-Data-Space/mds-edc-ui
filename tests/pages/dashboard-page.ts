@@ -91,6 +91,22 @@ export class DashboardPage {
     }, { timeout: 30000 });
   }
 
+  async waitForConnectorEndpointLoaded() {
+    // Wait until connector endpoint input has a value
+    await this.page.waitForFunction(() => {
+      const input = document.querySelector('[data-testid="dashboard-connector-endpoint"] input') as HTMLInputElement;
+      return input && input.value && input.value.length > 0;
+    }, { timeout: 30000 });
+  }
+
+  async waitForPropertiesLoaded() {
+    // Wait until properties section contains actual data (not just labels)
+    await this.page.waitForFunction(() => {
+      const props = document.querySelector('[data-testid="dashboard-edc-properties"]');
+      return props && props.textContent && props.textContent.includes('http://');
+    }, { timeout: 30000 });
+  }
+
   async getDashboardHeader() {
     return this.page.getByTestId(this.dashboardHeaderLocator);
   }
