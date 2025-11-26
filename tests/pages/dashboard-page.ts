@@ -79,6 +79,14 @@ export class DashboardPage {
     await this.page.locator(this.dataOffersCountLocator).waitFor({ state: 'visible' });
   }
 
+  async waitForDataLoaded() {
+    // Wait until data offers count is loaded (not "0" or empty)
+    await this.page.waitForFunction(() => {
+      const el = document.querySelector('[data-testid="dashboard-your-data-offers"] h2');
+      return el && parseInt(el.textContent || '0') > 0;
+    }, { timeout: 30000 });
+  }
+
   async getDashboardHeader() {
     return this.page.getByTestId(this.dashboardHeaderLocator);
   }

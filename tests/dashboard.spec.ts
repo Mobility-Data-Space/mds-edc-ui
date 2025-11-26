@@ -11,12 +11,15 @@ test.describe("Dashboard Tests", () => {
   });
 
   test("Displays the correct number of EDC resources in the connector", async ({ page }) => {
+    // Wait for dashboard data to load
+    await dashboardPage.waitForDataLoaded();
+
     const dataOffersCount = await dashboardPage.getDataOffersCount();
     const assetsCount = await dashboardPage.getAssetsCount();
     const policiesCount = await dashboardPage.getPoliciesCount();
     const catalogsCount = await dashboardPage.getCatalogsCount();
     const contractAgreementsCount = await dashboardPage.getContractAgreementsCount();
-    
+
     expect(dataOffersCount).toBeGreaterThanOrEqual(1);
     expect(assetsCount).toBeGreaterThanOrEqual(7);
     expect(policiesCount).toBeGreaterThanOrEqual(1);

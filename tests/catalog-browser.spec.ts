@@ -126,6 +126,8 @@ test.describe("Catalog Browser Tests", () => {
         await catalogPage.clearSearch();
 
         const allCatalogs = await catalogPage.getCatalogCards();
+        // Wait for items to render after API response
+        await allCatalogs.first().waitFor({ state: 'visible', timeout: 10000 });
         await expect(allCatalogs.first()).toBeVisible();
       });
 
