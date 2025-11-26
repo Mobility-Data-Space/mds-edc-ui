@@ -14,7 +14,7 @@ export type KeyValuePairInputListProps = Omit<TextFieldProps, "onChange"> & {
   valuePlaceholder?: string;
   valueOnly?: boolean;
   additionalActions?: JSX.Element[];
-  ignoreRegexCheck?:boolean
+  ensureValueIsALink?:boolean
   value: TagsList | any[];
   onChange: (tagList: TagsList) => void;
 };
@@ -75,7 +75,7 @@ export function KeyValuePairInputList({
   valueLabel = "Value",
   valuePlaceholder = "Value",
   valueOnly = false,
-  ignoreRegexCheck,
+  ensureValueIsALink,
   additionalActions = [],
   value,
   onChange
@@ -88,7 +88,7 @@ export function KeyValuePairInputList({
           keyPlaceholder={keyPlaceholder}
           valueLabel={valueLabel}
           valuePlaceholder={valuePlaceholder}
-          ignoreRegexCheck={ignoreRegexCheck}
+          ensureValueIsALink={ensureValueIsALink}
           key={tagInput.id || index}
           onChange={({ input, valid }) => {
             onChange(withUpdatedTag(value, { input, valid }, tagInput, index));
