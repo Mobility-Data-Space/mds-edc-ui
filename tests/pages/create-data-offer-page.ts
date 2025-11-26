@@ -52,7 +52,7 @@ export class CreateDataOfferPage {
   // Navigate to the create data offer page
   async navigate() {
     await this.page.goto('/create-data-offer');
-    await this.page.waitForLoadState('networkidle');
+    await this.form().waitFor({ state: 'visible' });
   }
 
   // Fill in the create data offer form

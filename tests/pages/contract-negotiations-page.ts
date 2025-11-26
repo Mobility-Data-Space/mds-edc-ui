@@ -12,7 +12,7 @@ export class ContractNegotiationsPage extends BaseListPage {
 
   async navigate() {
     await this.page.goto('/contract-negotiations');
-    await this.page.waitForLoadState('networkidle');
+    await this.waitForApiResponse('/connector/management/v3/contractnegotiations');
   }
 
   async getNegotiationsList() {
