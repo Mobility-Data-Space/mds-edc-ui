@@ -22,6 +22,10 @@ import { Checkbox } from "@/components/atoms/checkbox";
 import { idMultipleReader, idMultipleSelector } from "@/utilities/data-offer";
 import { Asset } from "@think-it-labs/edc-connector-client";
 import AssetDialog from "@/components/organisms/asset-dialog.tsx";
+import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog";
+import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
+import { assetToAssetInput, fromAssetForm } from "@/utilities/asset";
+import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 
 interface DataOfferCreateDialogProps {
   open: boolean;
@@ -41,7 +45,7 @@ const optionsGenerator = (data: { "@id": string }[]) => {
 
 const validateId = (
   id: string | undefined,
-  translator: (str: string) => string,
+  translator: (str: string) => string
 ) => {
   if (!id) {
     return true;
@@ -74,6 +78,7 @@ export default function DataOfferCreateDialog({
   const [idError, setIdError] = useState<string | boolean>(false);
 
   const edcClient = useEdcConnectorClient({ management: managementUrl });
+  const { connector } = useParticipantConnectorState();
 
   useEffect(() => {
     edcClient.management.assets
@@ -98,7 +103,7 @@ export default function DataOfferCreateDialog({
   }, [edcClient]);
 
   const [formData, setFormData] = useState<MdsContractDefinitionInput>(
-    defaultCreateContractDefinitionFormData,
+    defaultCreateContractDefinitionFormData
   );
   const validateForm = () => true;
 
@@ -115,10 +120,47 @@ export default function DataOfferCreateDialog({
     }
   };
 
+  const handleContractDefinitionSuccess = async () => {
+    const selectedAssetIds: string[] =
+      formData.assetsSelector[0].operandRight.split(",");
+    const selectedAssets = selectedAssetIds
+      .map((assetId) => assetsById[assetId])
+      .filter((asset) => !!asset);
+
+    await Promise.all(
+      selectedAssets.map(async (asset) => {
+        try {
+          const assetInput = await assetToAssetInput(asset);
+
+          const updatedAssetInput = {
+            ...assetInput,
+            properties: {
+              ...assetInput.properties,
+              additionalProperties: {
+                ...assetInput.properties.additionalProperties,
+                manual_approval: String(
+                  formData.privateProperties.manualApproval
+                ),
+              },
+            },
+          };
+          await edcClient.management.assets.update(
+            fromAssetForm(updatedAssetInput, connector.curatorName)
+          );
+        } catch (e) {
+          console.log("Error updating asset", e);
+        }
+      })
+    );
+
+    onSuccess();
+    onClose();
+  };
+
   const onFormSubmitFail = (error: Error) => {
     const match = /"message":"(.*?)"/.exec(error.message);
     enqueueSnackbar(
-      (match && match[1]) || translator("policyDefinition.new.saveFail"),
+      (match && match[1]) || translator("policyDefinition.new.saveFail")
     );
   };
 
@@ -141,10 +183,7 @@ export default function DataOfferCreateDialog({
         <ContractDefinitionFormWrapper
           managementUrl={managementUrl}
           formData={() => fromContractDefinitionForm(formData)}
-          onSuccess={() => {
-            onSuccess();
-            onClose();
-          }}
+          onSuccess={handleContractDefinitionSuccess}
           onFailure={onFormSubmitFail}
         >
           <DialogTitle>
