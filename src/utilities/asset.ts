@@ -412,17 +412,17 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
       value: sovereignLegalName,
     });
   }
-  const dataSampleUrls = readValue(
-    asset.properties,
+  const dataSampleUrls = asset.properties[
     ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS
-  );
+  ].map((dataSample: any) => dataSample["@value"]);
+
   if (dataSampleUrls?.length) {
     advancedFields.push({
       icon: "attachment",
       label: "assets.new.fieldAdvancedInfoDataSampleUrl",
       subLabel: assetTitle,
       openModalText: "assets.new.showDataSamples",
-      value: extractArrayValues(dataSampleUrls).join("\n"),
+      value: dataSampleUrls.join("\n"),
       valueTitle: "assets.new.urls",
     });
   }
