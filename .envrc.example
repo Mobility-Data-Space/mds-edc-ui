@@ -6,6 +6,7 @@ export EDC_MANAGEMENT_URL="http://edc:8182/api/management"
 export EDC_DEFAULT_URL="http://edc:8181/api"
 export EDC_PROTOCOL_URL="http://edc:8184/api/dsp"
 export EDC_PUBLIC_URL="http://edc:8183/public"
+export APP_URL="http://localhost:3000"
 // Management API Key
 export EDC_MANAGEMENT_API_KEY="API_KEY"
 // Connector Metadata
@@ -17,4 +18,3 @@ export MDS_DAPS_URL="https://daps.mobility-dataspace.eu"
 export MDS_DAPS_JWKS_URL="https://daps.mobility-dataspace.eu/.well-known/jwks.json"
 // Test Config
 export TEST_API_KEY="TEST_API_KEY"
-export APP_URL="http://localhost:3000"

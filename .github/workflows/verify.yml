@@ -110,7 +110,7 @@ jobs:
           -w /app \
           -e CI=true \
           -e TEST_API_KEY=${{ secrets.TEST_API_KEY }} \
-          mcr.microsoft.com/playwright:v1.54.2-jammy \
+          mcr.microsoft.com/playwright:v1.56.1-jammy \
           sh -c "yarn install --frozen-lockfile && yarn playwright test ${{ matrix.test-group.tests }}"
     
     - uses: actions/upload-artifact@v5
