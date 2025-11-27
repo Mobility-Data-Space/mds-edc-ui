@@ -22,7 +22,11 @@ import { useParticipantConnectorState } from "@/hooks/use-participant-connector-
 import { T, useTranslator } from "@/i18n";
 import {
   ASSET_ADVANCED_INFO_DATA_CATEGORY,
+  ASSET_ADVANCED_INFO_DATA_MODEL,
+  ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA,
+  ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS,
   ASSET_ADVANCED_INFO_MOBILITY_THEME,
+  ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS,
   ASSET_TITLE,
   ASSET_VERSION,
 } from "@/jsonld/asset";
@@ -34,6 +38,7 @@ import {
   validateDataAddress,
 } from "@/utilities/asset";
 import { proxyConnectorManagement } from "@/constants/proxy";
+import { isUrl } from "@/utilities/utilities";
 
 const stepLabelSharedProps = {
   className: "w-full justify-start p-4",
@@ -53,7 +58,7 @@ export default function AssetForm({ onClose }: AssetFormProps) {
 
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState<AssetInput>(
-    defaultCreateAssetFormData,
+    defaultCreateAssetFormData
   );
 
   const [existingIds, setExistingIds] = useState<string[]>([]);
@@ -141,12 +146,12 @@ export default function AssetForm({ onClose }: AssetFormProps) {
 
     const generatedOldId = generateId(
       formData.properties[ASSET_TITLE] as string,
-      formData.properties[ASSET_VERSION] as string,
+      formData.properties[ASSET_VERSION] as string
     );
     if (generatedOldId === generalInfoFormData["@id"]) {
       generalInfoFormData["@id"] = generateId(
         generalInfoFormData[ASSET_TITLE] as string,
-        generalInfoFormData[ASSET_VERSION] as string,
+        generalInfoFormData[ASSET_VERSION] as string
       );
     }
 
@@ -204,13 +209,35 @@ export default function AssetForm({ onClose }: AssetFormProps) {
       }
     });
 
+    const referencesData = formDataToValidate[ASSET_ADVANCED_INFO_DATA_MODEL][
+      ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA
+    ][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] as [];
+
+    const dataSampleData =
+      formDataToValidate[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS];
+
+    const allSamplesAreValid = dataSampleData.every((tagInput: any) =>
+      isUrl(tagInput.input.value)
+    );
+
+    const allReferencesAreValid = referencesData.every((tagInput: any) =>
+      isUrl(tagInput.input.value)
+    );
+
+    if (!allSamplesAreValid) {
+      newErrors[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS] = true;
+    }
+
+    if (!allReferencesAreValid) {
+      newErrors[ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] = true;
+    }
     return newErrors;
   };
 
   const setFormErrors = () => {
     return {
       properties: validateAdvancedInfo(
-        validateGeneralInfo(formData.properties),
+        validateGeneralInfo(formData.properties)
       ),
       dataAddress: validateDataAddress(formData.dataAddress, translator),
     };
@@ -262,7 +289,6 @@ export default function AssetForm({ onClose }: AssetFormProps) {
           <T string="assets.new.title" />
         </span>
       </div>
-
       <AssetFormWrapper
         managementUrl={proxyConnectorManagement}
         onSuccess={() => {
