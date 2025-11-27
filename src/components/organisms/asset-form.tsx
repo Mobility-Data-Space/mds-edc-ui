@@ -59,7 +59,7 @@ export default function AssetForm({ onClose }: AssetFormProps) {
 
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState<AssetInput>(
-    defaultCreateAssetFormData
+    defaultCreateAssetFormData,
   );
 
   const [existingIds, setExistingIds] = useState<string[]>([]);
@@ -147,12 +147,12 @@ export default function AssetForm({ onClose }: AssetFormProps) {
 
     const generatedOldId = generateId(
       formData.properties[ASSET_TITLE] as string,
-      formData.properties[ASSET_VERSION] as string
+      formData.properties[ASSET_VERSION] as string,
     );
     if (generatedOldId === generalInfoFormData["@id"]) {
       generalInfoFormData["@id"] = generateId(
         generalInfoFormData[ASSET_TITLE] as string,
-        generalInfoFormData[ASSET_VERSION] as string
+        generalInfoFormData[ASSET_VERSION] as string,
       );
     }
 
@@ -202,7 +202,7 @@ export default function AssetForm({ onClose }: AssetFormProps) {
   const setFormErrors = () => {
     return {
       properties: validateAdvancedInfo(
-        validateGeneralInfo(formData.properties)
+        validateGeneralInfo(formData.properties),
       ),
       dataAddress: validateDataAddress(formData.dataAddress, translator),
     };
@@ -254,6 +254,7 @@ export default function AssetForm({ onClose }: AssetFormProps) {
           <T string="assets.new.title" />
         </span>
       </div>
+
       <AssetFormWrapper
         managementUrl={proxyConnectorManagement}
         onSuccess={() => {

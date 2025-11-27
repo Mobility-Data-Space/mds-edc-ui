@@ -101,7 +101,7 @@ export default function EditAssetPage() {
   const { translator } = useTranslator();
 
   const [formData, setFormData] = useState<AssetInput>(
-    defaultCreateAssetFormData
+    defaultCreateAssetFormData,
   );
 
   const [errors, setErrors] = useState({

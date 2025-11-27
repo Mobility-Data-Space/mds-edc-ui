@@ -119,7 +119,7 @@ export default function CreateDataOfferPage() {
     (AtomicConstraint | MultiplicityConstraint)[]
   >([]);
   const [publishMode, setPublishMode] = useState(
-    PUBLISH_MODE_PUBLISH_UNRESTRICTED.value as string
+    PUBLISH_MODE_PUBLISH_UNRESTRICTED.value as string,
   );
 
   const [errors, setErrors] = useState({
@@ -139,7 +139,7 @@ export default function CreateDataOfferPage() {
     client.management.contractDefinitions
       .queryAll({ offset: 0 })
       .then((contracts) =>
-        setExistingContractIds(contracts.map((contract) => contract["@id"]))
+        setExistingContractIds(contracts.map((contract) => contract["@id"])),
       );
   }, [client, setExistingIds, setExistingContractIds]);
 
@@ -185,7 +185,7 @@ export default function CreateDataOfferPage() {
     return (
       0 <
       Object.entries(
-        validateDataAddress(formData.asset.dataAddress, translator)
+        validateDataAddress(formData.asset.dataAddress, translator),
       ).length
     );
   };
@@ -240,12 +240,12 @@ export default function CreateDataOfferPage() {
 
     const generatedOldId = generateId(
       formData.asset.properties[ASSET_TITLE] as string,
-      formData.asset.properties[ASSET_VERSION] as string
+      formData.asset.properties[ASSET_VERSION] as string,
     );
     if (generatedOldId === generalInfoFormData["@id"]) {
       generalInfoFormData["@id"] = generateId(
         generalInfoFormData[ASSET_TITLE] as string,
-        generalInfoFormData[ASSET_VERSION] as string
+        generalInfoFormData[ASSET_VERSION] as string,
       );
     }
 
@@ -284,7 +284,7 @@ export default function CreateDataOfferPage() {
   };
 
   const policyExpressionFormOnChange = (
-    policy: (AtomicConstraint | MultiplicityConstraint)[]
+    policy: (AtomicConstraint | MultiplicityConstraint)[],
   ) => {
     return setPolicyExpression(policy);
   };
@@ -345,11 +345,11 @@ export default function CreateDataOfferPage() {
               client.management.contractDefinitions
                 .create(fromContractDefinitionForm(formData.contract))
                 .catch((error) =>
-                  enqueueSnackbar(translator("common.errorOccurred"))
+                  enqueueSnackbar(translator("common.errorOccurred")),
                 );
             })
             .catch((error) =>
-              enqueueSnackbar(translator("common.errorOccurred"))
+              enqueueSnackbar(translator("common.errorOccurred")),
             );
         } else {
           formData.contract.accessPolicyId = UNRESTRICTED_POLICY_ID;
@@ -359,7 +359,7 @@ export default function CreateDataOfferPage() {
           client.management.contractDefinitions
             .create(fromContractDefinitionForm(formData.contract))
             .catch((error) =>
-              enqueueSnackbar(translator("common.errorOccurred"))
+              enqueueSnackbar(translator("common.errorOccurred")),
             );
         }
       })
