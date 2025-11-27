@@ -12,7 +12,6 @@ test.describe("Transfer Processes Page Tests", () => {
 
   test.describe("List Functionality", () => {
     test("Displays the transfer processes list on the first visit", async ({ page }) => {
-      await page.waitForLoadState("networkidle");
       // Verify the transfer processes list is visible
       const transferProcessesList = await transferProcessesPage.getTransferProcessesList();
       await expect(transferProcessesList).toBeVisible();

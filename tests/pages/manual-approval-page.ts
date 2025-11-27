@@ -18,7 +18,7 @@ export class ManualApprovalPage {
   // Navigate to the manual approval page
   async navigate() {
     await this.page.goto('/negotiation-manual-approval');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   // Get the list of approvals

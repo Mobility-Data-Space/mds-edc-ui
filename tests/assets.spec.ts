@@ -49,7 +49,7 @@ test.describe("Assets Page Tests", () => {
       await assetsPage.submitCreateAssetForm();
 
       // Verify the success message is displayed
-      const successMessage = await assetsPage.getToastMessage("success");
+      const successMessage = await assetsPage.waitForToastMessage("success");
       await expect(successMessage).toBeVisible();
 
       await assetsPage.searchAssets(assetTitle);
@@ -84,7 +84,7 @@ test.describe("Assets Page Tests", () => {
 
         await assetsPage.submitCreateAssetForm();
 
-        const successMessage = await assetsPage.getToastMessage("success");
+        const successMessage = await assetsPage.waitForToastMessage("success");
         await expect(successMessage).toBeVisible();
       });
 
@@ -109,7 +109,7 @@ test.describe("Assets Page Tests", () => {
         
         await assetsPage.submitCreateAssetForm();
 
-        const successMessage = await assetsPage.getToastMessage("success");
+        const successMessage = await assetsPage.waitForToastMessage("success");
         await expect(successMessage).toBeVisible();
       });
 
@@ -129,7 +129,7 @@ test.describe("Assets Page Tests", () => {
 
         await assetsPage.submitCreateAssetForm();
 
-        const successMessage = await assetsPage.getToastMessage("success");
+        const successMessage = await assetsPage.waitForToastMessage("success");
         await expect(successMessage).toBeVisible();
       });
 
@@ -149,7 +149,7 @@ test.describe("Assets Page Tests", () => {
 
         await assetsPage.submitCreateAssetForm();
 
-        const successMessage = await assetsPage.getToastMessage("success");
+        const successMessage = await assetsPage.waitForToastMessage("success");
         await expect(successMessage).toBeVisible();
       });
 
@@ -169,7 +169,7 @@ test.describe("Assets Page Tests", () => {
 
         await assetsPage.submitCreateAssetForm();
 
-        const successMessage = await assetsPage.getToastMessage("success");
+        const successMessage = await assetsPage.waitForToastMessage("success");
         await expect(successMessage).toBeVisible();
       });
 
@@ -189,7 +189,7 @@ test.describe("Assets Page Tests", () => {
 
         await assetsPage.submitCreateAssetForm();
 
-        const successMessage = await assetsPage.getToastMessage("success");
+        const successMessage = await assetsPage.waitForToastMessage("success");
         await expect(successMessage).toBeVisible();
       });
 
@@ -210,7 +210,7 @@ test.describe("Assets Page Tests", () => {
 
         await assetsPage.submitCreateAssetForm();
 
-        const successMessage = await assetsPage.getToastMessage("success");
+        const successMessage = await assetsPage.waitForToastMessage("success");
         await expect(successMessage).toBeVisible();
       });
 
@@ -230,7 +230,7 @@ test.describe("Assets Page Tests", () => {
 
         await assetsPage.submitCreateAssetForm();
 
-        const successMessage = await assetsPage.getToastMessage("success");
+        const successMessage = await assetsPage.waitForToastMessage("success");
         await expect(successMessage).toBeVisible();
       });
     })
@@ -249,7 +249,7 @@ test.describe("Assets Page Tests", () => {
       await assetsPage.confirmDeleteAsset();
 
       // Verify the success message is displayed
-      const successMessage = await assetsPage.getToastMessage("success")
+      const successMessage = await assetsPage.waitForToastMessage("success");
       await expect(successMessage).toBeVisible();
 
       // Verify the asset is removed
@@ -281,7 +281,7 @@ test.describe("Assets Page Tests", () => {
       await assetsPage.submitEditAssetForm();
 
       // Verify the success message is displayed
-      const successMessage = await assetsPage.getToastMessage("success")
+      const successMessage = await assetsPage.waitForToastMessage("success");
       await expect(successMessage).toBeVisible();
     });
   });
