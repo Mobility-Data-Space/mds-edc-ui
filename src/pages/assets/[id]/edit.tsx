@@ -29,7 +29,11 @@ import { useParticipantConnectorState } from "@/hooks/use-participant-connector-
 import { T, useTranslator } from "@/i18n";
 import {
   ASSET_ADVANCED_INFO_DATA_CATEGORY,
+  ASSET_ADVANCED_INFO_DATA_MODEL,
+  ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA,
+  ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS,
   ASSET_ADVANCED_INFO_MOBILITY_THEME,
+  ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS,
   ASSET_TITLE,
 } from "@/jsonld/asset.ts";
 import {
@@ -52,6 +56,7 @@ import { useSnackbar } from "notistack";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { proxyConnectorManagement } from "@/constants/proxy";
+import { isUrl } from "@/utilities/utilities";
 
 const unchangedOfferType = {
   text: "assets.edit.keepDatasourceUnchanged",
@@ -95,7 +100,7 @@ export default function EditAssetPage() {
   const { translator } = useTranslator();
 
   const [formData, setFormData] = useState<AssetInput>(
-    defaultCreateAssetFormData,
+    defaultCreateAssetFormData
   );
 
   const [errors, setErrors] = useState({
@@ -185,6 +190,29 @@ export default function EditAssetPage() {
       }
     });
 
+    const referencesData = formDataToValidate[ASSET_ADVANCED_INFO_DATA_MODEL][
+      ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA
+    ][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] as [];
+
+    const dataSampleData =
+      formDataToValidate[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS];
+
+    const allSamplesAreValid = dataSampleData.every((tagInput: any) =>
+      isUrl(tagInput.input.value)
+    );
+
+    const allReferencesAreValid = referencesData.every((tagInput: any) =>
+      isUrl(tagInput.input.value)
+    );
+
+    if (!allSamplesAreValid) {
+      newErrors[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS] = true;
+    }
+
+    if (!allReferencesAreValid) {
+      newErrors[ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] = true;
+    }
+
     return newErrors;
   };
   const onSubmit = () => {
@@ -218,7 +246,7 @@ export default function EditAssetPage() {
               }}
             />
           ),
-        }),
+        })
       );
   };
 

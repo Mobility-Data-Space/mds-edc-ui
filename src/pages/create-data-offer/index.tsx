@@ -36,7 +36,11 @@ import { useParticipantConnectorState } from "@/hooks/use-participant-connector-
 import { T, useTranslator } from "@/i18n";
 import {
   ASSET_ADVANCED_INFO_DATA_CATEGORY,
+  ASSET_ADVANCED_INFO_DATA_MODEL,
+  ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA,
+  ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS,
   ASSET_ADVANCED_INFO_MOBILITY_THEME,
+  ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS,
   ASSET_TITLE,
   ASSET_VERSION,
 } from "@/jsonld/asset";
@@ -84,6 +88,7 @@ import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-c
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useGenerateNextContractDefinitionId } from "@/hooks/use-generate-next-contract-definition-id";
+import { isUrl } from "@/utilities/utilities";
 
 interface DataOffer {
   asset: AssetInput;
@@ -113,7 +118,7 @@ export default function CreateDataOfferPage() {
     (AtomicConstraint | MultiplicityConstraint)[]
   >([]);
   const [publishMode, setPublishMode] = useState(
-    PUBLISH_MODE_PUBLISH_UNRESTRICTED.value as string,
+    PUBLISH_MODE_PUBLISH_UNRESTRICTED.value as string
   );
 
   const [errors, setErrors] = useState({
@@ -133,7 +138,7 @@ export default function CreateDataOfferPage() {
     client.management.contractDefinitions
       .queryAll({ offset: 0 })
       .then((contracts) =>
-        setExistingContractIds(contracts.map((contract) => contract["@id"])),
+        setExistingContractIds(contracts.map((contract) => contract["@id"]))
       );
   }, [client, setExistingIds, setExistingContractIds]);
 
@@ -179,7 +184,7 @@ export default function CreateDataOfferPage() {
     return (
       0 <
       Object.entries(
-        validateDataAddress(formData.asset.dataAddress, translator),
+        validateDataAddress(formData.asset.dataAddress, translator)
       ).length
     );
   };
@@ -210,7 +215,7 @@ export default function CreateDataOfferPage() {
         return false;
       });
     },
-    [publishMode],
+    [publishMode]
   );
 
   const cannotSubmit = () => {
@@ -234,12 +239,12 @@ export default function CreateDataOfferPage() {
 
     const generatedOldId = generateId(
       formData.asset.properties[ASSET_TITLE] as string,
-      formData.asset.properties[ASSET_VERSION] as string,
+      formData.asset.properties[ASSET_VERSION] as string
     );
     if (generatedOldId === generalInfoFormData["@id"]) {
       generalInfoFormData["@id"] = generateId(
         generalInfoFormData[ASSET_TITLE] as string,
-        generalInfoFormData[ASSET_VERSION] as string,
+        generalInfoFormData[ASSET_VERSION] as string
       );
     }
 
@@ -278,7 +283,7 @@ export default function CreateDataOfferPage() {
   };
 
   const policyExpressionFormOnChange = (
-    policy: (AtomicConstraint | MultiplicityConstraint)[],
+    policy: (AtomicConstraint | MultiplicityConstraint)[]
   ) => {
     return setPolicyExpression(policy);
   };
@@ -312,6 +317,29 @@ export default function CreateDataOfferPage() {
         newErrors[propertyName] = true;
       }
     });
+    const referencesData = formDataToValidate[ASSET_ADVANCED_INFO_DATA_MODEL][
+      ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA
+    ][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] as [];
+
+    const dataSampleData =
+      formDataToValidate[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS];
+
+    const allSamplesAreValid = dataSampleData.every((tagInput: any) =>
+      isUrl(tagInput.input.value)
+    );
+
+    const allReferencesAreValid = referencesData.every((tagInput: any) =>
+      isUrl(tagInput.input.value)
+    );
+
+    if (!allSamplesAreValid) {
+      newErrors[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS] = true;
+    }
+
+    if (!allReferencesAreValid) {
+      newErrors[ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] = true;
+    }
+
 
     return newErrors;
   };
@@ -353,11 +381,11 @@ export default function CreateDataOfferPage() {
               client.management.contractDefinitions
                 .create(fromContractDefinitionForm(formData.contract))
                 .catch((error) =>
-                  enqueueSnackbar(translator("common.errorOccurred")),
+                  enqueueSnackbar(translator("common.errorOccurred"))
                 );
             })
             .catch((error) =>
-              enqueueSnackbar(translator("common.errorOccurred")),
+              enqueueSnackbar(translator("common.errorOccurred"))
             );
         } else {
           formData.contract.accessPolicyId = UNRESTRICTED_POLICY_ID;
@@ -367,7 +395,7 @@ export default function CreateDataOfferPage() {
           client.management.contractDefinitions
             .create(fromContractDefinitionForm(formData.contract))
             .catch((error) =>
-              enqueueSnackbar(translator("common.errorOccurred")),
+              enqueueSnackbar(translator("common.errorOccurred"))
             );
         }
       })
@@ -392,9 +420,9 @@ export default function CreateDataOfferPage() {
             push(
               publishMode === PUBLISH_MODE_DO_NOT_PUBLISH.value
                 ? "/assets"
-                : "/data-offers",
+                : "/data-offers"
             ),
-          2000,
+          2000
         );
       })
       .catch(() =>
@@ -408,7 +436,7 @@ export default function CreateDataOfferPage() {
               }}
             />
           ),
-        }),
+        })
       );
   };
 
@@ -906,20 +934,21 @@ export default function CreateDataOfferPage() {
                     </div>
                     <Checkbox
                       label={translator(
-                        "contractDefinitions.new.manualApproval",
+                        "contractDefinitions.new.manualApproval"
                       )}
                       value={formData.contract.privateProperties.manualApproval}
                       onChange={(event) => {
                         onChange({
                           ...formData,
                           asset: {
-                              ...formData.asset,
-                              properties: {
-                                ...formData.asset.properties,
-                                additionalProperties: {
-                                  manual_approval: event.target.checked.toString(),
-                                },
-                              }
+                            ...formData.asset,
+                            properties: {
+                              ...formData.asset.properties,
+                              additionalProperties: {
+                                manual_approval:
+                                  event.target.checked.toString(),
+                              },
+                            },
                           },
                           contract: {
                             ...formData.contract,
