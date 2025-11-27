@@ -426,17 +426,21 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
       valueTitle: "assets.new.urls",
     });
   }
-  const referenceFileUrls = readValue(
-    asset.properties,
+
+  const referenceFileUrls = asset.properties?.[
+    ASSET_ADVANCED_INFO_DATA_MODEL
+  ]?.[0]?.[ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA]?.[0]?.[
     ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS
-  );
+  ]?.map((fileUrl: any) => fileUrl["@value"]);
+
+  console.log("referenceFileUrls-->", referenceFileUrls);
   if (referenceFileUrls?.length) {
     advancedFields.push({
       icon: "receipt",
       label: "assets.new.fieldAdvancedInfoReferenceFileUrls",
       subLabel: assetTitle,
       openModalText: "assets.new.showReferenceFiles",
-      value: extractArrayValues(referenceFileUrls).join("\n"),
+      value: referenceFileUrls.join("\n"),
       valueTitle: [
         "assets.new.fieldDescription",
         "assets.new.referenceFileImportant",
