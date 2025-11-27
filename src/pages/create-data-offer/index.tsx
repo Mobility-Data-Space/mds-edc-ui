@@ -418,7 +418,7 @@ export default function CreateDataOfferPage() {
 
   return (
     <SideDrawer title={<T string="dataOffer.new.title" />}>
-      <form onSubmit={onSubmit}>
+      <form data-testid="create-data-offer-form" onSubmit={onSubmit}>
         <div className="flex flex-col gap-y-12">
           <div className="flex flex-col gap-y-5 ">
             <div className="grid sm:grid-cols-3 gap-2 sm:gap-6">

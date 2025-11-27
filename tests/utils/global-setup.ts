@@ -3,6 +3,30 @@ import { initiate_transfers, publish_offers } from './seed';
 import { participantConfig, counterPartyParticipantConfig, SERVICES } from './tests-config'
 import { Participant } from '@/utilities/participant';
 
+const checkApiReadiness = async (managementUrl: string, apiKey: string, maxRetries = 30, intervalMs = 2000): Promise<boolean> => {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      const response = await fetch(`${managementUrl}/v3/assets/request`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Api-Key': apiKey,
+        },
+        body: JSON.stringify({}),
+      });
+      if (response.ok || response.status === 400) {
+        // 400 is acceptable - API is responding, just rejecting empty request
+        return true;
+      }
+    } catch {
+      // API not ready yet
+    }
+    console.log(`API at ${managementUrl} not ready yet. Retrying in ${intervalMs / 1000}s... (${i + 1}/${maxRetries})`);
+    await new Promise(resolve => setTimeout(resolve, intervalMs));
+  }
+  return false;
+};
+
 const checkInitStatus = (serviceName: string): boolean => {
   try {
     const containerId = execSync(`docker ps --filter "name=${serviceName}" --format "{{.ID}}"`).toString().trim();
@@ -35,6 +59,22 @@ async function globalSetup() {
   } else {
     console.log('Running in CI environment. Skipping Docker health checks.');
   }
+
+  // Wait for EDC APIs to be ready before seeding
+  const apiKey = process.env.TEST_API_KEY || 'default-test-api-key';
+  console.log('Checking EDC API readiness...');
+
+  const participantReady = await checkApiReadiness(participantConfig.EDC_MANAGEMENT_URL, apiKey);
+  if (!participantReady) {
+    throw new Error(`EDC API at ${participantConfig.EDC_MANAGEMENT_URL} failed to become ready`);
+  }
+  console.log('Participant EDC API is ready.');
+
+  const counterPartyReady = await checkApiReadiness(counterPartyParticipantConfig.EDC_MANAGEMENT_URL, apiKey);
+  if (!counterPartyReady) {
+    throw new Error(`EDC API at ${counterPartyParticipantConfig.EDC_MANAGEMENT_URL} failed to become ready`);
+  }
+  console.log('Counter-party EDC API is ready.');
 
   console.log('Seeding dataspace ...');
   try {

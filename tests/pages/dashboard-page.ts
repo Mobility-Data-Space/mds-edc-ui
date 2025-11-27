@@ -76,7 +76,35 @@ export class DashboardPage {
 
   async navigate() {
     await this.page.goto('/dashboard');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.locator(this.dataOffersCountLocator).waitFor({ state: 'visible' });
+  }
+
+  async waitForDataLoaded() {
+    // Wait until all dashboard counts are loaded (not "0" or empty)
+    await this.page.waitForFunction(() => {
+      const dataOffers = document.querySelector('[data-testid="dashboard-your-data-offers"] h2');
+      const assets = document.querySelector('[data-testid="dashboard-your-assets"] h2');
+      const policies = document.querySelector('[data-testid="dashboard-your-policies"] h2');
+      return dataOffers && parseInt(dataOffers.textContent || '0') > 0
+        && assets && parseInt(assets.textContent || '0') > 0
+        && policies && parseInt(policies.textContent || '0') > 0;
+    }, { timeout: 30000 });
+  }
+
+  async waitForConnectorEndpointLoaded() {
+    // Wait until connector endpoint input has a value
+    await this.page.waitForFunction(() => {
+      const input = document.querySelector('[data-testid="dashboard-connector-endpoint"] input') as HTMLInputElement;
+      return input && input.value && input.value.length > 0;
+    }, { timeout: 30000 });
+  }
+
+  async waitForPropertiesLoaded() {
+    // Wait until properties section contains actual data (not just labels)
+    await this.page.waitForFunction(() => {
+      const props = document.querySelector('[data-testid="dashboard-edc-properties"]');
+      return props && props.textContent && props.textContent.includes('http://');
+    }, { timeout: 30000 });
   }
 
   async getDashboardHeader() {

@@ -142,6 +142,8 @@ test.describe("Data Offer Tests", () => {
 
     test("should search for data offers by ID", async ({ page }) => {
       const initialDataOffers = await dataOfferPage.getDataOfferCards();
+      // Wait for initial data offers to load before searching
+      await initialDataOffers.first().waitFor({ state: 'visible', timeout: 30000 });
       const initialCount = await initialDataOffers.count();
 
       if (initialCount > 0) {
@@ -151,7 +153,8 @@ test.describe("Data Offer Tests", () => {
         await dataOfferPage.searchDataOffers(searchTerm);
 
         const searchResults = await dataOfferPage.getDataOfferCards();
-        await expect(searchResults.first()).toBeVisible();
+        // Wait for search results to render after API response
+        await searchResults.first().waitFor({ state: 'visible', timeout: 30000 });
 
         const results = await searchResults.allTextContents();
         const hasMatchingResult = results.some((result: string) =>
@@ -162,14 +165,17 @@ test.describe("Data Offer Tests", () => {
     });
 
     test("should clear search and show all data offers", async ({ page }) => {
+      // First verify data offers are visible before searching
+      const initialDataOffers = await dataOfferPage.getDataOfferCards();
+      await initialDataOffers.first().waitFor({ state: 'visible', timeout: 30000 });
+
       await dataOfferPage.searchDataOffers('test');
 
       await dataOfferPage.clearDataOfferSearch();
 
-      // Wait for the page to reload after clearing search
-      await page.waitForTimeout(1000);
-      
       const allDataOffers = await dataOfferPage.getDataOfferCards();
+      // Wait for items to render after API response with longer timeout
+      await allDataOffers.first().waitFor({ state: 'visible', timeout: 30000 });
       await expect(allDataOffers.first()).toBeVisible();
     });
 

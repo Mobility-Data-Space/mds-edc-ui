@@ -99,7 +99,7 @@ test.describe("Policy Definitions Page Tests", () => {
       // Attempt to create the policy
       await policiesPage.clickCreateButton();
       // Verify the success message
-      const successMessageLocator = await policiesPage.getToastMessage('success');
+      const successMessageLocator = await policiesPage.waitForToastMessage('success');
       const successMessage = await successMessageLocator.textContent();
       expect(successMessage).toContain("Policy created successfully!");
       await page.waitForResponse((response) => response.url().includes('/connector/management/v3/policydefinitions/request'));

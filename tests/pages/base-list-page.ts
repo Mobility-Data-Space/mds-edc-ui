@@ -49,6 +49,17 @@ export class BaseListPage {
         return this.page.locator(locator);
     }
 
+    async waitForToastMessage(type: SnackbarType, timeout = 10000) {
+        const locatorMap: Record<SnackbarType, string> = {
+            success: this.successMessageLocator,
+            info: this.infoMessageLocator,
+            error: this.errorMessageLocator,
+        };
+        const locator = this.page.locator(locatorMap[type]);
+        await locator.waitFor({ state: 'visible', timeout });
+        return locator;
+    }
+
     async searchItems(searchTerm: string, apiEndpoint: string) {
         const searchInput = this.page.locator(this.searchInputLocator);
         await searchInput.fill(searchTerm);

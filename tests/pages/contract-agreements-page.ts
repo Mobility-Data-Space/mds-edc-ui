@@ -68,7 +68,7 @@ export class ContractAgreementsPage extends BaseListPage {
 
   async navigate() {
     await this.page.goto('/contract-agreements');
-    await this.page.waitForLoadState("networkidle")
+    await this.waitForApiResponse('/connector/management/v3/contractagreements');
   }
 
   async getAgreementsList() {
@@ -77,6 +77,17 @@ export class ContractAgreementsPage extends BaseListPage {
 
   async getAgreementCards() {
     return this.page.locator(this.agreementCardLocator);
+  }
+
+  async getLoadedAgreementCards() {
+    // Wait for cards with actual content (not loading skeletons)
+    // The loaded card contains [data-testid="asset-id"] which the skeleton doesn't have
+    return this.page.locator(`${this.agreementCardLocator}:has([data-testid="asset-id"])`);
+  }
+
+  async waitForAgreementCardsLoaded() {
+    // Wait for at least one card to be fully loaded (not skeleton)
+    await this.page.locator(`${this.agreementCardLocator}:has([data-testid="asset-id"])`).first().waitFor({ state: 'visible' });
   }
 
   async selectAgreement(agreementName: string) {

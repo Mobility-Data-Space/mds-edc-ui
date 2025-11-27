@@ -10,8 +10,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "seed": "node --loader ts-node/esm src/seed.ts"
+    "lint": "next lint"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
