@@ -50,6 +50,7 @@ import {
   defaultCreateAssetFormData,
   fromAssetForm,
   generateId,
+  validateAdvancedInfo,
   validateDataAddress,
 } from "@/utilities/asset";
 import {
@@ -303,43 +304,6 @@ export default function CreateDataOfferPage() {
     } else if (idAlreadyExist) {
       newErrors["@id"] = translator("assets.new.fieldIdAlreadyExists");
     }
-
-    return newErrors;
-  };
-
-  const validateAdvancedInfo = (formDataToValidate: AssetProperties) => {
-    const newErrors: { [key: string]: boolean } = {};
-    const required_properties = [ASSET_ADVANCED_INFO_DATA_CATEGORY];
-    required_properties.forEach((propertyName) => {
-      if (
-        !formDataToValidate[ASSET_ADVANCED_INFO_MOBILITY_THEME][propertyName]
-      ) {
-        newErrors[propertyName] = true;
-      }
-    });
-    const referencesData = formDataToValidate[ASSET_ADVANCED_INFO_DATA_MODEL][
-      ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA
-    ][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] as [];
-
-    const dataSampleData =
-      formDataToValidate[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS];
-
-    const allSamplesAreValid = dataSampleData.every((tagInput: any) =>
-      isUrl(tagInput.input.value)
-    );
-
-    const allReferencesAreValid = referencesData.every((tagInput: any) =>
-      isUrl(tagInput.input.value)
-    );
-
-    if (!allSamplesAreValid) {
-      newErrors[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS] = true;
-    }
-
-    if (!allReferencesAreValid) {
-      newErrors[ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] = true;
-    }
-
 
     return newErrors;
   };
