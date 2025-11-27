@@ -115,7 +115,7 @@ test.describe('Create Data Offer Tests', () => {
     await page.waitForURL('/data-offers', { timeout: 10000 });
 
     // Navigate to data offers page and check the newly created data offer has the correct naming convention
-    const dataOfferCards = page.locator('[data-testid="data-offer-card"]');
+    const dataOfferCards = page.locator('.data-offer-card');
     await expect(dataOfferCards.first()).toBeVisible();
     
     // Find the newly created data offer by looking for the contract definition ID
