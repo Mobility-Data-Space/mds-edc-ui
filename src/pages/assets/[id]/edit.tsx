@@ -29,7 +29,11 @@ import { useParticipantConnectorState } from "@/hooks/use-participant-connector-
 import { T, useTranslator } from "@/i18n";
 import {
   ASSET_ADVANCED_INFO_DATA_CATEGORY,
+  ASSET_ADVANCED_INFO_DATA_MODEL,
+  ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA,
+  ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS,
   ASSET_ADVANCED_INFO_MOBILITY_THEME,
+  ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS,
   ASSET_TITLE,
 } from "@/jsonld/asset.ts";
 import {
@@ -37,6 +41,7 @@ import {
   assetToAssetInput,
   defaultCreateAssetFormData,
   fromAssetForm,
+  validateAdvancedInfo,
   validateDataAddress,
 } from "@/utilities/asset.ts";
 import {
@@ -52,6 +57,7 @@ import { useSnackbar } from "notistack";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { proxyConnectorManagement } from "@/constants/proxy";
+import { isUrl } from "@/utilities/utilities";
 
 const unchangedOfferType = {
   text: "assets.edit.keepDatasourceUnchanged",
@@ -174,19 +180,6 @@ export default function EditAssetPage() {
     return newErrors;
   };
 
-  const validateAdvancedInfo = (formDataToValidate: AssetProperties) => {
-    const newErrors: { [key: string]: boolean } = {};
-    const required_properties = [ASSET_ADVANCED_INFO_DATA_CATEGORY];
-    required_properties.forEach((propertyName) => {
-      if (
-        !formDataToValidate[ASSET_ADVANCED_INFO_MOBILITY_THEME][propertyName]
-      ) {
-        newErrors[propertyName] = true;
-      }
-    });
-
-    return newErrors;
-  };
   const onSubmit = () => {
     if (cannotSubmit()) {
       return;
@@ -218,7 +211,7 @@ export default function EditAssetPage() {
               }}
             />
           ),
-        }),
+        })
       );
   };
 

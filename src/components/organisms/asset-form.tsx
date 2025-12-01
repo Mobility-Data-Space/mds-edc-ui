@@ -22,7 +22,11 @@ import { useParticipantConnectorState } from "@/hooks/use-participant-connector-
 import { T, useTranslator } from "@/i18n";
 import {
   ASSET_ADVANCED_INFO_DATA_CATEGORY,
+  ASSET_ADVANCED_INFO_DATA_MODEL,
+  ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA,
+  ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS,
   ASSET_ADVANCED_INFO_MOBILITY_THEME,
+  ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS,
   ASSET_TITLE,
   ASSET_VERSION,
 } from "@/jsonld/asset";
@@ -31,9 +35,11 @@ import {
   defaultCreateAssetFormData,
   fromAssetForm,
   generateId,
+  validateAdvancedInfo,
   validateDataAddress,
 } from "@/utilities/asset";
 import { proxyConnectorManagement } from "@/constants/proxy";
+import { isUrl } from "@/utilities/utilities";
 
 const stepLabelSharedProps = {
   className: "w-full justify-start p-4",
@@ -189,20 +195,6 @@ export default function AssetForm({ onClose }: AssetFormProps) {
     } else if (idAlreadyExist) {
       newErrors["@id"] = translator("assets.new.fieldIdAlreadyExists");
     }
-
-    return newErrors;
-  };
-
-  const validateAdvancedInfo = (formDataToValidate: AssetProperties) => {
-    const newErrors: { [key: string]: boolean } = {};
-    const requiredProperties = [ASSET_ADVANCED_INFO_DATA_CATEGORY];
-    requiredProperties.forEach((propertyName) => {
-      if (
-        !formDataToValidate[ASSET_ADVANCED_INFO_MOBILITY_THEME][propertyName]
-      ) {
-        newErrors[propertyName] = true;
-      }
-    });
 
     return newErrors;
   };

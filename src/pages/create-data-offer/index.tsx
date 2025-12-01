@@ -36,7 +36,11 @@ import { useParticipantConnectorState } from "@/hooks/use-participant-connector-
 import { T, useTranslator } from "@/i18n";
 import {
   ASSET_ADVANCED_INFO_DATA_CATEGORY,
+  ASSET_ADVANCED_INFO_DATA_MODEL,
+  ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA,
+  ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS,
   ASSET_ADVANCED_INFO_MOBILITY_THEME,
+  ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS,
   ASSET_TITLE,
   ASSET_VERSION,
 } from "@/jsonld/asset";
@@ -46,6 +50,7 @@ import {
   defaultCreateAssetFormData,
   fromAssetForm,
   generateId,
+  validateAdvancedInfo,
   validateDataAddress,
 } from "@/utilities/asset";
 import {
@@ -84,6 +89,7 @@ import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-c
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useGenerateNextContractDefinitionId } from "@/hooks/use-generate-next-contract-definition-id";
+import { isUrl } from "@/utilities/utilities";
 
 interface DataOffer {
   asset: AssetInput;
@@ -210,7 +216,7 @@ export default function CreateDataOfferPage() {
         return false;
       });
     },
-    [publishMode],
+    [publishMode]
   );
 
   const cannotSubmit = () => {
@@ -302,20 +308,6 @@ export default function CreateDataOfferPage() {
     return newErrors;
   };
 
-  const validateAdvancedInfo = (formDataToValidate: AssetProperties) => {
-    const newErrors: { [key: string]: boolean } = {};
-    const required_properties = [ASSET_ADVANCED_INFO_DATA_CATEGORY];
-    required_properties.forEach((propertyName) => {
-      if (
-        !formDataToValidate[ASSET_ADVANCED_INFO_MOBILITY_THEME][propertyName]
-      ) {
-        newErrors[propertyName] = true;
-      }
-    });
-
-    return newErrors;
-  };
-
   const setFormErrors = () => {
     return {
       properties: validateGeneralInfo(formData.asset.properties),
@@ -392,9 +384,9 @@ export default function CreateDataOfferPage() {
             push(
               publishMode === PUBLISH_MODE_DO_NOT_PUBLISH.value
                 ? "/assets"
-                : "/data-offers",
+                : "/data-offers"
             ),
-          2000,
+          2000
         );
       })
       .catch(() =>
@@ -408,7 +400,7 @@ export default function CreateDataOfferPage() {
               }}
             />
           ),
-        }),
+        })
       );
   };
 
@@ -906,20 +898,21 @@ export default function CreateDataOfferPage() {
                     </div>
                     <Checkbox
                       label={translator(
-                        "contractDefinitions.new.manualApproval",
+                        "contractDefinitions.new.manualApproval"
                       )}
                       value={formData.contract.privateProperties.manualApproval}
                       onChange={(event) => {
                         onChange({
                           ...formData,
                           asset: {
-                              ...formData.asset,
-                              properties: {
-                                ...formData.asset.properties,
-                                additionalProperties: {
-                                  manual_approval: event.target.checked.toString(),
-                                },
-                              }
+                            ...formData.asset,
+                            properties: {
+                              ...formData.asset.properties,
+                              additionalProperties: {
+                                manual_approval:
+                                  event.target.checked.toString(),
+                              },
+                            },
                           },
                           contract: {
                             ...formData.contract,
