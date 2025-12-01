@@ -1,23 +1,33 @@
-import React from 'react';
-import {DatePicker as MuiDatePicker, DatePickerProps as MuiDatePickerProps} from '@mui/x-date-pickers/DatePicker';
-import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
-import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import React from "react";
+import {
+  DatePicker as MuiDatePicker,
+  DatePickerProps as MuiDatePickerProps,
+} from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import {DATE_FORMAT, dateToString} from "@/utilities/date";
-import {DatePickerDaySlot} from "@/components/atoms/date-picker-day-slot";
-import {Icon} from "@mui/material";
-import DateRangeSharpIcon from '@mui/icons-material/DateRangeSharp';
+import { DATE_FORMAT, dateToString } from "@/utilities/date";
+import { DatePickerDaySlot } from "@/components/atoms/date-picker-day-slot";
+import { Icon } from "@mui/material";
+import DateRangeSharpIcon from "@mui/icons-material/DateRangeSharp";
 
 export type DatePickerPros = Partial<MuiDatePickerProps<any>> & {
-  name?: string,
-  id?: string,
-  label?: string
-  onChange: (value: string) => void,
-  value: string,
-  error?: boolean,
+  name?: string;
+  id?: string;
+  label?: string;
+  onChange: (value: string) => void;
+  value: string;
+  error?: boolean;
 };
 
-export function DatePicker({ name = "", id = "", label = "", onChange, value, error = false }: DatePickerPros): JSX.Element {
+export function DatePicker({
+  name = "",
+  id = "",
+  label = "",
+  onChange,
+  value,
+  error = false,
+}: DatePickerPros): JSX.Element {
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
@@ -37,7 +47,7 @@ export function DatePicker({ name = "", id = "", label = "", onChange, value, er
         closeOnSelect={false}
         slots={{
           day: DatePickerDaySlot as any,
-          openPickerIcon: DateRangeSharpIcon
+          openPickerIcon: DateRangeSharpIcon,
         }}
         slotProps={{
           textField: {
@@ -48,7 +58,7 @@ export function DatePicker({ name = "", id = "", label = "", onChange, value, er
             fullWidth: true,
             helperText: DATE_FORMAT,
             placeholder: "Date",
-          }
+          },
         }}
       />
     </LocalizationProvider>
