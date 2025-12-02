@@ -152,6 +152,7 @@ export default function CreateDataOfferPage() {
 
   // Update contract ID when existing contracts are loaded
   useEffect(() => {
+    console.log("updating because nextId changed: ", nextId);
     if (generateIdError) {
       enqueueSnackbar("", {
         content: (key) => (
@@ -171,7 +172,7 @@ export default function CreateDataOfferPage() {
       ...prev,
       contract: createDefaultContractDefinitionFormData(nextId),
     }));
-  }, [existingContractIds]);
+  }, [nextId, generateIdError]);
 
   const generalInfoIsNotValid = () => {
     return (
