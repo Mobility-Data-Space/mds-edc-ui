@@ -216,7 +216,7 @@ export default function CreateDataOfferPage() {
         return false;
       });
     },
-    [publishMode]
+    [publishMode],
   );
 
   const cannotSubmit = () => {
@@ -329,6 +329,8 @@ export default function CreateDataOfferPage() {
         // get asset id for contract definition
         formData.contract.assetsSelector = idSelector(result["@id"]);
 
+        console.log({ publishMode });
+
         if (publishMode === PUBLISH_MODE_DO_NOT_PUBLISH.value) {
           return;
         }
@@ -355,12 +357,20 @@ export default function CreateDataOfferPage() {
           formData.contract.accessPolicyId = UNRESTRICTED_POLICY_ID;
           formData.contract.contractPolicyId = UNRESTRICTED_POLICY_ID;
 
+          console.log({ formData });
+
+          console.log(
+            "fromContractDefinitionForm result :",
+            fromContractDefinitionForm(formData.contract),
+          );
+
           // create contract
           client.management.contractDefinitions
             .create(fromContractDefinitionForm(formData.contract))
-            .catch((error) =>
-              enqueueSnackbar(translator("common.errorOccurred")),
-            );
+            .catch((error) => {
+              console.log("failed to create", error);
+              enqueueSnackbar(translator("common.errorOccurred"));
+            });
         }
       })
       .then(() => {
@@ -384,9 +394,9 @@ export default function CreateDataOfferPage() {
             push(
               publishMode === PUBLISH_MODE_DO_NOT_PUBLISH.value
                 ? "/assets"
-                : "/data-offers"
+                : "/data-offers",
             ),
-          2000
+          2000,
         );
       })
       .catch(() =>
@@ -400,7 +410,7 @@ export default function CreateDataOfferPage() {
               }}
             />
           ),
-        })
+        }),
       );
   };
 
@@ -898,7 +908,7 @@ export default function CreateDataOfferPage() {
                     </div>
                     <Checkbox
                       label={translator(
-                        "contractDefinitions.new.manualApproval"
+                        "contractDefinitions.new.manualApproval",
                       )}
                       value={formData.contract.privateProperties.manualApproval}
                       onChange={(event) => {

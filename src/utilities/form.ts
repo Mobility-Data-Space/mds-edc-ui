@@ -8,7 +8,7 @@ export const removeEmptyFields = (object: { [key: string]: any }) => {
       continue;
     }
 
-    if ((Array.isArray(object[key]))) {
+    if (Array.isArray(object[key])) {
       if (object[key].length > 0) {
         newFormData[key] = object[key];
       }
