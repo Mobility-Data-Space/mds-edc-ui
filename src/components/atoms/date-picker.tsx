@@ -23,12 +23,26 @@ function FreeTypingField(props: DatePickerFieldProps) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, "date");
   const pickerContext = usePickerContext();
   const [inputValue, setInputValue] = React.useState("");
+  const fieldContainerRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     if (pickerContext.value && pickerContext.value.isValid()) {
       setInputValue(pickerContext.value.format(pickerContext.fieldFormat));
     }
   }, [pickerContext.value, pickerContext.fieldFormat]);
+
+  // Set the rootRef to our container
+  React.useEffect(() => {
+    if (fieldContainerRef.current && pickerContext.rootRef) {
+      if (typeof pickerContext.rootRef === "function") {
+        pickerContext.rootRef(fieldContainerRef.current);
+      } else if (pickerContext.rootRef && "current" in pickerContext.rootRef) {
+        (
+          pickerContext.rootRef as React.MutableRefObject<HTMLElement | null>
+        ).current = fieldContainerRef.current;
+      }
+    }
+  }, [pickerContext.rootRef]);
 
   const { hasValidationError } = useValidation({
     value: pickerContext.value,
@@ -66,20 +80,24 @@ function FreeTypingField(props: DatePickerFieldProps) {
   };
 
   return (
-    <TextField
-      {...forwardedProps}
-      InputProps={inputProps}
-      sx={{ width: "100%" }}
-      value={inputValue}
-      onChange={handleChange}
-      onBlur={handleBlur}
-      error={hasValidationError}
-      helperText={DATE_FORMAT}
-      ref={pickerContext.rootRef}
-      label={pickerContext.label}
-      focused={pickerContext.open}
-      placeholder="Type a date..."
-    />
+    <div
+      ref={fieldContainerRef}
+      style={{ width: "100%", position: "relative" }}
+    >
+      <TextField
+        {...forwardedProps}
+        InputProps={inputProps}
+        sx={{ width: "100%" }}
+        value={inputValue}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        error={hasValidationError}
+        helperText={DATE_FORMAT}
+        label={pickerContext.label}
+        focused={pickerContext.open}
+        placeholder="Type a date..."
+      />
+    </div>
   );
 }
 
@@ -101,27 +119,34 @@ export function DatePicker({
   onChange,
   value,
 }: DatePickerProps) {
+  const anchorRef = React.useRef<HTMLDivElement>(null);
+
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <MuiDatePicker
-        name={name}
-        label={label}
-        value={value}
-        onChange={onChange}
-        slots={{
-          field: FreeTypingField,
-          openPickerIcon: CalendarMonthIcon,
-        }}
-        maxDate={dayjs("9999-12-30", "YYYY-MM-DD")}
-        minDate={dayjs("0001-01-01", "YYYY-MM-DD")}
-        slotProps={{
-          popper: { placement: "bottom-start" },
-          field: {
-            id,
-          },
-          openPickerButton: { size: "small" },
-        }}
-      />
-    </LocalizationProvider>
+    <div ref={anchorRef} style={{ position: "relative", width: "100%" }}>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <MuiDatePicker
+          name={name}
+          label={label}
+          value={value}
+          onChange={onChange}
+          slots={{
+            field: FreeTypingField,
+            openPickerIcon: CalendarMonthIcon,
+          }}
+          maxDate={dayjs("9999-12-30", "YYYY-MM-DD")}
+          minDate={dayjs("0001-01-01", "YYYY-MM-DD")}
+          slotProps={{
+            popper: {
+              placement: "bottom-start",
+              anchorEl: anchorRef.current,
+            },
+            field: {
+              id,
+            },
+            openPickerButton: { size: "small" },
+          }}
+        />
+      </LocalizationProvider>
+    </div>
   );
 }
