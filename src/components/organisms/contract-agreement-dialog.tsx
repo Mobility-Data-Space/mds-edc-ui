@@ -92,9 +92,7 @@ export default function ContractAgreementDialog({
           setAsset(fetchedAsset);
           setCounterPartyAddress(connectorEndpoint);
         })
-        .catch((error) =>
-          enqueueSnackbar(translator("assets.[id].fetchError")),
-        );
+        .catch(() => enqueueSnackbar(translator("assets.[id].fetchError")));
     } else {
       edcClient.management.contractAgreements
         .getNegotiation(contractAgreement.id)
@@ -215,9 +213,9 @@ export default function ContractAgreementDialog({
                   <Typography variant="subtitle1" className="text-red-800">
                     {TERMINATION_REASON_BY_USER}
                   </Typography>
-                  {contractAgreement.retirementReason && (
+                  {contractAgreement.terminationReason && (
                     <Typography variant="body2" className="text-red-800">
-                      {contractAgreement.retirementReason}
+                      {contractAgreement.terminationReason}
                     </Typography>
                   )}
                   {!!contractAgreement.isTerminatedAt && (
