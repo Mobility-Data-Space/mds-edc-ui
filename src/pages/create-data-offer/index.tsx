@@ -132,6 +132,10 @@ export default function CreateDataOfferPage() {
   });
 
   useEffect(() => {
+    console.log(formData);
+  }, [formData]);
+
+  useEffect(() => {
     client.management.assets
       .queryAll({ offset: 0 })
       .then((assets) => setExistingIds(assets.map((asset) => asset["@id"])));
