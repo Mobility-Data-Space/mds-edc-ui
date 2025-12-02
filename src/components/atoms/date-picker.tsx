@@ -100,9 +100,6 @@ export function DatePicker({
   label = "",
   onChange,
   value,
-  error = false,
-  errorMessage,
-  helperText,
 }: DatePickerProps) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
