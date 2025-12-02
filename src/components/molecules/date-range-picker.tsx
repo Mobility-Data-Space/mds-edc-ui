@@ -75,6 +75,7 @@ export default function DateRangePicker({ name = "", id = "", label = "", helper
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
         name={name}
+        enableAccessibleFieldDOMStructure={false}
         value={dayjs(startDate, DATE_FORMAT)}
         defaultValue={dayjs(new Date())}
         format={DATE_FORMAT}
