@@ -1,21 +1,49 @@
 import * as React from "react";
-import {Icon, IconButton} from "@mui/material";
+import { Icon, IconButton } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
-import {MuiSelect} from "@/components/atoms/mui-select";
-import {DatePicker} from "@/components/atoms/date-picker";
-import {ConstraintProps} from "@/components/molecules/constraint";
-import {T, useTranslator} from "@/i18n";
+import { MuiSelect } from "@/components/atoms/mui-select";
+import { DatePicker } from "@/components/atoms/date-picker";
+import { ConstraintProps } from "@/components/molecules/constraint";
+import { T, useTranslator } from "@/i18n";
 import { DATE_FORMAT } from "@/utilities/date.ts";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { timeRestrictionOperators } from "@/utilities/policy-operators";
 
-export function TimeRestrictionConstraint({ value, onChange, onRemove }: ConstraintProps) {
-  value = value as AtomicConstraint
+export function TimeRestrictionConstraint({
+  value,
+  onChange,
+  onRemove,
+}: ConstraintProps) {
+  
+  const [dateValue, setDateValue] = React.useState<Dayjs | null>(null);
+  value = value as AtomicConstraint;
+
+  React.useEffect(() => {
+    function initializeDate() {
+      const inputValue = value as AtomicConstraint;
+      if (inputValue?.rightOperand) {
+        const dayJsDate = dayjs(inputValue.rightOperand);
+        if (dayJsDate.isValid()) {
+          setDateValue(dayJsDate);
+        }
+      }
+    }
+    initializeDate();
+  }, [value.rightOperand]);
   const dayJsDate = dayjs(value.rightOperand);
   const dateIsNotValid = !dayJsDate.isValid();
-  const { translator } = useTranslator() ;
+  const { translator } = useTranslator();
 
+  const handleDateChange = (newValue: Dayjs | null) => {
+    setDateValue(newValue);
+    if (newValue?.isValid()) {
+      onChange({
+        ...value,
+        rightOperand: dayjs(newValue, DATE_FORMAT).toISOString(),
+      });
+    }
+  };
   return (
     <div className="flex flex-row gap-4">
       <Typography variant="body2">
@@ -25,13 +53,17 @@ export function TimeRestrictionConstraint({ value, onChange, onRemove }: Constra
         label="time-restriction"
         options={timeRestrictionOperators}
         value={value.operator}
-        onChange={(event) => onChange({ ...value, operator: event.target.value })}
+        onChange={(event) =>
+          onChange({ ...value, operator: event.target.value })
+        }
       />
       <DatePicker
-        label={`${translator("dataOffer.new.policyExpressionTimeRestriction")}*`}
+        label={`${translator(
+          "dataOffer.new.policyExpressionTimeRestriction"
+        )}*`}
         error={dateIsNotValid}
-        onChange={(dateValue) => onChange({ ...value, rightOperand: dayjs(dateValue, DATE_FORMAT).toISOString() })}
-        value={dateIsNotValid ? "" : dayJsDate.format(DATE_FORMAT)}
+        onChange={handleDateChange}
+        value={dateValue}
       />
 
       <div className="flex items-center">
@@ -41,7 +73,7 @@ export function TimeRestrictionConstraint({ value, onChange, onRemove }: Constra
           className="font-medium !-mt-5"
           color="secondary"
         >
-          <Icon style={{ fontSize: "28px" }} >remove</Icon>
+          <Icon style={{ fontSize: "28px" }}>remove</Icon>
         </IconButton>
       </div>
     </div>
