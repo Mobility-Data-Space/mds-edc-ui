@@ -127,6 +127,7 @@ export function DatePicker({
         <MuiDatePicker
           name={name}
           label={label}
+          format={DATE_FORMAT}
           value={value}
           onChange={onChange}
           slots={{
