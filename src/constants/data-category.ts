@@ -93,8 +93,8 @@ Object.entries(SUBCATEGORIES).forEach(([category, subCategories]) => {
 export const DATA_SUBCATEGORIES_DATA = _DATA_SUBCATEGORIES_DATA;
 
 export const GEO_REFERENCE_DATA = [
-  { text: "Rail", value: "Rail" },
-  { text: "Road", value: "Road" },
-  { text: "Water", value: "Water" },
-  { text: "Air", value: "Air" },
+  { text: "Rail", value: "RAIL" },
+  { text: "Road", value: "ROAD" },
+  { text: "Water", value: "WATER" },
+  { text: "Air", value: "AIR" },
 ];
