@@ -1,3 +1,4 @@
+import { Checkbox } from "@/components/atoms/checkbox";
 import RadioButtonsGroup from "@/components/atoms/radio-group";
 import { AssetConditionsForUse } from "@/components/molecules/asset-conditions-for-use";
 import { AssetContentType } from "@/components/molecules/asset-content-type";
@@ -32,18 +33,10 @@ import {
   PUBLISH_MODES,
 } from "@/constants/data-address-types";
 import { proxyConnectorManagement } from "@/constants/proxy";
+import { useGenerateNextContractDefinitionId } from "@/hooks/use-generate-next-contract-definition-id";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
-import {
-  ASSET_ADVANCED_INFO_DATA_CATEGORY,
-  ASSET_ADVANCED_INFO_DATA_MODEL,
-  ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA,
-  ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS,
-  ASSET_ADVANCED_INFO_MOBILITY_THEME,
-  ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS,
-  ASSET_TITLE,
-  ASSET_VERSION,
-} from "@/jsonld/asset";
+import { ASSET_TITLE, ASSET_VERSION } from "@/jsonld/asset";
 import { UNRESTRICTED_POLICY_ID } from "@/jsonld/policy";
 import {
   AssetProperties,
@@ -54,10 +47,10 @@ import {
   validateDataAddress,
 } from "@/utilities/asset";
 import {
+  createDefaultContractDefinitionFormData,
   defaultCreateContractDefinitionFormData,
   fromContractDefinitionForm,
   MdsContractDefinitionInput,
-  createDefaultContractDefinitionFormData,
 } from "@/utilities/contract-definition";
 import { idSelector } from "@/utilities/data-offer.ts";
 import {
@@ -73,12 +66,11 @@ import {
 } from "@/utilities/policy-constraints";
 import {
   Button,
-  Checkbox as MuiCheckbox,
   Divider,
   FormControlLabel,
+  Checkbox as MuiCheckbox,
   Typography,
 } from "@mui/material";
-import { Checkbox } from "@/components/atoms/checkbox";
 import {
   AssetInput,
   AtomicConstraint,
@@ -88,8 +80,6 @@ import {
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
 import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useGenerateNextContractDefinitionId } from "@/hooks/use-generate-next-contract-definition-id";
-import { isUrl } from "@/utilities/utilities";
 
 interface DataOffer {
   asset: AssetInput;
@@ -106,8 +96,7 @@ export default function CreateDataOfferPage() {
 
   const { translator } = useTranslator();
 
-  const [existingIds, setExistingIds] = useState<string[]>([]);
-  const [existingContractIds, setExistingContractIds] = useState<string[]>([]);
+  const [existingAssetIds, setExistingAssetIds] = useState<string[]>([]);
 
   const [formData, setFormData] = useState<DataOffer>({
     asset: defaultCreateAssetFormData,
@@ -132,28 +121,17 @@ export default function CreateDataOfferPage() {
   });
 
   useEffect(() => {
-    console.log(formData);
-  }, [formData]);
-
-  useEffect(() => {
     client.management.assets
-      .queryAll({ offset: 0 })
-      .then((assets) => setExistingIds(assets.map((asset) => asset["@id"])));
-
-    client.management.contractDefinitions
-      .queryAll({ offset: 0 })
-      .then((contracts) =>
-        setExistingContractIds(contracts.map((contract) => contract["@id"])),
+      .queryAll({ offset: 0, limit: 1000 })
+      .then((assets) =>
+        setExistingAssetIds(assets.map((asset) => asset["@id"])),
       );
-  }, [client, setExistingIds, setExistingContractIds]);
+  }, [client, setExistingAssetIds]);
 
-  const { nextId, error: generateIdError } =
-    useGenerateNextContractDefinitionId();
+  const nextIdGenerator = useGenerateNextContractDefinitionId();
 
-  // Update contract ID when existing contracts are loaded
   useEffect(() => {
-    console.log("updating because nextId changed: ", nextId);
-    if (generateIdError) {
+    if (typeof nextIdGenerator.error === "string") {
       enqueueSnackbar("", {
         content: (key) => (
           <Snackbar
@@ -170,9 +148,9 @@ export default function CreateDataOfferPage() {
 
     setFormData((prev) => ({
       ...prev,
-      contract: createDefaultContractDefinitionFormData(nextId),
+      contract: createDefaultContractDefinitionFormData(nextIdGenerator.id),
     }));
-  }, [nextId, generateIdError]);
+  }, [nextIdGenerator.id, nextIdGenerator.error]);
 
   const generalInfoIsNotValid = () => {
     return (
@@ -303,7 +281,7 @@ export default function CreateDataOfferPage() {
       }
     });
 
-    const idAlreadyExist = existingIds.includes(formDataToValidate["@id"]);
+    const idAlreadyExist = existingAssetIds.includes(formDataToValidate["@id"]);
     if (!/^[^\s:]*$/.test(formDataToValidate["@id"])) {
       newErrors["@id"] = translator("assets.new.invalidWhitespacesOrColons");
     } else if (idAlreadyExist) {
@@ -334,8 +312,6 @@ export default function CreateDataOfferPage() {
         // get asset id for contract definition
         formData.contract.assetsSelector = idSelector(result["@id"]);
 
-        console.log({ publishMode });
-
         if (publishMode === PUBLISH_MODE_DO_NOT_PUBLISH.value) {
           return;
         }
@@ -362,20 +338,10 @@ export default function CreateDataOfferPage() {
           formData.contract.accessPolicyId = UNRESTRICTED_POLICY_ID;
           formData.contract.contractPolicyId = UNRESTRICTED_POLICY_ID;
 
-          console.log({ formData });
-
-          console.log(
-            "fromContractDefinitionForm result :",
-            fromContractDefinitionForm(formData.contract),
-          );
-
           // create contract
           client.management.contractDefinitions
             .create(fromContractDefinitionForm(formData.contract))
-            .catch((error) => {
-              console.log("failed to create", error);
-              enqueueSnackbar(translator("common.errorOccurred"));
-            });
+            .catch(() => enqueueSnackbar(translator("common.errorOccurred")));
         }
       })
       .then(() => {
