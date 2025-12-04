@@ -90,8 +90,7 @@ export function FormDataAddressHttp({ formData, errors, onChange, translator, me
                 onChange={(event) => onChange({...formData, baseUrl: event.target.value})}
               />
             </div>
-            {JSON.parse(formData.proxyPath || "false") ? "" :
-              <div className="sm:col-span-2 flex flex-col gap-y-5">
+            {JSON.parse(formData.proxyPath || "false") ?<div className="sm:col-span-2 flex flex-col gap-y-5">
                 <label
                   htmlFor="data-address-path"
                   className="inline-block text-sm font-medium text-gray-800 mt-2.5"
@@ -108,7 +107,8 @@ export function FormDataAddressHttp({ formData, errors, onChange, translator, me
                   value={formData.path}
                   onChange={(event) => onChange({...formData, path: event.target.value})}
                 />
-              </div>
+              </div>:""
+              
             }
           </div>
           {isDestination ? "" : 
