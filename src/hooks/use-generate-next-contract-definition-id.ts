@@ -3,13 +3,15 @@ import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-c
 
 import { useState, useEffect } from "react";
 
-type NextContractDefinitionId = {
-  error: null;
-  id: string;
-} & {
-  error: string;
-  id: null;
-};
+type NextContractDefinitionId =
+  | {
+      error: null;
+      id: string;
+    }
+  | {
+      error: string;
+      id: null;
+    };
 
 export const useGenerateNextContractDefinitionId =
   (): NextContractDefinitionId => {
@@ -60,12 +62,15 @@ export const useGenerateNextContractDefinitionId =
 
           setId(`${prefix}${datePrefix}_${nextUid}`);
         } catch (err) {
-          setError(err as string);
+          console.error("Failed to find Next ID: ", err);
+          setError("Failed To find next Data Offer ID, Please try again Later");
         }
       };
 
       generateId();
     }, [client]);
 
-    return { nextId: id, error } as NextContractDefinitionId;
+    console.log({ id, error, types: { id: typeof id, error: typeof error } });
+
+    return { id, error } as NextContractDefinitionId;
   };
