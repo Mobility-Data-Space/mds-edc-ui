@@ -42,6 +42,11 @@ export function TimeRestrictionConstraint({
         ...value,
         rightOperand: dayjs(newValue, DATE_FORMAT).toISOString(),
       });
+    }else{
+       onChange({
+        ...value,
+        rightOperand: '',
+      });
     }
   };
   return (
