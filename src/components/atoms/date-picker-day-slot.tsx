@@ -3,7 +3,7 @@ import {PickersDay, PickersDayProps} from "@mui/x-date-pickers";
 import {Dayjs} from "dayjs";
 import {theme} from "@/theme/ThemeProvider";
 
-export type DaySlotCustomProps = PickersDayProps<any> & {
+export type DaySlotCustomProps = PickersDayProps & {
   dayjsStartDate?: Dayjs | null,
   dayjsEndDate?: Dayjs | null,
   bothDatesAreSet?: boolean,
