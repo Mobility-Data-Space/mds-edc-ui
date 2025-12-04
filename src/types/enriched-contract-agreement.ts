@@ -21,8 +21,8 @@ export class EnrichedContractAgreement extends ContractAgreement {
     return this.optionalValue("edc", "isTerminatedAt");
   }
 
-  get retirementReason(): string | undefined {
-    return this.optionalValue("edc", "retirementReason");
+  get terminationReason(): string | undefined {
+    return this.optionalValue("edc", "terminationReason");
   }
 
   get assetTitle(): string | null | undefined {

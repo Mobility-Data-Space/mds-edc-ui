@@ -69,7 +69,7 @@ const enrichContractAgreement = (
           AGREEMENT_RETIREMENT_DATE
         ] ||
         0,
-      [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.RETIREMENT_REASON]:
+      [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.TERMINATION_REASON]:
         contractAgreementInfo[contractAgreement.id]?.retirementReason ||
         retiredContractAgreementMap.get(contractAgreement.id)?.[
           AGREEMENT_RETIREMENT_REASON
