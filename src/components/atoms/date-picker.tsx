@@ -60,7 +60,7 @@ function FreeTypingField(props: DatePickerFieldProps) {
   };
 
   const handleBlur = () => {
-    const newValue = dayjs(inputValue);
+    const newValue = dayjs(inputValue, DATE_FORMAT);
     pickerContext.setValue(newValue);
   };
 
