@@ -319,7 +319,7 @@ export default function CreateDataOfferPage() {
         if (publishMode === PUBLISH_MODE_PUBLISH_RESTRICTED.value) {
           // create policy
           client.management.policyDefinitions
-            .create(fromPolicyDefinitionForm(policyExpression, ""))
+            .create(fromPolicyDefinitionForm(policyExpression, formData.asset["@id"]))
             .then((result) => {
               formData.contract.accessPolicyId = result["@id"];
               formData.contract.contractPolicyId = result["@id"];

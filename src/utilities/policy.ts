@@ -10,7 +10,7 @@ export const defaultCreatePolicyFormData: PolicyDefinitionInput = {
   policy: defaultPolicy
 };
 
-export const fromPolicyDefinitionForm = (formData: Constraint[], id:string) : PolicyDefinitionInput => {
+export const fromPolicyDefinitionForm = (formData: Constraint[], id?:string) : PolicyDefinitionInput => {
   const policy = new PolicyBuilder().type("Set").raw({
     permission: [
       {
