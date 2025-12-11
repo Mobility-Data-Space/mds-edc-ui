@@ -1109,10 +1109,10 @@
     jsonld "^8.2.1"
     type-fest "^4.20.0"
 
-"@think-it-labs/edc-connector-ui@^0.2.5":
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/@think-it-labs/edc-connector-ui/-/edc-connector-ui-0.2.5.tgz#ebd0b865945766a4de4750f8d64bd2b1d9c200f8"
-  integrity sha512-EQ97/cSXXJ0U6B3SzSFadC/d7V54hZ2xljWKN2O/6/jDQQBEs1J+vL2rY6ZFsHVjtkdup5ALeROAr0EZfEmwBg==
+"@think-it-labs/edc-connector-ui@0.2.5-beta.1":
+  version "0.2.5-beta.1"
+  resolved "https://npm.pkg.github.com/download/@think-it-labs/edc-connector-ui/0.2.5-beta.1/45906cb5e35e536b896c82b84218ef7cb4a20921#45906cb5e35e536b896c82b84218ef7cb4a20921"
+  integrity sha512-P+7VzAQ9VWmJt9wx+g03goO/fZ8AQ1MTko7PtDkpJtMuE0Gz6Wouv7tFOr3L9TPH4DcOtILHUJ6tvyy5Xav61Q==
 
 "@think-it-labs/typed-error@^0.3.0":
   version "0.3.0"
