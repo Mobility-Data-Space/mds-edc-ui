@@ -36,7 +36,11 @@ import { proxyConnectorManagement } from "@/constants/proxy";
 import { useGenerateNextContractDefinitionId } from "@/hooks/use-generate-next-contract-definition-id";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
-import { ASSET_TITLE, ASSET_VERSION } from "@/jsonld/asset";
+import {
+  ASSET_ENDPOINT_DOCUMENTATION,
+  ASSET_TITLE,
+  ASSET_VERSION,
+} from "@/jsonld/asset";
 import { UNRESTRICTED_POLICY_ID } from "@/jsonld/policy";
 import {
   AssetProperties,
@@ -64,6 +68,7 @@ import {
   isXoneConstraint,
   MultiplicityConstraint,
 } from "@/utilities/policy-constraints";
+import { isUrl } from "@/utilities/utilities";
 import {
   Button,
   Divider,
@@ -286,6 +291,12 @@ export default function CreateDataOfferPage() {
       newErrors["@id"] = translator("assets.new.invalidWhitespacesOrColons");
     } else if (idAlreadyExist) {
       newErrors["@id"] = translator("assets.new.fieldIdAlreadyExists");
+    }
+
+    const endpointDocumentation =
+      formDataToValidate[ASSET_ENDPOINT_DOCUMENTATION];
+    if (endpointDocumentation && !isUrl(endpointDocumentation)) {
+      newErrors[ASSET_ENDPOINT_DOCUMENTATION] = translator("assets.new.mustBeValidUrl");;
     }
 
     return newErrors;
