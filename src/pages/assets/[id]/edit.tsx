@@ -41,6 +41,7 @@ import {
   assetToAssetInput,
   defaultCreateAssetFormData,
   fromAssetForm,
+  useValidateGeneralInfo,
   validateAdvancedInfo,
   validateDataAddress,
 } from "@/utilities/asset.ts";
@@ -80,6 +81,8 @@ export default function EditAssetPage() {
   const client = useEdcConnectorClient({
     management: proxyConnectorManagement,
   });
+
+  const validateGeneralInfo = useValidateGeneralInfo()
 
   useEffect(() => {
     if (!id) {
@@ -169,16 +172,7 @@ export default function EditAssetPage() {
     return onChange({ ...formData, properties: advancedInfoFormData });
   };
 
-  const validateGeneralInfo = (formDataToValidate: AssetProperties) => {
-    const newErrors: { [key: string]: boolean | string } = {};
-    const required_properties = [ASSET_TITLE, "@id"];
-    required_properties.forEach((propertyName) => {
-      if (!formDataToValidate[propertyName]) {
-        newErrors[propertyName] = true;
-      }
-    });
-    return newErrors;
-  };
+
 
   const onSubmit = () => {
     if (cannotSubmit()) {

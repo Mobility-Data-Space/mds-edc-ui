@@ -47,6 +47,7 @@ import {
   defaultCreateAssetFormData,
   fromAssetForm,
   generateId,
+  useValidateGeneralInfo,
   validateAdvancedInfo,
   validateDataAddress,
 } from "@/utilities/asset";
@@ -102,6 +103,8 @@ export default function CreateDataOfferPage() {
   const { translator } = useTranslator();
 
   const [existingAssetIds, setExistingAssetIds] = useState<string[]>([]);
+
+  const validateGeneralInfo = useValidateGeneralInfo(existingAssetIds);
 
   const [formData, setFormData] = useState<DataOffer>({
     asset: defaultCreateAssetFormData,
@@ -275,31 +278,6 @@ export default function CreateDataOfferPage() {
     policy: (AtomicConstraint | MultiplicityConstraint)[]
   ) => {
     return setPolicyExpression(policy);
-  };
-
-  const validateGeneralInfo = (formDataToValidate: AssetProperties) => {
-    const newErrors: { [key: string]: boolean | string } = {};
-    const required_properties = [ASSET_TITLE, "@id"];
-    required_properties.forEach((propertyName) => {
-      if (!formDataToValidate[propertyName]) {
-        newErrors[propertyName] = true;
-      }
-    });
-
-    const idAlreadyExist = existingAssetIds.includes(formDataToValidate["@id"]);
-    if (!/^[^\s:]*$/.test(formDataToValidate["@id"])) {
-      newErrors["@id"] = translator("assets.new.invalidWhitespacesOrColons");
-    } else if (idAlreadyExist) {
-      newErrors["@id"] = translator("assets.new.fieldIdAlreadyExists");
-    }
-
-    const endpointDocumentation =
-      formDataToValidate[ASSET_ENDPOINT_DOCUMENTATION];
-    if (endpointDocumentation && !isUrl(endpointDocumentation)) {
-      newErrors[ASSET_ENDPOINT_DOCUMENTATION] = translator("assets.new.mustBeValidUrl");;
-    }
-
-    return newErrors;
   };
 
   const setFormErrors = () => {
