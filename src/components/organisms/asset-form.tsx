@@ -35,11 +35,11 @@ import {
   defaultCreateAssetFormData,
   fromAssetForm,
   generateId,
+  useValidateGeneralInfo,
   validateAdvancedInfo,
   validateDataAddress,
 } from "@/utilities/asset";
 import { proxyConnectorManagement } from "@/constants/proxy";
-import { isUrl } from "@/utilities/utilities";
 
 const stepLabelSharedProps = {
   className: "w-full justify-start p-4",
@@ -63,6 +63,9 @@ export default function AssetForm({ onClose }: AssetFormProps) {
   );
 
   const [existingIds, setExistingIds] = useState<string[]>([]);
+
+  const validateGeneralInfo = useValidateGeneralInfo(existingIds);
+
   const [errors, setErrors] = useState({ properties: {}, dataAddress: {} });
 
   const client = useEdcConnectorClient({
@@ -180,24 +183,7 @@ export default function AssetForm({ onClose }: AssetFormProps) {
     return onChange({ ...formData, properties: advancedInfoFormData });
   };
 
-  const validateGeneralInfo = (formDataToValidate: AssetProperties) => {
-    const newErrors: { [key: string]: boolean | string } = {};
-    const required_properties = [ASSET_TITLE, "@id"];
-    required_properties.forEach((propertyName) => {
-      if (!formDataToValidate[propertyName]) {
-        newErrors[propertyName] = true;
-      }
-    });
-
-    const idAlreadyExist = existingIds.includes(formDataToValidate["@id"]);
-    if (!/^[^\s:]*$/.test(formDataToValidate["@id"])) {
-      newErrors["@id"] = translator("assets.new.invalidWhitespacesOrColons");
-    } else if (idAlreadyExist) {
-      newErrors["@id"] = translator("assets.new.fieldIdAlreadyExists");
-    }
-
-    return newErrors;
-  };
+  
 
   const setFormErrors = () => {
     return {
