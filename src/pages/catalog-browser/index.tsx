@@ -99,7 +99,7 @@ export default function CatalogPage() {
         counterPartyAddress={counterPartyAddress}
         assetIsOwned={counterPartyAddress === connector.protocolUrl}
         onClose={() => setIsDataOfferDialogOpen(false)}
-        contentStyle={{ maxWidth: "90vw", width: "1000px" }}
+        contentStyle={{ maxWidth: "90vw", minWidth: "1000px" }}
         onNegotiateSuccess={() => setListKey((key) => key + 1)}
       />
 
