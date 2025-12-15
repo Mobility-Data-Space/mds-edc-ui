@@ -21,12 +21,6 @@ import { Snackbar } from "@/components/molecules/snackbar";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
 import {
-  ASSET_ADVANCED_INFO_DATA_CATEGORY,
-  ASSET_ADVANCED_INFO_DATA_MODEL,
-  ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA,
-  ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS,
-  ASSET_ADVANCED_INFO_MOBILITY_THEME,
-  ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS,
   ASSET_TITLE,
   ASSET_VERSION,
 } from "@/jsonld/asset";

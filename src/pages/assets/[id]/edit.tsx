@@ -28,15 +28,6 @@ import { DATA_OFFER_TYPE_DATA_SOURCE } from "@/constants/data-address-types.ts";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state.ts";
 import { T, useTranslator } from "@/i18n";
 import {
-  ASSET_ADVANCED_INFO_DATA_CATEGORY,
-  ASSET_ADVANCED_INFO_DATA_MODEL,
-  ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA,
-  ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS,
-  ASSET_ADVANCED_INFO_MOBILITY_THEME,
-  ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS,
-  ASSET_TITLE,
-} from "@/jsonld/asset.ts";
-import {
   AssetProperties,
   assetToAssetInput,
   defaultCreateAssetFormData,
@@ -58,7 +49,6 @@ import { useSnackbar } from "notistack";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { proxyConnectorManagement } from "@/constants/proxy";
-import { isUrl } from "@/utilities/utilities";
 
 const unchangedOfferType = {
   text: "assets.edit.keepDatasourceUnchanged",
