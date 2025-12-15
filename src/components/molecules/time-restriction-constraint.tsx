@@ -15,7 +15,6 @@ export function TimeRestrictionConstraint({
   onChange,
   onRemove,
 }: ConstraintProps) {
-  
   const [dateValue, setDateValue] = React.useState<Dayjs | null>(null);
   value = value as AtomicConstraint;
 
@@ -42,10 +41,10 @@ export function TimeRestrictionConstraint({
         ...value,
         rightOperand: dayjs(newValue, DATE_FORMAT).toISOString(),
       });
-    }else{
-       onChange({
+    } else {
+      onChange({
         ...value,
-        rightOperand: '',
+        rightOperand: "",
       });
     }
   };
@@ -62,14 +61,17 @@ export function TimeRestrictionConstraint({
           onChange({ ...value, operator: event.target.value })
         }
       />
-      <DatePicker
-        label={`${translator(
-          "dataOffer.new.policyExpressionTimeRestriction"
-        )}*`}
-        error={dateIsNotValid}
-        onChange={handleDateChange}
-        value={dateValue}
-      />
+
+      <div className="relative w-full">
+        <DatePicker
+          label={`${translator(
+            "dataOffer.new.policyExpressionTimeRestriction"
+          )}*`}
+          error={dateIsNotValid}
+          onChange={handleDateChange}
+          value={dateValue}
+        />
+      </div>
 
       <div className="flex items-center">
         <IconButton
