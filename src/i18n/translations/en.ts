@@ -52,6 +52,7 @@ export const en = {
       policyDefinitionsLoadError:
         "Failed to load Policy Definitions. Please try again.",
       loading: "Loading...",
+      showSensitiveValues: "Show Sensitive Values",
     },
     dashboard: {
       title: "Dashboard",
@@ -682,6 +683,7 @@ export const en = {
       endpoint: "Endpoint",
       authorization: "Authorization Token",
       searchPlaceholder: "Search EDRs by Asset ID",
+      failedToFetchEdr: "Failed To Fetch EDR",
       "[id]": {
         type: "Type",
         authType: "Authentication Type",
