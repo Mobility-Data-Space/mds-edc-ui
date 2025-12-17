@@ -7,7 +7,7 @@ import {
 import { FieldShowProps } from "@/components/molecules/field-show";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
 import { ENGLISH_SELECT_DATA, LANGUAGES } from "@/constants/languages";
-import { DELIMITER } from "@/i18n";
+import { DELIMITER, useTranslator } from "@/i18n";
 import {
   extractArrayValues,
   isEmail,
@@ -71,6 +71,7 @@ import jsonld from "jsonld";
 import { Tag } from "@/components/atoms/key-value-pair-input.tsx";
 import { EDC_ID_FIELD } from "@/utilities/data-offer.ts";
 import { dateToString } from "./date";
+import { useCallback } from "react";
 
 const temporalCoverageValue = ([start, end]: [string, string]) => {
   if (!start && !end) {
@@ -899,4 +900,39 @@ export const validateAdvancedInfo = (formDataToValidate: AssetProperties) => {
     newErrors[ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] = true;
   }
   return newErrors;
+};
+
+export const useValidateGeneralInfo = (existingAssetIds?: string[]) => {
+  const { translator } = useTranslator();
+
+  const validate = useCallback((formDataToValidate: AssetProperties) => {
+    const newErrors: { [key: string]: boolean | string } = {};
+    const required_properties = [ASSET_TITLE, "@id"];
+    required_properties.forEach((propertyName) => {
+      if (!formDataToValidate[propertyName]) {
+        newErrors[propertyName] = true;
+      }
+    });
+
+    const endpointDocumentation =
+      formDataToValidate[ASSET_ENDPOINT_DOCUMENTATION];
+    if (endpointDocumentation && !isUrl(endpointDocumentation)) {
+      newErrors[ASSET_ENDPOINT_DOCUMENTATION] = translator(
+        "assets.new.mustBeValidUrl"
+      );
+    }
+
+    if (typeof existingAssetIds === "undefined") return newErrors;
+
+    const idAlreadyExist = existingAssetIds.includes(formDataToValidate["@id"]);
+    if (!/^[^\s:]*$/.test(formDataToValidate["@id"])) {
+      newErrors["@id"] = translator("assets.new.invalidWhitespacesOrColons");
+    } else if (idAlreadyExist) {
+      newErrors["@id"] = translator("assets.new.fieldIdAlreadyExists");
+    }
+
+    return newErrors;
+  }, [translator, existingAssetIds]);
+
+  return validate;
 };
