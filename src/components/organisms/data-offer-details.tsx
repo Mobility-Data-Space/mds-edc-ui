@@ -95,10 +95,9 @@ export default function DataOfferDetails({
                   value={offer["@id"]}
                 />
               </div>
-
               <PolicyConstraintShow
                 constraints={
-                  removeJsonLdSchemaFromProperties(compactContractDefinitions)
+                  removeJsonLdSchemaFromProperties(offer)
                     ?.permission
                 }
                 jsonLdObject={offer}

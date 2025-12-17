@@ -434,7 +434,6 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
     ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS
   ]?.map((fileUrl: any) => fileUrl["@value"]);
 
-  console.log("referenceFileUrls-->", referenceFileUrls);
   if (referenceFileUrls?.length) {
     advancedFields.push({
       icon: "receipt",
