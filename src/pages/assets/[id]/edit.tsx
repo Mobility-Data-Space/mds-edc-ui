@@ -28,19 +28,11 @@ import { DATA_OFFER_TYPE_DATA_SOURCE } from "@/constants/data-address-types.ts";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state.ts";
 import { T, useTranslator } from "@/i18n";
 import {
-  ASSET_ADVANCED_INFO_DATA_CATEGORY,
-  ASSET_ADVANCED_INFO_DATA_MODEL,
-  ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA,
-  ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS,
-  ASSET_ADVANCED_INFO_MOBILITY_THEME,
-  ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS,
-  ASSET_TITLE,
-} from "@/jsonld/asset.ts";
-import {
   AssetProperties,
   assetToAssetInput,
   defaultCreateAssetFormData,
   fromAssetForm,
+  useValidateGeneralInfo,
   validateAdvancedInfo,
   validateDataAddress,
 } from "@/utilities/asset.ts";
@@ -57,7 +49,6 @@ import { useSnackbar } from "notistack";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { proxyConnectorManagement } from "@/constants/proxy";
-import { isUrl } from "@/utilities/utilities";
 
 const unchangedOfferType = {
   text: "assets.edit.keepDatasourceUnchanged",
@@ -80,6 +71,8 @@ export default function EditAssetPage() {
   const client = useEdcConnectorClient({
     management: proxyConnectorManagement,
   });
+
+  const validateGeneralInfo = useValidateGeneralInfo()
 
   useEffect(() => {
     if (!id) {
@@ -169,16 +162,7 @@ export default function EditAssetPage() {
     return onChange({ ...formData, properties: advancedInfoFormData });
   };
 
-  const validateGeneralInfo = (formDataToValidate: AssetProperties) => {
-    const newErrors: { [key: string]: boolean | string } = {};
-    const required_properties = [ASSET_TITLE, "@id"];
-    required_properties.forEach((propertyName) => {
-      if (!formDataToValidate[propertyName]) {
-        newErrors[propertyName] = true;
-      }
-    });
-    return newErrors;
-  };
+
 
   const onSubmit = () => {
     if (cannotSubmit()) {

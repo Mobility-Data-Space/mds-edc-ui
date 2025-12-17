@@ -101,14 +101,6 @@ export default function EdrsListPage() {
                     <T string="edrs.providerId" />
                   </Table.Heading>
 
-                  <Table.Heading className="w-2/8">
-                    <T string="edrs.endpoint" />
-                  </Table.Heading>
-
-                  <Table.Heading className="w-2/8">
-                    <T string="edrs.authorization" />
-                  </Table.Heading>
-
                   <Table.Heading className="w-1/8">Details</Table.Heading>
                 </Table.Row>
               </Table.Head>
