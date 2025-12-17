@@ -122,12 +122,9 @@ export function DatePicker({
   const anchorRef = React.useRef<HTMLDivElement>(null);
 
   return (
-    <div
-      ref={anchorRef}
-      style={{ position: "relative", width: "100%", height: "fit-content" }}
-    >
+    <div ref={anchorRef} style={{ position: "relative", width: "100%" }}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <div >
+        <div>
           <MuiDatePicker
             name={name}
             label={label}
@@ -136,17 +133,18 @@ export function DatePicker({
             onChange={onChange}
             slots={{
               field: FreeTypingField,
-              openPickerIcon: CalendarMonthIcon,
             }}
             maxDate={dayjs("9999-12-30", "YYYY-MM-DD")}
             minDate={dayjs("0001-01-01", "YYYY-MM-DD")}
             slotProps={{
               popper: {
-                placement: "bottom-start",
-                anchorEl: anchorRef.current,
+                className: "!absolute top-[10px]",
+                placement: "bottom-end",
+                disablePortal: true, // important
               },
               field: {
                 id,
+                ref: anchorRef,
               },
               openPickerButton: { size: "small" },
             }}
