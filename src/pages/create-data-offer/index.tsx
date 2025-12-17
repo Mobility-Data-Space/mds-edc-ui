@@ -36,13 +36,18 @@ import { proxyConnectorManagement } from "@/constants/proxy";
 import { useGenerateNextContractDefinitionId } from "@/hooks/use-generate-next-contract-definition-id";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
-import { ASSET_TITLE, ASSET_VERSION } from "@/jsonld/asset";
+import {
+  ASSET_ENDPOINT_DOCUMENTATION,
+  ASSET_TITLE,
+  ASSET_VERSION,
+} from "@/jsonld/asset";
 import { UNRESTRICTED_POLICY_ID } from "@/jsonld/policy";
 import {
   AssetProperties,
   defaultCreateAssetFormData,
   fromAssetForm,
   generateId,
+  useValidateGeneralInfo,
   validateAdvancedInfo,
   validateDataAddress,
 } from "@/utilities/asset";
@@ -64,6 +69,7 @@ import {
   isXoneConstraint,
   MultiplicityConstraint,
 } from "@/utilities/policy-constraints";
+import { isUrl } from "@/utilities/utilities";
 import {
   Button,
   Divider,
@@ -98,6 +104,8 @@ export default function CreateDataOfferPage() {
 
   const [existingAssetIds, setExistingAssetIds] = useState<string[]>([]);
 
+  const validateGeneralInfo = useValidateGeneralInfo(existingAssetIds);
+
   const [formData, setFormData] = useState<DataOffer>({
     asset: defaultCreateAssetFormData,
     policy: defaultCreatePolicyFormData,
@@ -108,7 +116,7 @@ export default function CreateDataOfferPage() {
     (AtomicConstraint | MultiplicityConstraint)[]
   >([]);
   const [publishMode, setPublishMode] = useState(
-    PUBLISH_MODE_PUBLISH_UNRESTRICTED.value as string,
+    PUBLISH_MODE_PUBLISH_UNRESTRICTED.value as string
   );
 
   const [errors, setErrors] = useState({
@@ -124,7 +132,7 @@ export default function CreateDataOfferPage() {
     client.management.assets
       .queryAll({ offset: 0, limit: 1000 })
       .then((assets) =>
-        setExistingAssetIds(assets.map((asset) => asset["@id"])),
+        setExistingAssetIds(assets.map((asset) => asset["@id"]))
       );
   }, [client, setExistingAssetIds]);
 
@@ -168,7 +176,7 @@ export default function CreateDataOfferPage() {
     return (
       0 <
       Object.entries(
-        validateDataAddress(formData.asset.dataAddress, translator),
+        validateDataAddress(formData.asset.dataAddress, translator)
       ).length
     );
   };
@@ -199,7 +207,7 @@ export default function CreateDataOfferPage() {
         return false;
       });
     },
-    [publishMode],
+    [publishMode]
   );
 
   const cannotSubmit = () => {
@@ -223,12 +231,12 @@ export default function CreateDataOfferPage() {
 
     const generatedOldId = generateId(
       formData.asset.properties[ASSET_TITLE] as string,
-      formData.asset.properties[ASSET_VERSION] as string,
+      formData.asset.properties[ASSET_VERSION] as string
     );
     if (generatedOldId === generalInfoFormData["@id"]) {
       generalInfoFormData["@id"] = generateId(
         generalInfoFormData[ASSET_TITLE] as string,
-        generalInfoFormData[ASSET_VERSION] as string,
+        generalInfoFormData[ASSET_VERSION] as string
       );
     }
 
@@ -267,28 +275,9 @@ export default function CreateDataOfferPage() {
   };
 
   const policyExpressionFormOnChange = (
-    policy: (AtomicConstraint | MultiplicityConstraint)[],
+    policy: (AtomicConstraint | MultiplicityConstraint)[]
   ) => {
     return setPolicyExpression(policy);
-  };
-
-  const validateGeneralInfo = (formDataToValidate: AssetProperties) => {
-    const newErrors: { [key: string]: boolean | string } = {};
-    const required_properties = [ASSET_TITLE, "@id"];
-    required_properties.forEach((propertyName) => {
-      if (!formDataToValidate[propertyName]) {
-        newErrors[propertyName] = true;
-      }
-    });
-
-    const idAlreadyExist = existingAssetIds.includes(formDataToValidate["@id"]);
-    if (!/^[^\s:]*$/.test(formDataToValidate["@id"])) {
-      newErrors["@id"] = translator("assets.new.invalidWhitespacesOrColons");
-    } else if (idAlreadyExist) {
-      newErrors["@id"] = translator("assets.new.fieldIdAlreadyExists");
-    }
-
-    return newErrors;
   };
 
   const setFormErrors = () => {
@@ -328,11 +317,11 @@ export default function CreateDataOfferPage() {
               client.management.contractDefinitions
                 .create(fromContractDefinitionForm(formData.contract))
                 .catch((error) =>
-                  enqueueSnackbar(translator("common.errorOccurred")),
+                  enqueueSnackbar(translator("common.errorOccurred"))
                 );
             })
             .catch((error) =>
-              enqueueSnackbar(translator("common.errorOccurred")),
+              enqueueSnackbar(translator("common.errorOccurred"))
             );
         } else {
           formData.contract.accessPolicyId = UNRESTRICTED_POLICY_ID;
@@ -365,9 +354,9 @@ export default function CreateDataOfferPage() {
             push(
               publishMode === PUBLISH_MODE_DO_NOT_PUBLISH.value
                 ? "/assets"
-                : "/data-offers",
+                : "/data-offers"
             ),
-          2000,
+          2000
         );
       })
       .catch(() =>
@@ -381,7 +370,7 @@ export default function CreateDataOfferPage() {
               }}
             />
           ),
-        }),
+        })
       );
   };
 
@@ -879,7 +868,7 @@ export default function CreateDataOfferPage() {
                     </div>
                     <Checkbox
                       label={translator(
-                        "contractDefinitions.new.manualApproval",
+                        "contractDefinitions.new.manualApproval"
                       )}
                       value={formData.contract.privateProperties.manualApproval}
                       onChange={(event) => {
