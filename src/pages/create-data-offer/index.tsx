@@ -187,6 +187,8 @@ export default function CreateDataOfferPage() {
         return false;
       }
 
+      if(policyExpression.length === 0) return true;
+
       return policyExpression.some((policy): boolean => {
         if (isAtomicConstraint(policy)) {
           return !policy.rightOperand;
