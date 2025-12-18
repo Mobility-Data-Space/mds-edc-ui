@@ -34,7 +34,7 @@
     "lucide-react": "^0.555.0",
     "mui-chips-input": "^7.0.1",
     "next": "16.0.7",
-    "next-i18next": "^15.3.0",
+    "next-i18next": "^15.4.3",
     "next-runtime-env": "2.x",
     "notistack": "^3.0.2",
     "react": "19.0.0",
