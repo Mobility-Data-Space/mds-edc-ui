@@ -124,29 +124,32 @@ export function DatePicker({
   return (
     <div ref={anchorRef} style={{ position: "relative", width: "100%" }}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <MuiDatePicker
-          name={name}
-          label={label}
-          format={DATE_FORMAT}
-          value={value}
-          onChange={onChange}
-          slots={{
-            field: FreeTypingField,
-            openPickerIcon: CalendarMonthIcon,
-          }}
-          maxDate={dayjs("9999-12-30", "YYYY-MM-DD")}
-          minDate={dayjs("0001-01-01", "YYYY-MM-DD")}
-          slotProps={{
-            popper: {
-              placement: "bottom-start",
-              anchorEl: anchorRef.current,
-            },
-            field: {
-              id,
-            },
-            openPickerButton: { size: "small" },
-          }}
-        />
+        <div>
+          <MuiDatePicker
+            name={name}
+            label={label}
+            format={DATE_FORMAT}
+            value={value}
+            onChange={onChange}
+            slots={{
+              field: FreeTypingField,
+            }}
+            maxDate={dayjs("9999-12-30", "YYYY-MM-DD")}
+            minDate={dayjs("0001-01-01", "YYYY-MM-DD")}
+            slotProps={{
+              popper: {
+                className: "!absolute top-[10px]",
+                placement: "bottom-end",
+                disablePortal: true, // important
+              },
+              field: {
+                id,
+                ref: anchorRef,
+              },
+              openPickerButton: { size: "small" },
+            }}
+          />
+        </div>
       </LocalizationProvider>
     </div>
   );
