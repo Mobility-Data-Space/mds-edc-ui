@@ -102,6 +102,28 @@ export function ProviderFormDataAddressKafka({
             }
           />
         </div>
+
+        <label
+          htmlFor="data-address-oidcDiscoveryUrl"
+          className="inline-block text-sm text-black font-medium mb-2"
+        >
+          <T string="Oidc Discovery Url" />
+        </label>
+        <div className="sm:col-span-1 flex flex-col gap-y-3">
+          <Input
+            name="data-address-oidcDiscoveryUrl"
+            id="data-address-oidcDiscoveryUrl"
+            data-testid="data-address-oidcDiscoveryUrl"
+            required
+            placeholder={"Oidc Discovery Url"}
+            label={translator("Oidc Discovery Url")}
+            error={errors.oidcDiscoveryUrl}
+            value={formData.oidcDiscoveryUrl}
+            onChange={(event) =>
+              onChange({ ...formData, oidcDiscoveryUrl: event.target.value })
+            }
+          />
+        </div>
         <label
           htmlFor="data-address-endpoint"
           className="inline-block text-sm text-black font-medium mb-2"
@@ -190,12 +212,12 @@ export function ProviderFormDataAddressKafka({
             id="data-address-oidc-token"
             data-testid="data-address-oidc-token"
             required
-            placeholder={"OIDC Register Token"}
-            label={translator("OIDC Register Token")}
-            error={errors.oidcToken}
-            value={formData.oidcToken}
+            placeholder={"OIDC Register Client Token"}
+            label={translator("OIDC Register Client Token")}
+            error={errors.oidcRegisterClientTokenKey}
+            value={formData.oidcRegisterClientTokenKey}
             onChange={(event) =>
-              onChange({ ...formData, oidcToken: event.target.value })
+              onChange({ ...formData, oidcRegisterClientTokenKey: event.target.value })
             }
           />
         </div>
@@ -211,12 +233,12 @@ export function ProviderFormDataAddressKafka({
             id="data-address-admin-key"
             data-testid="data-address-admin-key"
             required
-            placeholder={"Admin Properties Key"}
-            label={translator("Admin Properties Key")}
-            error={errors.adminPropertiesKey}
-            value={formData.adminPropertiesKey}
+            placeholder={"Kafka Admin Properties Key"}
+            label={translator("Kafka Admin Properties Key")}
+            error={errors.kafkaAdminPropertiesKey}
+            value={formData.kafkaAdminPropertiesKey}
             onChange={(event) =>
-              onChange({ ...formData, adminPropertiesKey: event.target.value })
+              onChange({ ...formData, kafkaAdminPropertiesKey: event.target.value })
             }
           />
         </div>
