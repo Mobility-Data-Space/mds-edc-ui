@@ -28,21 +28,21 @@ export default function DataOfferDetails({
   counterPartyAddress,
   participantId,
   assetIsOwned = false,
-  onNegotiateSuccess = () => {},
+  onNegotiateSuccess = () => { },
 }: DataOfferDetailsProps) {
   const { translator } = useTranslator();
 
   const [compactContractDefinitions, setCompactContractDefinitions] = useState<
     Policy[]
   >([]);
+
   useEffect(() => {
     if (!offers) {
-      setCompactContractDefinitions([]);
-    } else {
-      compact(offers).then((compacted) =>
-        setCompactContractDefinitions(compacted as unknown as Policy[]),
-      );
+      return;
     }
+    compact(offers).then((compacted) =>
+      setCompactContractDefinitions(compacted as unknown as Policy[]),
+    );
   }, [offers]);
 
   const [negotiateContractIsOpen, setNegotiateContractIsOpen] = useState<
