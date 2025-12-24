@@ -147,8 +147,8 @@ test.describe("Transfer Processes Page Tests", () => {
         await transferProcessesPage.goToNextPage();
 
         const searchInput = await transferProcessesPage.getSearchInput();
-        const searchValue = await searchInput.inputValue();
-        expect(searchValue).toBe('test');
+        const searchValue = searchInput;
+        await expect(searchValue).toHaveValue('test');
       }
     });
   });

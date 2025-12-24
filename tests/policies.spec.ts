@@ -58,8 +58,8 @@ test.describe("Policy Definitions Page Tests", () => {
       await datePickerInput.fill("15/07/2025");
 
       // Verify the manually entered date is displayed correctly
-      const inputValue = await datePickerInput.inputValue();
-      expect(inputValue).toBe("15/07/2025");
+      const inputValue = datePickerInput;
+      await expect(inputValue).toHaveValue("15/07/2025");
     });
 
     test("should create a policy using the '=' operator for Consumer's Participant ID", async ({ page }) => {
@@ -118,8 +118,8 @@ test.describe("Policy Definitions Page Tests", () => {
         // Get the first policy's ID
         const policyCards = await policiesPage.getPolicyCards();
         const firstPolicy = policyCards.first();
-        const policyId = await firstPolicy.locator('[data-testid="policy-id"]').textContent();
-        expect(policyId).toBeTruthy();
+        const policyId = firstPolicy.locator('[data-testid="policy-id"]');
+        await expect(policyId).toHaveText();
 
         // Try to create a policy with the same ID
         await policiesPage.clickCreatePolicyButton();
@@ -130,8 +130,8 @@ test.describe("Policy Definitions Page Tests", () => {
 
         // Verify the error message
         const errorMessageLocator = await policiesPage.getErrorMessage();
-        const errorMessage = await errorMessageLocator.textContent();
-        expect(errorMessage).toBe(`Policy with ID ${policyId} already exists`);
+        const errorMessage = errorMessageLocator;
+        await expect(errorMessage).toHaveText(`Policy with ID ${policyId} already exists`);
       } catch (error) {
         console.warn('Policy management service appears to be unavailable:', error);
         test.skip(true, 'EDC policies service not responding');
@@ -172,7 +172,7 @@ test.describe("Policy Definitions Page Tests", () => {
       expect(successMessage).toContain("Policy deleted successfully!");
 
       await page.waitForTimeout(1000);
-      expect(policyCard).toBeHidden() ;
+      await expect(policyCard).toBeHidden() ;
     });
 
   });
@@ -295,8 +295,8 @@ test.describe("Policy Definitions Page Tests", () => {
         await policiesPage.goToNextPage();
 
         const searchInput = await policiesPage.getSearchInput();
-        const searchValue = await searchInput.inputValue();
-        expect(searchValue).toBe('test');
+        const searchValue = searchInput;
+        await expect(searchValue).toHaveValue('test');
       }
     });
   });

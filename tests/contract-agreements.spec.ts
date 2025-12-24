@@ -230,8 +230,8 @@ test.describe("Contract Agreements Page Tests", () => {
         await agreementsPage.goToNextPage();
 
         const searchInput = await agreementsPage.getSearchInput();
-        const searchValue = await searchInput.inputValue();
-        expect(searchValue).toBe('test');
+        const searchValue = searchInput;
+        await expect(searchValue).toHaveValue('test');
       }
     });
   });
@@ -245,7 +245,7 @@ test.describe("Contract Agreements Page Tests", () => {
       for (let i = 0; i < count; i++) {
         const card = agreementCards.nth(i);
         await expect(card.getByText('Active')).toBeVisible();
-        await expect(card.getByText('Terminated')).not.toBeVisible();
+        await expect(card.getByText('Terminated')).toBeHidden();
       }
     });
 
@@ -285,7 +285,7 @@ test.describe("Contract Agreements Page Tests", () => {
       await expect(confirmTerminateBtn).toBeEnabled();
       await confirmTerminateBtn.click();
       await expect(page.getByText('Contract terminated successful')).toBeVisible();
-      await expect(agreementDialog).not.toBeVisible();
+      await expect(agreementDialog).toBeHidden();
     });
   });
 });
