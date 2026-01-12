@@ -20,10 +20,7 @@ import { AssetFormGeneralInfoStepContent } from "@/components/organisms/asset-fo
 import { Snackbar } from "@/components/molecules/snackbar";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
-import {
-  ASSET_TITLE,
-  ASSET_VERSION,
-} from "@/jsonld/asset";
+import { ASSET_TITLE, ASSET_VERSION } from "@/jsonld/asset";
 import {
   AssetProperties,
   defaultCreateAssetFormData,
@@ -177,8 +174,6 @@ export default function AssetForm({ onClose }: AssetFormProps) {
     return onChange({ ...formData, properties: advancedInfoFormData });
   };
 
-  
-
   const setFormErrors = () => {
     return {
       properties: validateAdvancedInfo(
@@ -249,7 +244,7 @@ export default function AssetForm({ onClose }: AssetFormProps) {
               />
             ),
           });
-          window.dispatchEvent(new Event("list-refetch"));
+          window.dispatchEvent(new Event("assets-list-refetch"));
           onClose();
         }}
         formData={() => fromAssetForm(formData, connector.curatorName)}

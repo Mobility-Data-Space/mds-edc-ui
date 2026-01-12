@@ -133,10 +133,10 @@ export default function ContractAgreementsListPage() {
           contractAgreement={openContractAgreementData}
           onClose={() => setIsDetailsModalOpen(false)}
           onInitSuccess={() => {
-            window.dispatchEvent(new Event("list-refetch"));
+            window.dispatchEvent(new Event("contract-agreements-list-refetch"));
           }}
           onTerminateSuccess={() => {
-            window.dispatchEvent(new Event("list-refetch"));
+            window.dispatchEvent(new Event("contract-agreements-list-refetch"));
             enqueueSnackbar(
               translator("contractAgreements.terminationSuccess"),
               {
