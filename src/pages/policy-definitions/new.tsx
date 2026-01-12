@@ -20,16 +20,23 @@ export default function CreatePolicyDefinitionPage() {
 
   const { translator } = useTranslator();
 
-  const [formData, setFormData] = useState<(AtomicConstraint|MultiplicityConstraint)[]>([]);
-  const [policyId, setPolicyId] = useState("") ;
-  const [policyExpression, setPolicyExpression] = useState<(AtomicConstraint|MultiplicityConstraint)[]>([]);
+  const [formData, setFormData] = useState<
+    (AtomicConstraint | MultiplicityConstraint)[]
+  >([]);
+  const [policyId, setPolicyId] = useState("");
+  const [policyExpression, setPolicyExpression] = useState<
+    (AtomicConstraint | MultiplicityConstraint)[]
+  >([]);
 
-  const validateForm = () => true ;
-  const onChange = (newFormData: (AtomicConstraint|MultiplicityConstraint)[], policyId:string) => {
-    setFormData([ ...newFormData ]);
-    setPolicyExpression([ ...newFormData ]);
+  const validateForm = () => true;
+  const onChange = (
+    newFormData: (AtomicConstraint | MultiplicityConstraint)[],
+    policyId: string,
+  ) => {
+    setFormData([...newFormData]);
+    setPolicyExpression([...newFormData]);
     setPolicyId(policyId);
-  }
+  };
   const onSubmit = () => {
     if (!validateForm()) {
       return;
@@ -41,8 +48,10 @@ export default function CreatePolicyDefinitionPage() {
   };
 
   const onFormSubmitFail = (error: Error) => {
-    const match = /"message":"(.*?)"/.exec(error.message)
-    enqueueSnackbar((match && match[1]) || translator("policyDefinition.new.saveFail"));
+    const match = /"message":"(.*?)"/.exec(error.message);
+    enqueueSnackbar(
+      (match && match[1]) || translator("policyDefinition.new.saveFail"),
+    );
   };
 
   if (!connector) {
@@ -60,13 +69,15 @@ export default function CreatePolicyDefinitionPage() {
               content: (key) => (
                 <Snackbar
                   type="success"
-                  message={translator('policyDefinitions.new.successCreate')}
-                  onClose={() => { closeSnackbar(key); }}
+                  message={translator("policyDefinitions.new.successCreate")}
+                  onClose={() => {
+                    closeSnackbar(key);
+                  }}
                 />
-              )
+              ),
             });
-            window.dispatchEvent(new Event("list-refetch"));
-            setTimeout(() => push("/policy-definitions"), 1000)
+            window.dispatchEvent(new Event("policy-definitions-list-refetch"));
+            setTimeout(() => push("/policy-definitions"), 1000);
           }}
           onFailure={onFormSubmitFail}
         >
@@ -74,10 +85,8 @@ export default function CreatePolicyDefinitionPage() {
             <div className="grid sm:grid-cols-2 gap-2 sm:gap-6">
               <div className="sm:col-span-2 flex flex-col gap-6">
                 <div>
-                  <label
-                    className="inline-block text-sm text-black font-medium mb-2"
-                  >
-                    <T string="policyDefinitions.new.policyId"/>
+                  <label className="inline-block text-sm text-black font-medium mb-2">
+                    <T string="policyDefinitions.new.policyId" />
                   </label>
                   <Input
                     required
@@ -96,11 +105,13 @@ export default function CreatePolicyDefinitionPage() {
               <div className="sm:col-span-2 flex flex-col gap-6">
                 <div>
                   <label className="inline-block text-sm text-black font-medium mb-4">
-                    <T string="policyDefinitions.new.policyExpression"/>
+                    <T string="policyDefinitions.new.policyExpression" />
                   </label>
                   <PolicyExpression
                     value={policyExpression}
-                    onChange={(value) => { onChange(value, policyId) }}
+                    onChange={(value) => {
+                      onChange(value, policyId);
+                    }}
                   />
                 </div>
               </div>
