@@ -109,7 +109,7 @@ export const useTerminatedContractAgreements = () => {
 
   useEffect(() => {
     populateRetired();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [populateRetired]);
 
   return {

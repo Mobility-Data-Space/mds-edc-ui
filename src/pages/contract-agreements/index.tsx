@@ -118,7 +118,7 @@ export default function ContractAgreementsListPage() {
     }
 
     return filters;
-  }, [statusFilterExpression, selectedOwnershipFilter, connector.id]);
+  }, [statusFilterExpression, selectedStatusFilter, selectedOwnershipFilter, connector.id]);
 
   if (!connector) {
     return "No connector";

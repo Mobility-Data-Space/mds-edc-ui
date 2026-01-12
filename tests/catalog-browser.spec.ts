@@ -217,8 +217,8 @@ test.describe("Catalog Browser Tests", () => {
           await catalogPage.goToNextPage();
 
           const searchInput = await catalogPage.getSearchInput();
-          const searchValue = await searchInput.inputValue();
-          expect(searchValue).toBe('test');
+          const searchValue = searchInput;
+          await expect(searchValue).toHaveValue('test');
         }
       });
     });

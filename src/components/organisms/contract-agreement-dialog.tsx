@@ -122,6 +122,9 @@ export default function ContractAgreementDialog({
     connectorEndpoint,
     translator,
     setCounterPartyAddress,
+    contractAgreement.assetId,
+    contractAgreement.id,
+    contractAgreement.providerId,
   ]);
 
   const populateTransferProcesses = useCallback(() => {

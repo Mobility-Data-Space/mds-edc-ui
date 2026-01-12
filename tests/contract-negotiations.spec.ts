@@ -129,8 +129,8 @@ test.describe("Contract Negotiations Tests", () => {
         await negotiationsPage.goToNextPage();
 
         const searchInput = await negotiationsPage.getSearchInput();
-        const searchValue = await searchInput.inputValue();
-        expect(searchValue).toBe('test');
+        const searchValue = searchInput;
+        await expect(searchValue).toHaveValue('test');
       }
     });
   });

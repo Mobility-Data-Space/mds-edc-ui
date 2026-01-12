@@ -61,18 +61,29 @@ export default function EditAssetPage() {
   } = useRouter();
   const [offerType, setOfferType] = useState(unchangedOfferType.value);
   const [oldAssetData, setOldAssetData] = useState({} as AssetInput);
+  const { push, connector } = useParticipantConnectorState();
+  const client = useEdcConnectorClient({
+    management: proxyConnectorManagement,
+  });
+
+  const validateGeneralInfo = useValidateGeneralInfo();
+
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const [showAdvancedFields, setShowAdvancedFields] = useState(false);
+  const submitButtonRef = useRef<HTMLButtonElement>(null);
+
+  const { translator } = useTranslator();
+
+  const [formData, setFormData] = useState<AssetInput>(
+    defaultCreateAssetFormData,
+  );
+
   const onChangeOfferType = (newOfferType: string) => {
     if (newOfferType === unchangedOfferType.value) {
       setFormData({ ...formData, dataAddress: oldAssetData.dataAddress });
     }
     setOfferType(newOfferType);
   };
-  const { push, connector } = useParticipantConnectorState();
-  const client = useEdcConnectorClient({
-    management: proxyConnectorManagement,
-  });
-
-  const validateGeneralInfo = useValidateGeneralInfo()
 
   useEffect(() => {
     if (!id) {
@@ -86,16 +97,6 @@ export default function EditAssetPage() {
         setFormData(assetInput);
       });
   }, [client, id]);
-
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-  const [showAdvancedFields, setShowAdvancedFields] = useState(false);
-  const submitButtonRef = useRef<HTMLButtonElement>(null);
-
-  const { translator } = useTranslator();
-
-  const [formData, setFormData] = useState<AssetInput>(
-    defaultCreateAssetFormData,
-  );
 
   const [errors, setErrors] = useState({
     properties: {},
