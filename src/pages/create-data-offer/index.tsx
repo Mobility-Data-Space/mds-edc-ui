@@ -154,11 +154,12 @@ export default function CreateDataOfferPage() {
       return;
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- updating form data when id generator changes is a valid sync pattern
     setFormData((prev) => ({
       ...prev,
       contract: createDefaultContractDefinitionFormData(nextIdGenerator.id),
     }));
-  }, [nextIdGenerator.id, nextIdGenerator.error]);
+  }, [nextIdGenerator.id, nextIdGenerator.error, enqueueSnackbar, closeSnackbar, translator]);
 
   const generalInfoIsNotValid = () => {
     return (
@@ -182,32 +183,38 @@ export default function CreateDataOfferPage() {
   };
 
   const policyExpressionIsNotValid = useCallback(
-    (policyExpression: (AtomicConstraint | MultiplicityConstraint)[]) => {
+    (policyExpressionArg: (AtomicConstraint | MultiplicityConstraint)[]) => {
       if (publishMode !== PUBLISH_MODE_PUBLISH_RESTRICTED.value) {
         return false;
       }
 
-      if(policyExpression.length === 0) return true;
+      const checkInvalid = (
+        policies: (AtomicConstraint | MultiplicityConstraint)[]
+      ): boolean => {
+        if (policies.length === 0) return true;
 
-      return policyExpression.some((policy): boolean => {
-        if (isAtomicConstraint(policy)) {
-          return !policy.rightOperand;
-        }
+        return policies.some((policy): boolean => {
+          if (isAtomicConstraint(policy)) {
+            return !policy.rightOperand;
+          }
 
-        if (isOrConstraint(policy)) {
-          return !policy.or.length || policyExpressionIsNotValid(policy.or);
-        }
+          if (isOrConstraint(policy)) {
+            return !policy.or.length || checkInvalid(policy.or);
+          }
 
-        if (isAndConstraint(policy)) {
-          return !policy.and.length || policyExpressionIsNotValid(policy.and);
-        }
+          if (isAndConstraint(policy)) {
+            return !policy.and.length || checkInvalid(policy.and);
+          }
 
-        if (isXoneConstraint(policy)) {
-          return !policy.xone.length || policyExpressionIsNotValid(policy.xone);
-        }
+          if (isXoneConstraint(policy)) {
+            return !policy.xone.length || checkInvalid(policy.xone);
+          }
 
-        return false;
-      });
+          return false;
+        });
+      };
+
+      return checkInvalid(policyExpressionArg);
     },
     [publishMode]
   );

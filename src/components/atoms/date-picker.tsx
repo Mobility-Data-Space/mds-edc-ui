@@ -32,17 +32,18 @@ function FreeTypingField(props: DatePickerFieldProps) {
   }, [pickerContext.value, pickerContext.fieldFormat]);
 
   // Set the rootRef to our container
+  const { rootRef } = pickerContext;
   React.useEffect(() => {
-    if (fieldContainerRef.current && pickerContext.rootRef) {
-      if (typeof pickerContext.rootRef === "function") {
-        pickerContext.rootRef(fieldContainerRef.current);
-      } else if (pickerContext.rootRef && "current" in pickerContext.rootRef) {
-        (
-          pickerContext.rootRef as React.MutableRefObject<HTMLElement | null>
-        ).current = fieldContainerRef.current;
+    if (fieldContainerRef.current && rootRef) {
+      if (typeof rootRef === "function") {
+        rootRef(fieldContainerRef.current);
+      } else if (rootRef && "current" in rootRef) {
+        // eslint-disable-next-line react-hooks/immutability -- MUI requires setting rootRef.current for proper positioning
+        (rootRef as React.MutableRefObject<HTMLElement | null>).current =
+          fieldContainerRef.current;
       }
     }
-  }, [pickerContext.rootRef]);
+  }, [rootRef]);
 
   const { hasValidationError } = useValidation({
     value: pickerContext.value,

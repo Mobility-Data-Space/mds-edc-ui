@@ -18,18 +18,18 @@ export function TimeRestrictionConstraint({
   const [dateValue, setDateValue] = React.useState<Dayjs | null>(null);
   value = value as AtomicConstraint;
 
+  const rightOperand = value.rightOperand;
   React.useEffect(() => {
     function initializeDate() {
-      const inputValue = value as AtomicConstraint;
-      if (inputValue?.rightOperand) {
-        const dayJsDate = dayjs(inputValue.rightOperand);
+      if (rightOperand) {
+        const dayJsDate = dayjs(rightOperand);
         if (dayJsDate.isValid()) {
           setDateValue(dayJsDate);
         }
       }
     }
     initializeDate();
-  }, [value.rightOperand]);
+  }, [rightOperand]);
   const dayJsDate = dayjs(value.rightOperand);
   const dateIsNotValid = !dayJsDate.isValid();
   const { translator } = useTranslator();

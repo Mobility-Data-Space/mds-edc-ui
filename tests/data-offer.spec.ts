@@ -256,8 +256,8 @@ test.describe("Data Offer Tests", () => {
         await dataOfferPage.goToNextPage();
 
         const searchInput = await dataOfferPage.getSearchInput();
-        const searchValue = await searchInput.inputValue();
-        expect(searchValue).toBe('services-offer');
+        const searchValue = searchInput;
+        await expect(searchValue).toHaveValue('services-offer');
       }
     });
   });
