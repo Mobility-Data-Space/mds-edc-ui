@@ -83,7 +83,6 @@ function FreeTypingField(props: DatePickerFieldProps) {
   return (
     <div
       ref={fieldContainerRef}
-      id="date-picker-container"
       style={{ width: "100%", position: "relative" }}
     >
       <TextField
