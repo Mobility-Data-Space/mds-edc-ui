@@ -34,7 +34,7 @@ export default function DataOffersPage() {
 
   const [openDataOfferData, setOpenDataOfferData] = useState({
     contractDefinition: {} as ContractDefinition,
-    deleteItem: async () => {},
+    deleteItem: async () => { },
   });
 
   const openDetailsModal = (contractDefinition: ContractDefinition) => {
@@ -173,7 +173,12 @@ export default function DataOffersPage() {
           className="flex flex-wrap gap-4 py-4"
           data-testid="data-offers-list"
         >
-          <ContractDefinitionsList.Items key={listKey} limit={MAX_ITEMS}>
+          <ContractDefinitionsList.Items
+            key={listKey}
+            limit={MAX_ITEMS}
+            sortField="createdAt"
+            sortOrder="DESC"
+          >
             {({ item, index }) => (
               <ContractDefinitionCard
                 key={index}
