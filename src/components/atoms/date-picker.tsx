@@ -83,6 +83,7 @@ function FreeTypingField(props: DatePickerFieldProps) {
   return (
     <div
       ref={fieldContainerRef}
+      id="date-picker-container"
       style={{ width: "100%", position: "relative" }}
     >
       <TextField
@@ -139,7 +140,10 @@ export function DatePicker({
             minDate={dayjs("0001-01-01", "YYYY-MM-DD")}
             slotProps={{
               popper: {
-                className: "!absolute top-[10px]",
+                sx: {
+                  marginTop: "60px",
+                  position: "absolute !important",
+                },
                 placement: "bottom-end",
                 disablePortal: true, // important
               },
