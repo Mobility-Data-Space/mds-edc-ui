@@ -1,10 +1,10 @@
 import React from "react";
 
-import {MuiSelect} from "@/components/atoms/mui-select";
+import { MuiSelect } from "@/components/atoms/mui-select";
 
-import {ASSET_ADVANCED_INFO_TRANSPORT_MODE} from "@/jsonld/asset";
-import {GEO_REFERENCE_DATA} from "@/constants/data-category";
-import {AssetProperties} from "@/utilities/asset";
+import { GEO_REFERENCE_DATA } from "@/constants/data-category";
+import { ASSET_ADVANCED_INFO_TRANSPORT_MODE } from "@/jsonld/asset";
+import { AssetProperties } from "@/utilities/asset";
 
 export interface AssetTransportModeProps {
   translator: (key: string) => string;
@@ -14,7 +14,7 @@ export interface AssetTransportModeProps {
   required?: boolean;
 }
 
-export function AssetTransportMode({ translator, formData, onChange, errors }: AssetTransportModeProps): JSX.Element {
+export function AssetTransportMode({ translator, formData, onChange, errors }: AssetTransportModeProps): React.ReactElement {
 
   return (
     <MuiSelect

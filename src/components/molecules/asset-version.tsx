@@ -1,10 +1,10 @@
 import React from "react";
 
-import {Input} from "@/components/atoms/input";
+import { Input } from "@/components/atoms/input";
 
-import {T} from "@/i18n";
-import {ASSET_VERSION} from "@/jsonld/asset";
-import {AssetProperties} from "@/utilities/asset";
+import { T } from "@/i18n";
+import { ASSET_VERSION } from "@/jsonld/asset";
+import { AssetProperties } from "@/utilities/asset";
 
 export interface AssetVersionProps {
   translator: (key: string) => string;
@@ -14,7 +14,7 @@ export interface AssetVersionProps {
   hideLabel?: boolean;
 }
 
-export function AssetVersion({ translator, formData, onChange, errors, hideLabel = false }: AssetVersionProps): JSX.Element {
+export function AssetVersion({ translator, formData, onChange, errors, hideLabel = false }: AssetVersionProps): React.ReactElement {
 
   return (
     <Input

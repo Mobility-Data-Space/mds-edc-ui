@@ -1,8 +1,8 @@
-import React, {ReactNode} from "react";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon} from "@mui/material";
-import Typography from "@mui/material/Typography";
+import { T } from "@/i18n";
 import ViewTimelineIcon from "@mui/icons-material/ViewTimelineSharp";
-import {T} from "@/i18n";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import React, { ReactNode } from "react";
 
 interface CounterPartyAddressDialogProps {
   content?: ReactNode;
@@ -11,7 +11,7 @@ interface CounterPartyAddressDialogProps {
   contentStyle?: { [key: string]: string }
 }
 
-export function CounterPartyAddressDialog({ open, onClose, content = "", contentStyle = {} }: CounterPartyAddressDialogProps): JSX.Element {
+export function CounterPartyAddressDialog({ open, onClose, content = "", contentStyle = {} }: CounterPartyAddressDialogProps): React.ReactElement {
   const onConfirmAndClose = () => {
     // TODO: refresh behaviour
     onClose();
@@ -29,10 +29,10 @@ export function CounterPartyAddressDialog({ open, onClose, content = "", content
           <ViewTimelineIcon className="!size-10" />
           <div className="flex flex-col">
             <Typography variant="h4">
-              <T string="catalog.fetchStatus"/>
+              <T string="catalog.fetchStatus" />
             </Typography>
             <Typography variant="body1" color="textSecondary">
-              <T string="catalog.otherConnectorEndpointCatalogs"/>
+              <T string="catalog.otherConnectorEndpointCatalogs" />
             </Typography>
           </div>
         </div>
@@ -42,7 +42,7 @@ export function CounterPartyAddressDialog({ open, onClose, content = "", content
       </DialogContent>
       <DialogActions>
         <Button color="secondary" onClick={onClose}>
-          <T string="common.cancel"/>
+          <T string="common.cancel" />
         </Button>
       </DialogActions>
     </Dialog>

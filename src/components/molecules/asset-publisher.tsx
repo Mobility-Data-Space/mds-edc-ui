@@ -1,10 +1,10 @@
 import React from "react";
 
-import {Input} from "@/components/atoms/input";
+import { Input } from "@/components/atoms/input";
 
-import {T} from "@/i18n";
-import {ASSET_PUBLISHER} from "@/jsonld/asset";
-import {AssetProperties} from "@/utilities/asset";
+import { T } from "@/i18n";
+import { ASSET_PUBLISHER } from "@/jsonld/asset";
+import { AssetProperties } from "@/utilities/asset";
 
 export interface AssetPublisherProps {
   translator: (key: string) => string;
@@ -14,7 +14,7 @@ export interface AssetPublisherProps {
   required?: boolean;
 }
 
-export function AssetPublisher({ translator, formData, onChange, errors }: AssetPublisherProps): JSX.Element {
+export function AssetPublisher({ translator, formData, onChange, errors }: AssetPublisherProps): React.ReactElement {
 
   return (
     <Input

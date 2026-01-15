@@ -1,3 +1,5 @@
+import { DeleteDialog } from "@/components/molecules/delete-dialog.tsx";
+import { Snackbar } from "@/components/molecules/snackbar.tsx";
 import { T, useTranslator } from "@/i18n";
 import { contextToCompact } from "@/jsonld/context";
 import {
@@ -14,11 +16,9 @@ import {
 import FormControlLabel from "@mui/material/FormControlLabel";
 import jsonld from "jsonld";
 import dynamic from "next/dynamic";
+import { enqueueSnackbar, useSnackbar } from "notistack";
 import React, { ReactNode, useEffect, useState } from "react";
 import { ReactJsonViewProps } from "react-json-view";
-import { DeleteDialog } from "@/components/molecules/delete-dialog.tsx";
-import { enqueueSnackbar, useSnackbar } from "notistack";
-import { Snackbar } from "@/components/molecules/snackbar.tsx";
 
 export interface JsonLdDialogProps {
   title?: string | ReactNode;
@@ -79,7 +79,7 @@ export function JsonLdDialog({
   deleteFailMessage,
   deleteButtonTestId,
   sensitiveFields = new Set<string>(),
-}: JsonLdDialogProps): JSX.Element {
+}: JsonLdDialogProps): React.ReactElement {
   const { translator } = useTranslator();
   const [ReactJson, setReactJson] =
     useState<React.ComponentType<ReactJsonViewProps>>();

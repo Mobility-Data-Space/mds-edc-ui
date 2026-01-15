@@ -1,11 +1,11 @@
 import React from "react";
 
-import {Button, Icon, IconButton} from "@mui/material";
+import { Button, Icon, IconButton } from "@mui/material";
 import Typography from "@mui/material/Typography";
 
-import {FieldDialog} from "@/components/molecules/field-dialog";
+import { FieldDialog } from "@/components/molecules/field-dialog";
 
-import {MultiTranslate, T} from "@/i18n";
+import { MultiTranslate, T } from "@/i18n";
 
 export interface FieldShowProps {
   icon: string;
@@ -18,7 +18,7 @@ export interface FieldShowProps {
   copyTextIcon?: boolean
 }
 
-export function FieldShow({ icon, label, value, valueTitle, subLabel, openModalText, testDataId, copyTextIcon = false}: FieldShowProps): JSX.Element {
+export function FieldShow({ icon, label, value, valueTitle, subLabel, openModalText, testDataId, copyTextIcon = false }: FieldShowProps): React.ReactElement {
   const nonNullValue = value || "";
   const shouldNotTranslateValue = 0 === nonNullValue.indexOf('http') || (typeof nonNullValue === "string" && nonNullValue.match(/^\d/));
   const [dialogIsOpen, setDialogIsOpen] = React.useState(false);
@@ -27,13 +27,13 @@ export function FieldShow({ icon, label, value, valueTitle, subLabel, openModalT
     <div className="flex flex-row gap-x-2.5" >
       <Icon className="mt-1.5">{icon}</Icon>
 
-      {! openModalText ?
+      {!openModalText ?
         <div>
           <Typography variant="body2" color="textDisabled" className="uppercase">
-            {0 === label.indexOf('http') ? label : <T string={label}/>}
+            {0 === label.indexOf('http') ? label : <T string={label} />}
           </Typography>
           <Typography data-testid={testDataId}>
-            {shouldNotTranslateValue ? nonNullValue : <MultiTranslate string={nonNullValue}/>}
+            {shouldNotTranslateValue ? nonNullValue : <MultiTranslate string={nonNullValue} />}
           </Typography>
         </div> :
         <>

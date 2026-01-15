@@ -1,10 +1,10 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import Typography from "@mui/material/Typography";
 
-import {T} from "@/i18n";
-import {Checkbox} from "@/components/atoms/checkbox.tsx";
+import { Checkbox } from "@/components/atoms/checkbox.tsx";
+import { T } from "@/i18n";
 
 interface ConfirmDialogProps {
   title?: string;
@@ -16,7 +16,7 @@ interface ConfirmDialogProps {
   confirmCheckboxText?: string;
 }
 
-export function ConfirmDialog({ open, onClose, title = "", content = "", onConfirm, contentStyle = {}, confirmCheckboxText }: ConfirmDialogProps): JSX.Element {
+export function ConfirmDialog({ open, onClose, title = "", content = "", onConfirm, contentStyle = {}, confirmCheckboxText }: ConfirmDialogProps): React.ReactElement {
   const [isChecked, setIsChecked] = useState(false);
   const onConfirmAndClose = () => {
     onConfirm();
@@ -48,14 +48,14 @@ export function ConfirmDialog({ open, onClose, title = "", content = "", onConfi
       <DialogActions>
         <div className="flex justify-end flex-grow gap-x-3 p-3">
           <Button color="secondary" onClick={onClose}>
-            <T string="common.close"/>
+            <T string="common.close" />
           </Button>
           <Button color="primary" variant="contained" onClick={onConfirmAndClose}
-                  disabled={!!confirmCheckboxText && !isChecked}>
-            <T string="common.confirm"/>
+            disabled={!!confirmCheckboxText && !isChecked}>
+            <T string="common.confirm" />
           </Button>
         </div>
       </DialogActions>
     </Dialog>
-);
+  );
 }

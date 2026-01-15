@@ -1,5 +1,5 @@
-import React from "react";
 import { Button } from "@mui/material";
+import React from "react";
 
 export type RadioButtonProps = {
   id?: string;
@@ -11,7 +11,7 @@ export type RadioButtonProps = {
   labelFalse: string
 }
 
-export function RadioButton({ id = "", trueValue = "true", falseValue = "false", value, onChange, labelTrue, labelFalse, }: RadioButtonProps): JSX.Element {
+export function RadioButton({ id = "", trueValue = "true", falseValue = "false", value, onChange, labelTrue, labelFalse, }: RadioButtonProps): React.ReactElement {
   const valueIsTrue = value === trueValue;
   const onClick = () => {
     return onChange(valueIsTrue ? falseValue : trueValue);

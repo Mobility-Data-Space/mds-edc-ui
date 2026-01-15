@@ -1,11 +1,10 @@
-import React from "react";
-import {Button, Icon} from "@mui/material";
+import { FieldShowProps } from "@/components/molecules/field-show";
+import { T } from "@/i18n";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import {Dialog, DialogActions, DialogContent, DialogTitle} from '@mui/material';
-import {FieldShowProps} from "@/components/molecules/field-show";
-import {T} from "@/i18n";
+import React from "react";
 
-export function FieldDialog({ icon, label, subLabel, value, valueTitle, isOpen, onClose }: FieldShowProps & { isOpen: boolean, onClose: () => void }): JSX.Element {
+export function FieldDialog({ icon, label, subLabel, value, valueTitle, isOpen, onClose }: FieldShowProps & { isOpen: boolean, onClose: () => void }): React.ReactElement {
   const nonNullValue = value || "";
   const nonNullValueTitle = valueTitle || "";
 
