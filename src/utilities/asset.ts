@@ -1,20 +1,7 @@
-import { removeEmptyFields } from "@/utilities/form";
-import {
-  Asset,
-  AssetInput,
-  DataAddress,
-} from "@think-it-labs/edc-connector-client";
+import { Tag } from "@/components/atoms/key-value-pair-input.tsx";
 import { FieldShowProps } from "@/components/molecules/field-show";
-import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
 import { ENGLISH_SELECT_DATA, LANGUAGES } from "@/constants/languages";
 import { DELIMITER, useTranslator } from "@/i18n";
-import {
-  extractArrayValues,
-  isEmail,
-  isUrl,
-  toTitleCase,
-  uid,
-} from "@/utilities/utilities";
 import {
   ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE,
   ASSET_ADVANCED_INFO_DATA_CATEGORY,
@@ -49,29 +36,42 @@ import {
   ASSET_VERSION,
 } from "@/jsonld/asset";
 import {
+  CONTEXT_DCAT,
+  CONTEXT_EDC,
+  contextWithNoPrefixToCompact,
+} from "@/jsonld/context";
+import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog.ts";
+import {
+  dataCategoryValueToText,
+  dataSubCategoryValueToText,
+} from "@/utilities/data-category.ts";
+import { EDC_ID_FIELD } from "@/utilities/data-offer.ts";
+import { removeEmptyFields } from "@/utilities/form";
+import {
+  extractArrayValues,
+  isEmail,
+  isUrl,
+  toTitleCase,
+  uid,
+} from "@/utilities/utilities";
+import {
+  Asset,
+  AssetInput,
+  DataAddress,
+} from "@think-it-labs/edc-connector-client";
+import { HttpDataAddress } from "@think-it-labs/edc-connector-client/dist/src/entities/data-address";
+import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
+import jsonld from "jsonld";
+import { useCallback } from "react";
+import {
+  AmazonS3DataAddress,
   AzureBlobDataAddress,
   DataAddressErrors,
   DataAddressTypes,
   defaultHttpSourceDataAddress,
   OnRequestDataAddress,
-  AmazonS3DataAddress,
 } from "./data-address";
-import {
-  CONTEXT_DCAT,
-  CONTEXT_EDC,
-  contextWithNoPrefixToCompact,
-} from "@/jsonld/context";
-import { HttpDataAddress } from "@think-it-labs/edc-connector-client/dist/src/entities/data-address";
-import {
-  dataCategoryValueToText,
-  dataSubCategoryValueToText,
-} from "@/utilities/data-category.ts";
-import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog.ts";
-import jsonld from "jsonld";
-import { Tag } from "@/components/atoms/key-value-pair-input.tsx";
-import { EDC_ID_FIELD } from "@/utilities/data-offer.ts";
 import { dateToString } from "./date";
-import { useCallback } from "react";
 
 const temporalCoverageValue = ([start, end]: [string, string]) => {
   if (!start && !end) {
@@ -91,7 +91,7 @@ const temporalCoverageValue = ([start, end]: [string, string]) => {
 
 export const fromAssetForm = (
   formData: AssetInput,
-  organizationName: string
+  organizationName: string,
 ) => {
   const properties = { ...formData.properties };
   delete properties["@id"];
@@ -112,12 +112,12 @@ export const fromAssetForm = (
     cleanFormDataObject.properties[ASSET_ADVANCED_INFO_GEO_LOCATION][
       ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS
     ] &&
-    cleanFormDataObject.properties[ASSET_ADVANCED_INFO_GEO_LOCATION][
-      ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS
-    ].length > 0
+      cleanFormDataObject.properties[ASSET_ADVANCED_INFO_GEO_LOCATION][
+        ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS
+      ].length > 0
       ? cleanFormDataObject.properties[ASSET_ADVANCED_INFO_GEO_LOCATION][
-          ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS
-        ].map(fromKeyValueInput)
+        ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS
+      ].map(fromKeyValueInput)
       : [];
 
   cleanFormDataObject.properties[ASSET_ADVANCED_INFO_DATA_MODEL][
@@ -126,25 +126,25 @@ export const fromAssetForm = (
     cleanFormDataObject.properties[ASSET_ADVANCED_INFO_DATA_MODEL][
       ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA
     ][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] &&
-    cleanFormDataObject.properties[ASSET_ADVANCED_INFO_DATA_MODEL][
-      ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA
-    ][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS].length > 0
+      cleanFormDataObject.properties[ASSET_ADVANCED_INFO_DATA_MODEL][
+        ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA
+      ][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS].length > 0
       ? cleanFormDataObject.properties[ASSET_ADVANCED_INFO_DATA_MODEL][
-          ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA
-        ][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS].map(fromKeyValueInput)
+        ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA
+      ][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS].map(fromKeyValueInput)
       : [];
   cleanFormDataObject.properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS] =
     cleanFormDataObject.properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS] &&
-    cleanFormDataObject.properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS]
-      .length > 0
+      cleanFormDataObject.properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS]
+        .length > 0
       ? cleanFormDataObject.properties[
-          ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS
-        ].map(fromKeyValueInput)
+        ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS
+      ].map(fromKeyValueInput)
       : [];
 
   if (
     cleanFormDataObject.properties[ASSET_ADVANCED_INFO_MOBILITY_THEME][
-      ASSET_ADVANCED_INFO_DATA_SUBCATEGORY
+    ASSET_ADVANCED_INFO_DATA_SUBCATEGORY
     ] == "-"
   ) {
     delete cleanFormDataObject.properties[ASSET_ADVANCED_INFO_MOBILITY_THEME][
@@ -229,14 +229,14 @@ export type AssetProperties = typeof defaultCreateAssetFormData.properties;
 export const assetGeneralFieldsToShow = (
   asset: Asset,
   participantId: string,
-  connectorEndpoint: string
+  connectorEndpoint: string,
 ): FieldShowProps[] => {
   const assetLanguage = readValue(asset.properties, ASSET_LANGUAGE);
 
   const properties = removeJsonLdSchemaFromProperties(asset.properties);
   const additionalProperties = readValue(
     properties,
-    "additionalProperties"
+    "additionalProperties",
   )?.[0];
 
   const manualApproval = readValue(additionalProperties, "manual_approval");
@@ -320,7 +320,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
 
   const transportMode = readValue(
     asset.properties,
-    ASSET_ADVANCED_INFO_TRANSPORT_MODE
+    ASSET_ADVANCED_INFO_TRANSPORT_MODE,
   );
   if (transportMode) {
     advancedFields.push({
@@ -332,12 +332,12 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
 
   const mobilityThemeArray = readValue(
     asset.properties,
-    ASSET_ADVANCED_INFO_MOBILITY_THEME
+    ASSET_ADVANCED_INFO_MOBILITY_THEME,
   );
   const mobilityTheme = mobilityThemeArray && mobilityThemeArray[0];
   const dataCategory = readValue(
     mobilityTheme,
-    ASSET_ADVANCED_INFO_DATA_CATEGORY
+    ASSET_ADVANCED_INFO_DATA_CATEGORY,
   );
   if (dataCategory) {
     advancedFields.push({
@@ -348,7 +348,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
   }
   const dataSubcategory = readValue(
     mobilityTheme,
-    ASSET_ADVANCED_INFO_DATA_SUBCATEGORY
+    ASSET_ADVANCED_INFO_DATA_SUBCATEGORY,
   );
   if (dataSubcategory) {
     advancedFields.push({
@@ -359,7 +359,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
   }
   const dataModel = readValue(
     asset.properties,
-    ASSET_ADVANCED_INFO_DATA_MODEL_ID
+    ASSET_ADVANCED_INFO_DATA_MODEL_ID,
   );
   if (dataModel) {
     advancedFields.push({
@@ -370,7 +370,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
   }
   const geoReferenceMethod = readValue(
     asset.properties,
-    ASSET_ADVANCED_INFO_GEO_REFERENCE_METHOD
+    ASSET_ADVANCED_INFO_GEO_REFERENCE_METHOD,
   );
   if (geoReferenceMethod) {
     advancedFields.push({
@@ -381,7 +381,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
   }
   const geoLocation = readValue(
     asset.properties,
-    ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL
+    ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL,
   );
   if (geoLocation) {
     advancedFields.push({
@@ -393,7 +393,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
 
   const nutsLocations = readValue(
     asset.properties,
-    ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS
+    ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS,
   );
   if (nutsLocations?.length) {
     advancedFields.push({
@@ -404,7 +404,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
   }
   const sovereignLegalName = readValue(
     asset.properties,
-    ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME
+    ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME,
   );
   if (sovereignLegalName) {
     advancedFields.push({
@@ -452,7 +452,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
   }
   const conditionsForUse = readValue(
     asset.properties,
-    ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE
+    ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE,
   );
   if (conditionsForUse) {
     advancedFields.push({
@@ -465,7 +465,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
   }
   const dataUpdateFrequency = readValue(
     asset.properties,
-    ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY
+    ASSET_ADVANCED_INFO_DATA_UPDATE_FREQUENCY,
   );
   if (dataUpdateFrequency) {
     advancedFields.push({
@@ -476,18 +476,18 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
   }
   const temporalCoverage = readValue(
     asset.properties,
-    ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE
+    ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE,
   );
 
   console.log(temporalCoverage);
 
   const startDate = readValue(
     temporalCoverage?.[0],
-    `${CONTEXT_DCAT.value}startDate`
+    `${CONTEXT_DCAT.value}startDate`,
   );
   const endDate = readValue(
     temporalCoverage?.[0],
-    `${CONTEXT_DCAT.value}endDate`
+    `${CONTEXT_DCAT.value}endDate`,
   );
 
   if (temporalCoverage && startDate && endDate) {
@@ -507,7 +507,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
 export const assetFieldsToShow = (
   asset: Asset,
   participantId: string,
-  connectorEndpoint: string
+  connectorEndpoint: string,
 ): FieldShowProps[] => {
   return [
     ...assetGeneralFieldsToShow(asset, participantId, connectorEndpoint),
@@ -526,12 +526,12 @@ export const assetDataAddressFieldsTitle = (asset: Asset) => {
 };
 
 export const assetDataAddressFieldsToShow = (
-  asset: Asset
+  asset: Asset,
 ): FieldShowProps[] => {
   const properties = removeJsonLdSchemaFromProperties(asset.properties);
   const additionalProperties = readValue(
     properties,
-    "additionalProperties"
+    "additionalProperties",
   )?.[0];
   const onrequest = readValue(additionalProperties, "onrequest") == "true";
 
@@ -586,7 +586,7 @@ export const transformForId = (str?: string) => {
 export const validateDataAddress = (
   formDataToValidate: DataAddress,
   translator: (str: string) => string,
-  isDestination = false
+  isDestination = false,
 ) => {
   if (formDataToValidate.type === DataAddressTypes.CustomJson) {
     if (!formDataToValidate.dataAddress) {
@@ -670,7 +670,7 @@ export const validateDataAddress = (
 };
 
 export const toKeyValueInput = (
-  value: string | { key: string; value: string }
+  value: string | { key: string; value: string },
 ) => {
   return {
     input: typeof value === "string" ? { value } : value,
@@ -694,7 +694,7 @@ export const fromKeyValueInput = (value: {
 export const assetToAssetInput = async (asset: Asset) => {
   const removedJsonLd = await jsonld.compact(
     asset,
-    contextWithNoPrefixToCompact
+    contextWithNoPrefixToCompact,
   );
   const properties: any = {
     ...defaultCreateAssetFormData.properties,
@@ -722,7 +722,7 @@ export const assetToAssetInput = async (asset: Asset) => {
       (queryParam: string) => {
         const [key, value] = queryParam.split("=");
         return { input: { key, value }, valid: true };
-      }
+      },
     );
   }
 
@@ -732,7 +732,7 @@ export const assetToAssetInput = async (asset: Asset) => {
 
   let geoLocationNuts =
     properties[ASSET_ADVANCED_INFO_GEO_LOCATION][
-      ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS
+    ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS
     ];
   if (geoLocationNuts && !Array.isArray(geoLocationNuts)) {
     geoLocationNuts = [geoLocationNuts];
@@ -745,7 +745,7 @@ export const assetToAssetInput = async (asset: Asset) => {
 
   let infoReferenceFileUrls =
     properties[ASSET_ADVANCED_INFO_DATA_MODEL][
-      ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA
+    ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA
     ][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS];
   if (infoReferenceFileUrls && !Array.isArray(infoReferenceFileUrls)) {
     infoReferenceFileUrls = [infoReferenceFileUrls].map(toKeyValueInput);
@@ -759,7 +759,7 @@ export const assetToAssetInput = async (asset: Asset) => {
 
   properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS] =
     properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS] &&
-    Array.isArray(properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS])
+      Array.isArray(properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS])
       ? properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS].map(toKeyValueInput)
       : [properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS]].map(toKeyValueInput);
 
@@ -796,17 +796,17 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
     const headers = (formDataToTransform.headers || [])
       .filter(
         (value: { input: { key: string; value: string } }) =>
-          value?.input?.key && value?.input?.value
+          value?.input?.key && value?.input?.value,
       )
       .reduce(
         (
           acc: Record<string, string>,
-          value: { input: { key: string; value: string } }
+          value: { input: { key: string; value: string } },
         ) => {
           acc[`header:${value.input.key}`] = value.input.value;
           return acc;
         },
-        {}
+        {},
       );
 
     let queryParams: string;
@@ -816,16 +816,17 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
       queryParams = (formDataToTransform.queryParams || [])
         .filter(
           (value: { input: { key: string; value: string } }) =>
-            value?.input?.key && value?.input?.value
+            value?.input?.key && value?.input?.value,
         )
         .map(
           (value: { input: { key: string; value: string } }) =>
-            `${value.input.key}=${value.input.value}`
+            `${value.input.key}=${value.input.value}`,
         )
         .join("&");
     }
 
     return removeEmptyFields({
+      ...formDataToTransform,
       type: DataAddressTypes.HttpData,
       method: formDataToTransform?.method,
       name: formDataToTransform?.name,
@@ -846,6 +847,7 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
 
   if (formDataToTransform.type === DataAddressTypes.MDSOnRequestOffer) {
     return {
+      ...formDataToTransform,
       type: DataAddressTypes.MDSOnRequestOffer,
       email: formDataToTransform.email,
       preferred_subject: formDataToTransform.preferred_subject,
@@ -854,6 +856,7 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
 
   if (formDataToTransform.type === DataAddressTypes.AmazonS3) {
     return {
+      ...formDataToTransform,
       type: DataAddressTypes.AmazonS3,
       bucketName: formDataToTransform.bucketName,
       region: formDataToTransform.region,
@@ -865,6 +868,7 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
 
   if (formDataToTransform.type === DataAddressTypes.AzureStorage) {
     return removeEmptyFields({
+      ...formDataToTransform,
       type: DataAddressTypes.AzureStorage,
       container: formDataToTransform.container,
       account: formDataToTransform.account,
@@ -876,7 +880,8 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
   }
 
   if (formDataToTransform.type === DataAddressTypes.Kafka) {
-    return removeEmptyFields({
+    const res = removeEmptyFields({
+      ...formDataToTransform,
       type: DataAddressTypes.Kafka,
       mechanism: formDataToTransform.mechanism,
       protocol: formDataToTransform.protocol,
@@ -887,6 +892,7 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
       kafkaAdminPropertiesKey: formDataToTransform.kafkaAdminPropertiesKey,
       oidcDiscoveryUrl: formDataToTransform.oidcDiscoveryUrl,
     });
+    return res;
   }
 
   return formDataToTransform;
@@ -908,11 +914,11 @@ export const validateAdvancedInfo = (formDataToValidate: AssetProperties) => {
     formDataToValidate[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS];
 
   const allSamplesAreValid = dataSampleData.every((tagInput: any) =>
-    isUrl(tagInput.input.value)
+    isUrl(tagInput.input.value),
   );
 
   const allReferencesAreValid = referencesData.every((tagInput: any) =>
-    isUrl(tagInput.input.value)
+    isUrl(tagInput.input.value),
   );
 
   if (!allSamplesAreValid) {
@@ -942,14 +948,14 @@ export const useValidateGeneralInfo = (existingAssetIds?: string[]) => {
         formDataToValidate[ASSET_ENDPOINT_DOCUMENTATION];
       if (endpointDocumentation && !isUrl(endpointDocumentation)) {
         newErrors[ASSET_ENDPOINT_DOCUMENTATION] = translator(
-          "assets.new.mustBeValidUrl"
+          "assets.new.mustBeValidUrl",
         );
       }
 
       if (typeof existingAssetIds === "undefined") return newErrors;
 
       const idAlreadyExist = existingAssetIds.includes(
-        formDataToValidate["@id"]
+        formDataToValidate["@id"],
       );
       if (!/^[^\s:]*$/.test(formDataToValidate["@id"])) {
         newErrors["@id"] = translator("assets.new.invalidWhitespacesOrColons");
@@ -959,7 +965,7 @@ export const useValidateGeneralInfo = (existingAssetIds?: string[]) => {
 
       return newErrors;
     },
-    [translator, existingAssetIds]
+    [translator, existingAssetIds],
   );
 
   return validate;
