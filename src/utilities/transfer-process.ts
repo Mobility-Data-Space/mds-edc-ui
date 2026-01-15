@@ -48,7 +48,7 @@ export const createTransferProcessRequest = (
     transferProcess.callbackAddresses = [
       {
         "@type": "CallbackAddress",
-        transactional: dataDestination.isTransactional,
+        transactional: true,
         uri: dataDestination.uri,
         events: "transfer.process.start",
       },
