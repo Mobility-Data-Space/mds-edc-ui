@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { DataAddress } from "@think-it-labs/edc-connector-client";
-import { T } from "@/i18n";
-import { Input } from "@/components/atoms/input";
-import { theme } from "@/theme/ThemeProvider";
 import { Checkbox } from "@/components/atoms/checkbox";
+import { Input } from "@/components/atoms/input";
+import { T } from "@/i18n";
+import { theme } from "@/theme/ThemeProvider";
+import { DataAddress } from "@think-it-labs/edc-connector-client";
+import React, { useState } from "react";
 
 export interface FormDataAddressAzureProps {
   translator: (key: string) => string;
@@ -19,7 +19,7 @@ export function FormDataAddressAzure({
   onChange,
   translator,
   isDestination = false,
-}: FormDataAddressAzureProps): JSX.Element {
+}: FormDataAddressAzureProps): React.ReactElement {
   const [multipleBlobs, setMultipleBlobs] = useState(false);
 
   return (

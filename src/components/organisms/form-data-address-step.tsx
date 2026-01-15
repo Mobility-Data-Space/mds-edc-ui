@@ -1,18 +1,18 @@
-import React from "react";
 import { Input } from "@/components/atoms/input";
 import { MuiSelect } from "@/components/atoms/mui-select";
+import { AssetContactEmailAndSubject } from "@/components/molecules/asset-contact-email-and-subject.tsx";
+import { FormDataAddressAmazonS3 } from "@/components/organisms/form-data-address-amazon-s3";
+import { FormDataAddressAzure } from "@/components/organisms/form-data-address-azure";
+import { FormDataAddressHttp } from "@/components/organisms/form-data-address-http";
 import {
   DATA_ADDRESS_DESTINATION_SELECT_DATA,
   DATA_ADDRESS_SELECT_DATA,
 } from "@/constants/data-address-types";
+import { T } from "@/i18n";
 import { theme } from "@/theme/ThemeProvider";
 import { DataAddressTypes } from "@/utilities/data-address.ts";
-import { FormDataAddressAmazonS3 } from "@/components/organisms/form-data-address-amazon-s3";
-import { AssetContactEmailAndSubject } from "@/components/molecules/asset-contact-email-and-subject.tsx";
-import { FormDataAddressHttp } from "@/components/organisms/form-data-address-http";
-import { FormDataAddressAzure } from "@/components/organisms/form-data-address-azure";
 import { DataAddress } from "@think-it-labs/edc-connector-client";
-import { T } from "@/i18n";
+import React from "react";
 import { FormDataAddressKafka } from "./form-data-address-kafka";
 
 export interface DataAddressFormStepProps {
@@ -33,7 +33,7 @@ export function FormDataAddressStep({
   methodAlwaysShowing = false,
   customDataAddressConfigRows = 2,
   isDestination = false,
-}: DataAddressFormStepProps): JSX.Element {
+}: DataAddressFormStepProps): React.ReactElement {
   return (
     <div className="flex flex-col gap-y-5">
       <div className="flex flex-col gap-y-5 items-start">

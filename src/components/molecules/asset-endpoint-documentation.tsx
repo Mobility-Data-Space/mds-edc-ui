@@ -20,7 +20,7 @@ export function AssetEndpointDocumentation({
   formData,
   onChange,
   errors,
-}: AssetEndpointDocumentationProps): JSX.Element {
+}: AssetEndpointDocumentationProps): React.ReactElement {
   return (
     <Input
       name={ASSET_ENDPOINT_DOCUMENTATION}

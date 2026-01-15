@@ -29,7 +29,7 @@ const LinkIcon = React.memo((props: SVGProps<SVGSVGElement>) => {
 LinkIcon.displayName = "LinkIcon";
 
 export const EdcInfoDisplayInput = forwardRef<HTMLInputElement, Omit<TextFieldProps, "error"> & EdcInfoDisplayInputProps>(
-  ({ translator, label, value, "data-testid": dataTestId, ...rest }, ref): JSX.Element => {
+  ({ translator, label, value, "data-testid": dataTestId, ...rest }, ref): React.ReactElement => {
     return (
       <Input
         ref={ref}

@@ -1,7 +1,7 @@
+import { CheckboxProps, FormControlLabel, FormControlLabelProps, Checkbox as MuiCheckbox } from '@mui/material';
 import React from "react";
-import {Checkbox as MuiCheckbox, CheckboxProps, FormControlLabel, FormControlLabelProps} from '@mui/material';
 
-export function Checkbox({ label, onChange, value, onClick }: Omit<FormControlLabelProps, "control" | "onChange"> & CheckboxProps & { value: boolean }): JSX.Element {
+export function Checkbox({ label, onChange, value, onClick }: Omit<FormControlLabelProps, "control" | "onChange"> & CheckboxProps & { value: boolean }): React.ReactElement {
 
   return (
     <FormControlLabel
