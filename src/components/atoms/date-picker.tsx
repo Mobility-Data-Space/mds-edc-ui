@@ -139,7 +139,10 @@ export function DatePicker({
             minDate={dayjs("0001-01-01", "YYYY-MM-DD")}
             slotProps={{
               popper: {
-                className: "!absolute top-[10px]",
+                sx: {
+                  marginTop: "60px",
+                  position: "absolute !important",
+                },
                 placement: "bottom-end",
                 disablePortal: true, // important
               },
