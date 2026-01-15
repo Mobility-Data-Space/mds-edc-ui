@@ -762,7 +762,6 @@ export const assetToAssetInput = async (asset: Asset) => {
     Array.isArray(properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS])
       ? properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS].map(toKeyValueInput)
       : [properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS]].map(toKeyValueInput);
-  // add REFERENCES HERe
 
   const currReferences = properties[ASSET_ADVANCED_INFO_DATA_MODEL]?.[
     ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA
