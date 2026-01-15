@@ -434,7 +434,6 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
     ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS
   ]?.map((fileUrl: any) => fileUrl["@value"]);
 
-  console.log("referenceFileUrls-->", referenceFileUrls);
   if (referenceFileUrls?.length) {
     advancedFields.push({
       icon: "receipt",
@@ -764,6 +763,19 @@ export const assetToAssetInput = async (asset: Asset) => {
       ? properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS].map(toKeyValueInput)
       : [properties[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS]].map(toKeyValueInput);
 
+  const currReferences = properties[ASSET_ADVANCED_INFO_DATA_MODEL]?.[
+    ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA
+  ]?.[ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS]?.map((item: any) => {
+    return item?.input?.input?.value || item.input?.value;
+  });
+
+  if (currReferences) {
+    properties[ASSET_ADVANCED_INFO_DATA_MODEL][
+      ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA
+    ][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] = currReferences.map(
+      toKeyValueInput
+    );
+  }
   return {
     "@id": removedJsonLd["@id"],
     properties: { ...properties, "@id": removedJsonLd["@id"] },
@@ -888,7 +900,6 @@ export const validateAdvancedInfo = (formDataToValidate: AssetProperties) => {
       newErrors[propertyName] = true;
     }
   });
-
   const referencesData = formDataToValidate[ASSET_ADVANCED_INFO_DATA_MODEL][
     ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA
   ][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] as [];
