@@ -1,8 +1,8 @@
+import { EdcInfoDisplayInput } from "@/components/atoms/edc-info-display-input.tsx";
+import { TitleWithIcon } from "@/components/atoms/TitleWithIcon.tsx";
+import { T } from "@/i18n";
+import { Card, CardContent, Typography } from "@mui/material";
 import React from "react";
-import {Card, CardContent, Typography} from "@mui/material";
-import {T} from "@/i18n";
-import {EdcInfoDisplayInput} from "@/components/atoms/edc-info-display-input.tsx";
-import {TitleWithIcon} from "@/components/atoms/TitleWithIcon.tsx";
 
 export interface EdcInfoCardProps {
   name: string;
@@ -12,7 +12,7 @@ export interface EdcInfoCardProps {
   translator: (key: string) => string;
 }
 
-export function EdcInfoCard({ name, description = "", managementUrl, protocolUrl, translator }: EdcInfoCardProps): JSX.Element {
+export function EdcInfoCard({ name, description = "", managementUrl, protocolUrl, translator }: EdcInfoCardProps): React.ReactElement {
 
   return (
     <Card >

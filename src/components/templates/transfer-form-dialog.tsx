@@ -1,25 +1,25 @@
-import { useRef, useState } from "react";
-import { closeSnackbar, enqueueSnackbar } from "notistack";
+import { FormDataAddressStep } from "@/components/organisms/form-data-address-step";
+import { proxyConnectorManagement } from "@/constants/proxy";
+import { T } from "@/i18n";
+import { validateDataAddress } from "@/utilities/asset.ts";
+import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog";
+import { defaultHttpDestinationDataAddress } from "@/utilities/data-address";
+import { createTransferProcessRequest } from "@/utilities/transfer-process";
 import {
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import {
   ContractAgreement,
   DataAddress,
 } from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
-import { T } from "@/i18n";
-import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog";
-import { defaultHttpDestinationDataAddress } from "@/utilities/data-address";
-import { createTransferProcessRequest } from "@/utilities/transfer-process";
-import { FormDataAddressStep } from "@/components/organisms/form-data-address-step";
-import { validateDataAddress } from "@/utilities/asset.ts";
-import { proxyConnectorManagement } from "@/constants/proxy";
+import { closeSnackbar, enqueueSnackbar } from "notistack";
+import { useRef, useState } from "react";
 import { Snackbar } from "../molecules/snackbar";
 
 export interface TransferFormDialogProps {
@@ -35,10 +35,10 @@ export function TransferFormDialog({
   contractAgreementId,
   open,
   onClose,
-  onSuccess = () => {},
+  onSuccess = () => { },
   translator,
   counterPartyAddress,
-}: TransferFormDialogProps): JSX.Element {
+}: TransferFormDialogProps): React.ReactElement {
   const [formData, setFormData] = useState<DataAddress>(
     defaultHttpDestinationDataAddress,
   );

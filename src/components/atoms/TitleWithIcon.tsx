@@ -1,5 +1,5 @@
-import React, {ReactNode} from "react";
 import Typography from "@mui/material/Typography";
+import React, { ReactNode } from "react";
 
 export interface TitleWithIconProps {
   icon?: ReactNode;
@@ -7,7 +7,7 @@ export interface TitleWithIconProps {
   subtitle?: string | ReactNode;
 }
 
-export function TitleWithIcon({ icon, title, subtitle = "" }: TitleWithIconProps): JSX.Element {
+export function TitleWithIcon({ icon, title, subtitle = "" }: TitleWithIconProps): React.ReactElement {
 
   return (
     <div className="flex flex-row gap-x-4 items-center">

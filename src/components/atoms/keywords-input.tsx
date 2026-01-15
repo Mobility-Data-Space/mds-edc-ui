@@ -1,9 +1,9 @@
-import React from "react";
-import { IconButton, Tooltip } from "@mui/material";
-import { TextFieldProps } from "@mui/material/TextField";
 import { InfoOutlined } from '@mui/icons-material';
+import { IconButton, Tooltip } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
-import { MuiChipsInput } from 'mui-chips-input'
+import { TextFieldProps } from "@mui/material/TextField";
+import { MuiChipsInput } from 'mui-chips-input';
+import React from "react";
 
 const chipKeyCodes = [",", ";", "Enter"];
 
@@ -16,8 +16,8 @@ export type KeywordsInputProps = Omit<TextFieldProps, "onChange"> & {
   onChange: (value: string[]) => void;
 };
 
-export function KeywordsInput({ tooltip = "", label = "", placeholder = "", error, value, onChange, }: KeywordsInputProps): JSX.Element {
-  const onDelete= (chip: string, index: number) => {
+export function KeywordsInput({ tooltip = "", label = "", placeholder = "", error, value, onChange, }: KeywordsInputProps): React.ReactElement {
+  const onDelete = (chip: string, index: number) => {
     value.splice(index, 1);
     return onChange(value);
   };

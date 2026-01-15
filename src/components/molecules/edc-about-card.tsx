@@ -1,10 +1,10 @@
-import React from "react";
-import {Card, CardContent, Box, Typography, ButtonBase} from "@mui/material";
-import {T} from "@/i18n";
-import {TitleWithIcon} from "@/components/atoms/TitleWithIcon.tsx";
+import { TitleWithIcon } from "@/components/atoms/TitleWithIcon.tsx";
+import { T } from "@/i18n";
+import { Box, ButtonBase, Card, CardContent, Typography } from "@mui/material";
 import Link from "next/link";
+import React from "react";
 
-export function EdcAboutCard(): JSX.Element {
+export function EdcAboutCard(): React.ReactElement {
   return (
     <Card >
       <CardContent className="flex flex-col gap-y-4">

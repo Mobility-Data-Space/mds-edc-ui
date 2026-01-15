@@ -1,10 +1,10 @@
 import React from "react";
 
-import {Input} from "@/components/atoms/input";
+import { Input } from "@/components/atoms/input";
 
-import {T} from "@/i18n";
-import {ASSET_STANDARD_LICENSE} from "@/jsonld/asset";
-import {AssetProperties} from "@/utilities/asset";
+import { T } from "@/i18n";
+import { ASSET_STANDARD_LICENSE } from "@/jsonld/asset";
+import { AssetProperties } from "@/utilities/asset";
 
 export interface AssetStandardLicenseProps {
   translator: (key: string) => string;
@@ -14,7 +14,7 @@ export interface AssetStandardLicenseProps {
   required?: boolean;
 }
 
-export function AssetStandardLicense({ translator, formData, onChange, errors }: AssetStandardLicenseProps): JSX.Element {
+export function AssetStandardLicense({ translator, formData, onChange, errors }: AssetStandardLicenseProps): React.ReactElement {
 
   return (
     <Input

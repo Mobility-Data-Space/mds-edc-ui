@@ -1,11 +1,11 @@
+import { FormHelperText, Link } from "@mui/material";
 import React from "react";
-import {FormHelperText, Link} from "@mui/material";
 
-import {Input} from "@/components/atoms/input";
+import { Input } from "@/components/atoms/input";
 
-import {T} from "@/i18n";
-import {ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE} from "@/jsonld/asset";
-import {AssetProperties} from "@/utilities/asset";
+import { T } from "@/i18n";
+import { ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE } from "@/jsonld/asset";
+import { AssetProperties } from "@/utilities/asset";
 
 export interface AssetConditionsForUseProps {
   translator: (key: string) => string;
@@ -15,13 +15,13 @@ export interface AssetConditionsForUseProps {
   required?: boolean;
 }
 
-export function AssetConditionsForUse({ translator, formData, onChange, errors }: AssetConditionsForUseProps): JSX.Element {
+export function AssetConditionsForUse({ translator, formData, onChange, errors }: AssetConditionsForUseProps): React.ReactElement {
 
   return (<>
     <Input
       name={ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE}
       id="advanced-info-conditions-for-use"
-      label={<T string="assets.new.fieldAdvancedInfoConditionsForUse"/>}
+      label={<T string="assets.new.fieldAdvancedInfoConditionsForUse" />}
       placeholder={translator("assets.new.fieldAdvancedInfoConditionsForUsePlaceholder")}
       multiline
       rows={6}
@@ -33,7 +33,7 @@ export function AssetConditionsForUse({ translator, formData, onChange, errors }
       })}
     />
     <FormHelperText className="flex flex-row gap-x-1">
-      <T string="assets.new.fieldAdvancedInfoConditionsForUseSupport"/>
+      <T string="assets.new.fieldAdvancedInfoConditionsForUseSupport" />
       <Link href="https://www.markdownguide.org/basic-syntax" target="_blank" color="secondary" >
         Markdown syntax
       </Link>

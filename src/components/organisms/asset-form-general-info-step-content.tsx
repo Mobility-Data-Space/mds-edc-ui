@@ -1,17 +1,17 @@
 import React from "react";
 
-import {AssetId} from "@/components/molecules/asset-id";
-import {AssetVersion} from "@/components/molecules/asset-version";
-import {AssetTitle} from "@/components/molecules/asset-title";
-import {AssetDescription} from "@/components/molecules/asset-description";
-import {AssetKeywords} from "@/components/molecules/asset-keywords";
-import {AssetLanguage} from "@/components/molecules/asset-language";
-import {AssetEndpointDocumentation} from "@/components/molecules/asset-endpoint-documentation";
-import {AssetContentType} from "@/components/molecules/asset-content-type";
-import {AssetPublisher} from "@/components/molecules/asset-publisher";
-import {AssetStandardLicense} from "@/components/molecules/asset-standard-license";
+import { AssetContentType } from "@/components/molecules/asset-content-type";
+import { AssetDescription } from "@/components/molecules/asset-description";
+import { AssetEndpointDocumentation } from "@/components/molecules/asset-endpoint-documentation";
+import { AssetId } from "@/components/molecules/asset-id";
+import { AssetKeywords } from "@/components/molecules/asset-keywords";
+import { AssetLanguage } from "@/components/molecules/asset-language";
+import { AssetPublisher } from "@/components/molecules/asset-publisher";
+import { AssetStandardLicense } from "@/components/molecules/asset-standard-license";
+import { AssetTitle } from "@/components/molecules/asset-title";
+import { AssetVersion } from "@/components/molecules/asset-version";
 
-import {T} from "@/i18n";
+import { T } from "@/i18n";
 import { AssetProperties } from "@/utilities/asset";
 
 export interface AssetFormGeneralInfoStepProps {
@@ -21,7 +21,7 @@ export interface AssetFormGeneralInfoStepProps {
   errors: { [key: string]: boolean };
 }
 
-export function AssetFormGeneralInfoStepContent({ translator, formData, onChange, errors }: AssetFormGeneralInfoStepProps): JSX.Element {
+export function AssetFormGeneralInfoStepContent({ translator, formData, onChange, errors }: AssetFormGeneralInfoStepProps): React.ReactElement {
 
   return (
     <div className="flex flex-col gap-y-5">
@@ -62,7 +62,7 @@ export function AssetFormGeneralInfoStepContent({ translator, formData, onChange
           htmlFor="properties-keywords"
           className="inline-block text-sm text-black font-medium mb-2"
         >
-          <T string="assets.new.fieldKeywords"/>
+          <T string="assets.new.fieldKeywords" />
         </label>
         <AssetKeywords
           formData={formData}
@@ -77,7 +77,7 @@ export function AssetFormGeneralInfoStepContent({ translator, formData, onChange
           htmlFor="properties-language"
           className="inline-block text-sm text-black font-medium mb-2"
         >
-          <T string="assets.new.fieldLanguage"/>
+          <T string="assets.new.fieldLanguage" />
         </label>
         <AssetLanguage
           formData={formData}
@@ -108,7 +108,7 @@ export function AssetFormGeneralInfoStepContent({ translator, formData, onChange
           htmlFor="properties-publisher"
           className="inline-block text-sm text-gray-800 mt-2.5"
         >
-          <T string="fieldPublisher"/>
+          <T string="fieldPublisher" />
         </label>
       </div>
 

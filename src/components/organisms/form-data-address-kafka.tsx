@@ -1,7 +1,7 @@
-import React from "react";
-import { DataAddress } from "@think-it-labs/edc-connector-client";
-import { T } from "@/i18n";
 import { Input } from "@/components/atoms/input";
+import { T } from "@/i18n";
+import { DataAddress } from "@think-it-labs/edc-connector-client";
+import React from "react";
 import { Checkbox } from "../atoms/checkbox";
 import { MuiSelect } from "../atoms/mui-select";
 
@@ -29,7 +29,7 @@ export function ConsumerFormDataAddressKafka({
   errors,
   onChange,
   translator,
-}: FormDataAddressKafkaProps): JSX.Element {
+}: FormDataAddressKafkaProps): React.ReactElement {
   if (!formData.isPull) {
     onChange({ ...formData, isPull: true });
   }
@@ -77,7 +77,7 @@ export function ProviderFormDataAddressKafka({
   errors,
   onChange,
   translator,
-}: FormDataAddressKafkaProps): JSX.Element {
+}: FormDataAddressKafkaProps): React.ReactElement {
   return (
     <>
       <div className="flex flex-col gap-y-5">

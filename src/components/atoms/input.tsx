@@ -1,9 +1,9 @@
-import React, { ForwardedRef, forwardRef } from "react";
-import { TextField, Tooltip, IconButton } from "@mui/material";
-import { TextFieldProps } from "@mui/material/TextField";
 import { InfoOutlined } from "@mui/icons-material";
+import { IconButton, TextField, Tooltip } from "@mui/material";
+import { TextFieldProps } from "@mui/material/TextField";
+import React, { ForwardedRef, forwardRef } from "react";
 
-export const Input = forwardRef(({ tooltip = "", onChange, value, error, ...rest }: Omit<TextFieldProps, "error"> & { tooltip?: string, error?: string | boolean }, ref: ForwardedRef<HTMLInputElement>): JSX.Element => {
+export const Input = forwardRef(({ tooltip = "", onChange, value, error, ...rest }: Omit<TextFieldProps, "error"> & { tooltip?: string, error?: string | boolean }, ref: ForwardedRef<HTMLInputElement>): React.ReactElement => {
 
   return (
     <TextField

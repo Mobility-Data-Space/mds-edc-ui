@@ -1,12 +1,12 @@
+import { EdcEntityCount } from "@/components/molecules/edc-entity-count.tsx";
+import { EdcEntitiesCount } from "@/hooks/use-edc-entities-count.ts";
 import React from "react";
-import {EdcEntityCount} from "@/components/molecules/edc-entity-count.tsx";
-import {EdcEntitiesCount} from "@/hooks/use-edc-entities-count.ts";
 
 export interface EdcEntitiesCountProps {
   entitiesCount: EdcEntitiesCount;
 }
 
-export function EdcEntitiesCountGrid({ entitiesCount }: EdcEntitiesCountProps): JSX.Element {
+export function EdcEntitiesCountGrid({ entitiesCount }: EdcEntitiesCountProps): React.ReactElement {
   const cardClassName = "min-w-[200px] flex-grow flex-shrink basis-0";
   return (
     <div className="flex flex-row flex-wrap gap-2.5">

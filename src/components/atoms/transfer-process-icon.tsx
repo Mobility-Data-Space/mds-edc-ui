@@ -5,7 +5,7 @@ import { TransferProcess } from "@think-it-labs/edc-connector-client/dist/src/en
 export function TransferProcessIcon({
   transferProcess,
   ...rest
-}: { transferProcess: TransferProcess } & IconProps): JSX.Element {
+}: { transferProcess: TransferProcess } & IconProps): React.ReactElement {
   let icon;
 
   if (transferProcess.type === "PROVIDER") {

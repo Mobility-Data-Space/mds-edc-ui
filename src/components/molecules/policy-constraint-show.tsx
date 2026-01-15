@@ -1,11 +1,11 @@
-import React, {ReactNode, useState} from "react";
-import {Icon} from "@mui/material";
+import { ConstraintShow } from "@/components/molecules/constraint-show";
+import { JsonLdDialog } from "@/components/molecules/JsonLdDialog";
+import { T } from "@/i18n";
+import { convertOdrlToJsonHtml } from "@/utilities/catalog";
+import { Icon } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import {T} from "@/i18n";
-import {ConstraintShow} from "@/components/molecules/constraint-show";
-import {convertOdrlToJsonHtml} from "@/utilities/catalog";
-import {JsonLdDialog} from "@/components/molecules/JsonLdDialog";
-import {Constraint} from "@think-it-labs/edc-connector-client";
+import { Constraint } from "@think-it-labs/edc-connector-client";
+import React, { ReactNode, useState } from "react";
 
 export interface FieldShowProps {
   constraints: Constraint[];
@@ -13,7 +13,7 @@ export interface FieldShowProps {
   jsonLdObject: any;
 }
 
-export function PolicyConstraintShow({ constraints, jsonLdDialogTitle, jsonLdObject }: FieldShowProps): JSX.Element {
+export function PolicyConstraintShow({ constraints, jsonLdDialogTitle, jsonLdObject }: FieldShowProps): React.ReactElement {
   const [jsonLdModalOpen, setJsonLdModalOpen] = useState(false);
   const onOpen = () => setJsonLdModalOpen(true);
   const onClose = () => setJsonLdModalOpen(false);
@@ -25,11 +25,11 @@ export function PolicyConstraintShow({ constraints, jsonLdDialogTitle, jsonLdObj
           <Icon className="mt-1.5">policy</Icon>
           <div>
             <Typography variant="body2" color="textDisabled" className="uppercase">
-              <T string="contractDefinitions.contractPolicy"/>
+              <T string="contractDefinitions.contractPolicy" />
             </Typography>
             <div>
               <ConstraintShow
-                data={convertOdrlToJsonHtml(constraints, ",")}/>
+                data={convertOdrlToJsonHtml(constraints, ",")} />
             </div>
           </div>
         </div>
@@ -38,10 +38,10 @@ export function PolicyConstraintShow({ constraints, jsonLdDialogTitle, jsonLdObj
           <Icon className="mt-1.5">policy</Icon>
           <div className="flex flex-col gapy-y-2">
             <Typography variant="body2" color="textDisabled" className="uppercase">
-              <T string="contractDefinitions.contractPolicyJsonLd"/>
+              <T string="contractDefinitions.contractPolicyJsonLd" />
             </Typography>
             <Typography className="!leading-none hover:underline cursor-pointer" onClick={onOpen}>
-              <T string="common.showJsonLd"/>
+              <T string="common.showJsonLd" />
             </Typography>
           </div>
         </div>
