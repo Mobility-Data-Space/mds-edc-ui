@@ -1,9 +1,9 @@
 import React from "react";
 
-import {KeywordsInput} from "@/components/atoms/keywords-input";
+import { KeywordsInput } from "@/components/atoms/keywords-input";
 
-import {ASSET_KEYWORDS} from "@/jsonld/asset";
-import {AssetProperties} from "@/utilities/asset";
+import { ASSET_KEYWORDS } from "@/jsonld/asset";
+import { AssetProperties } from "@/utilities/asset";
 
 export interface AssetKeywordsProps {
   translator: (key: string) => string;
@@ -13,7 +13,7 @@ export interface AssetKeywordsProps {
   required?: boolean;
 }
 
-export function AssetKeywords({ translator, formData, onChange, errors }: AssetKeywordsProps): JSX.Element {
+export function AssetKeywords({ translator, formData, onChange, errors }: AssetKeywordsProps): React.ReactElement {
 
   return (
     <KeywordsInput
@@ -24,7 +24,7 @@ export function AssetKeywords({ translator, formData, onChange, errors }: AssetK
       placeholder={translator("assets.new.fieldKeywordsPlaceholder")}
       value={formData[ASSET_KEYWORDS] as []}
       error={errors[ASSET_KEYWORDS]}
-      onChange={(value) => onChange({...formData, [ASSET_KEYWORDS]: value})}
+      onChange={(value) => onChange({ ...formData, [ASSET_KEYWORDS]: value })}
     />
   );
 }

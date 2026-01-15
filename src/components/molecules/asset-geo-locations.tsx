@@ -1,8 +1,8 @@
+import { T } from "@/i18n";
+import { ASSET_ADVANCED_INFO_GEO_LOCATION, ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL } from "@/jsonld/asset";
+import { AssetProperties } from "@/utilities/asset";
 import React from "react";
-import {Input} from "../atoms/input";
-import {T} from "@/i18n";
-import {ASSET_ADVANCED_INFO_GEO_LOCATION, ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL} from "@/jsonld/asset";
-import {AssetProperties} from "@/utilities/asset";
+import { Input } from "../atoms/input";
 
 export interface AssetGeoLocationsProps {
   translator: (key: string) => string;
@@ -12,14 +12,14 @@ export interface AssetGeoLocationsProps {
   required?: boolean;
 }
 
-export function AssetGeoLocations({ translator, formData, onChange, errors }: AssetGeoLocationsProps): JSX.Element {
+export function AssetGeoLocations({ translator, formData, onChange, errors }: AssetGeoLocationsProps): React.ReactElement {
 
   return (
     <Input
       name={ASSET_ADVANCED_INFO_GEO_LOCATION}
       id="advanced-geo-location"
       type="text"
-      label={<T string="assets.new.fieldAdvancedGeoLocation"/>}
+      label={<T string="assets.new.fieldAdvancedGeoLocation" />}
       placeholder={"40.741895,-73.989308"}
       tooltip={translator("assets.new.fieldAdvancedGeoLocationTooltip")}
       value={formData[ASSET_ADVANCED_INFO_GEO_LOCATION][ASSET_ADVANCED_INFO_GEO_LOCATION_LABEL]}

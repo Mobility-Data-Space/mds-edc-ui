@@ -16,14 +16,14 @@ export function Select({
   unstyled = false,
   value,
   ...rest
-}: PropsWithChildren<Props>): JSX.Element {
+}: PropsWithChildren<Props>): React.ReactElement {
   return (
     <select
       className={clsx(
         "placeholder:text-edc-subtitle bg-transparent text-sm",
         unstyled && "p-0 border-0 rounded-none pr-6",
         !unstyled &&
-          "px-3 py-3 pr-9 border border-edc-border rounded-md text-sm",
+        "px-3 py-3 pr-9 border border-edc-border rounded-md text-sm",
         className,
       )}
       onChange={onChange}

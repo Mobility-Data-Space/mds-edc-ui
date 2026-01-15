@@ -1,5 +1,5 @@
-import React, { useState, useRef, useLayoutEffect } from "react";
 import { Button, Icon } from "@mui/material";
+import React, { useLayoutEffect, useRef, useState } from "react";
 
 import { MarkdownText } from "@/components/atoms/markdown-text";
 import { T } from "@/i18n";
@@ -13,7 +13,7 @@ interface MarkdowCollapsableTextProps {
 export function MarkdownCollapsableText({
   data,
   collapsableHeight = COLLAPSABLE_HEIGHT_DEFAULT,
-}: MarkdowCollapsableTextProps): JSX.Element {
+}: MarkdowCollapsableTextProps): React.ReactElement {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [textHeight, setTextHeight] = useState(0);
   const markdownTextRef = useRef<HTMLDivElement>(null);

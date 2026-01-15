@@ -1,9 +1,9 @@
-import React from "react";
-import {Card, CardContent, Typography} from "@mui/material";
-import {T} from "@/i18n";
-import {TitleWithIcon} from "@/components/atoms/TitleWithIcon.tsx";
+import { TitleWithIcon } from "@/components/atoms/TitleWithIcon.tsx";
+import { T } from "@/i18n";
 import CheckIcon from '@mui/icons-material/CheckSharp';
+import { Card, CardContent, Typography } from "@mui/material";
 import Link from "next/link";
+import React from "react";
 
 function TextWithIcon({ title, link = "", linkTitle = "" }: { title: string, link?: string, linkTitle?: string }) {
   return (
@@ -35,13 +35,13 @@ const titles = Object.entries({
   "dashboard.aboutUiContractDefinitionsViewAndCreate": ["/data-offers", "Data Offer Page"],
 });
 
-export function EdcUIAboutCard(): JSX.Element {
+export function EdcUIAboutCard(): React.ReactElement {
 
   return (
     <Card>
       <CardContent className="flex flex-col gap-y-4">
         <TitleWithIcon
-          title={<T string="dashboard.aboutEdcUi"/>}
+          title={<T string="dashboard.aboutEdcUi" />}
           subtitle={<T string="dashboard.dataDashboard" />}
         />
 

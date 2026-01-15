@@ -1,20 +1,15 @@
 import React from "react";
 
-import {IconButton, Tooltip} from "@mui/material";
-import {InfoOutlined} from "@mui/icons-material";
 
-import {KeyValuePairInputList} from "@/components/molecules/key-value-pair-input-list";
 
-import {T} from "@/i18n";
+import { Input } from "@/components/atoms/input.tsx";
+import { MuiSelect } from "@/components/atoms/mui-select.tsx";
+import { RadioButton } from "@/components/atoms/radio-button.tsx";
+import { T } from "@/i18n";
 import {
-  ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS,
   ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_SELECT_OPTIONS
 } from "@/jsonld/asset";
-import {AssetProperties} from "@/utilities/asset";
-import {DataAddress} from "@think-it-labs/edc-connector-client/dist/src/entities/data-address";
-import {MuiSelect} from "@/components/atoms/mui-select.tsx";
-import {Input} from "@/components/atoms/input.tsx";
-import {RadioButton} from "@/components/atoms/radio-button.tsx";
+import { DataAddress } from "@think-it-labs/edc-connector-client/dist/src/entities/data-address";
 
 export interface AssetDataSamplesProps {
   translator: (key: string) => string;
@@ -24,7 +19,7 @@ export interface AssetDataSamplesProps {
   required?: boolean;
 }
 
-export function DataAddressAuthHeaders({ translator, formData, onChange, errors }: AssetDataSamplesProps): JSX.Element {
+export function DataAddressAuthHeaders({ translator, formData, onChange, errors }: AssetDataSamplesProps): React.ReactElement {
 
   return (
     <div className="flex flex-col gap-y-5 items-start w-full">
@@ -32,7 +27,7 @@ export function DataAddressAuthHeaders({ translator, formData, onChange, errors 
         htmlFor="data-address-base-url"
         className="inline-block text-sm text-gray-800 mt-2.5"
       >
-        <T string="assets.new.fieldDataAddressHeaderAuth"/>
+        <T string="assets.new.fieldDataAddressHeaderAuth" />
       </label>
       {!JSON.parse(formData.addAuthHeaders || "false") ? "" : <>
         <MuiSelect
@@ -45,7 +40,7 @@ export function DataAddressAuthHeaders({ translator, formData, onChange, errors 
           defaultValue="Vault-Secret"
           error={errors.authHeaderType}
           value={formData.authHeaderType || "Vault-Secret"}
-          onChange={(event) => onChange({...formData, authHeaderType: event.target.value})}
+          onChange={(event) => onChange({ ...formData, authHeaderType: event.target.value })}
         />
 
         <div className="grid sm:grid-cols-3 gap-2 w-full">
@@ -54,11 +49,11 @@ export function DataAddressAuthHeaders({ translator, formData, onChange, errors 
             name="authKey"
             id="data-address-auth-key"
             type="text"
-            label={<T string="assets.new.fieldDataAddressAuthHeaderName"/>}
+            label={<T string="assets.new.fieldDataAddressAuthHeaderName" />}
             placeholder={translator("assets.new.fieldDataAddressAuthHeaderNamePlaceholder")}
             value={formData.authKey}
             error={errors.authKey}
-            onChange={(event) => onChange({...formData, authKey: event.target.value})}
+            onChange={(event) => onChange({ ...formData, authKey: event.target.value })}
           />
 
           <Input
@@ -67,13 +62,13 @@ export function DataAddressAuthHeaders({ translator, formData, onChange, errors 
             id="data-address-auth-code"
             type="text"
             label={<T
-              string={`assets.new.fieldDataAddressAuthHeader${formData.authHeaderType === "Vault-Secret" ? "Vault" : ""}Value`}/>}
+              string={`assets.new.fieldDataAddressAuthHeader${formData.authHeaderType === "Vault-Secret" ? "Vault" : ""}Value`} />}
             placeholder={formData.authHeaderType === "Vault-Secret" ? "Mysecret123" : "Bearer ..."}
             value={formData.authHeaderType === "Vault-Secret" ? formData.secretName : formData.authCode}
             error={formData.authHeaderType === "Vault-Secret" ? errors.secretName : errors.authCode}
-            onChange={(event) => formData.authHeaderType === "Vault-Secret" ? 
-              onChange({...formData, secretName: event.target.value}) : 
-              onChange({...formData, authCode: event.target.value})}
+            onChange={(event) => formData.authHeaderType === "Vault-Secret" ?
+              onChange({ ...formData, secretName: event.target.value }) :
+              onChange({ ...formData, authCode: event.target.value })}
           />
         </div>
       </>}
@@ -83,7 +78,7 @@ export function DataAddressAuthHeaders({ translator, formData, onChange, errors 
         labelTrue={translator("assets.new.fieldDataAddressHeaderTypeTrue")}
         labelFalse={translator("assets.new.fieldDataAddressHeaderTypeFalse")}
         value={formData.addAuthHeaders}
-        onChange={(value) => onChange({...formData, addAuthHeaders: value})}
+        onChange={(value) => onChange({ ...formData, addAuthHeaders: value })}
       />
     </div>
   );

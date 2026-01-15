@@ -1,7 +1,7 @@
-import React from "react";
+import { Input } from "@/components/atoms/input";
+import { T } from "@/i18n";
 import { DataAddress } from "@think-it-labs/edc-connector-client";
-import {Input} from "@/components/atoms/input";
-import {T} from "@/i18n";
+import React from "react";
 
 export interface ContactEmailAndSubjectProps {
   translator: (key: string) => string;
@@ -11,7 +11,7 @@ export interface ContactEmailAndSubjectProps {
   required?: boolean;
 }
 
-export function AssetContactEmailAndSubject({ translator, formData, onChange, errors, required = true }: ContactEmailAndSubjectProps): JSX.Element {
+export function AssetContactEmailAndSubject({ translator, formData, onChange, errors, required = true }: ContactEmailAndSubjectProps): React.ReactElement {
   return (
     <>
       <div>
@@ -19,7 +19,7 @@ export function AssetContactEmailAndSubject({ translator, formData, onChange, er
           htmlFor="data-offer-contact-email"
           className="inline-block text-sm text-black font-medium mb-2"
         >
-          <T string="dataOffer.new.contactEmail"/> {required ? " * " : ""}
+          <T string="dataOffer.new.contactEmail" /> {required ? " * " : ""}
         </label>
         <Input
           name="data-offer-contact-email"
@@ -38,7 +38,7 @@ export function AssetContactEmailAndSubject({ translator, formData, onChange, er
           htmlFor="data-offer-contact-preferred-email-subject"
           className="inline-block text-sm text-black font-medium mb-2"
         >
-          <T string="dataOffer.new.dataOfferContactPreferredEmailSubject"/> {required ? " * " : ""}
+          <T string="dataOffer.new.dataOfferContactPreferredEmailSubject" /> {required ? " * " : ""}
         </label>
         <Input
           name="data-offer-contact-preferred-email-subject"

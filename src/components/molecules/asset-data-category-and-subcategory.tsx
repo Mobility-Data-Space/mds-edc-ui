@@ -13,7 +13,7 @@ export interface AssetDataCategoryAndSubcategoryProps {
   errors: { [key: string]: boolean };
 }
 
-export function AssetDataCategoryAndSubcategory({ translator, formData, onChange, errors }: AssetDataCategoryAndSubcategoryProps): JSX.Element {
+export function AssetDataCategoryAndSubcategory({ translator, formData, onChange, errors }: AssetDataCategoryAndSubcategoryProps): React.ReactElement {
   const labelColor = errors[ASSET_ADVANCED_INFO_DATA_CATEGORY] ? `text-red-500` : "text-gray-800"
 
   return (

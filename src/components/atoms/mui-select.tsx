@@ -1,6 +1,6 @@
-import React, {ReactNode, useEffect, useState} from "react";
-import {Select, SelectProps as MuiSelectProps, MenuItem, InputLabel, FormHelperText, Divider, FormControl, Typography, Stack} from "@mui/material";
-import {Checkbox} from "@/components/atoms/checkbox.tsx";
+import { Checkbox } from "@/components/atoms/checkbox.tsx";
+import { Divider, FormControl, FormHelperText, InputLabel, MenuItem, SelectProps as MuiSelectProps, Select, Stack, Typography } from "@mui/material";
+import React, { ReactNode, useEffect, useState } from "react";
 
 type Option = { text?: string; value: string };
 
@@ -17,10 +17,10 @@ export type SelectProps = Partial<MuiSelectProps> & {
 };
 
 function valueIsEmpty(value: unknown): boolean {
-  return (Array.isArray(value) && value.length === 0) || ! value;
+  return (Array.isArray(value) && value.length === 0) || !value;
 }
 
-export function renderSelectOptions(options: Option[], value: unknown): JSX.Element[] {
+export function renderSelectOptions(options: Option[], value: unknown): React.ReactElement[] {
   let isMultiple = false;
   if (Array.isArray(value)) {
     isMultiple = true;
@@ -58,9 +58,9 @@ export function renderSelectValue(value: unknown, placeholder: string = "", opti
   return <>{option && option.text ? option.text : value}</>;
 }
 
-export function MuiSelect({ label, options, highlights = [], id = "", defaultValue = "", name, value = "", error = false, onChange, placeholder = "", required = false, disabled = false, helperText = "", multiple = false }: Omit<SelectProps, "label" | "error"> & { label?: string, error?: string | boolean }): JSX.Element {
+export function MuiSelect({ label, options, highlights = [], id = "", defaultValue = "", name, value = "", error = false, onChange, placeholder = "", required = false, disabled = false, helperText = "", multiple = false }: Omit<SelectProps, "label" | "error"> & { label?: string, error?: string | boolean }): React.ReactElement {
   const hasHighlights = highlights && highlights.length > 0;
-  const notValue = ! value;
+  const notValue = !value;
   const [labelPlaceholder, setLabelPlaceholder] = useState(valueIsEmpty(value) ? "" : label);
 
   useEffect(() => {

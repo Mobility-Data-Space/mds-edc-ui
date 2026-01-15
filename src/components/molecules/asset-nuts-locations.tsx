@@ -1,13 +1,13 @@
 import React from "react";
 
-import {IconButton, Tooltip} from "@mui/material";
-import {InfoOutlined} from "@mui/icons-material";
+import { InfoOutlined } from "@mui/icons-material";
+import { IconButton, Tooltip } from "@mui/material";
 
-import {KeyValuePairInputList} from "@/components/molecules/key-value-pair-input-list";
+import { KeyValuePairInputList } from "@/components/molecules/key-value-pair-input-list";
 
-import {T} from "@/i18n";
-import {AssetProperties} from "@/utilities/asset";
+import { T } from "@/i18n";
 import { ASSET_ADVANCED_INFO_GEO_LOCATION, ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS } from "@/jsonld/asset";
+import { AssetProperties } from "@/utilities/asset";
 
 export interface AssetNutsLocationsProps {
   translator: (key: string) => string;
@@ -17,15 +17,15 @@ export interface AssetNutsLocationsProps {
   required?: boolean;
 }
 
-export function AssetNutsLocations({ translator, formData, onChange, errors }: AssetNutsLocationsProps): JSX.Element {
+export function AssetNutsLocations({ translator, formData, onChange, errors }: AssetNutsLocationsProps): React.ReactElement {
   return (<>
     <label
       htmlFor="advanced-info-nuts-locations"
       className="inline-block text-sm text-black font-medium mb-2"
     >
-      <T string="assets.new.fieldAdvancedInfoNutsLocation"/>
+      <T string="assets.new.fieldAdvancedInfoNutsLocation" />
       <Tooltip
-        title={translator("assets.new.fieldAdvancedInfoNutsLocationTooltip")}><IconButton><InfoOutlined/></IconButton></Tooltip>
+        title={translator("assets.new.fieldAdvancedInfoNutsLocationTooltip")}><IconButton><InfoOutlined /></IconButton></Tooltip>
     </label>
 
     <KeyValuePairInputList

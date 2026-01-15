@@ -1,14 +1,10 @@
 import React from "react";
 
-import {IconButton, Tooltip} from "@mui/material";
-import {InfoOutlined} from "@mui/icons-material";
 
-import {KeyValuePairInputList} from "@/components/molecules/key-value-pair-input-list";
+import { KeyValuePairInputList } from "@/components/molecules/key-value-pair-input-list";
 
-import {T} from "@/i18n";
-import {ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS} from "@/jsonld/asset";
-import {AssetProperties} from "@/utilities/asset";
-import {DataAddress} from "@think-it-labs/edc-connector-client/dist/src/entities/data-address";
+import { T } from "@/i18n";
+import { DataAddress } from "@think-it-labs/edc-connector-client/dist/src/entities/data-address";
 
 export interface DataAddressHttpHeadersProps {
   translator: (key: string) => string;
@@ -18,7 +14,7 @@ export interface DataAddressHttpHeadersProps {
   required?: boolean;
 }
 
-export function DataAddressHttpHeaders({ translator, formData, onChange, errors }: DataAddressHttpHeadersProps): JSX.Element {
+export function DataAddressHttpHeaders({ translator, formData, onChange, errors }: DataAddressHttpHeadersProps): React.ReactElement {
 
   return (
     <div className="flex flex-col gap-y-5 items-start">
@@ -26,7 +22,7 @@ export function DataAddressHttpHeaders({ translator, formData, onChange, errors 
         htmlFor="data-address-http-headers"
         className="inline-block text-sm text-gray-800 mt-2.5"
       >
-        <T string="assets.new.fieldDataAddressHttpHeaders"/>
+        <T string="assets.new.fieldDataAddressHttpHeaders" />
       </label>
       <KeyValuePairInputList
         label={translator("assets.new.fieldDataAddressHttpHeaders")}
@@ -39,7 +35,7 @@ export function DataAddressHttpHeaders({ translator, formData, onChange, errors 
         required
         error={!!errors.headers}
         value={formData.headers || []}
-        onChange={(value) => onChange({...formData, headers: value})}
+        onChange={(value) => onChange({ ...formData, headers: value })}
       />
     </div>
   );

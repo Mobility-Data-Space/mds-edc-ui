@@ -1,10 +1,6 @@
-import React, {useEffect} from "react";
-import {Card, CardContent, Typography} from "@mui/material";
-import {T} from "@/i18n";
-import {EdcInfoDisplayInput} from "@/components/atoms/edc-info-display-input.tsx";
-import {TitleWithIcon} from "@/components/atoms/TitleWithIcon.tsx";
-import {QuerySpec} from "@think-it-labs/edc-connector-client";
-import {EdcConnectorClientContext} from "@think-it-labs/edc-connector-client/dist/src/context";
+import { T } from "@/i18n";
+import { Card, CardContent, Typography } from "@mui/material";
+import React from "react";
 
 export interface EdcEntityCountProps {
   label: string;
@@ -13,7 +9,7 @@ export interface EdcEntityCountProps {
   "data-testid"?: string;
 }
 
-export function EdcEntityCount({ label, count, className = "", "data-testid": dataTestId }: EdcEntityCountProps): JSX.Element {
+export function EdcEntityCount({ label, count, className = "", "data-testid": dataTestId }: EdcEntityCountProps): React.ReactElement {
   return (
     <Card className={className} data-testid={dataTestId} >
       <CardContent className="flex flex-col gap-y-4">

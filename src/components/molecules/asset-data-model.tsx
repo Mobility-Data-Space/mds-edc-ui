@@ -1,10 +1,10 @@
 import React from "react";
 
-import {Input} from "@/components/atoms/input";
+import { Input } from "@/components/atoms/input";
 
-import {T} from "@/i18n";
-import {ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_MODEL_ID} from "@/jsonld/asset";
-import {AssetProperties} from "@/utilities/asset";
+import { T } from "@/i18n";
+import { ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_MODEL_ID } from "@/jsonld/asset";
+import { AssetProperties } from "@/utilities/asset";
 
 export interface AssetDataModelProps {
   translator: (key: string) => string;
@@ -14,20 +14,20 @@ export interface AssetDataModelProps {
   required?: boolean;
 }
 
-export function AssetDataModel({ translator, formData, onChange, errors }: AssetDataModelProps): JSX.Element {
+export function AssetDataModel({ translator, formData, onChange, errors }: AssetDataModelProps): React.ReactElement {
 
   return (
     <Input
       name={ASSET_ADVANCED_INFO_DATA_MODEL}
       id="advanced-data-model"
       type="text"
-      label={<T string="assets.new.fieldAdvancedInfoDataModel"/>}
+      label={<T string="assets.new.fieldAdvancedInfoDataModel" />}
       placeholder={translator("assets.new.fieldAdvancedInfoDataModelPlaceholder")}
       tooltip={translator("assets.new.fieldAdvancedInfoDataModelTooltip")}
       value={formData[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_ID]}
       error={errors[ASSET_ADVANCED_INFO_DATA_MODEL]}
       onChange={(event) => onChange({
-        ...formData, 
+        ...formData,
         [ASSET_ADVANCED_INFO_DATA_MODEL]: {
           ...formData[ASSET_ADVANCED_INFO_DATA_MODEL],
           [ASSET_ADVANCED_INFO_DATA_MODEL_ID]: event.target.value

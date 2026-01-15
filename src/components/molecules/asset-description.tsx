@@ -1,12 +1,12 @@
 import React from "react";
 
-import {FormHelperText, Link} from "@mui/material";
+import { FormHelperText, Link } from "@mui/material";
 
-import {Input} from "@/components/atoms/input";
+import { Input } from "@/components/atoms/input";
 
-import {T} from "@/i18n";
-import {ASSET_DESCRIPTION} from "@/jsonld/asset";
-import {AssetProperties} from "@/utilities/asset";
+import { T } from "@/i18n";
+import { ASSET_DESCRIPTION } from "@/jsonld/asset";
+import { AssetProperties } from "@/utilities/asset";
 
 export interface AssetDescriptionProps {
   translator: (key: string) => string;
@@ -16,7 +16,7 @@ export interface AssetDescriptionProps {
   required?: boolean;
 }
 
-export function AssetDescription({ translator, formData, onChange, errors }: AssetDescriptionProps): JSX.Element {
+export function AssetDescription({ translator, formData, onChange, errors }: AssetDescriptionProps): React.ReactElement {
 
   return (<>
     <Input
@@ -31,7 +31,7 @@ export function AssetDescription({ translator, formData, onChange, errors }: Ass
       onChange={(event) => onChange({ ...formData, [ASSET_DESCRIPTION]: event.target.value })}
     />
     <FormHelperText className="flex flex-row gap-x-1">
-      <T string="assets.new.fieldDescriptionSupport"/>
+      <T string="assets.new.fieldDescriptionSupport" />
       <Link href="https://www.markdownguide.org/basic-syntax" target="_blank" color="secondary" >
         Markdown syntax
       </Link>

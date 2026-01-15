@@ -1,16 +1,16 @@
-import React from "react";
-import { Chip, ChipProps } from "@mui/material";
 import {
   transferProcessStateBgColor,
   transferProcessStateTextColor,
 } from "@/utilities/transfer-process.ts";
+import { Chip, ChipProps } from "@mui/material";
+import React from "react";
 
 export function StateChip({
   state: _state,
   icon,
   didError,
   ...rest
-}: { state: string; didError: boolean } & ChipProps): JSX.Element {
+}: { state: string; didError: boolean } & ChipProps): React.ReactElement {
   let state = _state;
   if (state === "DEPROVISIONED") {
     state = didError ? "TERMINATED" : "COMPLETED";

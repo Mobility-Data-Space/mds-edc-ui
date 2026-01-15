@@ -13,8 +13,8 @@ export type KeyValuePairInputListProps = Omit<TextFieldProps, "onChange"> & {
   valueLabel?: string;
   valuePlaceholder?: string;
   valueOnly?: boolean;
-  additionalActions?: JSX.Element[];
-  ensureValueIsALink?:boolean
+  additionalActions?: React.ReactElement[];
+  ensureValueIsALink?: boolean
   value: TagsList | any[];
   onChange: (tagList: TagsList) => void;
 };

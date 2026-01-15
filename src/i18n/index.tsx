@@ -1,8 +1,7 @@
-import React, {createContext, PropsWithChildren, useContext, useEffect} from "react";
 import { createInstance } from "i18next";
-import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router.js";
-import { I18nextProvider, initReactI18next } from "react-i18next";
+import React, { createContext, PropsWithChildren, useContext, useEffect } from "react";
+import { I18nextProvider, initReactI18next, useTranslation } from "react-i18next";
 import { cn } from "./translations/cn";
 import { de } from "./translations/de";
 import { en } from "./translations/en";
@@ -15,7 +14,7 @@ interface TranslatorContextType {
 }
 
 export interface TranslatorProviderProps extends TranslatorContextType {
-  Setup: ({ children }: PropsWithChildren) => JSX.Element;
+  Setup: ({ children }: PropsWithChildren) => React.ReactElement;
 }
 
 const TranslatorContext = createContext<TranslatorContextType>({} as any);
@@ -61,7 +60,7 @@ export function MultiTranslate(
   const { translator, globalTranslator } = useTranslator();
   const t = global ? globalTranslator : translator;
 
-  if(typeof string != "string"){
+  if (typeof string != "string") {
     string = JSON.stringify(string)
   }
 
