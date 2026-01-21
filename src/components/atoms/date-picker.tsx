@@ -2,6 +2,7 @@ import * as React from "react";
 import { DATE_FORMAT } from "@/utilities/date";
 
 import dayjs, { Dayjs } from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import TextField, { TextFieldProps } from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -18,6 +19,8 @@ import {
 } from "@mui/x-date-pickers/hooks";
 import { useValidation, validateDate } from "@mui/x-date-pickers/validation";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+
+dayjs.extend(customParseFormat);
 
 function FreeTypingField(props: DatePickerFieldProps) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, "date");
@@ -93,10 +96,10 @@ function FreeTypingField(props: DatePickerFieldProps) {
         onChange={handleChange}
         onBlur={handleBlur}
         error={hasValidationError}
-        helperText={DATE_FORMAT}
+        helperText={`Format: ${DATE_FORMAT}`}
         label={pickerContext.label}
         focused={pickerContext.open}
-        placeholder="Type a date..."
+        placeholder={`${DATE_FORMAT}`}
       />
     </div>
   );
@@ -107,7 +110,7 @@ export type DatePickerProps = Partial<MuiDatePickerProps<any>> & {
   id?: string;
   label?: string;
   onChange: (value: Dayjs | null) => void;
-  value: Dayjs | null;
+  value: Dayjs | null | string; // Support both Dayjs and ISO string
   error?: boolean;
   errorMessage?: string;
   helperText?: string;
@@ -122,6 +125,16 @@ export function DatePicker({
 }: DatePickerProps) {
   const anchorRef = React.useRef<HTMLDivElement>(null);
 
+  const dayjsValue = React.useMemo(() => {
+    if (!value) return null;
+    if (typeof value === 'string') {
+      // Try to parse as ISO first
+      const parsed = dayjs(value);
+      return parsed.isValid() ? parsed : null;
+    }
+    return value;
+  }, [value]);
+
   return (
     <div ref={anchorRef} style={{ position: "relative", width: "100%" }}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -130,7 +143,7 @@ export function DatePicker({
             name={name}
             label={label}
             format={DATE_FORMAT}
-            value={value}
+            value={dayjsValue}
             onChange={onChange}
             slots={{
               field: FreeTypingField,

@@ -6,7 +6,6 @@ import { MuiSelect } from "@/components/atoms/mui-select";
 import { DatePicker } from "@/components/atoms/date-picker";
 import { ConstraintProps } from "@/components/molecules/constraint";
 import { T, useTranslator } from "@/i18n";
-import { DATE_FORMAT } from "@/utilities/date.ts";
 import dayjs, { Dayjs } from "dayjs";
 import { timeRestrictionOperators } from "@/utilities/policy-operators";
 
@@ -30,6 +29,7 @@ export function TimeRestrictionConstraint({
     }
     initializeDate();
   }, [rightOperand]);
+
   const dayJsDate = dayjs(value.rightOperand);
   const dateIsNotValid = !dayJsDate.isValid();
   const { translator } = useTranslator();
@@ -39,7 +39,7 @@ export function TimeRestrictionConstraint({
     if (newValue?.isValid()) {
       onChange({
         ...value,
-        rightOperand: dayjs(newValue, DATE_FORMAT).toISOString(),
+        rightOperand: newValue.toISOString(),
       });
     } else {
       onChange({
@@ -48,6 +48,7 @@ export function TimeRestrictionConstraint({
       });
     }
   };
+
   return (
     <div className="flex flex-row gap-4">
       <Typography variant="body2">
