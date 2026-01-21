@@ -231,7 +231,7 @@ export const en = {
           "Additional not legally relevant usage instructions (e.g. how to cite the dataset). The field supports",
         fieldAdvancedInfoTemporalCoverage: "Temporal coverage",
         fieldAdvancedInfoTemporalCoverageHelper:
-          "Start and/or end date when the dataset is available for consumption. DD/MM/YYYY (optional) – DD/MM/YYYY (optional)",
+          "Start and/or end date when the dataset is availabl for consumption. Format: (optional) – (optional)",
 
         fieldDataAddressType: "Type",
         fieldDataAddressMethodAndContentType: "Method",
