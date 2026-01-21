@@ -67,7 +67,7 @@ export default function ContractAgreementDetails({
           <PolicyConstraintShow
             constraints={removeJsonLdSchemaFromProperties(
               contractAgreement.policy?.permissions,
-            )}
+            ).map((p: any)=> p.constraint)}
             jsonLdObject={contractAgreement?.policy?.permissions}
             jsonLdDialogTitle={
               <TitleWithIcon

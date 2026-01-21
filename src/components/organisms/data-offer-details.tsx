@@ -98,7 +98,7 @@ export default function DataOfferDetails({
               <PolicyConstraintShow
                 constraints={
                   removeJsonLdSchemaFromProperties(offer)
-                    ?.permission
+                    ?.permission.map((p: any) => p.constraint)
                 }
                 jsonLdObject={offer}
                 jsonLdDialogTitle={
