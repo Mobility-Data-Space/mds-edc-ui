@@ -13,6 +13,7 @@ import { operators } from "@/utilities/policy-operators";
 
 interface ConstraintShowProps {
   data: any;
+  passedFirstLevel?: boolean;
 }
 
 function constraintTooltipAndValue(value: string, index: number, translator: (key: string) => string) {
@@ -39,7 +40,7 @@ function constraintTooltipAndValue(value: string, index: number, translator: (ke
   return tryTranslatingWithTooltip(value, "policyDefinitions.constraint", translator);
 }
 
-export function ConstraintShow({ data }: ConstraintShowProps): ReactNode {
+export function ConstraintShow({ data, passedFirstLevel=false }: ConstraintShowProps): ReactNode {
   const { translator } = useTranslator();
   if (typeof data === 'string') {
     return (
@@ -61,9 +62,9 @@ export function ConstraintShow({ data }: ConstraintShowProps): ReactNode {
   if (Array.isArray(data)) {
     const lastIndex = data.length - 1;
     return data.map((item, index) => (
-      <ShowTreeLeaf disablePadding key={index} >
+      <ShowTreeLeaf disablePadding key={index} hidden={!passedFirstLevel}>
         <div className="pt-2">
-          <ConstraintShow data={item} />
+          <ConstraintShow passedFirstLevel data={item} />
           {lastIndex !== index ? "" : <div className="bg-white absolute -left-1 bottom-0 size-2" />}
         </div>
       </ShowTreeLeaf>
@@ -86,7 +87,7 @@ export function ConstraintShow({ data }: ConstraintShowProps): ReactNode {
         </Tooltip>
         <div>
           <ShowTreeBranch bottomLeafHidden>
-            <ConstraintShow data={data[key]} />
+            <ConstraintShow data={data[key]} passedFirstLevel/>
           </ShowTreeBranch>
         </div>
       </div>
