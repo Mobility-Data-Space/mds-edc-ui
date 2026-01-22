@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactCompiler: true,
   output: "standalone",
   i18n: {
     defaultLocale: "en",
