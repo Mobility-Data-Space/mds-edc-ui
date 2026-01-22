@@ -71,7 +71,7 @@ import {
   defaultHttpSourceDataAddress,
   OnRequestDataAddress,
 } from "./data-address";
-import { dateToString } from "./date";
+import { dateToString, isValidDate, dateToISO } from "./date";
 
 const temporalCoverageValue = ([start, end]: [string, string]) => {
   if (!start && !end) {
@@ -163,6 +163,17 @@ export const fromAssetForm = (
       cleanFormDataObject.dataAddress.email;
     cleanFormDataObject.properties.additionalProperties.preferred_subject =
       cleanFormDataObject.dataAddress.preferred_subject;
+  }
+
+  const temporalCoverage = cleanFormDataObject.properties[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE];
+  if (temporalCoverage) {
+    const startDate = temporalCoverage[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START] as string;
+    const endDate = temporalCoverage[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END] as string;
+
+    cleanFormDataObject.properties[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE] = {
+      [ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START]: dateToISO(startDate),
+      [ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END]: dateToISO(endDate),
+    };
   }
 
   return {
@@ -928,6 +939,15 @@ export const validateAdvancedInfo = (formDataToValidate: AssetProperties) => {
   if (!allReferencesAreValid) {
     newErrors[ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] = true;
   }
+
+  const temporalCoverage = formDataToValidate[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE];
+  const startDate = temporalCoverage[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START] as string;
+  const endDate = temporalCoverage[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END] as string;
+
+  if (!isValidDate(startDate) || !isValidDate(endDate)) {
+    newErrors[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE] = true;
+  }
+
   return newErrors;
 };
 
