@@ -1,40 +1,62 @@
-import React from 'react';
-import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
-import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
-import {DatePicker} from '@mui/x-date-pickers/DatePicker';
+import React from "react";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import type { PickersActionBarProps } from "@mui/x-date-pickers/PickersActionBar";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-import {DATE_FORMAT, dateToString, DateType} from "@/utilities/date";
-import {DateRangePickerTextFieldSlot, DateRangePickerTextFieldSlotProps} from "@/components/molecules/date-range-picker-text-field";
-import {DatePickerDaySlot, DaySlotCustomProps} from "@/components/atoms/date-picker-day-slot";
+import { DATE_FORMAT, dateToString, DateType } from "@/utilities/date";
+import {
+  DateRangePickerTextFieldSlot,
+  DateRangePickerTextFieldSlotProps,
+} from "@/components/molecules/date-range-picker-text-field";
+import {
+  DatePickerDaySlot,
+  DaySlotCustomProps,
+} from "@/components/atoms/date-picker-day-slot";
 
-type SlotProps = { textField: Partial<DateRangePickerTextFieldSlotProps>, day: Partial<DaySlotCustomProps> };
+type SlotProps = {
+  textField: Partial<DateRangePickerTextFieldSlotProps>;
+  day: Partial<DaySlotCustomProps>;
+  actionBar?: Partial<PickersActionBarProps>;
+};
 
 export interface DateRangePickerProps {
   name?: string;
   id?: string;
   label?: React.ReactNode;
   helperText?: string;
-  onChange: (value: [string, string]) => void,
-  value: [string, string],
-  error?: boolean,
+  onChange: (value: [string, string]) => void;
+  value: [string, string];
+  error?: boolean;
 }
 
-export default function DateRangePicker({ name = "", id = "", label = "", helperText = "", onChange, value, error }: DateRangePickerProps) {
+export default function DateRangePicker({
+  name = "",
+  id = "",
+  label = "",
+  helperText = "",
+  onChange,
+  value,
+  error,
+}: DateRangePickerProps) {
   const startDate = value[0];
   const endDate = value[1];
   const [datesPicked, setDatesPicked] = React.useState(0);
   const [isOpen, setIsOpen] = React.useState(false);
-  const dayjsStartDate =  dayjs(startDate, DATE_FORMAT);
-  const dayjsEndDate =  dayjs(endDate, DATE_FORMAT);
+  const dayjsStartDate = dayjs(startDate, DATE_FORMAT);
+  const dayjsEndDate = dayjs(endDate, DATE_FORMAT);
   const startDateString = dateToString(startDate);
   const endDateString = dateToString(endDate);
 
-  const formattedOnChange = ([startDate, endDate]: [DateType | string, DateType | string]) => {
+  const formattedOnChange = ([startDate, endDate]: [
+    DateType | string,
+    DateType | string,
+  ]) => {
     return onChange([dateToString(startDate), dateToString(endDate)]);
   };
 
   const onClearClicked = () => {
-    formattedOnChange(["", ""])
+    formattedOnChange(["", ""]);
     setDatesPicked(0);
   };
 
@@ -62,13 +84,24 @@ export default function DateRangePicker({ name = "", id = "", label = "", helper
       label,
       fullWidth: true,
       placeholder: "Start date - end date (inclusive)",
-      displayedValue: ! startDateString && !endDateString ? "" : `${startDateString} - ${endDateString}`,
+      displayedValue:
+        !startDateString && !endDateString
+          ? ""
+          : `${startDateString} - ${endDateString}`,
       onClearClicked,
     },
     day: {
-      bothDatesAreSet: !!startDate && !! endDate,
+      bothDatesAreSet: !!startDate && !!endDate,
       dayjsStartDate,
       dayjsEndDate,
+    },
+    actionBar: {
+      sx: {
+        "& .MuiButton-root": {
+          color: "var(--variant-containedColor)",
+          backgroundColor: "var(--variant-containedBg)",
+        },
+      },
     },
   };
   return (

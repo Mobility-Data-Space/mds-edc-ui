@@ -66,13 +66,13 @@ const enrichContractAgreement = (
       [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.IS_TERMINATED_AT]:
         contractAgreementInfo[contractAgreement.id]?.isTerminatedAt ||
         retiredContractAgreementMap.get(contractAgreement.id)?.[
-          AGREEMENT_RETIREMENT_DATE
+        AGREEMENT_RETIREMENT_DATE
         ] ||
         0,
       [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.TERMINATION_REASON]:
         contractAgreementInfo[contractAgreement.id]?.retirementReason ||
         retiredContractAgreementMap.get(contractAgreement.id)?.[
-          AGREEMENT_RETIREMENT_REASON
+        AGREEMENT_RETIREMENT_REASON
         ] ||
         "",
       [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.ASSET_TITLE]:
@@ -167,7 +167,7 @@ const handleContractAgreementsQuery = async (
       ),
     );
 
-    // should fetch only the needed ones
+    // Should fetch only the needed ones
     const transferProcesses =
       await client.management.transferProcesses.queryAll({
         offset: 0,
@@ -216,15 +216,13 @@ const handleContractAgreementsQuery = async (
     );
 
     // NOTE: has to specificly be true
-    if (
-      statusFilter &&
-      statusFilter.operandRight === true &&
-      retiredAgreements.length
-    ) {
+    if (statusFilter && statusFilter.operandRight === true) {
       body.filterExpression?.push({
         operandLeft: "id",
         operator: operatorIn.value,
-        operandRight: retiredContractAgreementIds,
+        operandRight: retiredContractAgreementIds.length
+          ? retiredContractAgreementIds
+          : [""],
       });
     }
 
@@ -233,7 +231,7 @@ const handleContractAgreementsQuery = async (
 
     let assets: Asset[] = [];
 
-    if (contractAgreements.length)
+    if (contractAgreements.length) {
       assets = await client.management.assets.queryAll({
         limit: 100,
         offset: 0,
@@ -247,6 +245,7 @@ const handleContractAgreementsQuery = async (
           },
         ],
       });
+    }
 
     const assetIdTitleMap = new Map(
       assets.map((asset) => [
@@ -323,8 +322,8 @@ const handleContractAgreementsQuery = async (
           return [
             `${connectorId}-${dataset.id}`,
             dataset["http://purl.org/dc/terms/title"]?.[0]?.["@value"] as
-              | string
-              | undefined,
+            | string
+            | undefined,
           ];
         });
       }),
