@@ -1,8 +1,10 @@
 import { FieldShowProps } from "@/components/molecules/field-show";
 import { CONTEXT_EDC, TRACTUS_X_CONTEXT } from "@/jsonld/context";
-import { ContractAgreement } from "@think-it-labs/edc-connector-client";
-import { Inner } from "@think-it-labs/edc-connector-client/dist/src/inner";
 import { formatDateTime } from "@/utilities/date.ts";
+import {
+  ContractAgreement,
+} from "@think-it-labs/edc-connector-client";
+import { Inner } from "@think-it-labs/edc-connector-client/dist/src/inner";
 
 export const contractAgreementFieldsToShow = (
   contractAgreement: ContractAgreement,
@@ -46,13 +48,30 @@ export const contractAgreementFieldsToShow = (
   ];
 };
 
-export const AGREEMENT_RETIREMENT_DATE = `${TRACTUS_X_CONTEXT.value}agreementRetirementDate`;
-export const AGREEMENT_RETIREMENT_REASON = `${TRACTUS_X_CONTEXT.value}reason`;
-
-export interface RetiredContractAgreement {
+type AgreementRetirementSchema = {
   agreementId: string;
-  [AGREEMENT_RETIREMENT_DATE]: number;
-  [AGREEMENT_RETIREMENT_REASON]: string;
+  agreementRetirementDate: number;
+  reason: string;
+};
+
+type IRetiredContractAgreement = {
+  [k in keyof AgreementRetirementSchema as `${typeof CONTEXT_EDC.value}${k}`]: AgreementRetirementSchema[k];
+};
+
+export class RetiredContractAgreement {
+  constructor(private data: IRetiredContractAgreement) { }
+
+  get agreementId(): string {
+    return this.data[`${CONTEXT_EDC.value}agreementId`];
+  }
+
+  get retirementDate(): number {
+    return this.data[`${CONTEXT_EDC.value}agreementRetirementDate`];
+  }
+
+  get reason(): string {
+    return this.data[`${CONTEXT_EDC.value}reason`];
+  }
 }
 
 export class AgreementsRetirementController {
@@ -67,10 +86,17 @@ export class AgreementsRetirementController {
   }
 
   async retiredAgreementsRequest(): Promise<RetiredContractAgreement[]> {
-    return this.#inner.request(this.#management, {
+    const retiredContractAgreements = await this.#inner.request<
+      IRetiredContractAgreement[]
+    >(this.#management, {
       path: `${this.#pathPrefix}/request`,
       method: "POST",
     });
+
+    return retiredContractAgreements.map(
+      (retiredContractAgreements) =>
+        new RetiredContractAgreement(retiredContractAgreements),
+    );
   }
 
   async retireAgreement(contractAgreementId: string, reason: string) {
@@ -79,11 +105,10 @@ export class AgreementsRetirementController {
       method: "POST",
       body: {
         "@context": {
-          tx: TRACTUS_X_CONTEXT.value,
           edc: CONTEXT_EDC.value,
         },
-        "edc:agreementId": contractAgreementId,
-        "tx:reason": reason,
+        [`${CONTEXT_EDC.value}agreementId`]: contractAgreementId,
+        [`${CONTEXT_EDC.value}reason`]: reason,
       },
     });
   }

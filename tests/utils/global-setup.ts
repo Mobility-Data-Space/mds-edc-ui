@@ -1,16 +1,25 @@
-import { execSync } from 'child_process';
-import { initiate_transfers, publish_offers } from './seed';
-import { participantConfig, counterPartyParticipantConfig, SERVICES } from './tests-config'
-import { Participant } from '@/utilities/participant';
+import { execSync } from "child_process";
+import { initiate_transfers, publish_offers } from "./seed.ts";
+import {
+  participantConfig,
+  counterPartyParticipantConfig,
+  SERVICES,
+} from "./tests-config.ts";
+import { type Participant } from "../../src/utilities/participant.ts";
 
-const checkApiReadiness = async (managementUrl: string, apiKey: string, maxRetries = 30, intervalMs = 2000): Promise<boolean> => {
+const checkApiReadiness = async (
+  managementUrl: string,
+  apiKey: string,
+  maxRetries = 30,
+  intervalMs = 2000,
+): Promise<boolean> => {
   for (let i = 0; i < maxRetries; i++) {
     try {
       const response = await fetch(`${managementUrl}/v3/assets/request`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'X-Api-Key': apiKey,
+          "Content-Type": "application/json",
+          "X-Api-Key": apiKey,
         },
         body: JSON.stringify({}),
       });
@@ -21,23 +30,36 @@ const checkApiReadiness = async (managementUrl: string, apiKey: string, maxRetri
     } catch {
       // API not ready yet
     }
-    console.log(`API at ${managementUrl} not ready yet. Retrying in ${intervalMs / 1000}s... (${i + 1}/${maxRetries})`);
-    await new Promise(resolve => setTimeout(resolve, intervalMs));
+    console.log(
+      `API at ${managementUrl} not ready yet. Retrying in ${intervalMs / 1000}s... (${i + 1}/${maxRetries})`,
+    );
+    await new Promise((resolve) => setTimeout(resolve, intervalMs));
   }
   return false;
 };
 
 const checkInitStatus = (serviceName: string): boolean => {
   try {
-    const containerId = execSync(`docker ps --filter "name=${serviceName}" --format "{{.ID}}"`).toString().trim();
+    const containerId = execSync(
+      `docker ps --filter "name=${serviceName}" --format "{{.ID}}"`,
+    )
+      .toString()
+      .trim();
     if (!containerId) {
       console.error(`No container found for service ${serviceName}`);
       return false;
     }
-    const result = execSync(`docker inspect --format='{{.State.Status}}' ${containerId}`).toString().trim();
-    return result === 'running';
+    const result = execSync(
+      `docker inspect --format='{{.State.Status}}' ${containerId}`,
+    )
+      .toString()
+      .trim();
+    return result === "running";
   } catch (error) {
-    console.error(`Error checking status for service ${serviceName}:`, (error as Error).message);
+    console.error(
+      `Error checking status for service ${serviceName}:`,
+      (error as Error).message,
+    );
     return false;
   }
 };
@@ -45,38 +67,50 @@ const checkInitStatus = (serviceName: string): boolean => {
 async function globalSetup() {
   const interval = 5000; // 5 seconds
 
-  const isCI = process.env.CI === 'true';
+  const isCI = process.env.CI === "true";
 
   if (!isCI) {
-    console.log('Waiting for services to become healthy...');
+    console.log("Waiting for services to become healthy...");
     for (const service of SERVICES) {
       while (!checkInitStatus(service)) {
-        console.log(`Service ${service} is not healthy yet. Retrying in ${interval / 1000} seconds...`);
+        console.log(
+          `Service ${service} is not healthy yet. Retrying in ${interval / 1000} seconds...`,
+        );
         await new Promise((resolve) => setTimeout(resolve, interval));
       }
       console.log(`Service ${service} is ready.`);
     }
   } else {
-    console.log('Running in CI environment. Skipping Docker health checks.');
+    console.log("Running in CI environment. Skipping Docker health checks.");
   }
 
   // Wait for EDC APIs to be ready before seeding
-  const apiKey = process.env.TEST_API_KEY || 'default-test-api-key';
-  console.log('Checking EDC API readiness...');
+  const apiKey = process.env.TEST_API_KEY || "default-test-api-key";
+  console.log("Checking EDC API readiness...");
 
-  const participantReady = await checkApiReadiness(participantConfig.EDC_MANAGEMENT_URL, apiKey);
+  const participantReady = await checkApiReadiness(
+    participantConfig.EDC_MANAGEMENT_URL,
+    apiKey,
+  );
   if (!participantReady) {
-    throw new Error(`EDC API at ${participantConfig.EDC_MANAGEMENT_URL} failed to become ready`);
+    throw new Error(
+      `EDC API at ${participantConfig.EDC_MANAGEMENT_URL} failed to become ready`,
+    );
   }
-  console.log('Participant EDC API is ready.');
+  console.log("Participant EDC API is ready.");
 
-  const counterPartyReady = await checkApiReadiness(counterPartyParticipantConfig.EDC_MANAGEMENT_URL, apiKey);
+  const counterPartyReady = await checkApiReadiness(
+    counterPartyParticipantConfig.EDC_MANAGEMENT_URL,
+    apiKey,
+  );
   if (!counterPartyReady) {
-    throw new Error(`EDC API at ${counterPartyParticipantConfig.EDC_MANAGEMENT_URL} failed to become ready`);
+    throw new Error(
+      `EDC API at ${counterPartyParticipantConfig.EDC_MANAGEMENT_URL} failed to become ready`,
+    );
   }
-  console.log('Counter-party EDC API is ready.');
+  console.log("Counter-party EDC API is ready.");
 
-  console.log('Seeding dataspace ...');
+  console.log("Seeding dataspace ...");
   try {
     const participant: Participant = {
       id: participantConfig.EDC_ID,
@@ -91,7 +125,7 @@ async function globalSetup() {
       maintainerName: participantConfig.EDC_MAINTAINER_ORGANIZATION,
       maintainerUrl: participantConfig.EDC_MAINTAINER_URL,
       dapsUrl: participantConfig.MDS_DAPS_URL,
-      dapsJwksUrl: participantConfig.MDS_DAPS_JWKS_URL
+      dapsJwksUrl: participantConfig.MDS_DAPS_JWKS_URL,
     };
 
     const counterPartyParticipant: Participant = {
@@ -107,7 +141,7 @@ async function globalSetup() {
       maintainerName: counterPartyParticipantConfig.EDC_MAINTAINER_ORGANIZATION,
       maintainerUrl: counterPartyParticipantConfig.EDC_MAINTAINER_URL,
       dapsUrl: counterPartyParticipantConfig.MDS_DAPS_URL,
-      dapsJwksUrl: counterPartyParticipantConfig.MDS_DAPS_JWKS_URL
+      dapsJwksUrl: counterPartyParticipantConfig.MDS_DAPS_JWKS_URL,
     };
 
     await publish_offers(participant);
@@ -115,11 +149,15 @@ async function globalSetup() {
 
     await initiate_transfers(participant, counterPartyParticipant);
 
-    console.log('Dataspace seeding completed successfully.');
+    console.log("Dataspace seeding completed successfully.");
   } catch (error) {
-    console.error('Error during dataspace seeding:', (error as Error).message);
+    console.error("Error during dataspace seeding:", (error as Error).message);
     process.exit(1);
   }
+}
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  globalSetup();
 }
 
 export default globalSetup;
