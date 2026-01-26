@@ -52,7 +52,7 @@
     "@tailwindcss/postcss": "^4.1.18",
     "@types/json-schema": "^7.0.15",
     "@types/jsonld": "^1.5.15",
-    "@types/node": "^24",
+    "@types/node": "^25",
     "@types/react": "^19",
     "@types/react-dom": "^18",
     "babel-plugin-react-compiler": "^1.0.0",
