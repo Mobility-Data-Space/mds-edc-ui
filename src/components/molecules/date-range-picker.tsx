@@ -83,11 +83,8 @@ export default function DateRangePicker({
       helperText,
       label,
       fullWidth: true,
-      placeholder: "Start date - end date (inclusive)",
-      displayedValue:
-        !startDateString && !endDateString
-          ? ""
-          : `${startDateString} - ${endDateString}`,
+      placeholder: `${DATE_FORMAT} (inclusive)`,
+      displayedValue: !startDateString && !endDateString ? "" : `${startDateString} - ${endDateString}`,
       onClearClicked,
     },
     day: {

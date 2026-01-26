@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
-import { Button, Icon, Tooltip } from "@mui/material";
-import Typography from "@mui/material/Typography";
-import { enqueueSnackbar } from "notistack";
-import { compact, Policy } from "@think-it-labs/edc-connector-client";
-import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
 import { TitleWithIcon } from "@/components/atoms/TitleWithIcon";
-import { FieldShow } from "@/components/molecules/field-show";
 import { ConfirmDialog } from "@/components/molecules/confirm-dialog";
-import { T, useTranslator } from "@/i18n";
-import { createNegotiationRequest } from "@/utilities/contract-negotiations";
-import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog";
+import { FieldShow } from "@/components/molecules/field-show";
 import { PolicyConstraintShow } from "@/components/molecules/policy-constraint-show";
 import { proxyConnectorManagement } from "@/constants/proxy";
+import { T, useTranslator } from "@/i18n";
+import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog";
+import { createNegotiationRequest } from "@/utilities/contract-negotiations";
+import { Button, Icon, Tooltip } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import { compact, Policy } from "@think-it-labs/edc-connector-client";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
+import { enqueueSnackbar } from "notistack";
+import { useEffect, useState } from "react";
 
 interface DataOfferDetailsProps {
   offers?: Policy[];
