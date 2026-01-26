@@ -5,8 +5,6 @@ import { ASSET_TITLE } from "@/jsonld/asset";
 import { EnrichedContractAgreement } from "@/types/enriched-contract-agreement";
 import { cache } from "@/utilities/cache";
 import {
-  AGREEMENT_RETIREMENT_DATE,
-  AGREEMENT_RETIREMENT_REASON,
   AgreementsRetirementController,
   RetiredContractAgreement,
 } from "@/utilities/contract-agreement";
@@ -65,15 +63,11 @@ const enrichContractAgreement = (
         contractAgreementInfo[contractAgreement.id]?.transfersCount || 0,
       [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.IS_TERMINATED_AT]:
         contractAgreementInfo[contractAgreement.id]?.isTerminatedAt ||
-        retiredContractAgreementMap.get(contractAgreement.id)?.[
-        AGREEMENT_RETIREMENT_DATE
-        ] ||
+        retiredContractAgreementMap.get(contractAgreement.id)?.retirementDate ||
         0,
       [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.TERMINATION_REASON]:
         contractAgreementInfo[contractAgreement.id]?.retirementReason ||
-        retiredContractAgreementMap.get(contractAgreement.id)?.[
-        AGREEMENT_RETIREMENT_REASON
-        ] ||
+        retiredContractAgreementMap.get(contractAgreement.id)?.reason ||
         "",
       [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.ASSET_TITLE]:
         assetTitleMap.get(contractAgreement.assetId) || null,
@@ -195,13 +189,8 @@ const handleContractAgreementsQuery = async (
           isRunning:
             transferProcess.state !== TransferProcessStates.TERMINATED &&
             transferProcess.state === STATE_RUNNING,
-          isTerminatedAt:
-            (retiredContractAgreement?.[AGREEMENT_RETIREMENT_DATE] as number) ??
-            0,
-          retirementReason:
-            (retiredContractAgreement?.[
-              AGREEMENT_RETIREMENT_REASON
-            ] as string) ?? "",
+          isTerminatedAt: retiredContractAgreement?.retirementDate ?? 0,
+          retirementReason: retiredContractAgreement?.reason ?? "",
           transfersCount: 1,
         });
       },

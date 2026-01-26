@@ -1,6 +1,6 @@
 services:
   edc-1:
-    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
+    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:sha-277e97a
     platform: linux/amd64
     entrypoint: ["/app/bin/connector-inmemory", "--log-level=debug"]
     environment:
@@ -31,16 +31,16 @@ services:
       # CORS
       EDC_WEB_REST_CORS_ENABLED: true
       EDC_WEB_REST_CORS_HEADERS: origin,content-type,accept,authorization,X-Api-Key
-      EDC_WEB_REST_CORS_ORIGINS: '*'
+      EDC_WEB_REST_CORS_ORIGINS: "*"
 
       EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "false"
     ports:
-      - "8181:8181"  # API
-      - "8186:8186"  # Control
-      - "8182:8182"  # Management
-      - "8183:8183"  # Protocol
-      - "8184:8184"  # Version
-      - "8185:8185"  # Public
+      - "8181:8181" # API
+      - "8186:8186" # Control
+      - "8182:8182" # Management
+      - "8183:8183" # Protocol
+      - "8184:8184" # Version
+      - "8185:8185" # Public
     post_start:
       - command: apk --no-cache add curl
         user: root
@@ -52,7 +52,7 @@ services:
       start_period: 30s
 
   edc-2:
-    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
+    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:sha-277e97a
     platform: linux/amd64
     entrypoint: ["/app/bin/connector-inmemory", "--log-level=debug"]
     environment:
@@ -81,12 +81,12 @@ services:
 
       EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "false"
     ports:
-      - "9181:8181"  # API
-      - "9186:8186"  # Control
-      - "9182:8182"  # Management
-      - "9183:8183"  # Protocol
-      - "9184:8184"  # Version
-      - "9185:8185"  # Public
+      - "9181:8181" # API
+      - "9186:8186" # Control
+      - "9182:8182" # Management
+      - "9183:8183" # Protocol
+      - "9184:8184" # Version
+      - "9185:8185" # Public
     post_start:
       - command: apk --no-cache add curl
         user: root
