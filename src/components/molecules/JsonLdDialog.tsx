@@ -1,5 +1,6 @@
 import { DeleteDialog } from "@/components/molecules/delete-dialog.tsx";
 import { Snackbar } from "@/components/molecules/snackbar.tsx";
+import { useAppSnackbar } from "@/hooks/use-app-snackbar";
 import { T, useTranslator } from "@/i18n";
 import { contextToCompact } from "@/jsonld/context";
 import {
@@ -88,7 +89,7 @@ export function JsonLdDialog({
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [showSensitive, setShowSensitive] = useState(false);
   const { closeSnackbar } = useSnackbar();
-
+  const {showSnackbar} = useAppSnackbar();
   const onDeleteConfirm = async () => {
     try {
       deleteItem && (await deleteItem());
@@ -98,17 +99,12 @@ export function JsonLdDialog({
       }
     } catch (error) {
       /* TODO: translate */
-      enqueueSnackbar("", {
-        content: (key) => (
-          <Snackbar
-            type="error"
-            message={deleteFailMessage || ""}
-            onClose={() => {
-              closeSnackbar(key);
-            }}
-          />
-        ),
-      });
+
+      showSnackbar({
+        type: "error",
+        message: deleteFailMessage || "", 
+        persist: true
+      })
     }
   };
 

@@ -13,16 +13,16 @@ import { PolicyDefinition } from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
 import { PolicyDefinitionsList } from "@think-it-labs/edc-connector-ui/policy-definitions-list";
 import { useRouter } from "next/router";
-import { useSnackbar } from "notistack";
 import { useCallback, useState } from "react";
 import { ErrorPopup } from "../../components/molecules/error-popup";
 import { MAX_ITEMS } from "../../constants/lists";
+import { useAppSnackbar } from "@/hooks/use-app-snackbar";
 
 export default function PolicyDefinitionListPage() {
   const router = useRouter();
   const { push } = useParticipantConnectorState();
   const { translator } = useTranslator();
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { showSnackbar }= useAppSnackbar();
   const edcClient = useEdcConnectorClient({
     management: proxyConnectorManagement,
   });
@@ -45,6 +45,7 @@ export default function PolicyDefinitionListPage() {
       },
     });
   };
+
 
   const navigate = useCallback(
     (newPage: number) => {
@@ -80,17 +81,11 @@ export default function PolicyDefinitionListPage() {
         deleteButtonTestId="delete-policy-modal-btn"
         deleteItem={openPolicyDefinitionData.deleteItem}
         onDeleteSuccess={() => {
-          enqueueSnackbar("", {
-            content: (key) => (
-              <Snackbar
-                type="success"
-                message={translator("policyDefinitions.deleteSuccess")}
-                onClose={() => {
-                  closeSnackbar(key);
-                }}
-              />
-            ),
-          });
+          showSnackbar({
+            type: "success",
+            message: translator("policyDefinitions.deleteSuccess"),
+            persist: true
+          })
           setTimeout(() => push("/policy-definitions"), 1000);
         }}
       />

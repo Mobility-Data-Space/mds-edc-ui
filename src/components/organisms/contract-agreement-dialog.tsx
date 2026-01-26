@@ -30,6 +30,7 @@ import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
 import { Timestamp } from "@think-it-labs/edc-connector-ui/timestamp";
 import { enqueueSnackbar } from "notistack";
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface ContractAgreementDialogProps {
   contractAgreement: ContractAgreement;
@@ -60,6 +61,8 @@ export default function ContractAgreementDialog({
     new EnrichedContractAgreement(),
     _contractAgreement,
   );
+
+  const router = useRouter()
   const assetTitle = contractAgreement.assetId || contractAgreement.assetId;
 
   const canTransfer =
@@ -168,6 +171,7 @@ export default function ContractAgreementDialog({
         onSuccess={() => {
           onTerminateSuccess();
           populateTransferProcesses();
+          router.push("/contract-agreements?status=Terminated&page=0");
         }}
         translator={translator}
       />

@@ -18,9 +18,10 @@ import { ASSET_TITLE } from "@/jsonld/asset";
 import { Asset, EdcConnectorClient } from "@think-it-labs/edc-connector-client";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
 import { enqueueSnackbar, useSnackbar } from "notistack";
-import { useState } from "react";
+import { use, useState } from "react";
 import { proxyConnectorManagement } from "@/constants/proxy";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
+import { useAppSnackbar } from "@/hooks/use-app-snackbar";
 
 interface AssetDialogProps {
   asset: Asset;
@@ -69,7 +70,7 @@ export default function AssetDialog({
   const client = useEdcConnectorClient({
     management: proxyConnectorManagement,
   });
-
+  const {showSnackbar} = useAppSnackbar();
   const onDeleteConfirm = async () => {
     try {
       const assetHasContracts = await hasContract(client, id);
@@ -92,17 +93,12 @@ export default function AssetDialog({
         message = error.message;
       }
       /* TODO: translate */
-      enqueueSnackbar("", {
-        content: (key) => (
-          <Snackbar
-            type="error"
-            message={message}
-            onClose={() => {
-              closeSnackbar(key);
-            }}
-          />
-        ),
-      });
+
+      showSnackbar({
+        type: "error",
+        message,
+        persist: true
+      })
     }
   };
 
