@@ -1,15 +1,13 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import { browserDateFormat } from "@/utilities/date";
+import { useState } from "react";
 
-// Hook to get date format on client side
 export const useDateFormat = () => {
-  const [dateFormat, setDateFormat] = useState<string>("DD/MM/YYYY");
-  
-  useEffect(() => {
-    setDateFormat(browserDateFormat());
-  }, []);
-  
+  const [dateFormat] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      return browserDateFormat();
+    }
+    return "DD/MM/YYYY";
+  });
+
   return dateFormat;
 };
