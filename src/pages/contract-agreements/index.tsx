@@ -2,7 +2,6 @@ import { LoadingSpinner } from "@/components/atoms/loading-spinner";
 import RadioButtonsGroup from "@/components/atoms/radio-group";
 import PaginationControls from "@/components/molecules/pagination-controls";
 import SearchBar from "@/components/molecules/search-bar";
-import { Snackbar } from "@/components/molecules/snackbar";
 import ContractAgreementCard from "@/components/organisms/contract-agreement-card";
 import ContractAgreementDialog from "@/components/organisms/contract-agreement-dialog";
 import SideDrawer from "@/components/organisms/side-drawer";
@@ -23,6 +22,7 @@ import { SnackbarKey, useSnackbar } from "notistack";
 import { useCallback, useMemo, useState } from "react";
 import { ErrorPopup } from "../../components/molecules/error-popup";
 import { MAX_ITEMS } from "../../constants/lists";
+import { useAppSnackbar } from "@/hooks/use-app-snackbar";
 
 type OwnershipFilter = "all" | "provider" | "consumer";
 
@@ -58,8 +58,7 @@ export default function ContractAgreementsListPage() {
     [],
   );
 
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
+  const { showSnackbar } = useAppSnackbar();
   const navigateToPage = useCallback(
     (newPage: number) => {
       updateQueryParams({ page: String(newPage) });
@@ -137,23 +136,12 @@ export default function ContractAgreementsListPage() {
           }}
           onTerminateSuccess={() => {
             window.dispatchEvent(new Event("contract-agreements-list-refetch"));
-            enqueueSnackbar(
-              translator("contractAgreements.terminationSuccess"),
-              {
-                variant: "success",
-                content: (key: SnackbarKey) => (
-                  <Snackbar
-                    type="success"
-                    message={translator(
-                      "contractAgreements.terminationSuccess",
-                    )}
-                    onClose={() => {
-                      closeSnackbar(key);
-                    }}
-                  />
-                ),
-              },
-            );
+
+            showSnackbar({
+              type: "success",
+              message: translator("contractAgreements.terminationSuccess"),
+              persist: true,
+            })
             setIsDetailsModalOpen(false);
           }}
           participantId={connector.id}

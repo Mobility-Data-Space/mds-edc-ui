@@ -120,7 +120,7 @@ export default function DataOfferCreateDialog({
 
   const handleContractDefinitionSuccess = async () => {
     const selectedAssetIds: string[] =
-      formData.assetsSelector[0].operandRight.split(",");
+      formData.assetsSelector[0]?.operandRight.split(",");
     const selectedAssets = selectedAssetIds
       .map((assetId) => assetsById[assetId])
       .filter((asset) => !!asset);
