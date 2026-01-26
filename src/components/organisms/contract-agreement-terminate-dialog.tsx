@@ -10,6 +10,7 @@ import {AgreementsRetirementController} from "@/utilities/contract-agreement";
 import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
 import {enqueueSnackbar} from "notistack";
 import { proxyConnectorManagement } from "@/constants/proxy";
+import { useAppSnackbar } from "@/hooks/use-app-snackbar";
 
 interface ContractAgreementTerminateDialogProps {
   contractAgreement: ContractAgreement,
@@ -33,6 +34,7 @@ function calculateDetailedReasonValidationError(detailedReason: string, translat
 
 export default function ContractAgreementTerminateDialog({ contractAgreement, open, onClose, onSuccess = () => {}, translator }: ContractAgreementTerminateDialogProps) {
   const { connector } = useParticipantConnectorState();
+  const { showSnackbar } = useAppSnackbar();
   const [formData, setFormData] = useState({
     reason: TERMINATION_REASON_BY_USER,
     detailedReason: "",
@@ -51,7 +53,10 @@ export default function ContractAgreementTerminateDialog({ contractAgreement, op
       })
       .catch(error => {
         const match = /"message":"(.*?)"/.exec(error.message)
-        enqueueSnackbar((match && match[1]) || translator("contractAgreements.[id].terminationError"));
+        showSnackbar({
+          type: "error",
+          message: (match && match[1]) || translator("contractAgreements.[id].terminationError"),
+        })
       });
   };
 
