@@ -52,7 +52,7 @@ export async function publish_offers(participant: Participant) {
                     "http://purl.org/dc/terms/title": `${participant.name} - Asset ${i + 1}`,
                     "https://w3id.org/mobilitydcat-ap/mobilityTheme": {
                         "https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category":
-                            "PUBLIC_TRANSPORT_SCHEDULED_TRANSPORT",
+                            "PUBLIC_TRANSPORT_INFORMATION",
                         "https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category":
                             "OPERATIONAL_CALENDAR",
                     },
