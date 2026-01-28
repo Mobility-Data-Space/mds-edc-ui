@@ -52,9 +52,9 @@ export async function publish_offers(participant: Participant) {
                     "http://purl.org/dc/terms/title": `${participant.name} - Asset ${i + 1}`,
                     "https://w3id.org/mobilitydcat-ap/mobilityTheme": {
                         "https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category":
-                            "PUBLIC_TRANSPORT_INFORMATION",
+                            "INFRASTRUCTURE_AND_LOGISTICS",
                         "https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category":
-                            "LOCATION_INFORMATION",
+                            "GENERAL_INFORMATION_ABOUT_PLANNING_OF_ROUTES",
                     },
                     "https://w3id.org/mobilitydcat-ap/mobilityDataStandard": {
                         "@id": "my-data-model-001",
@@ -67,8 +67,7 @@ export async function publish_offers(participant: Participant) {
                                 "These reference files are important",
                         },
                     },
-                    "https://w3id.org/mobilitydcat-ap/transportMode":
-                        "LONG_DISTANCE_COACH",
+                    "https://w3id.org/mobilitydcat-ap/transportMode": "RAIL",
                     "https://w3id.org/mobilitydcat-ap/georeferencingMethod":
                         "my-geo-reference-method",
                     "http://purl.org/dc/terms/description": `Description for Asset ${i + 1}`,
