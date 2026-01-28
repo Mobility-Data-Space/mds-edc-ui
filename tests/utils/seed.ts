@@ -54,7 +54,7 @@ export async function publish_offers(participant: Participant) {
                         "https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category":
                             "PUBLIC_TRANSPORT_INFORMATION",
                         "https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category":
-                            "OPERATIONAL_CALENDAR",
+                            "LOCATION_INFORMATION",
                     },
                     "https://w3id.org/mobilitydcat-ap/mobilityDataStandard": {
                         "@id": "my-data-model-001",
