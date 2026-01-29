@@ -1,8 +1,8 @@
-import { describe, it, expect, test } from 'vitest';
-import { isUrl } from './utilities';
+import { expect, test } from '@playwright/test';
+import { isUrl } from '../src/utilities/utilities';
 
-describe('isUrl', () => {
-  describe('should accept valid URLs', () => {
+test.describe('isUrl', () => {
+  test.describe('should accept valid URLs', () => {
     test('should accept http:// URLs', () => {
       expect(isUrl('http://example.com')).toBe(true);
       expect(isUrl('http://test.org/path')).toBe(true);
@@ -27,7 +27,7 @@ describe('isUrl', () => {
     });
   });
 
-  describe('should reject invalid URLs', () => {
+  test.describe('should reject invalid URLs', () => {
     test('should reject URLs without :// separator', () => {
       expect(isUrl('http:example.com')).toBe(false);
       expect(isUrl('https:example.com')).toBe(false);
