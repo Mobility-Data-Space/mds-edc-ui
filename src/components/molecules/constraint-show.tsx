@@ -1,14 +1,14 @@
-import React, {ReactNode} from "react";
+import React, { ReactNode } from "react";
 
 import Typography from "@mui/material/Typography";
-import {Tooltip} from "@mui/material";
+import { Tooltip } from "@mui/material";
 
-import {ShowTreeLeaf} from "@/components/atoms/show-tree-leaf";
-import {ShowTreeBranch} from "@/components/atoms/show-tree-branch";
+import { ShowTreeLeaf } from "@/components/atoms/show-tree-leaf";
+import { ShowTreeBranch } from "@/components/atoms/show-tree-branch";
 
-import {useTranslator} from "@/i18n";
-import {dateToString, formatDateTime} from "@/utilities/date";
-import {isDate, tryTranslatingWithTooltip} from "@/utilities/utilities";
+import { useTranslator } from "@/i18n";
+import { dateToString, formatDateTime } from "@/utilities/date";
+import { isDate, tryTranslatingWithTooltip } from "@/utilities/utilities";
 import { operators } from "@/utilities/policy-operators";
 
 interface ConstraintShowProps {
@@ -16,18 +16,22 @@ interface ConstraintShowProps {
   passedFirstLevel?: boolean;
 }
 
-function constraintTooltipAndValue(value: string, index: number, translator: (key: string) => string) {
+function constraintTooltipAndValue(
+  value: string,
+  index: number,
+  translator: (key: string) => string,
+) {
   if (index === 1) {
     const valueToLower = value.toLowerCase();
     const operator = operators.find(
-      operator => operator.value.toLowerCase() === valueToLower
+      (operator) => operator.value.toLowerCase() === valueToLower,
     );
     return operator ? [operator.tooltip, operator.text] : [value, value];
   }
 
   if (index === 2) {
     const trimmedValue = value.trim();
-    if (! isDate(value)) {
+    if (!isDate(value)) {
       return [`"${trimmedValue}"`, trimmedValue];
     }
 
@@ -37,25 +41,63 @@ function constraintTooltipAndValue(value: string, index: number, translator: (ke
     return [`"${tooltip}"`, dateValue || trimmedValue];
   }
 
-  return tryTranslatingWithTooltip(value, "policyDefinitions.constraint", translator);
+  return tryTranslatingWithTooltip(
+    value,
+    "policyDefinitions.constraint",
+    translator,
+  );
 }
 
-export function ConstraintShow({ data, passedFirstLevel=false }: ConstraintShowProps): ReactNode {
+export function ConstraintShow({
+  data,
+  passedFirstLevel = false,
+}: ConstraintShowProps): ReactNode {
   const { translator } = useTranslator();
-  if (typeof data === 'string') {
+  if (typeof data === "string") {
+    const parts = data.split(",");
+    const result = [parts[0], parts[1], parts.slice(2).join(",")];
+
+    let operatorToCheck = result[1];
     return (
-      <div className="flex gap-x-2 items-center">{
-        data.split(",").map((value, index) => {
-          const [tooltipTitle, computedValue] = constraintTooltipAndValue(value, index, translator);
+      <div className="flex gap-x-2 items-center">
+        {result.map((value, index) => {
+          const [tooltipTitle, computedValue] = constraintTooltipAndValue(
+            value,
+            index,
+            translator,
+          );
+
+          if (operatorToCheck === "IN" && index === 2) {
+            return (
+              <div key={index}>
+                {computedValue
+                  .split(",")
+                  .map((v) => v.trim())
+                  .filter(Boolean)
+                  .map((value, i) => (
+                    <Tooltip title={value}>
+                      <Typography key={`${value}-${i}`} component="div">
+                        {value}
+                      </Typography>
+                    </Tooltip>
+                  ))}
+              </div>
+            );
+          }
+          if (index == 1) operatorToCheck = computedValue;
+
           return (
             <Tooltip title={tooltipTitle} key={index}>
-              <Typography component="span" className={index > 1 ? "[word-break:break-word]" : ""}>
+              <Typography
+                component="span"
+                className={index > 1 ? "[word-break:break-word]" : ""}
+              >
                 {computedValue}
               </Typography>
             </Tooltip>
           );
-        })
-      }</div>
+        })}
+      </div>
     );
   }
 
@@ -65,32 +107,43 @@ export function ConstraintShow({ data, passedFirstLevel=false }: ConstraintShowP
       <ShowTreeLeaf disablePadding key={index} hidden={!passedFirstLevel}>
         <div className="pt-2">
           <ConstraintShow passedFirstLevel data={item} />
-          {lastIndex !== index ? "" : <div className="bg-white absolute -left-1 bottom-0 size-2" />}
+          {lastIndex !== index ? (
+            ""
+          ) : (
+            <div className="bg-white absolute -left-1 bottom-0 size-2" />
+          )}
         </div>
       </ShowTreeLeaf>
     ));
   }
 
-  if (typeof data !== 'object' || !data) {
+  if (typeof data !== "object" || !data) {
     return [null, undefined].indexOf(data) === -1 ? String(data) : "";
   }
 
   let html = [];
   for (const key in data) {
-    const [tooltip] = tryTranslatingWithTooltip(key, "policyDefinitions.constraint", translator)
+    const [tooltip] = tryTranslatingWithTooltip(
+      key,
+      "policyDefinitions.constraint",
+      translator,
+    );
     html.push(
       <div key={key}>
         <Tooltip title={tooltip}>
-          <Typography component="span" className="p-3 py-1 inline-block uppercase">
+          <Typography
+            component="span"
+            className="p-3 py-1 inline-block uppercase"
+          >
             {key}
           </Typography>
         </Tooltip>
         <div>
           <ShowTreeBranch bottomLeafHidden>
-            <ConstraintShow data={data[key]} passedFirstLevel/>
+            <ConstraintShow data={data[key]} passedFirstLevel />
           </ShowTreeBranch>
         </div>
-      </div>
+      </div>,
     );
   }
 
