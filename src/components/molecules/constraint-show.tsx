@@ -57,8 +57,6 @@ export function ConstraintShow({
     const parts = data.split(",");
     const result = [parts[0], parts[1], parts.slice(2).join(",")];
 
-    console.log(result);
-
     let operatorToCheck = result[1];
     return (
       <div className="flex gap-x-2 items-center">
