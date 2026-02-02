@@ -35,27 +35,39 @@ export function ConsumerFormDataAddressKafka({
   }
   return (
     <div className="flex flex-col gap-y-5">
-      <label
-        htmlFor="data-address-uri"
-        className="inline-block text-sm text-black font-medium mb-2"
-      >
-        <T string="Callback URL" />
-      </label>
-      <div className="sm:col-span-1 flex flex-col gap-y-3">
-        <Input
-          name="data-address-uri"
-          id="data-address-uri"
-          data-testid="data-address-uri"
-          required
-          placeholder={"https://example.com"}
-          label={translator("Callback URL")}
-          error={errors.uri}
-          value={formData.uri}
-          onChange={(event) =>
-            onChange({ ...formData, uri: event.target.value })
-          }
-        />
-      </div>
+      <Checkbox
+        label={<T string="Provide Callback Address" />}
+        value={!!formData.isTransactional}
+        onChange={(event) =>
+          onChange({ ...formData, isTransactional: event.target.checked })
+        }
+      />
+
+      {formData.isTransactional && (
+        <>
+          <label
+            htmlFor="data-address-uri"
+            className="inline-block text-sm text-black font-medium mb-2"
+          >
+            <T string="Callback URL" />
+          </label>
+          <div className="sm:col-span-1 flex flex-col gap-y-3">
+            <Input
+              name="data-address-uri"
+              id="data-address-uri"
+              data-testid="data-address-uri"
+              required
+              placeholder={"https://example.com"}
+              label={translator("Callback URL")}
+              error={errors.uri}
+              value={formData.uri}
+              onChange={(event) =>
+                onChange({ ...formData, uri: event.target.value })
+              }
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 }
