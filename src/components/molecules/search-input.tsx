@@ -3,7 +3,32 @@ import { Input } from "@/components/atoms/input";
 import { Button, Icon } from "@mui/material";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
+import { CriterionInput } from "@think-it-labs/edc-connector-client";
 
+
+
+type UseCriterionSearchProps = {
+  searchTerm:string;
+  operandLeft: string,
+  operator: CriterionInput['operator']
+}
+
+export const useCriterionSearchInput = (props: UseCriterionSearchProps)=> {
+  const {searchTerm, operandLeft, operator} = props;
+    const [searchCriteria, setSearchCriteria] = useState<CriterionInput[]>([]);
+  
+    useEffect(()=> {
+      if(searchTerm){
+        setSearchCriteria([
+          {operandLeft, operator,  operandRight: `%${searchTerm}%`}
+        ])
+      }else{
+        setSearchCriteria([]);
+      }
+    }, [searchTerm])
+
+    return searchCriteria
+}
 interface SearchInputProps {
   placeholder: string;
 }

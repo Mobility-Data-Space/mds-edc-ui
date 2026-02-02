@@ -1,8 +1,6 @@
 import { TitleWithIcon } from "@/components/atoms/TitleWithIcon";
 import { JsonLdDialog } from "@/components/molecules/JsonLdDialog";
 import PaginationControls from "@/components/molecules/pagination-controls";
-import SearchBar from "@/components/molecules/search-bar";
-import { Snackbar } from "@/components/molecules/snackbar";
 import PolicyCard from "@/components/organisms/policy-card";
 import SideDrawer from "@/components/organisms/side-drawer";
 import { proxyConnectorManagement } from "@/constants/proxy";
