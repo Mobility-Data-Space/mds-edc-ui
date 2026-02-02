@@ -110,7 +110,7 @@ test.describe("Policy Definitions Page Tests", () => {
       expect(policiesCount).toBeGreaterThan(1);
     });
 
-    test("should display a clear error message for duplicate policy ID", async ({ page }) => {
+    test.only("should display a clear error message for duplicate policy ID", async ({ page }) => {
       try {
         // Navigate to the Policies page
         await policiesPage.navigate();
@@ -119,8 +119,7 @@ test.describe("Policy Definitions Page Tests", () => {
         const policyCards = await policiesPage.getPolicyCards();
         const firstPolicy = policyCards.first();
         const policyId = firstPolicy.locator('[data-testid="policy-id"]');
-        await expect(policyId).toHaveText();
-
+        await expect(policyId).toHaveText(/^always-true/);
         // Try to create a policy with the same ID
         await policiesPage.clickCreatePolicyButton();
         await page.waitForURL("**/new");
