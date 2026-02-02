@@ -110,7 +110,7 @@ test.describe("Policy Definitions Page Tests", () => {
       expect(policiesCount).toBeGreaterThan(1);
     });
 
-    test.only("should display a clear error message for duplicate policy ID", async ({ page }) => {
+    test("should display a clear error message for duplicate policy ID", async ({ page }) => {
       try {
         // Navigate to the Policies page
         await policiesPage.navigate();
