@@ -9,17 +9,19 @@ import { proxyConnectorManagement } from "@/constants/proxy";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
 import { Icon, Button as MuiButton } from "@mui/material";
-import { PolicyDefinition } from "@think-it-labs/edc-connector-client";
+import { CriterionInput, PolicyDefinition } from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
 import { PolicyDefinitionsList } from "@think-it-labs/edc-connector-ui/policy-definitions-list";
-import { useRouter } from "next/router";
-import { useCallback, useState } from "react";
+import { useRouter} from "next/router";
+import { useCallback, useEffect, useState } from "react";
 import { ErrorPopup } from "../../components/molecules/error-popup";
 import { MAX_ITEMS } from "../../constants/lists";
 import { useAppSnackbar } from "@/hooks/use-app-snackbar";
+import SearchInput from "@/components/molecules/search-input";
 
 export default function PolicyDefinitionListPage() {
   const router = useRouter();
+  const {q: searchTerm} =  router.query;
   const { push } = useParticipantConnectorState();
   const { translator } = useTranslator();
   const { showSnackbar }= useAppSnackbar();
@@ -27,6 +29,21 @@ export default function PolicyDefinitionListPage() {
     management: proxyConnectorManagement,
   });
 
+  const [searchCriteria, setSearchCriteria] = useState<CriterionInput[]>([]);
+
+  useEffect(()=> {
+
+    if(searchTerm){
+      setSearchCriteria([
+        {operandLeft: 'id', operator: 'ilike', operandRight: `%${searchTerm}%`}
+      ])
+    }else{
+      setSearchCriteria([]);
+    }
+
+  }, [searchTerm])
+
+  const [policyListKey, setPolicyListKey] = useState(0);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
   const [openPolicyDefinitionData, setOpenPolicyDefinitionData] = useState({
@@ -86,7 +103,7 @@ export default function PolicyDefinitionListPage() {
             message: translator("policyDefinitions.deleteSuccess"),
             persist: true
           })
-          setTimeout(() => push("/policy-definitions"), 1000);
+          setPolicyListKey((key) => key + 1);
         }}
       />
       <PolicyDefinitionsList
@@ -95,14 +112,16 @@ export default function PolicyDefinitionListPage() {
         currentPage={parseInt(router.query.page as string) || 0}
         firstPage={0}
         managementUrl={proxyConnectorManagement}
+        key={policyListKey}
+
       >
         <div className="flex justify-between pb-6">
           <div className="flex justify-start gap-x-5">
             <div className="min-w-xl h-full">
-              <SearchBar
-                searchTarget="id"
+              <SearchInput
                 placeholder={translator("policyDefinitions.searchPlaceholder")}
-                searchOperator="ilike"
+                // searchTarget="id"
+                // searchOperator="ilike"
               />
             </div>
             <div className="flex gap-x-4">
@@ -157,6 +176,7 @@ export default function PolicyDefinitionListPage() {
             limit={MAX_ITEMS}
             sortOrder="DESC"
             sortField="createdAt"
+            filterExpression={searchCriteria}
           >
             {({ item, index }) => (
               <PolicyCard

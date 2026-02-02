@@ -167,8 +167,7 @@ test.describe("Policy Definitions Page Tests", () => {
       await expect(confirmDeleteButton).toBeVisible() ;
 
       await confirmDeleteButton.click() ;
-      const successMessage = await page.getByTestId('toast-success-message').textContent() ;
-      expect(successMessage).toContain("Policy deleted successfully!");
+      await expect(page.getByTestId('toast-success-message').filter({ hasText: 'Policy deleted successfully!' })).toBeVisible();
 
       await page.waitForTimeout(1000);
       await expect(policyCard).toBeHidden() ;

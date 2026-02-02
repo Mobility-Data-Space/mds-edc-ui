@@ -1,44 +1,25 @@
 import { T } from "@/i18n";
 import { Input } from "@/components/atoms/input";
 import { Button, Icon } from "@mui/material";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import { useListContext } from "@think-it-labs/edc-connector-ui/list";
 
-interface SearchBarProps {
+interface SearchInputProps {
   placeholder: string;
-  searchTarget: string | string[];
-  searchOperator: "=" | "!=" | "in" | "like" | "ilike" | "contains";
-  onSearch?: (searchTerm: string) => void;
 }
 
-export default function SearchBar({
+export default function SearchInput({
   placeholder,
-  searchTarget,
-  searchOperator,
-  onSearch,
-}: SearchBarProps) {
-  const { query, push } = useRouter();
-
-  const { searchSpec, setSearchSpec } = useListContext();
+}: SearchInputProps) {
+  const { query, replace} = useRouter();
+  const [searchTerm, setSearchTerm] = useState(query.q);
 
   const searchRef = useRef<HTMLInputElement>(null);
-
-  const searchQuery = query.q;
-
-  useEffect(() => {
-    setSearchSpec({ operator: searchOperator, operandLeft: searchTarget });
-  }, [setSearchSpec, searchTarget, searchOperator]);
-
-  useEffect(() => {
-    setSearchSpec({ operandRight: searchQuery });
-  }, [searchQuery, setSearchSpec]);
 
   const handleSearch = useCallback(() => {
     // TODO: use useUpdateQueryParams when merged
     if (searchRef.current) {
-      push({
-        href: window.location.href,
+      replace({
         query: {
           ...query,
           q: searchRef.current.value,
@@ -46,7 +27,7 @@ export default function SearchBar({
         },
       });
     }
-  }, [push, query]);
+  }, [replace, query]);
 
   return (
     <div className="relative flex rounded-lg h-full">
@@ -54,10 +35,15 @@ export default function SearchBar({
         className="!pr-0 rounded"
         ref={searchRef}
         placeholder={placeholder}
-        value={searchSpec.operandRight}
-        onChange={(event) =>
-          setSearchSpec({ operandRight: event.currentTarget.value })
-        }
+        value={searchTerm}
+        onChange={(event) =>{
+
+          setSearchTerm(event.target.value);
+
+          if(event.target.value === ''){
+            handleSearch();
+          }
+        }}
         onKeyDown={(event) => {
           if (event.key === "Enter") {
             handleSearch();
