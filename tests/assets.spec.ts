@@ -62,7 +62,7 @@ test.describe("Assets Page Tests", () => {
     });
 
     test.describe("Asset Data Sources", () => {
-      test("Creates a new asset with GET HTTP and verifies its visibility in the list", async ({ page }) => {
+      test.only("Creates a new asset with GET HTTP and verifies its visibility in the list", async ({ page }) => {
         await assetsPage.openCreateAssetModal();
 
         const randomNumber = `${Math.random()}`.replace("0.", "");

@@ -19,7 +19,7 @@ export class AssetsPage extends BaseListPage {
   }
 
   async fillHttpPath() {
-    await this.page.getByRole('textbox', { name: 'The default URL path' }).fill('/api/v1/resource');
+    await this.page.getByRole('textbox', { name: 'Base URL' }).fill('https://example.com/api/v1/resource');
   }
 
   async addQueryParams() {
