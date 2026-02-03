@@ -5,39 +5,36 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { CriterionInput } from "@think-it-labs/edc-connector-client";
 
-
-
 type UseCriterionSearchProps = {
-  searchTerm:string;
-  operandLeft: string,
-  operator: CriterionInput['operator']
-}
+  searchTerm: string;
+  operandLeft: string | string[];
+  operator: CriterionInput["operator"];
+};
 
-export const useCriterionSearchInput = (props: UseCriterionSearchProps)=> {
-  const {searchTerm, operandLeft, operator} = props;
-    const [searchCriteria, setSearchCriteria] = useState<CriterionInput[]>([]);
-  
-    useEffect(()=> {
-      if(searchTerm){
-        const operandRight = operator === 'ilike' ? `%${searchTerm}%` : searchTerm;
-        setSearchCriteria([
-          {operandLeft, operator, operandRight}
-        ])
-      }else{
-        setSearchCriteria([]);
-      }
-    }, [searchTerm])
+export const useCriterionSearchInput = (props: UseCriterionSearchProps) => {
+  const { searchTerm, operandLeft, operator } = props;
+  const [searchCriteria, setSearchCriteria] = useState<CriterionInput[]>([]);
 
-    return searchCriteria
-}
+  useEffect(() => {
+    if (searchTerm) {
+      const operandRight =
+        operator === "ilike" ? `%${searchTerm}%` : searchTerm;
+
+      const opLeft = Array.isArray(operandLeft)? operandLeft : [operandLeft];
+      setSearchCriteria(opLeft.map(item=> ({ operandLeft: item, operator, operandRight })));
+    } else {
+      setSearchCriteria([]);
+    }
+  }, [searchTerm]);
+
+  return searchCriteria;
+};
 interface SearchInputProps {
   placeholder: string;
 }
 
-export default function SearchInput({
-  placeholder,
-}: SearchInputProps) {
-  const { query, replace} = useRouter();
+export default function SearchInput({ placeholder }: SearchInputProps) {
+  const { query, replace } = useRouter();
   const [searchTerm, setSearchTerm] = useState(query.q);
 
   const searchRef = useRef<HTMLInputElement>(null);
@@ -62,11 +59,10 @@ export default function SearchInput({
         ref={searchRef}
         placeholder={placeholder}
         value={searchTerm}
-        onChange={(event) =>{
-
+        onChange={(event) => {
           setSearchTerm(event.target.value);
 
-          if(event.target.value === ''){
+          if (event.target.value === "") {
             handleSearch();
           }
         }}

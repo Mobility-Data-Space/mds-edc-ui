@@ -16,6 +16,7 @@ import { useSnackbar } from "notistack";
 import { useCallback, useState } from "react";
 import { ErrorPopup } from "../../components/molecules/error-popup";
 import { MAX_ITEMS } from "../../constants/lists";
+import SearchInput, { useCriterionSearchInput } from "@/components/molecules/search-input";
 
 export default function AssetListPage() {
   const router = useRouter();
@@ -26,6 +27,11 @@ export default function AssetListPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
+  const filterExpressions =  useCriterionSearchInput({
+    operandLeft: "http://purl.org/dc/terms/title",
+    searchTerm: router.query.q as string,
+    operator: "ilike",
+  })
   const [openAssetData, setOpenAssetData] = useState({
     asset: {} as Asset,
     deleteItem: async () => {},
@@ -105,7 +111,7 @@ export default function AssetListPage() {
           <div className="flex justify-between pb-6">
             <div className="flex justify-start gap-x-5 items-center">
               <div className="min-w-xl h-full">
-                <SearchBar
+                <SearchInput
                   searchTarget={[
                     "id",
                     "http://purl.org/dc/terms/title",
@@ -160,6 +166,7 @@ export default function AssetListPage() {
                 limit={MAX_ITEMS}
                 sortOrder="DESC"
                 sortField="createdAt"
+                filterExpression={filterExpressions}
               >
                 {({ item, index, deleteItem }) => (
                   <AssetCard
