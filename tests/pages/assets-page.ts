@@ -96,7 +96,7 @@ export class AssetsPage extends BaseListPage {
 
   async fillRequiredAssetFields() {
     await this.page.getByRole('combobox').filter({ hasText: 'Select data category' }).click();
-    await this.page.getByRole('option', { name: 'Traffic Information' }).click();
+    await this.page.getByRole('option', { name: 'Air and Space Travel' }).click();
   }
 
   async openDataSourceSection() {
