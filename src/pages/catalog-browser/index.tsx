@@ -20,6 +20,7 @@ import { useRouter } from "next/router";
 
 import { useCallback, useEffect, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
+import { upgradeCounterPartyAddressToNextVersion } from "@/utilities/utilities";
 
 export default function CatalogPage() {
   const { connector } = useParticipantConnectorState();
@@ -66,10 +67,15 @@ export default function CatalogPage() {
   const client = useEdcConnectorClient({
     management: proxyConnectorManagement,
   });
+
   useEffect(() => {
     if (counterPartyAddress) {
+      console.log(upgradeCounterPartyAddressToNextVersion(counterPartyAddress));
       client.management.catalog
-        .request({ counterPartyAddress })
+        .request({
+          counterPartyAddress:
+            upgradeCounterPartyAddressToNextVersion(counterPartyAddress),
+        })
         .then((catalog) => {
           console.log(catalog);
           setCatalogParticipantId(
@@ -77,7 +83,7 @@ export default function CatalogPage() {
           );
         });
     }
-  }, [client, counterPartyAddress]);
+  }, [counterPartyAddress, client]);
 
   const openDataOfferDialog = (dataset: Dataset) => {
     setIsDataOfferDialogOpen(true);
@@ -97,7 +103,9 @@ export default function CatalogPage() {
         open={isDataOfferDialogOpen}
         dataset={datasetToNegotiate}
         participantId={catalogParticipantId}
-        counterPartyAddress={counterPartyAddress}
+        counterPartyAddress={upgradeCounterPartyAddressToNextVersion(
+          counterPartyAddress,
+        )}
         assetIsOwned={counterPartyAddress === connector.protocolUrl}
         onClose={() => setIsDataOfferDialogOpen(false)}
         contentStyle={{ maxWidth: "90vw", minWidth: "1000px" }}
@@ -114,7 +122,9 @@ export default function CatalogPage() {
         <div className="h-[70vh]">
           <ContractOffersList
             managementUrl={proxyConnectorManagement}
-            counterPartyAddress={counterPartyAddress}
+            counterPartyAddress={upgradeCounterPartyAddressToNextVersion(
+              counterPartyAddress,
+            )}
             usePagination
             navigate={navigateToPage}
             currentPage={parseInt(query.page as string) || 0}

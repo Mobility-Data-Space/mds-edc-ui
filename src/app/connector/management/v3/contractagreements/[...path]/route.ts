@@ -9,6 +9,7 @@ import {
   RetiredContractAgreement,
 } from "@/utilities/contract-agreement";
 import { operatorIn } from "@/utilities/data-offer";
+import { upgradeCounterPartyAddressToNextVersion } from "@/utilities/utilities";
 import {
   Asset,
   Catalog,
@@ -283,14 +284,10 @@ const handleContractAgreementsQuery = async (
     // fetch the asset titles using the dsp
     const assetsConnectorMap = await Promise.all(
       dsps.map(async ([connectorId, dsp]): Promise<[string, Catalog]> => {
-        if (!dsp.endsWith("/2025-1")) {
-          dsp += "/2025-1";
-        }
-
         return [
           connectorId,
           await client.management.catalog.request({
-            counterPartyAddress: dsp,
+            counterPartyAddress: upgradeCounterPartyAddressToNextVersion(dsp),
             querySpec: {
               limit: 1000,
               offset: 0,
