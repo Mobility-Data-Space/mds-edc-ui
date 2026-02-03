@@ -1,11 +1,11 @@
-import {DELIMITER} from "@/i18n";
+import { DELIMITER } from "@/i18n";
 
 export const truncate = (string: string, length: number = 10) => {
   if (!string) {
     return string;
   }
   return string.length > length ? string.substring(0, length) + "..." : string;
-}
+};
 
 /**
  * Converts a string to Title Case.
@@ -23,48 +23,59 @@ export const toTitleCase = (str: string) =>
   str
     .toLowerCase()
     .split(/\s+/)
-    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(" ");
-    
 
 export const extractArrayValues = (array: any[]) => {
   if (!Array.isArray(array)) {
     return [array];
   }
-  return array.map(item => {
+  return array.map((item) => {
     try {
-      return item["https://w3id.org/edc/v0.0.1/ns/input"][0]["https://w3id.org/edc/v0.0.1/ns/value"][0]["@value"]
+      return item["https://w3id.org/edc/v0.0.1/ns/input"][0][
+        "https://w3id.org/edc/v0.0.1/ns/value"
+      ][0]["@value"];
     } catch (e) {
       return "";
     }
   });
-}
+};
 
 export const joinArrayValues = (array: any[]) => {
   return extractArrayValues(array).join(DELIMITER);
-}
+};
 
 export const pascalCase = (string: string) => {
-  return string.replace(
-    /\w+/g,
-    (word) => word[0].toUpperCase() + word.slice(1).toLowerCase()
-  ).replaceAll(' ', '');
-}
+  return string
+    .replace(
+      /\w+/g,
+      (word) => word[0].toUpperCase() + word.slice(1).toLowerCase(),
+    )
+    .replaceAll(" ", "");
+};
 
 export const upperAndSnakeCase = (string: string) => {
   return string.replaceAll(" ", "_").toUpperCase();
-}
+};
 
-export const tryTranslatingWithTooltip = (value: string, prefix: string, translator: (key: string) => string) => {
+export const tryTranslatingWithTooltip = (
+  value: string,
+  prefix: string,
+  translator: (key: string) => string,
+) => {
   const tooltipTitleTranslationKey = `${prefix}.${value}Tooltip`;
   const tooltipTitleTranslation = translator(tooltipTitleTranslationKey);
-  const tooltipTitle = tooltipTitleTranslation === tooltipTitleTranslationKey ? `"${value}"` : tooltipTitleTranslation;
+  const tooltipTitle =
+    tooltipTitleTranslation === tooltipTitleTranslationKey
+      ? `"${value}"`
+      : tooltipTitleTranslation;
   const valueTranslationKey = `${prefix}.${value}`;
   const valueTranslation = translator(valueTranslationKey);
-  const computedValue = valueTranslation === valueTranslationKey ? value : valueTranslation;
+  const computedValue =
+    valueTranslation === valueTranslationKey ? value : valueTranslation;
 
   return [tooltipTitle, computedValue];
-}
+};
 
 export const isUrl = (value: string): boolean => {
   try {
@@ -113,16 +124,32 @@ export const isUrl = (value: string): boolean => {
   }
 };
 
-
 export const isEmail = (email: string) => {
   return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email);
-}
+};
 
 export const isDate = (date: string) => {
   // Can match different formats like 12/31/2025 and 1-1-2025 || ISO8601
-  return /^\d{1,2}[./-]\d{1,2}[./-]\d{4}$/.test(date) || /^\d{4}(-\d{2}(-\d{2}(T\d{2}:\d{2}(:\d{2}(\.\d{1,3})?)?(Z|[+-]\d{2}:\d{2})?)?)?)?$/.test(date);
-}
+  return (
+    /^\d{1,2}[./-]\d{1,2}[./-]\d{4}$/.test(date) ||
+    /^\d{4}(-\d{2}(-\d{2}(T\d{2}:\d{2}(:\d{2}(\.\d{1,3})?)?(Z|[+-]\d{2}:\d{2})?)?)?)?$/.test(
+      date,
+    )
+  );
+};
 
 export const uid = function () {
   return Date.now().toString(36) + Math.random().toString(36);
-}
+};
+
+export const PROTOCOL_PATH = "/2025-1";
+
+export const counterPartyAddressWithDsp2025_1 = (
+  counterPartyAddress: string,
+) => {
+  if (!counterPartyAddress.endsWith(PROTOCOL_PATH)) {
+    return counterPartyAddress.replace(/\/+$/, "") + PROTOCOL_PATH;
+  }
+
+  return counterPartyAddress;
+};

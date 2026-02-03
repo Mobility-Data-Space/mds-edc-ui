@@ -9,6 +9,7 @@ import {
   RetiredContractAgreement,
 } from "@/utilities/contract-agreement";
 import { operatorIn } from "@/utilities/data-offer";
+import { counterPartyAddressWithDsp2025_1 } from "@/utilities/utilities";
 import {
   Asset,
   Catalog,
@@ -286,7 +287,7 @@ const handleContractAgreementsQuery = async (
         return [
           connectorId,
           await client.management.catalog.request({
-            counterPartyAddress: dsp,
+            counterPartyAddress: counterPartyAddressWithDsp2025_1(dsp),
             querySpec: {
               limit: 1000,
               offset: 0,

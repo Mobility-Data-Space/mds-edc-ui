@@ -28,7 +28,7 @@ export default function DataOfferDetails({
   counterPartyAddress,
   participantId,
   assetIsOwned = false,
-  onNegotiateSuccess = () => { },
+  onNegotiateSuccess = () => {},
 }: DataOfferDetailsProps) {
   const { translator } = useTranslator();
 
@@ -97,8 +97,9 @@ export default function DataOfferDetails({
               </div>
               <PolicyConstraintShow
                 constraints={
-                  removeJsonLdSchemaFromProperties(offer)
-                    ?.permission.map((p: any) => p.constraint)[0]
+                  removeJsonLdSchemaFromProperties(offer)?.permission.map(
+                    (p: any) => p.constraint,
+                  )[0]
                 }
                 jsonLdObject={offer}
                 jsonLdDialogTitle={

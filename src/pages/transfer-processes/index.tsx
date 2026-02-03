@@ -1,5 +1,4 @@
 import { Table } from "@/components/atoms/table";
-import { Snackbar } from "@/components/molecules/snackbar";
 import PaginationControls from "@/components/molecules/pagination-controls";
 import SearchBar from "@/components/molecules/search-bar";
 import SideDrawer from "@/components/organisms/side-drawer";

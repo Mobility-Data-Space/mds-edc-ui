@@ -20,6 +20,7 @@ import { useRouter } from "next/router";
 
 import { useCallback, useEffect, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
+import { counterPartyAddressWithDsp2025_1 } from "@/utilities/utilities";
 
 export default function CatalogPage() {
   const { connector } = useParticipantConnectorState();
@@ -66,17 +67,21 @@ export default function CatalogPage() {
   const client = useEdcConnectorClient({
     management: proxyConnectorManagement,
   });
+
   useEffect(() => {
     if (counterPartyAddress) {
       client.management.catalog
-        .request({ counterPartyAddress })
+        .request({
+          counterPartyAddress:
+            counterPartyAddressWithDsp2025_1(counterPartyAddress),
+        })
         .then((catalog) => {
           setCatalogParticipantId(
-            catalog["https://w3id.org/dspace/v0.8/participantId"][0]["@value"],
+            catalog["https://w3id.org/dspace/2025/1/participantId"][0]["@id"],
           );
         });
     }
-  }, [client, counterPartyAddress]);
+  }, [counterPartyAddress, client]);
 
   const openDataOfferDialog = (dataset: Dataset) => {
     setIsDataOfferDialogOpen(true);
@@ -96,7 +101,9 @@ export default function CatalogPage() {
         open={isDataOfferDialogOpen}
         dataset={datasetToNegotiate}
         participantId={catalogParticipantId}
-        counterPartyAddress={counterPartyAddress}
+        counterPartyAddress={counterPartyAddressWithDsp2025_1(
+          counterPartyAddress,
+        )}
         assetIsOwned={counterPartyAddress === connector.protocolUrl}
         onClose={() => setIsDataOfferDialogOpen(false)}
         contentStyle={{ maxWidth: "90vw", minWidth: "1000px" }}
@@ -113,7 +120,9 @@ export default function CatalogPage() {
         <div className="h-[70vh]">
           <ContractOffersList
             managementUrl={proxyConnectorManagement}
-            counterPartyAddress={counterPartyAddress}
+            counterPartyAddress={counterPartyAddressWithDsp2025_1(
+              counterPartyAddress,
+            )}
             usePagination
             navigate={navigateToPage}
             currentPage={parseInt(query.page as string) || 0}
