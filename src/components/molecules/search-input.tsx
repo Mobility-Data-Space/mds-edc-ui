@@ -19,8 +19,9 @@ export const useCriterionSearchInput = (props: UseCriterionSearchProps)=> {
   
     useEffect(()=> {
       if(searchTerm){
+        const operandRight = operator === 'ilike' ? `%${searchTerm}%` : searchTerm;
         setSearchCriteria([
-          {operandLeft, operator,  operandRight: `%${searchTerm}%`}
+          {operandLeft, operator, operandRight}
         ])
       }else{
         setSearchCriteria([]);

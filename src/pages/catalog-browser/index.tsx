@@ -2,7 +2,6 @@ import { Input } from "@/components/atoms/input";
 import { CounterPartyAddressDialog } from "@/components/molecules/counter-party-address-dialog";
 import { ErrorPopup } from "@/components/molecules/error-popup";
 import PaginationControls from "@/components/molecules/pagination-controls";
-import SearchBar from "@/components/molecules/search-bar";
 import DataOfferCard from "@/components/organisms/data-offer-card";
 import DataOfferDialog from "@/components/organisms/data-offer-dialog";
 import SideDrawer from "@/components/organisms/side-drawer";
@@ -20,6 +19,7 @@ import { useRouter } from "next/router";
 
 import { useCallback, useEffect, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
+import SearchInput, { useCriterionSearchInput } from "@/components/molecules/search-input";
 
 export default function CatalogPage() {
   const { connector } = useParticipantConnectorState();
@@ -27,6 +27,12 @@ export default function CatalogPage() {
   const { query } = useRouter();
   const updateQueryParams = useUpdateQueryParams();
   const [hasBadUrlError, setHasBadUrlError] = useState(false);
+
+ const filterExpression =  useCriterionSearchInput({
+    searchTerm: query.q as string,
+    operandLeft: "http://purl.org/dc/terms/title",
+    operator: "ilike",
+  })
 
   const [listKey, setListKey] = useState(1);
   const [isDataOfferDialogOpen, setIsDataOfferDialogOpen] = useState(false);
@@ -168,10 +174,8 @@ export default function CatalogPage() {
                 />
               </Badge>
               <div className="col-span-2">
-                <SearchBar
-                  searchTarget="http://purl.org/dc/terms/title"
+                <SearchInput
                   placeholder={translator("catalog.searchPlaceholder")}
-                  searchOperator="ilike"
                 />
               </div>
               <div className="justify-self-center">
@@ -203,7 +207,7 @@ export default function CatalogPage() {
               data-testid="catalog-list"
             >
               {counterPartyAddress ? (
-                <ContractOffersList.Items key={listKey} limit={MAX_ITEMS}>
+                <ContractOffersList.Items key={listKey} limit={MAX_ITEMS} filterExpression={filterExpression}>
                   {({ item, index }) => (
                     <DataOfferCard
                       key={index}
