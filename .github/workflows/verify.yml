@@ -118,7 +118,9 @@ jobs:
         if: ${{ !cancelled() }}
         with:
           name: playwright-report-${{ matrix.test-group.name }}
-          path: playwright-report/
+          path: |
+            playwright-report/
+            test-results/
           retention-days: 30
 
   # Build Phase - Only runs if all tests pass
