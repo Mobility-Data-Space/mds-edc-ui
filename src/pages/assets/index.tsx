@@ -1,5 +1,4 @@
 import PaginationControls from "@/components/molecules/pagination-controls";
-import SearchBar from "@/components/molecules/search-bar";
 import { Snackbar } from "@/components/molecules/snackbar";
 import AssetCard from "@/components/organisms/asset-card";
 import AssetDialog from "@/components/organisms/asset-dialog";
@@ -112,13 +111,7 @@ export default function AssetListPage() {
             <div className="flex justify-start gap-x-5 items-center">
               <div className="min-w-xl h-full">
                 <SearchInput
-                  searchTarget={[
-                    "id",
-                    "http://purl.org/dc/terms/title",
-                    "http://purl.org/dc/terms/description",
-                  ]}
                   placeholder={translator("assets.searchPlaceholder")}
-                  searchOperator="ilike"
                 />
               </div>
               <div className="flex gap-x-4">
