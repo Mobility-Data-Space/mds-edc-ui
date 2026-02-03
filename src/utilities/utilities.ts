@@ -144,7 +144,7 @@ export const uid = function () {
 
 export const PROTOCOL_PATH = "/2025-1";
 
-export const upgradeCounterPartyAddressToNextVersion = (
+export const counterPartyAddressWithDsp2025_1 = (
   counterPartyAddress: string,
 ) => {
   if (!counterPartyAddress.endsWith(PROTOCOL_PATH)) {

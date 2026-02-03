@@ -20,7 +20,7 @@ import { useRouter } from "next/router";
 
 import { useCallback, useEffect, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
-import { upgradeCounterPartyAddressToNextVersion } from "@/utilities/utilities";
+import { counterPartyAddressWithDsp2025_1 } from "@/utilities/utilities";
 
 export default function CatalogPage() {
   const { connector } = useParticipantConnectorState();
@@ -70,14 +70,12 @@ export default function CatalogPage() {
 
   useEffect(() => {
     if (counterPartyAddress) {
-      console.log(upgradeCounterPartyAddressToNextVersion(counterPartyAddress));
       client.management.catalog
         .request({
           counterPartyAddress:
-            upgradeCounterPartyAddressToNextVersion(counterPartyAddress),
+            counterPartyAddressWithDsp2025_1(counterPartyAddress),
         })
         .then((catalog) => {
-          console.log(catalog);
           setCatalogParticipantId(
             catalog["https://w3id.org/dspace/2025/1/participantId"][0]["@id"],
           );
@@ -103,7 +101,7 @@ export default function CatalogPage() {
         open={isDataOfferDialogOpen}
         dataset={datasetToNegotiate}
         participantId={catalogParticipantId}
-        counterPartyAddress={upgradeCounterPartyAddressToNextVersion(
+        counterPartyAddress={counterPartyAddressWithDsp2025_1(
           counterPartyAddress,
         )}
         assetIsOwned={counterPartyAddress === connector.protocolUrl}
@@ -122,7 +120,7 @@ export default function CatalogPage() {
         <div className="h-[70vh]">
           <ContractOffersList
             managementUrl={proxyConnectorManagement}
-            counterPartyAddress={upgradeCounterPartyAddressToNextVersion(
+            counterPartyAddress={counterPartyAddressWithDsp2025_1(
               counterPartyAddress,
             )}
             usePagination
