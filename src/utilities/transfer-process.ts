@@ -45,14 +45,16 @@ export const createTransferProcessRequest = (
   }
 
   if (transferType === DataAddressTypes.Kafka + TRANSFER_TYPE_PULL) {
-    transferProcess.callbackAddresses = [
-      {
-        "@type": "CallbackAddress",
-        transactional: true,
-        uri: dataDestination.uri,
-        events: "transfer.process.start",
-      },
-    ];
+    if (dataDestination.isTransactional) {
+      transferProcess.callbackAddresses = [
+        {
+          "@type": "CallbackAddress",
+          transactional: dataDestination.isTransactional,
+          uri: dataDestination.uri,
+          events: "transfer.process.start",
+        },
+      ];
+    }
   }
 
   if (dataDestination.type === DataAddressTypes.CustomJson) {

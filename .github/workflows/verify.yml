@@ -29,6 +29,8 @@ jobs:
             tests: "tests/contract-agreements.spec.ts tests/contract-negotiations.spec.ts"
           - name: "transfer-catalog"
             tests: "tests/transfer-process.spec.ts tests/catalog-browser.spec.ts tests/manual-approval.spec.ts"
+          - name: "utilities"
+            tests: "tests/utilities.spec.ts"
 
     services:
       edc-1:
