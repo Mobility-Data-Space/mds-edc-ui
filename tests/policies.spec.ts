@@ -75,8 +75,10 @@ test.describe("Policy Definitions Page Tests", () => {
       await policiesPage.fillParticipantId("ConsumerParticipant002");
 
       // Attempt to create the policy
+      const listener =  page.waitForResponse((response) => response.url().includes('/connector/management/v3/policydefinitions/request'));
       await policiesPage.clickCreateButton();
-      await page.waitForResponse((response) => response.url().includes('/connector/management/v3/policydefinitions/request'));
+      const response = await listener;
+      expect(response.status()).toBe(200);
 
       // Verify policy was added
       const policyCards = await policiesPage.getPolicyCards();
@@ -97,12 +99,17 @@ test.describe("Policy Definitions Page Tests", () => {
       await policiesPage.fillParticipantId("ConsumerParticipant001");
 
       // Attempt to create the policy
+
+      const listener =  page.waitForResponse((response) => response.url().includes('/connector/management/v3/policydefinitions/request'));
       await policiesPage.clickCreateButton();
+
+      const response = await listener;
+      expect(response.status()).toBe(200);
       // Verify the success message
       const successMessageLocator = await policiesPage.waitForToastMessage('success');
       const successMessage = await successMessageLocator.textContent();
       expect(successMessage).toContain("Policy created successfully!");
-      await page.waitForResponse((response) => response.url().includes('/connector/management/v3/policydefinitions/request'));
+      
 
       // Verify policy was added
       const policyCards = await policiesPage.getPolicyCards();
@@ -150,8 +157,10 @@ test.describe("Policy Definitions Page Tests", () => {
       await policiesPage.fillPolicyId(policyId);
 
       // Attempt to create the policy
+      const listerner = page.waitForResponse((response) => response.url().includes('/connector/management/v3/policydefinitions/request'));
       await policiesPage.clickCreateButton();
-      await page.waitForResponse((response) => response.url().includes('/connector/management/v3/policydefinitions/request'));
+      const response = await listerner;
+      expect(response.status()).toBe(200);
 
       const policyCards = await policiesPage.getPolicyCards();
       const policyCard = policyCards.locator('[data-testid="policy-id"]', {hasText: policyId});

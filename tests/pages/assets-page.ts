@@ -63,8 +63,10 @@ export class AssetsPage extends BaseListPage {
   }
 
   async navigate() {
+    const listerner = this.page.waitForResponse((response) => response.url().includes('/connector/management/v3/assets'));
     await this.page.goto('/assets');
-    await this.page.waitForResponse((response) => response.url().includes('/connector/management/v3/assets'));
+
+    await listerner;
   }
 
   async getAssetList() {
