@@ -71,8 +71,9 @@ export default function CatalogPage() {
       client.management.catalog
         .request({ counterPartyAddress })
         .then((catalog) => {
+          console.log(catalog);
           setCatalogParticipantId(
-            catalog["https://w3id.org/dspace/v0.8/participantId"][0]["@value"],
+            catalog["https://w3id.org/dspace/2025/1/participantId"][0]["@id"],
           );
         });
     }

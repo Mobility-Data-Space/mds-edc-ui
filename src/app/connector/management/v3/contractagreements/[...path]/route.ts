@@ -283,6 +283,10 @@ const handleContractAgreementsQuery = async (
     // fetch the asset titles using the dsp
     const assetsConnectorMap = await Promise.all(
       dsps.map(async ([connectorId, dsp]): Promise<[string, Catalog]> => {
+        if (!dsp.endsWith("/2025-1")) {
+          dsp += "/2025-1";
+        }
+
         return [
           connectorId,
           await client.management.catalog.request({
@@ -311,8 +315,8 @@ const handleContractAgreementsQuery = async (
           return [
             `${connectorId}-${dataset.id}`,
             dataset["http://purl.org/dc/terms/title"]?.[0]?.["@value"] as
-            | string
-            | undefined,
+              | string
+              | undefined,
           ];
         });
       }),
