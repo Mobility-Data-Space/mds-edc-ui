@@ -129,7 +129,7 @@ export default function ContractAgreementTerminateDialog({ contractAgreement, op
       </DialogContent>
       <DialogActions>
         <div className="p-3">
-          <Button color="secondary" onClick={onClose}>
+          <Button color="secondary" onClick={onClose} className="px-4">
             <T string="common.close"/>
           </Button>
           <Button
