@@ -1,4 +1,4 @@
-import { PROTOCOL_PATH } from "@/utilities/utilities";
+import { PROTOCOL_PATH } from "../../src/constants/catalog.ts";
 
 export const SERVICES = ["edc-1", "edc-2"];
 
