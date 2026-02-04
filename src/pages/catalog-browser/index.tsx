@@ -2,6 +2,7 @@ import { Input } from "@/components/atoms/input";
 import { CounterPartyAddressDialog } from "@/components/molecules/counter-party-address-dialog";
 import { ErrorPopup } from "@/components/molecules/error-popup";
 import PaginationControls from "@/components/molecules/pagination-controls";
+import SearchBar from "@/components/molecules/search-bar";
 import DataOfferCard from "@/components/organisms/data-offer-card";
 import DataOfferDialog from "@/components/organisms/data-offer-dialog";
 import SideDrawer from "@/components/organisms/side-drawer";
@@ -19,8 +20,6 @@ import { useRouter } from "next/router";
 
 import { useCallback, useEffect, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
-import SearchInput from "@/components/molecules/search-input/search-input";
-import { useCriterionSearchInput } from "@/components/molecules/search-input/useCriterionSearchInput";
 import { counterPartyAddressWithDsp2025_1 } from "@/utilities/utilities";
 
 export default function CatalogPage() {
@@ -29,12 +28,6 @@ export default function CatalogPage() {
   const { query } = useRouter();
   const updateQueryParams = useUpdateQueryParams();
   const [hasBadUrlError, setHasBadUrlError] = useState(false);
-
- const filterExpression =  useCriterionSearchInput({
-    searchTerm: query.q as string,
-    operandLeft: "http://purl.org/dc/terms/title",
-    operator: "ilike",
-  })
 
   const [listKey, setListKey] = useState(1);
   const [isDataOfferDialogOpen, setIsDataOfferDialogOpen] = useState(false);
@@ -184,8 +177,10 @@ export default function CatalogPage() {
                 />
               </Badge>
               <div className="col-span-2">
-                <SearchInput
+                <SearchBar
+                  searchTarget="http://purl.org/dc/terms/title"
                   placeholder={translator("catalog.searchPlaceholder")}
+                  searchOperator="ilike"
                 />
               </div>
               <div className="justify-self-center">
@@ -217,7 +212,7 @@ export default function CatalogPage() {
               data-testid="catalog-list"
             >
               {counterPartyAddress ? (
-                <ContractOffersList.Items key={listKey} limit={MAX_ITEMS} filterExpression={filterExpression}>
+                <ContractOffersList.Items key={listKey} limit={MAX_ITEMS}>
                   {({ item, index }) => (
                     <DataOfferCard
                       key={index}

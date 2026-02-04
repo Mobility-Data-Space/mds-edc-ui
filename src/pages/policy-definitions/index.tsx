@@ -1,45 +1,30 @@
 import { TitleWithIcon } from "@/components/atoms/TitleWithIcon";
 import { JsonLdDialog } from "@/components/molecules/JsonLdDialog";
 import PaginationControls from "@/components/molecules/pagination-controls";
+import SearchBar from "@/components/molecules/search-bar";
 import PolicyCard from "@/components/organisms/policy-card";
 import SideDrawer from "@/components/organisms/side-drawer";
 import { proxyConnectorManagement } from "@/constants/proxy";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
 import { Icon, Button as MuiButton } from "@mui/material";
-import { CriterionInput, PolicyDefinition } from "@think-it-labs/edc-connector-client";
+import { PolicyDefinition } from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
 import { PolicyDefinitionsList } from "@think-it-labs/edc-connector-ui/policy-definitions-list";
 import { useRouter} from "next/router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { ErrorPopup } from "../../components/molecules/error-popup";
 import { MAX_ITEMS } from "../../constants/lists";
 import { useAppSnackbar } from "@/hooks/use-app-snackbar";
-import SearchInput from "@/components/molecules/search-input/search-input";
 
 export default function PolicyDefinitionListPage() {
   const router = useRouter();
-  const {q: searchTerm} =  router.query;
   const { push } = useParticipantConnectorState();
   const { translator } = useTranslator();
   const { showSnackbar }= useAppSnackbar();
   const edcClient = useEdcConnectorClient({
     management: proxyConnectorManagement,
   });
-
-  const [searchCriteria, setSearchCriteria] = useState<CriterionInput[]>([]);
-
-  useEffect(()=> {
-
-    if(searchTerm){
-      setSearchCriteria([
-        {operandLeft: 'id', operator: 'ilike', operandRight: `%${searchTerm}%`}
-      ])
-    }else{
-      setSearchCriteria([]);
-    }
-
-  }, [searchTerm])
 
   const [policyListKey, setPolicyListKey] = useState(0);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
@@ -116,10 +101,10 @@ export default function PolicyDefinitionListPage() {
         <div className="flex justify-between pb-6">
           <div className="flex justify-start gap-x-5">
             <div className="min-w-xl h-full">
-              <SearchInput
+              <SearchBar
+                searchTarget="id"
                 placeholder={translator("policyDefinitions.searchPlaceholder")}
-                // searchTarget="id"
-                // searchOperator="ilike"
+                searchOperator="ilike"
               />
             </div>
             <div className="flex gap-x-4">
@@ -174,7 +159,6 @@ export default function PolicyDefinitionListPage() {
             limit={MAX_ITEMS}
             sortOrder="DESC"
             sortField="createdAt"
-            filterExpression={searchCriteria}
           >
             {({ item, index }) => (
               <PolicyCard

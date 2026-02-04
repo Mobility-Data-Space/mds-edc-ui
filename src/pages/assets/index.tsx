@@ -1,4 +1,5 @@
 import PaginationControls from "@/components/molecules/pagination-controls";
+import SearchBar from "@/components/molecules/search-bar";
 import { Snackbar } from "@/components/molecules/snackbar";
 import AssetCard from "@/components/organisms/asset-card";
 import AssetDialog from "@/components/organisms/asset-dialog";
@@ -15,8 +16,6 @@ import { useSnackbar } from "notistack";
 import { useCallback, useState } from "react";
 import { ErrorPopup } from "../../components/molecules/error-popup";
 import { MAX_ITEMS } from "../../constants/lists";
-import SearchInput from "@/components/molecules/search-input/search-input";
-import { useCriterionSearchInput } from "@/components/molecules/search-input/useCriterionSearchInput";
 
 export default function AssetListPage() {
   const router = useRouter();
@@ -27,11 +26,6 @@ export default function AssetListPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
-  const filterExpressions =  useCriterionSearchInput({
-    operandLeft: "http://purl.org/dc/terms/title",
-    searchTerm: router.query.q as string,
-    operator: "ilike",
-  })
   const [openAssetData, setOpenAssetData] = useState({
     asset: {} as Asset,
     deleteItem: async () => {},
@@ -111,8 +105,14 @@ export default function AssetListPage() {
           <div className="flex justify-between pb-6">
             <div className="flex justify-start gap-x-5 items-center">
               <div className="min-w-xl h-full">
-                <SearchInput
+                <SearchBar
+                  searchTarget={[
+                    "id",
+                    "http://purl.org/dc/terms/title",
+                    "http://purl.org/dc/terms/description",
+                  ]}
                   placeholder={translator("assets.searchPlaceholder")}
+                  searchOperator="ilike"
                 />
               </div>
               <div className="flex gap-x-4">
@@ -160,7 +160,6 @@ export default function AssetListPage() {
                 limit={MAX_ITEMS}
                 sortOrder="DESC"
                 sortField="createdAt"
-                filterExpression={filterExpressions}
               >
                 {({ item, index, deleteItem }) => (
                   <AssetCard

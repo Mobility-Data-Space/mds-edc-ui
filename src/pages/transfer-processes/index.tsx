@@ -10,19 +10,11 @@ import { useRouter } from "next/router";
 import { useCallback } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
 import { proxyConnectorManagement } from "@/constants/proxy";
-import SearchInput from "@/components/molecules/search-input/search-input";
-import { useCriterionSearchInput } from "@/components/molecules/search-input/useCriterionSearchInput";
 
 export default function TransferProcessesListPage() {
   const router = useRouter();
   const { connector } = useParticipantConnectorState();
   const { translator } = useTranslator();
-
-  const criterionFilter = useCriterionSearchInput({
-    searchTerm: router.query.q as string,
-    operandLeft: "assetId",
-    operator: "ilike",
-  })
 
   const currentPage = parseInt(router.query.page as string) || 0;
 
@@ -51,8 +43,10 @@ export default function TransferProcessesListPage() {
         <div className="flex justify-between pb-6">
           <div className="flex justify-start gap-x-5 items-center">
             <div className="min-w-xl">
-              <SearchInput
+              <SearchBar
+                searchTarget="assetId"
                 placeholder={translator("transferProcesses.searchPlaceholder")}
+                searchOperator="ilike"
               />
             </div>
           </div>
@@ -127,7 +121,6 @@ export default function TransferProcessesListPage() {
                 limit={MAX_ITEMS}
                 sortOrder="DESC"
                 sortField="stateTimestamp"
-                filterExpression={criterionFilter}
               >
                 {({ item }) => (
                   <TransferProcessTableRow
