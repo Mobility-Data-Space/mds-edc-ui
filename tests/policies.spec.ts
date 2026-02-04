@@ -148,7 +148,7 @@ test.describe("Policy Definitions Page Tests", () => {
   });
 
   test.describe("Delete Functionality", () => {
-    // This test works locally but fails in CI we need to investigate further
+    // TODO: This test works locally but fails in CI we need to investigate further
     test.fixme("should delete the policy", async ({ page }) => {
       // Open the Create Policy dialog
       await policiesPage.clickCreatePolicyButton();
