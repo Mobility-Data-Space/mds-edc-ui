@@ -141,15 +141,3 @@ export const isDate = (date: string) => {
 export const uid = function () {
   return Date.now().toString(36) + Math.random().toString(36);
 };
-
-export const PROTOCOL_PATH = "/2025-1";
-
-export const counterPartyAddressWithDsp2025_1 = (
-  counterPartyAddress: string,
-) => {
-  if (!counterPartyAddress.endsWith(PROTOCOL_PATH)) {
-    return counterPartyAddress.replace(/\/+$/, "") + PROTOCOL_PATH;
-  }
-
-  return counterPartyAddress;
-};

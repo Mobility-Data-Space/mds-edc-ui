@@ -1,68 +1,89 @@
-import {Asset, ContractDefinition, Dataset, JsonLdObject} from "@think-it-labs/edc-connector-client";
-import {contextPrefixes} from "@/jsonld/context";
-import {formatDateTime} from "@/utilities/date.ts";
+import {
+  Asset,
+  ContractDefinition,
+  Dataset,
+  JsonLdObject,
+} from "@think-it-labs/edc-connector-client";
+import { contextPrefixes } from "@/jsonld/context";
+import { PROTOCOL_PATH } from "@/constants/catalog";
 
 export const HAS_POLICY = "http://www.w3.org/ns/odrl/2/hasPolicy";
 
-export const datasetToAsset = (dataset: Dataset): Asset => { // TODO: dataSet type
+export const datasetToAsset = (dataset: Dataset): Asset => {
+  // TODO: dataSet type
   return {
     ["@id"]: dataset["@id"],
     properties: dataset.properties || { ...dataset },
     dataAddress: dataset.dataAddress || {},
     privateProperties: dataset.privateProperties || {},
   } as Asset;
-}
+};
 
-export const datasetToContractDefinitions = (dataset: Dataset): ContractDefinition[] => {
+export const datasetToContractDefinitions = (
+  dataset: Dataset,
+): ContractDefinition[] => {
   return dataset[HAS_POLICY] || [];
 };
 
-export const removeJsonLdSchemaFromProperties = (originalJson: any, keepKeys = false): any => {
+export const removeJsonLdSchemaFromProperties = (
+  originalJson: any,
+  keepKeys = false,
+): any => {
   if (Array.isArray(originalJson)) {
-    return originalJson.map(item => removeJsonLdSchemaFromProperties(item));
+    return originalJson.map((item) => removeJsonLdSchemaFromProperties(item));
   }
 
-  if (typeof originalJson !== 'object' || !originalJson) {
+  if (typeof originalJson !== "object" || !originalJson) {
     return originalJson;
   }
 
   const convertedObject: any = {};
   for (const key in originalJson) {
     if (originalJson.hasOwnProperty(key)) {
-      const parts = key.split('/');
+      const parts = key.split("/");
       const newKey = parts[parts.length - 1];
 
-      if (newKey === 'operator' && typeof originalJson[key]['@id'] === 'string') {
-        const operatorParts = originalJson[key]['@id'].split('/');
-        convertedObject[keepKeys ? key : newKey] = operatorParts[operatorParts.length - 1];
+      if (
+        newKey === "operator" &&
+        typeof originalJson[key]["@id"] === "string"
+      ) {
+        const operatorParts = originalJson[key]["@id"].split("/");
+        convertedObject[keepKeys ? key : newKey] =
+          operatorParts[operatorParts.length - 1];
       } else {
-        convertedObject[keepKeys ? key : newKey] = removeJsonLdSchemaFromProperties(originalJson[key]);
+        convertedObject[keepKeys ? key : newKey] =
+          removeJsonLdSchemaFromProperties(originalJson[key]);
       }
     }
   }
 
   return convertedObject;
-}
+};
 
-export const convertOdrlToJsonHtml = (processedJson: any, valueDelimiter = " "): any => {
+export const convertOdrlToJsonHtml = (
+  processedJson: any,
+  valueDelimiter = " ",
+): any => {
   if (Array.isArray(processedJson)) {
-    return processedJson.map(item => convertOdrlToJsonHtml(item, valueDelimiter));
+    return processedJson.map((item) =>
+      convertOdrlToJsonHtml(item, valueDelimiter),
+    );
   }
 
-  if (typeof processedJson !== 'object' || processedJson === null) {
+  if (typeof processedJson !== "object" || processedJson === null) {
     return processedJson;
   }
 
-  if (!! processedJson.action) {
+  if (!!processedJson.action) {
     const action = processedJson.action[0] || processedJson.action;
     const value = action["@id"];
     return `Action${valueDelimiter}:${valueDelimiter}${value}`;
   }
 
   if (
-    !! processedJson.leftOperand &&
-    !! processedJson.operator &&
-    !! processedJson.rightOperand &&
+    !!processedJson.leftOperand &&
+    !!processedJson.operator &&
+    !!processedJson.rightOperand &&
     Object.keys(processedJson).length === 3
   ) {
     return [
@@ -75,14 +96,17 @@ export const convertOdrlToJsonHtml = (processedJson: any, valueDelimiter = " "):
   const htmlObject: any = {};
   for (const key in processedJson) {
     if (processedJson.hasOwnProperty(key)) {
-      htmlObject[key] = convertOdrlToJsonHtml(processedJson[key], valueDelimiter);
+      htmlObject[key] = convertOdrlToJsonHtml(
+        processedJson[key],
+        valueDelimiter,
+      );
     }
   }
   return htmlObject;
 };
 
 function extractValue(value: any) {
-  if (! Array.isArray(value)) {
+  if (!Array.isArray(value)) {
     if (typeof value === "object") {
       return value["@id"] || value["@value"] || "";
     }
@@ -90,7 +114,7 @@ function extractValue(value: any) {
   }
 
   const result = (value[0] && (value[0]["@id"] || value[0]["@value"])) || "";
-  if (! result.startsWith("http")) {
+  if (!result.startsWith("http")) {
     return result;
   }
 
@@ -115,10 +139,14 @@ export function replaceUrlPrefixes(jsonObject: JsonLdObject) {
 
   const transformValue = (value: any) => {
     if (Array.isArray(value)) {
-      return value.map(item => typeof item === 'object' && item !== null ? replaceUrlPrefixes(item) : item);
+      return value.map((item) =>
+        typeof item === "object" && item !== null
+          ? replaceUrlPrefixes(item)
+          : item,
+      );
     }
 
-    if (typeof value === 'object' && value !== null) {
+    if (typeof value === "object" && value !== null) {
       const newObj: { [key: string]: any } = {};
       for (const k in value) {
         newObj[transformKey(k)] = transformValue(value[k]);
@@ -136,3 +164,13 @@ export function replaceUrlPrefixes(jsonObject: JsonLdObject) {
 
   return newObject;
 }
+
+export const counterPartyAddressWithDsp2025_1 = (
+  counterPartyAddress: string,
+) => {
+  if (!counterPartyAddress.endsWith(PROTOCOL_PATH)) {
+    return counterPartyAddress.replace(/\/+$/, "") + PROTOCOL_PATH;
+  }
+
+  return counterPartyAddress;
+};

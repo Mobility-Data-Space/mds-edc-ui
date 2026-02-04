@@ -4,12 +4,12 @@ import { STATE_RUNNING } from "@/constants/transfer-process";
 import { ASSET_TITLE } from "@/jsonld/asset";
 import { EnrichedContractAgreement } from "@/types/enriched-contract-agreement";
 import { cache } from "@/utilities/cache";
+import { counterPartyAddressWithDsp2025_1 } from "@/utilities/catalog";
 import {
   AgreementsRetirementController,
   RetiredContractAgreement,
 } from "@/utilities/contract-agreement";
 import { operatorIn } from "@/utilities/data-offer";
-import { counterPartyAddressWithDsp2025_1 } from "@/utilities/utilities";
 import {
   Asset,
   Catalog,
@@ -312,8 +312,8 @@ const handleContractAgreementsQuery = async (
           return [
             `${connectorId}-${dataset.id}`,
             dataset["http://purl.org/dc/terms/title"]?.[0]?.["@value"] as
-            | string
-            | undefined,
+              | string
+              | undefined,
           ];
         });
       }),

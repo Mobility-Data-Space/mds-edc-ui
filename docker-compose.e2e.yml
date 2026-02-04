@@ -1,6 +1,6 @@
 services:
   edc-1:
-    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:1.0.0-rc.12
+    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
     platform: linux/amd64
     entrypoint: ["/app/bin/connector-inmemory", "--log-level=debug"]
     environment:
@@ -52,7 +52,7 @@ services:
       start_period: 30s
 
   edc-2:
-    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:1.0.0-rc.12
+    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
     platform: linux/amd64
     entrypoint: ["/app/bin/connector-inmemory", "--log-level=debug"]
     environment:
