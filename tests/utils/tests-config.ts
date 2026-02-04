@@ -1,7 +1,11 @@
-export const SERVICES = ['edc-1', 'edc-2'];
+import { PROTOCOL_PATH } from "@/utilities/utilities";
 
-const participantProtocolUrl = "http://" + SERVICES[0] + ":8183/api/dsp" ;
-const couterPartyparticipantProtocolUrl = "http://" + SERVICES[1] + ":8183/api/dsp" ;
+export const SERVICES = ["edc-1", "edc-2"];
+
+const participantProtocolUrl =
+  "http://" + SERVICES[0] + ":8183/api/dsp" + PROTOCOL_PATH;
+const couterPartyparticipantProtocolUrl =
+  "http://" + SERVICES[1] + ":8183/api/dsp" + PROTOCOL_PATH;
 
 export const participantConfig = {
   APP_URL: "http://127.0.0.1:3000",
@@ -18,8 +22,8 @@ export const participantConfig = {
   EDC_MAINTAINER_ORGANIZATION: "Think-it GmbH",
   EDC_MAINTAINER_URL: "https://think-it.io",
   MDS_DAPS_URL: "https://daps.mobility-dataspace.eu",
-  MDS_DAPS_JWKS_URL: "https://daps.mobility-dataspace.eu/.well-known/jwks.json"
-}
+  MDS_DAPS_JWKS_URL: "https://daps.mobility-dataspace.eu/.well-known/jwks.json",
+};
 
 export const counterPartyParticipantConfig = {
   EDC_ID: "MDSXXXXXXX.ZZZZZZZ",
@@ -35,6 +39,5 @@ export const counterPartyParticipantConfig = {
   EDC_MAINTAINER_ORGANIZATION: "Think-it GmbH",
   EDC_MAINTAINER_URL: "https://think-it.io",
   MDS_DAPS_URL: "https://daps.mobility-dataspace.eu",
-  MDS_DAPS_JWKS_URL: "https://daps.mobility-dataspace.eu/.well-known/jwks.json"
-}
-
+  MDS_DAPS_JWKS_URL: "https://daps.mobility-dataspace.eu/.well-known/jwks.json",
+};
