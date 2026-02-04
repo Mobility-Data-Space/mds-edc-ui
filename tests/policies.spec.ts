@@ -128,11 +128,13 @@ test.describe("Policy Definitions Page Tests", () => {
         const firstPolicy = policyCards.first();
         const policyId = firstPolicy.locator('[data-testid="policy-id"]');
         await expect(policyId).toHaveText(/^always-true/);
+
+        const policyText = await policyId.textContent();
         // Try to create a policy with the same ID
         await policiesPage.clickCreatePolicyButton();
         await page.waitForURL("**/new");
         
-        await policiesPage.fillPolicyId(policyId || "");
+        await policiesPage.fillPolicyId(policyText as string);
         await policiesPage.clickCreateButton();
 
         // Verify the error message
