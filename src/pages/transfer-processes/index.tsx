@@ -11,7 +11,8 @@ import { useRouter } from "next/router";
 import { useCallback } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
 import { proxyConnectorManagement } from "@/constants/proxy";
-import SearchInput, { useCriterionSearchInput } from "@/components/molecules/search-input";
+import SearchInput from "@/components/molecules/search-input/search-input";
+import { useCriterionSearchInput } from "@/components/molecules/search-input/useCriterionSearchInput";
 
 export default function TransferProcessesListPage() {
   const router = useRouter();

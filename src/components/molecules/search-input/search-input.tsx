@@ -1,34 +1,9 @@
 import { T } from "@/i18n";
 import { Input } from "@/components/atoms/input";
 import { Button, Icon } from "@mui/material";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import { CriterionInput } from "@think-it-labs/edc-connector-client";
 
-type UseCriterionSearchProps = {
-  searchTerm: string;
-  operandLeft: string | string[];
-  operator: CriterionInput["operator"];
-};
-
-export const useCriterionSearchInput = (props: UseCriterionSearchProps) => {
-  const { searchTerm, operandLeft, operator } = props;
-  const [searchCriteria, setSearchCriteria] = useState<CriterionInput[]>([]);
-
-  useEffect(() => {
-    if (searchTerm) {
-      const operandRight =
-        operator === "ilike" ? `%${searchTerm}%` : searchTerm;
-
-      const opLeft = Array.isArray(operandLeft)? operandLeft : [operandLeft];
-      setSearchCriteria(opLeft.map(item=> ({ operandLeft: item, operator, operandRight })));
-    } else {
-      setSearchCriteria([]);
-    }
-  }, [searchTerm]);
-
-  return searchCriteria;
-};
 interface SearchInputProps {
   placeholder: string;
 }

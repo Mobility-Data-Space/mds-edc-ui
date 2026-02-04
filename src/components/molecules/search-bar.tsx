@@ -9,14 +9,12 @@ interface SearchBarProps {
   placeholder: string;
   searchTarget: string | string[];
   searchOperator: "=" | "!=" | "in" | "like" | "ilike" | "contains";
-  onSearch?: (searchTerm: string) => void;
 }
 
 export default function SearchBar({
   placeholder,
   searchTarget,
   searchOperator,
-  onSearch,
 }: SearchBarProps) {
   const { query, push } = useRouter();
 

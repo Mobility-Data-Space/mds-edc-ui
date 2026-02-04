@@ -15,7 +15,8 @@ import { useSnackbar } from "notistack";
 import { useCallback, useState } from "react";
 import { ErrorPopup } from "../../components/molecules/error-popup";
 import { MAX_ITEMS } from "../../constants/lists";
-import SearchInput, { useCriterionSearchInput } from "@/components/molecules/search-input";
+import SearchInput from "@/components/molecules/search-input/search-input";
+import { useCriterionSearchInput } from "@/components/molecules/search-input/useCriterionSearchInput";
 
 export default function AssetListPage() {
   const router = useRouter();

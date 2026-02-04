@@ -15,7 +15,7 @@ import { useCallback, useEffect, useState } from "react";
 import { ErrorPopup } from "../../components/molecules/error-popup";
 import { MAX_ITEMS } from "../../constants/lists";
 import { useAppSnackbar } from "@/hooks/use-app-snackbar";
-import SearchInput from "@/components/molecules/search-input";
+import SearchInput from "@/components/molecules/search-input/search-input";
 
 export default function PolicyDefinitionListPage() {
   const router = useRouter();
