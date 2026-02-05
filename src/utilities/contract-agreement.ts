@@ -3,6 +3,8 @@ import { CONTEXT_EDC, TRACTUS_X_CONTEXT } from "@/jsonld/context";
 import { formatDateTime } from "@/utilities/date.ts";
 import {
   ContractAgreement,
+  expandArray,
+  JsonLdId,
 } from "@think-it-labs/edc-connector-client";
 import { Inner } from "@think-it-labs/edc-connector-client/dist/src/inner";
 
@@ -48,29 +50,17 @@ export const contractAgreementFieldsToShow = (
   ];
 };
 
-type AgreementRetirementSchema = {
-  agreementId: string;
-  agreementRetirementDate: number;
-  reason: string;
-};
-
-type IRetiredContractAgreement = {
-  [k in keyof AgreementRetirementSchema as `${typeof CONTEXT_EDC.value}${k}`]: AgreementRetirementSchema[k];
-};
-
-export class RetiredContractAgreement {
-  constructor(private data: IRetiredContractAgreement) { }
-
+export class RetiredContractAgreement extends JsonLdId {
   get agreementId(): string {
-    return this.data[`${CONTEXT_EDC.value}agreementId`];
+    return this.mandatoryValue("edc", "agreementId");
   }
 
-  get retirementDate(): number {
-    return this.data[`${CONTEXT_EDC.value}agreementRetirementDate`];
+  get agreementRetirementDate(): number {
+    return this.mandatoryValue("edc", "agreementRetirementDate");
   }
 
   get reason(): string {
-    return this.data[`${CONTEXT_EDC.value}reason`];
+    return this.mandatoryValue("edc", "reason");
   }
 }
 
@@ -86,21 +76,16 @@ export class AgreementsRetirementController {
   }
 
   async retiredAgreementsRequest(): Promise<RetiredContractAgreement[]> {
-    const retiredContractAgreements = await this.#inner.request<
-      IRetiredContractAgreement[]
-    >(this.#management, {
+    const body = await this.#inner.request(this.#management, {
       path: `${this.#pathPrefix}/request`,
       method: "POST",
     });
 
-    return retiredContractAgreements.map(
-      (retiredContractAgreements) =>
-        new RetiredContractAgreement(retiredContractAgreements),
-    );
+    return await expandArray(body, () => new RetiredContractAgreement());
   }
 
   async retireAgreement(contractAgreementId: string, reason: string) {
-    return this.#inner.request(this.#management, {
+    return await this.#inner.request(this.#management, {
       path: `${this.#pathPrefix}`,
       method: "POST",
       body: {
@@ -114,7 +99,7 @@ export class AgreementsRetirementController {
   }
 
   async reactivateRetired(contractAgreementId: string) {
-    return this.#inner.request(this.#management, {
+    return await this.#inner.request(this.#management, {
       path: `${this.#pathPrefix}/${contractAgreementId}`,
       method: "DELETE",
     });
