@@ -59,7 +59,7 @@
     "@types/react-dom": "^18",
     "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^9",
-    "eslint-config-next": "16.1.4",
+    "eslint-config-next": "16.1.6",
     "eslint-plugin-playwright": "^2.5.1",
     "postcss": "^8",
     "tailwindcss": "^4.1.12",
