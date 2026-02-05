@@ -63,8 +63,7 @@ test.describe("Policy Definitions Page Tests", () => {
       await expect(inputValue).toHaveValue("15/07/2025");
     });
 
-    // This test works locally but fails in CI we need to investigate further
-    test.fixme("should create a policy using the '=' operator for Consumer's Participant ID", async ({ page }) => {
+    test("should create a policy using the '=' operator for Consumer's Participant ID", async ({ page }) => {
       // Open the Create Policy dialog
       await policiesPage.clickCreatePolicyButton();
       await page.waitForURL("**/new");
@@ -129,7 +128,6 @@ test.describe("Policy Definitions Page Tests", () => {
       await policiesPage.clickCreateButtonAndWaitForCreateResponse();
 
       // Create again with same ID (expect 409)
-      // this ensures all preveious calls are done before going on to create the duplicate
       await policiesPage.clickCreatePolicyButton();
       await policiesPage.waitForURL("**/new");
       await policiesPage.fillPolicyId(policyText);
