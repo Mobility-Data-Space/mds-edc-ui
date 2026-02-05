@@ -20,7 +20,7 @@ import { useRouter } from "next/router";
 
 import { useCallback, useEffect, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
-import { counterPartyAddressWithDsp2025_1 } from "@/utilities/utilities";
+import { counterPartyAddressWithDsp2025_1 } from "@/utilities/catalog";
 
 export default function CatalogPage() {
   const { connector } = useParticipantConnectorState();

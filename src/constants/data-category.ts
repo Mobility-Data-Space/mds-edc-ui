@@ -10,7 +10,7 @@ export const GENERAL_INFORMATION_FOR_TRIP_PLANNING =
   "General Information for Trip-Planning";
 export const OTHER = "Other";
 export const PARKING_SERVICE_AND_REST_AREA_INFORMATION =
-  " Parking Service and Rest Area Information";
+  "Parking Service and Rest Area Information";
 export const PEDESTRIAN_NETWORK_DATA = "Pedestrian Network Data";
 export const PUBLIC_TRANSPORT_NON_SCHEDULED_TRANSPORT =
   "Public Transport non Scheduled Transport";
@@ -22,7 +22,7 @@ export const ROAD_WORK_INFORMATION = "Road Work Information";
 export const SHARING_AND_HIRING_SERVICES = "Sharing and Hiring Services";
 export const STATIC_ROAD_NETWORK_DATA = "Static Road Network Data";
 export const STATIC_TRAFFIC_SIGNS_AND_REGULATIONS =
-  " Static Traffic Signs and Regulations";
+  "Static Traffic Signs and Regulations";
 export const TOLL_INFORMATION = "Toll Information";
 export const WATERWAYS_AND_WATER_BODIES = "Waterways and Water Bodies";
 
@@ -48,7 +48,7 @@ export type TYPE_DATA_CATEGORY =
   | typeof WATERWAYS_AND_WATER_BODIES;
 
 export const SUBCATEGORIES = {
-  [AIR_AND_SPACE_TRAVEL]: [],
+  [AIR_AND_SPACE_TRAVEL]: ["-"],
   [CYCLE_NETWORK_DATA]: [
     "Network Closures Diversions",
     "Network Detailed Attributes",
@@ -74,7 +74,7 @@ export const SUBCATEGORIES = {
   [FREIGHT_AND_LOGISTICS]: [
     "Availability of Delivery Areas",
     "Freight Delivery Regulations",
-    " Location of Delivery Areas",
+    "Location of Delivery Areas",
   ],
   [GENERAL_INFORMATION_FOR_TRIP_PLANNING]: [
     "Address Identifiers",
@@ -83,7 +83,7 @@ export const SUBCATEGORIES = {
     "Points of Interests",
     "Topographic Places",
   ],
-  [OTHER]: [],
+  [OTHER]: ["-"],
   [PARKING_SERVICE_AND_REST_AREA_INFORMATION]: [
     "Bike Parking Locations",
     "Car Parking Availability",
@@ -184,7 +184,7 @@ export const SUBCATEGORIES = {
     "Location of Tolling Stations",
     "Payment Methods for Tolls",
   ],
-  [WATERWAYS_AND_WATER_BODIES]: [],
+  [WATERWAYS_AND_WATER_BODIES]: ["-"],
 };
 
 export const DATA_CATEGORY_SELECT_DATA = Object.keys(SUBCATEGORIES).map(
