@@ -5,7 +5,7 @@ export default defineConfig({
   workers: '80%',
   testDir: './tests',
   testMatch: '**/*.spec.ts',
-  fullyParallel: true,
+  fullyParallel: !process.env.CI,
   forbidOnly: !!process.env.CI,
   retries: 1,
   reporter: 'html',
