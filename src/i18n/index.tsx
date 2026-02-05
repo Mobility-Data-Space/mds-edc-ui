@@ -1,8 +1,17 @@
-"use client"
+"use client";
 import { createInstance } from "i18next";
 import { useRouter } from "next/router.js";
-import React, { createContext, PropsWithChildren, useContext, useEffect } from "react";
-import { I18nextProvider, initReactI18next, useTranslation } from "react-i18next";
+import React, {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+} from "react";
+import {
+  I18nextProvider,
+  initReactI18next,
+  useTranslation,
+} from "react-i18next";
 import { cn } from "./translations/cn";
 import { de } from "./translations/de";
 import { en } from "./translations/en";
@@ -19,9 +28,7 @@ export interface TranslatorProviderProps extends TranslatorContextType {
 }
 
 const TranslatorContext = createContext<TranslatorContextType>({} as any);
-export function TranslatorProvider({
-  children,
-}: PropsWithChildren<{}>) {
+export function TranslatorProvider({ children }: PropsWithChildren<{}>) {
   const { Setup, translator, globalTranslator } = useInitTranslator();
   return (
     <TranslatorContext.Provider
@@ -45,9 +52,7 @@ interface TranslateProps {
   delimiter?: string;
 }
 
-export function Translate(
-  { string, global = false }: TranslateProps,
-): string {
+export function Translate({ string, global = false }: TranslateProps): string {
   const { translator, globalTranslator } = useTranslator();
   const t = global ? globalTranslator : translator;
   return t(string);
@@ -55,22 +60,22 @@ export function Translate(
 
 export const DELIMITER = ", ";
 
-export function MultiTranslate(
-  { string, delimiter = DELIMITER, global = false }: TranslateProps,
-): string {
+export function MultiTranslate({
+  string,
+  delimiter = DELIMITER,
+  global = false,
+}: TranslateProps): string {
   const { translator, globalTranslator } = useTranslator();
   const t = global ? globalTranslator : translator;
 
   if (typeof string != "string") {
-    string = JSON.stringify(string)
+    string = JSON.stringify(string);
   }
 
   const stringArray = string.split(delimiter);
-  return stringArray.length === 1 ?
-    t(string) :
-    stringArray
-      .map(str => t(str))
-      .join(delimiter);
+  return stringArray.length === 1
+    ? t(string)
+    : stringArray.map((str) => t(str)).join(delimiter);
 }
 
 export const T = Translate;
