@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { createInstance } from "i18next";
 import { useRouter } from "next/router.js";
 import React, { createContext, PropsWithChildren, useContext, useEffect } from "react";
