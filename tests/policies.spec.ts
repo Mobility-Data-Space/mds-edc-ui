@@ -86,8 +86,8 @@ test.describe("Policy Definitions Page Tests", () => {
       const policiesCount = await policyCards.count();
       expect(policiesCount).toBeGreaterThan(1);
     });
-    // This test works locally but fails in CI we need to investigate further
-    test.fixme("should create a policy using the IN ('isPartOf') operator for Consumer's Participant ID", async ({ page }) => {
+
+    test("should create a policy using the IN ('isPartOf') operator for Consumer's Participant ID", async ({ page }) => {
       // Open the Create Policy dialog
       await policiesPage.clickCreatePolicyButton();
       await page.waitForURL("**/new");
@@ -150,8 +150,7 @@ test.describe("Policy Definitions Page Tests", () => {
   });
 
   test.describe("Delete Functionality", () => {
-    // TODO: This test works locally but fails in CI we need to investigate further
-    test.fixme("should delete the policy", async ({ page }) => {
+    test("should delete the policy", async ({ page }) => {
       // Open the Create Policy dialog
       await policiesPage.clickCreatePolicyButton();
       await page.waitForURL("**/new");
