@@ -1,0 +1,17 @@
+FROM node:24-alpine
+
+RUN apk add --no-cache libc6-compat git
+
+WORKDIR /app
+
+# Copy package files and install dependencies
+COPY package.json yarn.lock* ./
+RUN yarn --frozen-lockfile
+
+# Copy source code needed for seeding
+COPY src ./src
+COPY tests ./tests
+COPY tsconfig.json ./
+
+# Run the seeding script using yarn
+CMD ["yarn", "ts-node", "tests/utils/global-setup.ts"]
