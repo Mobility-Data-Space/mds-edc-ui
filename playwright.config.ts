@@ -44,6 +44,6 @@ export default defineConfig({
     },
     {
       name: "MDS EDC E2E Services",
-      command: 'docker compose -f ./docker-compose.e2e.yml up -d'
+      command: 'docker compose -f ./docker-compose.e2e.yml up --pull always -d'
     }]
 });

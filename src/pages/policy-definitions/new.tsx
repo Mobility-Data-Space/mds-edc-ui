@@ -12,11 +12,13 @@ import { Input } from "@/components/atoms/input";
 import { proxyConnectorManagement } from "@/constants/proxy";
 import { Snackbar } from "@/components/molecules/snackbar";
 import { useSnackbar } from "notistack";
+import { useAppSnackbar } from "@/hooks/use-app-snackbar";
 
 export default function CreatePolicyDefinitionPage() {
   const { push, connector } = useParticipantConnectorState();
   const submitButtonRef = useRef<HTMLButtonElement>(null);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { showSnackbar }  = useAppSnackbar();
 
   const { translator } = useTranslator();
 
@@ -49,9 +51,12 @@ export default function CreatePolicyDefinitionPage() {
 
   const onFormSubmitFail = (error: Error) => {
     const match = /"message":"(.*?)"/.exec(error.message);
-    enqueueSnackbar(
-      (match && match[1]) || translator("policyDefinition.new.saveFail"),
-    );
+
+    showSnackbar({
+      type: 'error',
+      message:  (match && match[1]) || translator("policyDefinition.new.saveFail"),
+      persist: true
+    })
   };
 
   if (!connector) {
@@ -65,19 +70,14 @@ export default function CreatePolicyDefinitionPage() {
           managementUrl={proxyConnectorManagement}
           formData={() => fromPolicyDefinitionForm(formData, policyId)}
           onSuccess={() => {
-            enqueueSnackbar("", {
-              content: (key) => (
-                <Snackbar
-                  type="success"
-                  message={translator("policyDefinitions.new.successCreate")}
-                  onClose={() => {
-                    closeSnackbar(key);
-                  }}
-                />
-              ),
-            });
+
+            showSnackbar({
+              type: "success",
+              message: translator("policyDefinitions.new.successCreate"),
+              persist: true
+            })
             window.dispatchEvent(new Event("policy-definitions-list-refetch"));
-            setTimeout(() => push("/policy-definitions"), 1000);
+            setTimeout(() => push("/policy-definitions"), 4_000);
           }}
           onFailure={onFormSubmitFail}
         >

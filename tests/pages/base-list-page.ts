@@ -16,19 +16,27 @@ export class BaseListPage {
         this.page = page;
     }
 
-    async waitForApiResponse(apiEndpoint: string, options?: { timeout?: number, retries?: number }): Promise<boolean> {
+    async waitForApiResponse(apiEndpoint: string, options?: { timeout?: number, retries?: number, expectedStatus?: number }): Promise<boolean> {
         const timeout = options?.timeout || 45000;
         const retries = options?.retries || 3;
+        const expectedStatus = options?.expectedStatus;
         
         for (let attempt = 1; attempt <= retries; attempt++) {
             try {
                 await this.page.waitForResponse(
-                    (response) => response.url().includes(apiEndpoint) && response.status() < 400,
+                    (response) => {
+                        const respnoseStatus = response.status()
+                        let statusCheck = respnoseStatus < 400;
+                        if(expectedStatus){
+                            statusCheck = respnoseStatus === expectedStatus;
+                        }
+
+                        return response.url().includes(apiEndpoint) && statusCheck
+                    },
                     { timeout: timeout / retries }
                 );
                 return true;
             } catch (error) {
-                console.log(`API response attempt ${attempt}/${retries} failed for ${apiEndpoint}`);
                 if (attempt === retries) {
                     console.warn(`Failed to get response from ${apiEndpoint} after ${retries} attempts`);
                     return false;
