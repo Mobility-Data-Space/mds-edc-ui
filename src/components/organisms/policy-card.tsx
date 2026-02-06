@@ -24,7 +24,7 @@ function getConstraintData(policyDefinition: PolicyDefinition) {
 
 export default function PolicyCard({ policyDefinition, onClick }: PolicyCardProps) {
   return (
-    <Card className="policy-card w-full max-w-[400px]" onClick={onClick}>
+    <Card className="policy-card w-full max-w-[500px]" onClick={onClick}>
       <CardContent className="flex flex-col gap-y-3">
         <div>
           <div className="flex gap-x-4">
