@@ -2,7 +2,6 @@ import { TitleWithIcon } from "@/components/atoms/TitleWithIcon";
 import { JsonLdDialog } from "@/components/molecules/JsonLdDialog";
 import PaginationControls from "@/components/molecules/pagination-controls";
 import SearchBar from "@/components/molecules/search-bar";
-import { Snackbar } from "@/components/molecules/snackbar";
 import PolicyCard from "@/components/organisms/policy-card";
 import SideDrawer from "@/components/organisms/side-drawer";
 import { proxyConnectorManagement } from "@/constants/proxy";
@@ -12,7 +11,7 @@ import { Icon, Button as MuiButton } from "@mui/material";
 import { PolicyDefinition } from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
 import { PolicyDefinitionsList } from "@think-it-labs/edc-connector-ui/policy-definitions-list";
-import { useRouter } from "next/router";
+import { useRouter} from "next/router";
 import { useCallback, useState } from "react";
 import { ErrorPopup } from "../../components/molecules/error-popup";
 import { MAX_ITEMS } from "../../constants/lists";
@@ -27,6 +26,7 @@ export default function PolicyDefinitionListPage() {
     management: proxyConnectorManagement,
   });
 
+  const [policyListKey, setPolicyListKey] = useState(0);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
   const [openPolicyDefinitionData, setOpenPolicyDefinitionData] = useState({
@@ -86,7 +86,7 @@ export default function PolicyDefinitionListPage() {
             message: translator("policyDefinitions.deleteSuccess"),
             persist: true
           })
-          setTimeout(() => push("/policy-definitions"), 1000);
+          setPolicyListKey((key) => key + 1);
         }}
       />
       <PolicyDefinitionsList
@@ -95,6 +95,8 @@ export default function PolicyDefinitionListPage() {
         currentPage={parseInt(router.query.page as string) || 0}
         firstPage={0}
         managementUrl={proxyConnectorManagement}
+        key={policyListKey}
+
       >
         <div className="flex justify-between pb-6">
           <div className="flex justify-start gap-x-5">

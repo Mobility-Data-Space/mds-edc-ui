@@ -27,7 +27,7 @@ export function renderSelectOptions(options: Option[], value: unknown): React.Re
   }
 
   return options?.map((option: Option) => (
-    <MenuItem key={`${option.text}:${option.value}`} value={option.value}>
+    <MenuItem key={`${option.text}:${option.value}`} value={option.value}  aria-label={option.text}>
       {isMultiple ?
         <Checkbox
           onClick={(event) => event.preventDefault()}

@@ -62,7 +62,6 @@ export default function ContractAgreementDialog({
     _contractAgreement,
   );
 
-  const router = useRouter()
   const assetTitle = contractAgreement.assetId || contractAgreement.assetId;
 
   const canTransfer =
@@ -169,9 +168,8 @@ export default function ContractAgreementDialog({
         open={isTerminateModalOpen}
         onClose={() => setIsTerminateModalOpen(false)}
         onSuccess={() => {
-          onTerminateSuccess();
           populateTransferProcesses();
-          router.push("/contract-agreements?status=Terminated&page=0");
+          onTerminateSuccess();
         }}
         translator={translator}
       />

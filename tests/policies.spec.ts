@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { PoliciesPage } from './pages/policies-page';
 import { randomUUID } from 'node:crypto';
+import { beforeEach } from 'node:test';
 
 test.describe("Policy Definitions Page Tests", () => {
   let policiesPage: PoliciesPage;
@@ -75,8 +76,10 @@ test.describe("Policy Definitions Page Tests", () => {
       await policiesPage.fillParticipantId("ConsumerParticipant002");
 
       // Attempt to create the policy
+      const listener =  page.waitForResponse((response) => response.url().includes('/connector/management/v3/policydefinitions/request'));
       await policiesPage.clickCreateButton();
-      await page.waitForResponse((response) => response.url().includes('/connector/management/v3/policydefinitions/request'));
+      const response = await listener;
+      expect(response.status()).toBe(200);
 
       // Verify policy was added
       const policyCards = await policiesPage.getPolicyCards();
@@ -90,19 +93,23 @@ test.describe("Policy Definitions Page Tests", () => {
       await page.waitForURL("**/new");
 
       // Fill in the policy details
-      await policiesPage.fillPolicyId(`TestPolicy002-${Date.now()}`);
       await policiesPage.clickAddExpressionButton();
       await policiesPage.selectParticipantIdField();
       await policiesPage.selectInOperator();
       await policiesPage.fillParticipantId("ConsumerParticipant001");
+      await policiesPage.fillPolicyId(`TestPolicy002-${Date.now()}`);
 
       // Attempt to create the policy
+
+      const listener =  page.waitForResponse((response) => response.url().includes('/connector/management/v3/policydefinitions/request'));
       await policiesPage.clickCreateButton();
-      // Verify the success message
+
       const successMessageLocator = await policiesPage.waitForToastMessage('success');
       const successMessage = await successMessageLocator.textContent();
       expect(successMessage).toContain("Policy created successfully!");
-      await page.waitForResponse((response) => response.url().includes('/connector/management/v3/policydefinitions/request'));
+      const response = await listener;
+      expect(response.status()).toBe(200);
+      // Verify the success message
 
       // Verify policy was added
       const policyCards = await policiesPage.getPolicyCards();
@@ -111,31 +118,25 @@ test.describe("Policy Definitions Page Tests", () => {
     });
 
     test("should display a clear error message for duplicate policy ID", async ({ page }) => {
-      try {
-        // Navigate to the Policies page
-        await policiesPage.navigate();
 
-        // Get the first policy's ID
-        const policyCards = await policiesPage.getPolicyCards();
-        const firstPolicy = policyCards.first();
-        const policyId = firstPolicy.locator('[data-testid="policy-id"]');
-        await expect(policyId).toHaveText();
+      await policiesPage.navigate();
+      const policyText = `TestDuplicatePolicy-${randomUUID()}`;
+    
+      // Create policy first time
+      await policiesPage.clickCreatePolicyButton();
+      await policiesPage.fillPolicyId(policyText);
+      await policiesPage.clickCreateButtonAndWaitForCreateResponse();
 
-        // Try to create a policy with the same ID
-        await policiesPage.clickCreatePolicyButton();
-        await page.waitForURL("**/new");
-        
-        await policiesPage.fillPolicyId(policyId || "");
-        await policiesPage.clickCreateButton();
-
-        // Verify the error message
-        const errorMessageLocator = await policiesPage.getErrorMessage();
-        const errorMessage = errorMessageLocator;
-        await expect(errorMessage).toHaveText(`Policy with ID ${policyId} already exists`);
-      } catch (error) {
-        console.warn('Policy management service appears to be unavailable:', error);
-        test.skip(true, 'EDC policies service not responding');
-      }
+      // Create again with same ID (expect 409)
+      await policiesPage.clickCreatePolicyButton();
+      await policiesPage.waitForURL("**/new");
+      await policiesPage.fillPolicyId(policyText);
+      const res = await policiesPage.clickCreateButtonAndWaitForCreateResponse(409);
+      expect(res.status()).toBe(409);
+    
+      // Wait for error toast to appear, then verify message
+      const errorToast = await policiesPage.waitForToastMessage('error');
+      await expect(errorToast).toContainText(`Policy with ID ${policyText} already exists`);
     });
 
   });
@@ -151,8 +152,10 @@ test.describe("Policy Definitions Page Tests", () => {
       await policiesPage.fillPolicyId(policyId);
 
       // Attempt to create the policy
-      await policiesPage.clickCreateButton();
-      await page.waitForResponse((response) => response.url().includes('/connector/management/v3/policydefinitions/request'));
+      const listerner = page.waitForResponse((response) => response.url().includes('/connector/management/v3/policydefinitions/request'));
+      policiesPage.clickCreateButton();
+      const response = await listerner;
+      expect(response.status()).toBe(200);
 
       const policyCards = await policiesPage.getPolicyCards();
       const policyCard = policyCards.locator('[data-testid="policy-id"]', {hasText: policyId});
@@ -168,8 +171,7 @@ test.describe("Policy Definitions Page Tests", () => {
       await expect(confirmDeleteButton).toBeVisible() ;
 
       await confirmDeleteButton.click() ;
-      const successMessage = await page.getByTestId('toast-success-message').textContent() ;
-      expect(successMessage).toContain("Policy deleted successfully!");
+      await expect(page.getByTestId('toast-success-message').filter({ hasText: 'Policy deleted successfully!' })).toBeVisible();
 
       await page.waitForTimeout(1000);
       await expect(policyCard).toBeHidden() ;

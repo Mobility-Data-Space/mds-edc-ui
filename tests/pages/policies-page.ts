@@ -51,17 +51,36 @@ export class PoliciesPage extends BaseListPage {
     await this.page.getByRole('textbox', { name: 'Policy ID' }).fill(policyId);
   }
 
-  async clickCreateButton() {
+  async clickCreateButton(expectedStatus?: number) {
     await this.page.locator(this.createButtonLocator).click();
-    await this.waitForApiResponse('/connector/management/v3/policydefinitions');
+    await this.waitForApiResponse('/connector/management/v3/policydefinitions', {
+      expectedStatus,
+    });
   }
 
+  async clickCreateButtonAndWaitForCreateResponse(expectedStatus?: number) {
+    const createEndpoint = '/connector/management/v3/policydefinitions';
+    const responsePromise = this.page.waitForResponse(
+      (response) => {
+        const statusCheck = expectedStatus ? response.status() === expectedStatus : response.status() < 400;
+        return response.url().includes(createEndpoint) && response.request().method() === 'POST' && statusCheck;
+      },
+    );
+    await this.page.locator(this.createButtonLocator).click();
+    return responsePromise;
+  }
   async getErrorMessage() {
     return this.page.getByRole('alert').filter({ hasText: 'Policy with ID' });
   }
 
   async clickCreatePolicyButton() {
     await this.page.locator(this.createPolicyButtonLocator).click();
+    // eslint-disable-next-line playwright/no-wait-for-selector
+    await this.page.waitForSelector('button:has-text("Cancel")');
+  }
+
+  async waitForURL(url:string){
+     await this.page.waitForURL(url);
   }
 
   async navigate() {

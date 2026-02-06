@@ -5,7 +5,7 @@ export default defineConfig({
   workers: '80%',
   testDir: './tests',
   testMatch: '**/*.spec.ts',
-  fullyParallel: true,
+  fullyParallel: !process.env.CI,
   forbidOnly: !!process.env.CI,
   retries: 1,
   reporter: 'html',
@@ -44,6 +44,6 @@ export default defineConfig({
     },
     {
       name: "MDS EDC E2E Services",
-      command: 'docker compose -f ./docker-compose.e2e.yml up -d'
+      command: 'docker compose -f ./docker-compose.e2e.yml up --pull always -d'
     }]
 });
