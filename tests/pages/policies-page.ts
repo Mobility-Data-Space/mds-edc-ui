@@ -58,7 +58,6 @@ export class PoliciesPage extends BaseListPage {
     });
   }
 
-  /** Use when the create response must be awaited without race (listens before click). */
   async clickCreateButtonAndWaitForCreateResponse(expectedStatus?: number) {
     const createEndpoint = '/connector/management/v3/policydefinitions';
     const responsePromise = this.page.waitForResponse(
