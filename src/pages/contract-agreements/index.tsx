@@ -18,7 +18,6 @@ import {
 } from "@think-it-labs/edc-connector-client";
 import { ContractAgreementsList } from "@think-it-labs/edc-connector-ui/contract-agreements-list";
 import { useRouter } from "next/router";
-import { SnackbarKey, useSnackbar } from "notistack";
 import { useCallback, useMemo, useState } from "react";
 import { ErrorPopup } from "../../components/molecules/error-popup";
 import { MAX_ITEMS } from "../../constants/lists";
@@ -33,7 +32,7 @@ enum StatusFilter {
 }
 
 export default function ContractAgreementsListPage() {
-  const { query } = useRouter();
+  const { query, push } = useRouter();
   const { connector } = useParticipantConnectorState();
   const { translator } = useTranslator();
 
@@ -141,13 +140,15 @@ export default function ContractAgreementsListPage() {
           }}
           onTerminateSuccess={() => {
             window.dispatchEvent(new Event("contract-agreements-list-refetch"));
-
+            setIsDetailsModalOpen(false);
+            
             showSnackbar({
               type: "success",
               message: translator("contractAgreements.terminationSuccess"),
               persist: true,
             })
-            setIsDetailsModalOpen(false);
+
+            setTimeout(()=> push("/contract-agreements?status=Terminated&page=0"), 2_500);
           }}
           participantId={connector.id}
           connectorEndpoint={connector.protocolUrl}

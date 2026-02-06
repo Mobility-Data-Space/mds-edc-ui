@@ -19,7 +19,7 @@ export class AssetsPage extends BaseListPage {
   }
 
   async fillHttpPath() {
-    await this.page.getByRole('textbox', { name: 'The default URL path' }).fill('/api/v1/resource');
+    await this.page.getByRole('textbox', { name: 'Base URL' }).fill('https://example.com/api/v1/resource');
   }
 
   async addQueryParams() {
@@ -63,8 +63,10 @@ export class AssetsPage extends BaseListPage {
   }
 
   async navigate() {
+    const listerner = this.page.waitForResponse((response) => response.url().includes('/connector/management/v3/assets'));
     await this.page.goto('/assets');
-    await this.page.waitForResponse((response) => response.url().includes('/connector/management/v3/assets'));
+
+    await listerner;
   }
 
   async getAssetList() {
@@ -94,7 +96,7 @@ export class AssetsPage extends BaseListPage {
 
   async fillRequiredAssetFields() {
     await this.page.getByRole('combobox').filter({ hasText: 'Select data category' }).click();
-    await this.page.getByRole('option', { name: 'Traffic Information' }).click();
+    await this.page.getByRole('option', { name: 'Air and Space Travel' }).click();
   }
 
   async openDataSourceSection() {

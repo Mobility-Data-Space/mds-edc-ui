@@ -28,6 +28,7 @@ export default function DataOffersPage() {
     management: proxyConnectorManagement,
   });
 
+
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [listKey, setListKey] = useState(1);
@@ -102,6 +103,8 @@ export default function DataOffersPage() {
               />
             ),
           });
+
+          setListKey((key) => key + 1);
           setTimeout(() => push("/data-offers"), 1000);
         }}
       />

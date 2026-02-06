@@ -63,6 +63,7 @@ test.describe("Contract Agreements Page Tests", () => {
       await agreementsPage.selectS3Type();
       await agreementsPage.fillRequiredS3DataDestination("single");
       await agreementsPage.submitTransfer();
+
       const successMessage = page.getByText('Transfer Process Initiated Successfully');
       await expect(successMessage).toBeVisible();
     });
