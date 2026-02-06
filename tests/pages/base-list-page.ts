@@ -25,10 +25,10 @@ export class BaseListPage {
             try {
                 await this.page.waitForResponse(
                     (response) => {
-                        const respnoseStatus = response.status()
-                        let statusCheck = respnoseStatus < 400;
+                        const responseStatus = response.status()
+                        let statusCheck = responseStatus < 400;
                         if(expectedStatus){
-                            statusCheck = respnoseStatus === expectedStatus;
+                            statusCheck = responseStatus === expectedStatus;
                         }
 
                         return response.url().includes(apiEndpoint) && statusCheck
