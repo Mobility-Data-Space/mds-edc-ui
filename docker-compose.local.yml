@@ -1,0 +1,165 @@
+services:
+  edc-1:
+    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
+    platform: linux/amd64
+    entrypoint: ["/app/bin/connector-inmemory", "--log-level=debug"]
+    environment:
+      EDC_PARTICIPANT_ID: "MDSXXXXXXX.YYYYYYY"
+      EDC_COMPONENT_ID: "participant_1_MDS_COMPONENT"
+
+      WEB_HTTP_PATH: "/api"
+      WEB_HTTP_PORT: "8181"
+      WEB_HTTP_CONTROL_PATH: "/api/control"
+      WEB_HTTP_CONTROL_PORT: "8186"
+      WEB_HTTP_MANAGEMENT_PATH: "/api/management"
+      WEB_HTTP_MANAGEMENT_PORT: "8182"
+      WEB_HTTP_MANAGEMENT_AUTH_TYPE: "tokenbased"
+      WEB_HTTP_MANAGEMENT_AUTH_KEY: "${TEST_API_KEY:-default-test-api-key}"
+      WEB_HTTP_PROTOCOL_PATH: "/api/dsp"
+      WEB_HTTP_PROTOCOL_PORT: "8183"
+      WEB_HTTP_VERSION_PATH: "/api/version"
+      WEB_HTTP_VERSION_PORT: "8184"
+      WEB_HTTP_PUBLIC_PATH: "/public"
+      WEB_HTTP_PUBLIC_PORT: "8185"
+
+      EDC_DSP_CALLBACK_ADDRESS: "http://edc-1:8183/api/dsp"
+
+      # Transfer Proxy Configuration
+      EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: "transfer-proxy-token-signer-public-key"
+      EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: "transfer-proxy-token-signer-private-key"
+
+      # CORS
+      EDC_WEB_REST_CORS_ENABLED: true
+      EDC_WEB_REST_CORS_HEADERS: origin,content-type,accept,authorization,X-Api-Key
+      EDC_WEB_REST_CORS_ORIGINS: "*"
+
+      EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "false"
+    ports:
+      - "8181:8181" # API
+      - "8186:8186" # Control
+      - "8182:8182" # Management
+      - "8183:8183" # Protocol
+      - "8184:8184" # Version
+      - "8185:8185" # Public
+    post_start:
+      - command: apk --no-cache add curl
+        user: root
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://edc-1:8181/api/check/liveness"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - mds-network
+
+  edc-2:
+    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
+    platform: linux/amd64
+    entrypoint: ["/app/bin/connector-inmemory", "--log-level=debug"]
+    environment:
+      EDC_PARTICIPANT_ID: "MDSXXXXXXX.ZZZZZZZ"
+      EDC_COMPONENT_ID: "participant_2_MDS_COMPONENT"
+
+      WEB_HTTP_PATH: "/api"
+      WEB_HTTP_PORT: "8181"
+      WEB_HTTP_CONTROL_PATH: "/api/control"
+      WEB_HTTP_CONTROL_PORT: "8186"
+      WEB_HTTP_MANAGEMENT_PATH: "/api/management"
+      WEB_HTTP_MANAGEMENT_PORT: "8182"
+      WEB_HTTP_MANAGEMENT_AUTH_TYPE: "tokenbased"
+      WEB_HTTP_MANAGEMENT_AUTH_KEY: "${TEST_API_KEY:-default-test-api-key}"
+      WEB_HTTP_PROTOCOL_PATH: "/api/dsp"
+      WEB_HTTP_PROTOCOL_PORT: "8183"
+      WEB_HTTP_VERSION_PATH: "/api/version"
+      WEB_HTTP_VERSION_PORT: "8184"
+      WEB_HTTP_PUBLIC_PATH: "/public"
+      WEB_HTTP_PUBLIC_PORT: "8185"
+
+      EDC_DSP_CALLBACK_ADDRESS: "http://edc-2:8183/api/dsp"
+
+      EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: "transfer-proxy-token-signer-public-key"
+      EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: "transfer-proxy-token-signer-private-key"
+
+      EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "false"
+    ports:
+      - "9181:8181" # API
+      - "9186:8186" # Control
+      - "9182:8182" # Management
+      - "9183:8183" # Protocol
+      - "9184:8184" # Version
+      - "9185:8185" # Public
+    post_start:
+      - command: apk --no-cache add curl
+        user: root
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://edc-2:8181/api/check/liveness"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - mds-network
+
+  ui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      # EDC Configuration
+      EDC_ID: "MDSXXXXXXX.YYYYYYY"
+      EDC_NAME: "Think-it Test Connector 1"
+      EDC_DESCRIPTION: "Think-it GmbH MDS EDC Test Connector 1"
+      EDC_MANAGEMENT_URL: "http://edc-1:8182/api/management"
+      EDC_PUBLIC_URL: "http://edc-1:8185/public"
+      EDC_DEFAULT_URL: "http://edc-1:8181/api"
+      EDC_PROTOCOL_URL: "http://edc-1:8183/api/dsp/2025-1"
+      EDC_MANAGEMENT_API_KEY: "${TEST_API_KEY:-default-test-api-key}"
+
+      # MDS DAPS Configuration
+      MDS_DAPS_URL: "https://daps.mobility-dataspace.eu"
+      MDS_DAPS_JWKS_URL: "https://daps.mobility-dataspace.eu/.well-known/jwks.json"
+
+      # Curator and Maintainer
+      EDC_CURATOR_ORGANIZATION: "Think-it GmbH"
+      EDC_CURATOR_URL: "https://think-it.io"
+      EDC_MAINTAINER_ORGANIZATION: "Think-it GmbH"
+      EDC_MAINTAINER_URL: "https://think-it.io"
+
+      # App Configuration
+      APP_URL: "http://localhost:3000"
+      NEXT_PUBLIC_BASE_URL: "http://localhost:3000"
+      NODE_ENV: "production"
+
+      # OAuth Configuration
+      OAUTH_CLIENT_ID: "${OAUTH_CLIENT_ID:-test-ui}"
+      OAUTH_CLIENT_SECRET: "${OAUTH_CLIENT_SECRET:-xqkQswpBJqfSnxXsXWBtYrkYlxaoeeiq}"
+      OAUTH_ISSUER: "${OAUTH_ISSUER:-https://auth.mds-dev.think-it.io/realms/test-ui}"
+      NEXTAUTH_SECRET: "${NEXTAUTH_SECRET:-http://localhost:3000}"
+    ports:
+      - "3000:3000"
+    depends_on:
+      edc-1:
+        condition: service_healthy
+      edc-2:
+        condition: service_healthy
+    networks:
+      - mds-network
+
+  seed:
+    build:
+      context: .
+      dockerfile: Dockerfile.seed
+    environment:
+      TEST_API_KEY: "${TEST_API_KEY:-default-test-api-key}"
+      CI: "true"
+    depends_on:
+      edc-1:
+        condition: service_healthy
+      edc-2:
+        condition: service_healthy
+    network_mode: host
+
+networks:
+  mds-network:
+    driver: bridge

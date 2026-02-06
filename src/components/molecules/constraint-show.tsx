@@ -75,10 +75,8 @@ export function ConstraintShow({
                   .map((v) => v.trim())
                   .filter(Boolean)
                   .map((value, i) => (
-                    <Tooltip title={value}>
-                      <Typography key={`${value}-${i}`} component="div">
-                        {value}
-                      </Typography>
+                    <Tooltip title={value} key={`${value}-${i}`}>
+                      <Typography component="div">{value}</Typography>
                     </Tooltip>
                   ))}
               </div>
