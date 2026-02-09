@@ -509,8 +509,8 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
       icon: "today",
       label: "assets.new.fieldAdvancedInfoTemporalCoverage",
       value: temporalCoverageValue([
-        dateToString(startDate),
-        dateToString(endDate),
+        dateToString( new Date(startDate)),
+        dateToString(new Date(endDate)),
       ]),
     });
   }
@@ -787,7 +787,6 @@ export const assetToAssetInput = async (asset: Asset) => {
   const temporalCoverage =
     properties[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE];
 
-    console.log("temporalCoverage", temporalCoverage);
     if(temporalCoverage){
         const startDate = temporalCoverage[
           ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START
@@ -967,7 +966,6 @@ export const validateAdvancedInfo = (formDataToValidate: AssetProperties) => {
     ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END
   ] as string;
 
-  console.log("startDate", startDate, "endDate", endDate);
   if (!isValidDate(startDate) || !isValidDate(endDate)) {
     newErrors[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE] = true;
   }
