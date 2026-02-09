@@ -783,6 +783,22 @@ export const assetToAssetInput = async (asset: Asset) => {
     return item?.input?.input?.value || item.input?.value;
   });
 
+
+  const temporalCoverage =
+    properties[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE];
+
+    console.log("temporalCoverage", temporalCoverage);
+    if(temporalCoverage){
+        const startDate = temporalCoverage[
+          ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START
+        ] as string;
+        const endDate = temporalCoverage[
+          ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END
+        ] as string;
+        properties[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE][ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START] = dateToString(new Date(startDate));
+        properties[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE][ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END] = dateToString(new Date(endDate));
+    }
+ 
   if (currReferences) {
     properties[ASSET_ADVANCED_INFO_DATA_MODEL][
       ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA
@@ -951,6 +967,7 @@ export const validateAdvancedInfo = (formDataToValidate: AssetProperties) => {
     ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END
   ] as string;
 
+  console.log("startDate", startDate, "endDate", endDate);
   if (!isValidDate(startDate) || !isValidDate(endDate)) {
     newErrors[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE] = true;
   }
