@@ -66,33 +66,22 @@ export function ConstraintShow({
             index,
             translator,
           );
-
-          if (operatorToCheck === "IN" && index === 2) {
-            return (
-              <div key={index}>
-                {computedValue
-                  .split(",")
-                  .map((v) => v.trim())
-                  .filter(Boolean)
-                  .map((value, i) => (
-                    <Tooltip title={value} key={`${value}-${i}`}>
-                      <Typography component="div">{value}</Typography>
-                    </Tooltip>
-                  ))}
-              </div>
-            );
-          }
-          if (index == 1) operatorToCheck = computedValue;
+          
 
           return (
-            <Tooltip title={tooltipTitle} key={index}>
-              <Typography
-                component="span"
-                className={index > 1 ? "[word-break:break-word]" : ""}
-              >
-                {computedValue}
-              </Typography>
-            </Tooltip>
+            <div key={index}>
+              {computedValue
+                .split(",")
+                .map((v) => v.trim())
+                .filter(Boolean)
+                .map((value, i) => (
+                  <Tooltip title={value} key={`${value}-${i}`}>
+                    <Typography  component="div">
+                      {value}
+                    </Typography>
+                  </Tooltip>
+                ))}
+            </div>
           );
         })}
       </div>
