@@ -67,9 +67,6 @@ export default function ContractAgreementDialog({
   const canTransfer =
     participantId !== contractAgreement.providerId &&
     !contractAgreement.isTerminated;
-  const canTerminate =
-    participantId !== contractAgreement.providerId &&
-    !contractAgreement.isTerminated;
 
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [isTerminateModalOpen, setIsTerminateModalOpen] = useState(false);
@@ -250,16 +247,14 @@ export default function ContractAgreementDialog({
         </DialogContent>
         <DialogActions>
           <div className="flex justify-between flex-grow p-3">
-            {canTerminate && (
-              <Button
-                data-testid="transfer-process-terminate"
-                variant="contained"
-                color="error"
-                onClick={() => setIsTerminateModalOpen(true)}
-              >
-                <T string="common.terminate" />
-              </Button>
-            )}
+            <Button
+              data-testid="transfer-process-terminate"
+              variant="contained"
+              color="error"
+              onClick={() => setIsTerminateModalOpen(true)}
+            >
+              <T string="common.terminate" />
+            </Button>
             <div className="flex flex-grow justify-end gap-x-3">
               <Button color="secondary" onClick={onClose} className="self-end">
                 <T string="common.close" />
