@@ -7,7 +7,7 @@ export const STATE_FINALIZED = "FINALIZED";
 export const TEXT_COLORS: { [key: string]: string } = {
   [STATE_RUNNING]: "black",
   [TransferProcessStates.STARTED]: "black",
-  [TransferProcessStates.DEPROVISIONED]: "black",
+  [TransferProcessStates.DEPROVISIONED]: "white",
   [STATE_ERROR]: "black",
   [TransferProcessStates.TERMINATED]: "white",
   [STATE_FINALIZED]: "black",

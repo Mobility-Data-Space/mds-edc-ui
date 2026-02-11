@@ -5,17 +5,13 @@ import {
 import { Chip, ChipProps } from "@mui/material";
 import React from "react";
 
+type StateChipProps = { state: string; didError: boolean } & ChipProps
 export function StateChip({
-  state: _state,
+  state,
   icon,
   didError,
   ...rest
-}: { state: string; didError: boolean } & ChipProps): React.ReactElement {
-  let state = _state;
-  if (state === "DEPROVISIONED") {
-    state = didError ? "TERMINATED" : "COMPLETED";
-  }
-
+}: StateChipProps): React.ReactElement {
   return (
     <Chip
       className="font-semibold"
