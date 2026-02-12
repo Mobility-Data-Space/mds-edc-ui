@@ -30,7 +30,6 @@ import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
 import { Timestamp } from "@think-it-labs/edc-connector-ui/timestamp";
 import { enqueueSnackbar } from "notistack";
 import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 
 interface ContractAgreementDialogProps {
   contractAgreement: ContractAgreement;
@@ -54,8 +53,8 @@ export default function ContractAgreementDialog({
   connectorEndpoint,
   contentStyle = {},
   translator,
-  onTerminateSuccess = () => {},
-  onInitSuccess = () => {},
+  onTerminateSuccess = () => { },
+  onInitSuccess = () => { },
 }: ContractAgreementDialogProps) {
   const contractAgreement = Object.assign(
     new EnrichedContractAgreement(),
@@ -67,6 +66,7 @@ export default function ContractAgreementDialog({
   const canTransfer =
     participantId !== contractAgreement.providerId &&
     !contractAgreement.isTerminated;
+  const canTerminate = !contractAgreement.isTerminated;
 
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [isTerminateModalOpen, setIsTerminateModalOpen] = useState(false);
@@ -247,14 +247,16 @@ export default function ContractAgreementDialog({
         </DialogContent>
         <DialogActions>
           <div className="flex justify-between flex-grow p-3">
-            <Button
-              data-testid="transfer-process-terminate"
-              variant="contained"
-              color="error"
-              onClick={() => setIsTerminateModalOpen(true)}
-            >
-              <T string="common.terminate" />
-            </Button>
+            {canTerminate && (
+              <Button
+                data-testid="transfer-process-terminate"
+                variant="contained"
+                color="error"
+                onClick={() => setIsTerminateModalOpen(true)}
+              >
+                <T string="common.terminate" />
+              </Button>
+            )}
             <div className="flex flex-grow justify-end gap-x-3">
               <Button color="secondary" onClick={onClose} className="self-end">
                 <T string="common.close" />
