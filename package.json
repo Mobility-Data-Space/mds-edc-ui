@@ -1,9 +1,9 @@
 {
   "name": "edc-connector-ui-mds",
-  "version": "3.0.1-rc.1",
+  "version": "3.0.1-rc.2",
   "private": true,
   "config": {
-    "mdsEdcVersion": "2.0.0-rc.1"
+    "mdsEdcVersion": "2.0.0-rc.2"
   },
   "type": "module",
   "scripts": {
