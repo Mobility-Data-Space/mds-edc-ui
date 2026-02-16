@@ -128,6 +128,15 @@ export const isEmail = (email: string) => {
   return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email);
 };
 
+export const hasPort = (value: string): boolean => {
+  try {
+    const url = new URL(value);
+    return url.port !== "";
+  } catch {
+    return false;
+  }
+};
+
 export const isDate = (date: string) => {
   // Can match different formats like 12/31/2025 and 1-1-2025 || ISO8601
   return (
