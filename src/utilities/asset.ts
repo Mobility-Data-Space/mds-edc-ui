@@ -49,6 +49,7 @@ import { EDC_ID_FIELD } from "@/utilities/data-offer.ts";
 import { removeEmptyFields } from "@/utilities/form";
 import {
   extractArrayValues,
+  hasPort,
   isEmail,
   isUrl,
   toTitleCase,
@@ -71,7 +72,7 @@ import {
   defaultHttpSourceDataAddress,
   OnRequestDataAddress,
 } from "./data-address";
-import { dateToString, isValidDate, dateToISO } from "./date";
+import { dateToISO, dateToString, isValidDate } from "./date";
 
 const temporalCoverageValue = ([start, end]: [string, string]) => {
   if (!start && !end) {
@@ -509,7 +510,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
       icon: "today",
       label: "assets.new.fieldAdvancedInfoTemporalCoverage",
       value: temporalCoverageValue([
-        dateToString( new Date(startDate)),
+        dateToString(new Date(startDate)),
         dateToString(new Date(endDate)),
       ]),
     });
@@ -677,6 +678,13 @@ export const validateDataAddress = (
         errors[field] = translator("This must be a valid URL");
       }
     }
+    if (
+      formDataToValidate.endpoint &&
+      !errors.endpoint &&
+      !hasPort(formDataToValidate.endpoint)
+    ) {
+      errors.endpoint = translator("Endpoint URL must include a port number");
+    }
     return errors;
   }
 
@@ -783,21 +791,23 @@ export const assetToAssetInput = async (asset: Asset) => {
     return item?.input?.input?.value || item.input?.value;
   });
 
+  const temporalCoverage = properties[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE];
 
-  const temporalCoverage =
-    properties[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE];
+  if (temporalCoverage) {
+    const startDate = temporalCoverage[
+      ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START
+    ] as string;
+    const endDate = temporalCoverage[
+      ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END
+    ] as string;
+    properties[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE][
+      ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START
+    ] = dateToString(new Date(startDate));
+    properties[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE][
+      ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END
+    ] = dateToString(new Date(endDate));
+  }
 
-    if(temporalCoverage){
-        const startDate = temporalCoverage[
-          ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START
-        ] as string;
-        const endDate = temporalCoverage[
-          ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END
-        ] as string;
-        properties[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE][ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START] = dateToString(new Date(startDate));
-        properties[ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE][ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_END] = dateToString(new Date(endDate));
-    }
- 
   if (currReferences) {
     properties[ASSET_ADVANCED_INFO_DATA_MODEL][
       ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA
@@ -908,19 +918,22 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
   }
 
   if (formDataToTransform.type === DataAddressTypes.Kafka) {
-    const res = removeEmptyFields({
+    return removeEmptyFields({
       ...formDataToTransform,
+      // To remove the ui only keys, They are replaced by the connector keys
+      mechanism: "",
+      protocol: "",
+      endpoint: "",
       type: DataAddressTypes.Kafka,
-      mechanism: formDataToTransform.mechanism,
-      protocol: formDataToTransform.protocol,
       topic: formDataToTransform.topic,
-      endpoint: formDataToTransform.endpoint,
+      "kafka.sasl.mechanism": formDataToTransform.mechanism,
+      "kafka.security.protocol": formDataToTransform.protocol,
+      "kafka.bootstrap.servers": formDataToTransform.endpoint,
       oidcRegisterClientTokenKey:
         formDataToTransform.oidcRegisterClientTokenKey,
       kafkaAdminPropertiesKey: formDataToTransform.kafkaAdminPropertiesKey,
       oidcDiscoveryUrl: formDataToTransform.oidcDiscoveryUrl,
     });
-    return res;
   }
 
   return formDataToTransform;
