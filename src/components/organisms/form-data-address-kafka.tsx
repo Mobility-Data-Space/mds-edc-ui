@@ -17,8 +17,6 @@ export function FormDataAddressKafka({
   isDestination,
   ...props
 }: FormDataAddressKafkaProps) {
-
-  console.log("FormDataAddressKafka", { props});
   return isDestination ? (
     <ConsumerFormDataAddressKafka {...props} />
   ) : (
@@ -80,8 +78,6 @@ export function ProviderFormDataAddressKafka({
   onChange,
   translator,
 }: FormDataAddressKafkaProps): React.ReactElement {
-
-  console.log("ProviderFormDataAddressKafka", { formData, errors });
   return (
     <>
       <div className="flex flex-col gap-y-5">
