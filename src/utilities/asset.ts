@@ -673,17 +673,17 @@ export const validateDataAddress = (
 
   if (formDataToValidate.type === DataAddressTypes.Kafka) {
     const errors: any = {};
-    for (const field of ["oidcDiscoveryUrl", "endpoint"]) {
+    for (const field of ["oidcDiscoveryUrl", "kafka.bootstrap.servers"]) {
       if (!isUrl(formDataToValidate[field])) {
         errors[field] = translator("This must be a valid URL");
       }
     }
     if (
-      formDataToValidate.endpoint &&
-      !errors.endpoint &&
-      !hasPort(formDataToValidate.endpoint)
+      formDataToValidate["kafka.bootstrap.servers"] &&
+      !errors["kafka.bootstrap.servers"] &&
+      !hasPort(formDataToValidate["kafka.bootstrap.servers"])
     ) {
-      errors.endpoint = translator("Endpoint URL must include a port number");
+      errors["kafka.bootstrap.servers"] = translator("Endpoint URL must include a port number");
     }
     return errors;
   }
@@ -920,15 +920,8 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
   if (formDataToTransform.type === DataAddressTypes.Kafka) {
     return removeEmptyFields({
       ...formDataToTransform,
-      // To remove the ui only keys, They are replaced by the connector keys
-      mechanism: "",
-      protocol: "",
-      endpoint: "",
       type: DataAddressTypes.Kafka,
       topic: formDataToTransform.topic,
-      "kafka.sasl.mechanism": formDataToTransform.mechanism,
-      "kafka.security.protocol": formDataToTransform.protocol,
-      "kafka.bootstrap.servers": formDataToTransform.endpoint,
       oidcRegisterClientTokenKey:
         formDataToTransform.oidcRegisterClientTokenKey,
       kafkaAdminPropertiesKey: formDataToTransform.kafkaAdminPropertiesKey,

@@ -17,6 +17,8 @@ export function FormDataAddressKafka({
   isDestination,
   ...props
 }: FormDataAddressKafkaProps) {
+
+  console.log("FormDataAddressKafka", { props});
   return isDestination ? (
     <ConsumerFormDataAddressKafka {...props} />
   ) : (
@@ -78,6 +80,8 @@ export function ProviderFormDataAddressKafka({
   onChange,
   translator,
 }: FormDataAddressKafkaProps): React.ReactElement {
+
+  console.log("ProviderFormDataAddressKafka", { formData, errors });
   return (
     <>
       <div className="flex flex-col gap-y-5">
@@ -139,10 +143,10 @@ export function ProviderFormDataAddressKafka({
             type="url"
             placeholder={"Endpoint URL"}
             label={translator("Endpoint URL")}
-            error={errors.endpoint}
-            value={formData.endpoint}
+            error={errors['kafka.bootstrap.servers']}
+            value={formData['kafka.bootstrap.servers']}
             onChange={(event) =>
-              onChange({ ...formData, endpoint: event.target.value })
+              onChange({ ...formData, "kafka.bootstrap.servers": event.target.value })
             }
           />
         </div>
@@ -164,10 +168,10 @@ export function ProviderFormDataAddressKafka({
                 value: "OAUTHBEARER",
               },
             ]}
-            error={errors.mechanism}
-            value={formData.mechanism}
+            error={errors["kafka.sasl.mechanism"]}
+            value={formData['kafka.sasl.mechanism']}
             onChange={(event) =>
-              onChange({ ...formData, mechanism: event.target.value })
+              onChange({ ...formData, "kafka.sasl.mechanism": event.target.value })
             }
           />
         </div>
@@ -193,10 +197,10 @@ export function ProviderFormDataAddressKafka({
                 value: "SASL_SSL",
               },
             ]}
-            error={errors.protocol}
-            value={formData.protocol}
+            error={errors["kafka.security.protocol"]}
+            value={formData["kafka.security.protocol"]}
             onChange={(event) =>
-              onChange({ ...formData, protocol: event.target.value })
+              onChange({ ...formData, "kafka.security.protocol": event.target.value })
             }
           />
         </div>
