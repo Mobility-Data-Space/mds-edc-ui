@@ -165,7 +165,7 @@ export function ProviderFormDataAddressKafka({
               },
             ]}
             error={errors["kafka.sasl.mechanism"]}
-            value={formData['kafka.sasl.mechanism']}
+            value={formData["kafka.sasl.mechanism"]}
             onChange={(event) =>
               onChange({ ...formData, "kafka.sasl.mechanism": event.target.value })
             }

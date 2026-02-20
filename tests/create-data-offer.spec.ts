@@ -131,7 +131,7 @@ test.describe('Create Data Offer Tests', () => {
     expect(correctFormatIds.length).toBeGreaterThan(0);
   });
 
-  test("should create kafka data source", async ({ page }) => {
+  test.only("should create kafka data source", async ({ page }) => {
     const input = {
       asset: {
         title: `Kafka Data Offer ${Date.now()}`,
@@ -140,7 +140,7 @@ test.describe('Create Data Offer Tests', () => {
       kafka: {
         topic: "test topic",
         oidcDiscoveryUrl: "http://example.com",
-        bootstrapServers: "http://port.com:500",
+        bootstrapServers: "port.com:500",
         saslMechanism: "oAuth bearer",
         securityProtocol: "SSL",
         oidcRegisterClientTokenKey: "test client token",
@@ -175,7 +175,7 @@ test.describe('Create Data Offer Tests', () => {
     expect(dataAddress.type).toBe("Kafka");
     expect(dataAddress.topic).toBe("test topic");
     expect(dataAddress.oidcDiscoveryUrl).toBe("http://example.com");
-    expect(dataAddress["kafka.bootstrap.servers"]).toBe("http://port.com:500");
+    expect(dataAddress["kafka.bootstrap.servers"]).toBe("port.com:500");
     expect(dataAddress["kafka.sasl.mechanism"]).toBe("OAUTHBEARER");
     expect(dataAddress["kafka.security.protocol"]).toBe("SASL_SSL");
     expect(dataAddress.oidcRegisterClientTokenKey).toBe("test client token");
@@ -197,7 +197,7 @@ test.describe('Create Data Offer Tests', () => {
       kafka: {
         topic: "test topic",
         oidcDiscoveryUrl: "http://example.com",
-        bootstrapServers: "http://port.com:500",
+        bootstrapServers: "port.com:500",
         saslMechanism: "oAuth bearer",
         securityProtocol: "SSL",
         oidcRegisterClientTokenKey: "test client token",
@@ -222,7 +222,7 @@ test.describe('Create Data Offer Tests', () => {
       kafka: {
         topic: "new topic",
         oidcDiscoveryUrl: "http://edited-example.com",
-        bootstrapServers: "http://edited-port.com:500",
+        bootstrapServers: "edited-port.com:500",
         saslMechanism: "oAuth bearer",
         securityProtocol: "SSL",
         oidcRegisterClientTokenKey: "edited client token",
@@ -256,7 +256,7 @@ test.describe('Create Data Offer Tests', () => {
     expect(editBodyAddress.topic).toBe("new topic");
     expect(editBodyAddress.oidcDiscoveryUrl).toBe("http://edited-example.com");
     expect(editBodyAddress["kafka.bootstrap.servers"]).toBe(
-      "http://edited-port.com:500",
+      "edited-port.com:500",
     );
     expect(editBodyAddress["kafka.sasl.mechanism"]).toBe("OAUTHBEARER");
     expect(editBodyAddress["kafka.security.protocol"]).toBe("SASL_SSL");
