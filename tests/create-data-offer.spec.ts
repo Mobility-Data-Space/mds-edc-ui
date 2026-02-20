@@ -131,7 +131,7 @@ test.describe('Create Data Offer Tests', () => {
     expect(correctFormatIds.length).toBeGreaterThan(0);
   });
 
-  test.only("should create kafka data source", async ({ page }) => {
+  test("should create kafka data source", async ({ page }) => {
     const input = {
       asset: {
         title: `Kafka Data Offer ${Date.now()}`,
