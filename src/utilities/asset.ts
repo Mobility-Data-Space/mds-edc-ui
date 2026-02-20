@@ -673,10 +673,17 @@ export const validateDataAddress = (
 
   if (formDataToValidate.type === DataAddressTypes.Kafka) {
     const errors: any = {};
-    for (const field of ["oidcDiscoveryUrl", "kafka.bootstrap.servers"]) {
-      if (!isUrl(formDataToValidate[field])) {
-        errors[field] = translator("This must be a valid URL");
-      }
+    if (!isUrl(formDataToValidate.oidcDiscoveryUrl)) {
+      errors.oidcDiscoveryUrl = translator("This must be a valid URL");
+    }
+    if (
+      !isUrl(formDataToValidate["kafka.bootstrap.servers"], {
+        forceHttpProtocols: false,
+      })
+    ) {
+      errors["kafka.bootstrap.servers"] = translator(
+        "This must be a valid kafka endpoint URL",
+      );
     }
     if (
       formDataToValidate["kafka.bootstrap.servers"] &&

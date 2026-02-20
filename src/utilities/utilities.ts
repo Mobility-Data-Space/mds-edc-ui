@@ -77,48 +77,78 @@ export const tryTranslatingWithTooltip = (
   return [tooltipTitle, computedValue];
 };
 
-export const isUrl = (value: string): boolean => {
+export type IsUrlOptions = {
+  /**
+   * When false, validates as a Kafka-style endpoint: protocol is optional
+   * (e.g. hostname:9092 or kafka://broker:9092), and hostname may be a single
+   * label (no TLD required). Default true.
+   */
+  forceHttpProtocols?: boolean;
+};
+
+function parseUrlForValidation(value: string): URL | null {
+  if (value.includes("://")) {
+    try {
+      return new URL(value);
+    } catch {
+      return null;
+    }
+  }
+  try {
+    return new URL(`http://${value}`);
+  } catch {
+    return null;
+  }
+}
+
+function isHostnameValid(
+  hostname: string,
+  requireTld: boolean,
+): boolean {
+  if (
+    !hostname ||
+    hostname.length === 0 ||
+    hostname.endsWith(".") ||
+    hostname.includes("..")
+  ) {
+    return false;
+  }
+  const parts = hostname.split(".");
+  if (parts.some((part) => part.length === 0)) {
+    return false;
+  }
+  if (requireTld) {
+    if (parts.length < 2) return false;
+    const tld = parts[parts.length - 1];
+    if (!tld || !/^[a-zA-Z0-9-]+$/.test(tld)) return false;
+  } else {
+    if (!/^[a-zA-Z0-9.-]+$/.test(hostname)) return false;
+  }
+  return true;
+}
+
+export const isUrl = (
+  value: string,
+  options: IsUrlOptions = {},
+): boolean => {
   try {
     if (/\s/.test(value)) return false;
 
-    // Ensure URLs contain :// separator after protocol (reject http:example.com)
+    const { forceHttpProtocols = true } = options;
+    const isKafkaEndpoint = !forceHttpProtocols;
+
+    if (isKafkaEndpoint) {
+      const url = parseUrlForValidation(value);
+      if (!url) return false;
+      return isHostnameValid(url.hostname, false);
+    }
+
     if (!/^https?:\/\//.test(value)) return false;
-
     const url = new URL(value);
-
     if (url.protocol !== "http:" && url.protocol !== "https:") {
       return false;
     }
-
-    const hostname = url.hostname;
-
-    const hostNameStructureIsValid =
-      !hostname ||
-      hostname.length === 0 ||
-      hostname.endsWith(".") ||
-      hostname.includes("..");
-
-    if (hostNameStructureIsValid) return false;
-
-    // Require at least one dot for TLD (e.g., example.com)
-    // Split by dot and ensure we have at least 2 parts with non-empty TLD
-    const parts = hostname.split(".");
-    if (parts.length < 2) {
-      return false;
-    }
-
-    // Ensure TLD part is non-empty and contains valid characters
-    const tld = parts[parts.length - 1];
-    if (!tld || tld.length === 0 || !/^[a-zA-Z0-9-]+$/.test(tld)) {
-      return false;
-    }
-
-    // Ensure no part is empty (rejects cases like "example..com" which we already check, but also "..example.com")
-    if (parts.some((part) => part.length === 0)) {
-      return false;
-    }
-
-    return true;
+    return isHostnameValid(url.hostname, true);
   } catch {
     return false;
   }
@@ -130,7 +160,8 @@ export const isEmail = (email: string) => {
 
 export const hasPort = (value: string): boolean => {
   try {
-    const url = new URL(value);
+    const toParse = value.includes("://") ? value : `http://${value}`;
+    const url = new URL(toParse);
     return url.port !== "";
   } catch {
     return false;
