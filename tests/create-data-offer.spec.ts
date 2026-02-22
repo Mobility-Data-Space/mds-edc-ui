@@ -147,6 +147,8 @@ test.describe('Create Data Offer Tests', () => {
         kafkaAdminPropertiesKey: "test admin key",
       },
     } as const;
+
+    await createDataOfferPage.navigate();
     await createDataOfferPage.fillKafkaDataInput(input);
 
     await createDataOfferPage
@@ -204,13 +206,14 @@ test.describe('Create Data Offer Tests', () => {
         kafkaAdminPropertiesKey: "test admin key",
       },
     } as const;
+
+    await createDataOfferPage.navigate();
     await createDataOfferPage.fillKafkaDataInput(initialInput);
 
     await createDataOfferPage
       .getDataOfferPublishMode("PUBLISH_UNRESTRICTED")
       .check();
     await createDataOfferPage.submitButton().click();
-    const toast = createDataOfferPage.getSuccessMessage();
 
     await page.waitForURL("/data-offers", { timeout: 10000 });
 
