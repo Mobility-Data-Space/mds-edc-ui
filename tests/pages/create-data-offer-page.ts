@@ -11,8 +11,8 @@ export type KafkaTestDataAssetInput = {
     topic: string;
     oidcDiscoveryUrl: string;
     bootstrapServers: string;
-    saslMechanism: "oAuth bearer";
-    securityProtocol: 'SSL';
+    saslMechanism: "OAUTHBEARER";
+    securityProtocol: 'SASL_SSL';
     oidcRegisterClientTokenKey: string;
     kafkaAdminPropertiesKey: string;
   }

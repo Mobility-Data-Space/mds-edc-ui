@@ -160,7 +160,7 @@ export function ProviderFormDataAddressKafka({
             required
             options={[
               {
-                text: "oAuth bearer",
+                text: "OAUTHBEARER",
                 value: "OAUTHBEARER",
               },
             ]}
@@ -189,7 +189,7 @@ export function ProviderFormDataAddressKafka({
                 value: "SASL_PLAINTEXT",
               },
               {
-                text: "SSL",
+                text: "SASL_SSL",
                 value: "SASL_SSL",
               },
             ]}
