@@ -208,7 +208,7 @@ export default function CatalogPage() {
             </div>
 
             <div
-              className="flex flex-wrap gap-2.5 h-full"
+              className="flex flex-wrap gap-2.5"
               data-testid="catalog-list"
             >
               {counterPartyAddress ? (
