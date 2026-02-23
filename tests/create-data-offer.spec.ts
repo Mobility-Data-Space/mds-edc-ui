@@ -193,8 +193,8 @@ test.describe('Create Data Offer Tests', () => {
   test("should update kafka data source correctly", async ({ page }) => {
     const initialInput = {
       asset: {
-        title: `Kafka Data Offer ${Date.now()}`,
-        id: `kafka-test-data-offer-${Date.now()}`,
+        title: `Update Data Offer ${Date.now()}`,
+        id: `update-kafka-test-data-offer-${Date.now()}`,
       },
       kafka: {
         topic: "test topic",
