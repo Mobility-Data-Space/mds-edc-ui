@@ -149,6 +149,7 @@ test.describe('Create Data Offer Tests', () => {
     } as const;
 
     await createDataOfferPage.navigate();
+    await  page.getByRole("combobox", { name: /type/i }).click();
     await createDataOfferPage.fillKafkaDataInput(input);
 
     await createDataOfferPage
@@ -208,6 +209,7 @@ test.describe('Create Data Offer Tests', () => {
     } as const;
 
     await createDataOfferPage.navigate();
+    await  page.getByRole("combobox", { name: /type/i }).click();
     await createDataOfferPage.fillKafkaDataInput(initialInput);
 
     await createDataOfferPage
@@ -236,6 +238,7 @@ test.describe('Create Data Offer Tests', () => {
     await page
       .getByRole("radio", { name: "Available (with data source)" })
       .check();
+    await  page.getByRole("combobox", { name: /type/i }).click();
     await createDataOfferPage.fillKafkaDataInput(editedKafkaAsset);
 
     // Set up listener for the assets API endpoint before clicking submit
