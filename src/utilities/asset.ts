@@ -676,22 +676,6 @@ export const validateDataAddress = (
     if (!isUrl(formDataToValidate.oidcDiscoveryUrl)) {
       errors.oidcDiscoveryUrl = translator("This must be a valid URL");
     }
-    if (
-      !isUrl(formDataToValidate["kafka.bootstrap.servers"], {
-        forceHttpProtocols: false,
-      })
-    ) {
-      errors["kafka.bootstrap.servers"] = translator(
-        "This must be a valid kafka endpoint URL",
-      );
-    }
-    if (
-      formDataToValidate["kafka.bootstrap.servers"] &&
-      !errors["kafka.bootstrap.servers"] &&
-      !hasPort(formDataToValidate["kafka.bootstrap.servers"])
-    ) {
-      errors["kafka.bootstrap.servers"] = translator("Endpoint URL must include a port number");
-    }
     return errors;
   }
 

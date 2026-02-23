@@ -45,6 +45,8 @@ export const useGenerateNextContractDefinitionId =
                   operandRight: `${prefix}${datePrefix}_%`,
                 },
               ],
+              sortField: "createdAt",
+              sortOrder: "DESC",
             })
           ).map((contract) => contract["@id"]);
 
