@@ -77,57 +77,6 @@ export const tryTranslatingWithTooltip = (
   return [tooltipTitle, computedValue];
 };
 
-export type IsUrlOptions = {
-  /**
-   * When false, validates as a Kafka-style endpoint: protocol is optional
-   * (e.g. hostname:9092 or kafka://broker:9092), and hostname may be a single
-   * label (no TLD required). Default true.
-   */
-  forceHttpProtocols?: boolean;
-};
-
-function parseUrlForValidation(value: string): URL | null {
-  if (value.includes("://")) {
-    try {
-      return new URL(value);
-    } catch {
-      return null;
-    }
-  }
-  try {
-    return new URL(`http://${value}`);
-  } catch {
-    return null;
-  }
-}
-
-function isHostnameValid(
-  hostname: string,
-  requireTld: boolean,
-): boolean {
-  if (
-    !hostname ||
-    hostname.length === 0 ||
-    hostname.endsWith(".") ||
-    hostname.includes("..")
-  ) {
-    return false;
-  }
-  const parts = hostname.split(".");
-  if (parts.some((part) => part.length === 0)) {
-    return false;
-  }
-  if (requireTld) {
-    if (parts.length < 2) return false;
-    const tld = parts[parts.length - 1];
-    if (!tld || !/^[a-zA-Z0-9-]+$/.test(tld)) return false;
-  } else {
-    if (!/^[a-zA-Z0-9.-]+$/.test(hostname)) return false;
-  }
-  return true;
-}
-
-
 export const isUrl = (value: string): boolean => {
   try {
     if (/\s/.test(value)) return false;
@@ -175,15 +124,13 @@ export const isUrl = (value: string): boolean => {
   }
 };
 
-
 export const isEmail = (email: string) => {
   return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email);
 };
 
 export const hasPort = (value: string): boolean => {
   try {
-    const toParse = value.includes("://") ? value : `http://${value}`;
-    const url = new URL(toParse);
+    const url = new URL(value);
     return url.port !== "";
   } catch {
     return false;
