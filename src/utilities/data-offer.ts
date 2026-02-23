@@ -48,5 +48,6 @@ export const transformIdsToString = (ids: string[]): string => {
 };
 
 export const idMultipleReader = (criteria: CriterionInput[]): string[] => {
-  return criteria?.at(0)?.operandRight.split(",") || [];
+  const values: string[] = criteria?.at(0)?.operandRight.split(",") || [];
+  return values.filter((values) => !!values);
 };
