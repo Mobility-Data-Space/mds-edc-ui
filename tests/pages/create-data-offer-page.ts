@@ -97,7 +97,9 @@ export class CreateDataOfferPage {
 
   async fillKafkaDataInput(input: KafkaTestDataAssetInput) {
     // Fill Kafka Input
-    await this.page.getByRole("combobox", { name: /type/i }).click();
+    const typeCombobox = this.page.getByRole("combobox", { name: /type/i });
+    await typeCombobox.waitFor({ state: "visible" });
+    await typeCombobox.click();
     await this.page.getByRole("option", { name: "Kafka Streaming" }).click();
 
     await this.page
