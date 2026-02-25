@@ -31,6 +31,8 @@ jobs:
             tests: "tests/transfer-process.spec.ts tests/catalog-browser.spec.ts tests/manual-approval.spec.ts"
           - name: "utilities"
             tests: "tests/utilities.spec.ts"
+          - name: "kafka-data-offer"
+            tests: "tests/kafka-data-offer.spec.ts"
 
     services:
       edc-1:

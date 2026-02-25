@@ -280,7 +280,7 @@ test.describe("Contract Agreements Page Tests", () => {
       await expect(terminateDialog).toBeVisible();
       const detailedReasonInput = terminateDialog.getByPlaceholder('You can enter a detailed explanation here');
       await detailedReasonInput.fill('Test termination reason');
-      const confirmCheckbox = terminateDialog.getByLabel('I understand the consequences of terminating a contract.');
+      const confirmCheckbox = terminateDialog.getByRole('checkbox', { name: 'I understand the consequences' });
       await confirmCheckbox.check();
       const confirmTerminateBtn = terminateDialog.getByTestId('transfer-process-submit');
       await expect(confirmTerminateBtn).toBeEnabled();

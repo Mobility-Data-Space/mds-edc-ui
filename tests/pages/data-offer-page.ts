@@ -63,6 +63,7 @@ export class DataOfferPage extends BaseListPage {
   // List page navigation
   async navigate() {
     await this.page.goto('/data-offers');
+    await this.page.waitForURL('/data-offers');
     await this.page.waitForResponse((response) => response.url().includes('/connector/management/v3/contractdefinitions'));
   }
 
