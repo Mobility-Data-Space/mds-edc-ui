@@ -55,14 +55,16 @@ test.describe('Create and Update Kafka Data Offer Tests', () => {
     expect(requestBody).toHaveProperty("dataAddress");
 
     const dataAddress = requestBody.dataAddress;
-    expect(dataAddress.type).toBe("Kafka");
-    expect(dataAddress.topic).toBe("test topic");
-    expect(dataAddress.oidcDiscoveryUrl).toBe("http://example.com");
-    expect(dataAddress["kafka.bootstrap.servers"]).toBe("port.com:500");
-    expect(dataAddress["kafka.sasl.mechanism"]).toBe("OAUTHBEARER");
-    expect(dataAddress["kafka.security.protocol"]).toBe("SASL_SSL");
-    expect(dataAddress.oidcRegisterClientTokenKey).toBe("test client token");
-    expect(dataAddress.kafkaAdminPropertiesKey).toBe("test admin key");
+    expect(dataAddress).toEqual({
+      type: "Kafka",
+      topic: "test topic",
+      oidcDiscoveryUrl: "http://example.com",
+      "kafka.bootstrap.servers": "port.com:500",
+      "kafka.sasl.mechanism": "OAUTHBEARER",
+      "kafka.security.protocol": "SASL_SSL",
+      oidcRegisterClientTokenKey: "test client token",
+      kafkaAdminPropertiesKey: "test admin key",
+    })
 
     const toast = createDataOfferPage.getSuccessMessage();
     await expect(toast).toBeVisible();
@@ -141,18 +143,16 @@ test.describe('Create and Update Kafka Data Offer Tests', () => {
     expect(editBody).toHaveProperty("dataAddress");
 
     const editBodyAddress = editBody.dataAddress;
-    expect(editBodyAddress.type).toBe("Kafka");
-    expect(editBodyAddress.topic).toBe("new topic");
-    expect(editBodyAddress.oidcDiscoveryUrl).toBe("http://edited-example.com");
-    expect(editBodyAddress["kafka.bootstrap.servers"]).toBe(
-      "edited-port.com:500",
-    );
-    expect(editBodyAddress["kafka.sasl.mechanism"]).toBe("OAUTHBEARER");
-    expect(editBodyAddress["kafka.security.protocol"]).toBe("SASL_SSL");
-    expect(editBodyAddress.oidcRegisterClientTokenKey).toBe(
-      "edited client token",
-    );
-    expect(editBodyAddress.kafkaAdminPropertiesKey).toBe("edited admin key");
+    expect(editBodyAddress).toEqual({
+      type: "Kafka",
+      topic: "new topic",
+      oidcDiscoveryUrl: "http://edited-example.com",
+      "kafka.bootstrap.servers": "edited-port.com:500",
+      "kafka.sasl.mechanism": "OAUTHBEARER",
+      "kafka.security.protocol": "SASL_SSL",
+      oidcRegisterClientTokenKey: "edited client token",
+      kafkaAdminPropertiesKey: "edited admin key",
+    })
   });
 
 });
