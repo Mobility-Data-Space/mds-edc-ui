@@ -876,7 +876,6 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
 
   if (formDataToTransform.type === DataAddressTypes.MDSOnRequestOffer) {
     return {
-      ...formDataToTransform,
       type: DataAddressTypes.MDSOnRequestOffer,
       email: formDataToTransform.email,
       preferred_subject: formDataToTransform.preferred_subject,
@@ -885,7 +884,6 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
 
   if (formDataToTransform.type === DataAddressTypes.AmazonS3) {
     return {
-      ...formDataToTransform,
       type: DataAddressTypes.AmazonS3,
       bucketName: formDataToTransform.bucketName,
       region: formDataToTransform.region,
@@ -897,7 +895,6 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
 
   if (formDataToTransform.type === DataAddressTypes.AzureStorage) {
     return removeEmptyFields({
-      ...formDataToTransform,
       type: DataAddressTypes.AzureStorage,
       container: formDataToTransform.container,
       account: formDataToTransform.account,
@@ -909,12 +906,14 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
   }
 
   if (formDataToTransform.type === DataAddressTypes.Kafka) {
-    return removeEmptyFields({
-      ...formDataToTransform,
+     return removeEmptyFields({
       type: DataAddressTypes.Kafka,
+      "kafka.sasl.mechanism": formDataToTransform["kafka.sasl.mechanism"],
+      "kafka.security.protocol": formDataToTransform["kafka.security.protocol"],
+      "kafka.bootstrap.servers": formDataToTransform["kafka.bootstrap.servers"],
       topic: formDataToTransform.topic,
       oidcRegisterClientTokenKey:
-        formDataToTransform.oidcRegisterClientTokenKey,
+      formDataToTransform.oidcRegisterClientTokenKey,
       kafkaAdminPropertiesKey: formDataToTransform.kafkaAdminPropertiesKey,
       oidcDiscoveryUrl: formDataToTransform.oidcDiscoveryUrl,
     });
