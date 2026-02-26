@@ -54,7 +54,7 @@ jobs:
           WEB_HTTP_MANAGEMENT_PATH: "/api/management"
           WEB_HTTP_MANAGEMENT_PORT: "8182"
           WEB_HTTP_MANAGEMENT_AUTH_TYPE: "tokenbased"
-          WEB_HTTP_MANAGEMENT_AUTH_KEY: "${{ secrets.TEST_API_KEY }}"
+          WEB_HTTP_MANAGEMENT_AUTH_KEY: "${{ secrets.TEST_API_KEY || 'default-test-api-key' }}"
           WEB_HTTP_PROTOCOL_PATH: "/api/dsp"
           WEB_HTTP_PROTOCOL_PORT: "8183"
           WEB_HTTP_VERSION_PATH: "/api/version"
@@ -85,7 +85,7 @@ jobs:
           WEB_HTTP_MANAGEMENT_PATH: "/api/management"
           WEB_HTTP_MANAGEMENT_PORT: "8182"
           WEB_HTTP_MANAGEMENT_AUTH_TYPE: "tokenbased"
-          WEB_HTTP_MANAGEMENT_AUTH_KEY: "${{ secrets.TEST_API_KEY }}"
+          WEB_HTTP_MANAGEMENT_AUTH_KEY: "${{ secrets.TEST_API_KEY || 'default-test-api-key' }}"
           WEB_HTTP_PROTOCOL_PATH: "/api/dsp"
           WEB_HTTP_PROTOCOL_PORT: "8183"
           WEB_HTTP_VERSION_PATH: "/api/version"
@@ -114,7 +114,7 @@ jobs:
             -v ${{ github.workspace }}:/app \
             -w /app \
             -e CI=true \
-            -e TEST_API_KEY=${{ secrets.TEST_API_KEY }} \
+            -e TEST_API_KEY=${{ secrets.TEST_API_KEY || 'default-test-api-key' }} \
             mcr.microsoft.com/playwright:v1.58.1-jammy \
             sh -c "yarn install --frozen-lockfile && yarn playwright test ${{ matrix.test-group.tests }}"
 
