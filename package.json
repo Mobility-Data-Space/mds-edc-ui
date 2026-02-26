@@ -21,7 +21,7 @@
     "@headlessui/react": "^2.2.9",
     "@mui/icons-material": "^7.3.7",
     "@mui/material": "^7.3.7",
-    "@mui/x-date-pickers": "^8.19.0",
+    "@mui/x-date-pickers": "^8.27.2",
     "@tailwindcss/typography": "^0.5.19",
     "@think-it-labs/edc-connector-client": "^0.9.1",
     "@think-it-labs/edc-connector-ui": "^0.2.5",
