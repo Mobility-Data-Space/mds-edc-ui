@@ -30,7 +30,7 @@
     "dayjs": "^1.11.19",
     "formik": "^2.4.9",
     "i18next": "^25.7.3",
-    "javascript-time-ago": "^2.5.12",
+    "javascript-time-ago": "^2.6.4",
     "json-schema": "^0.4.0",
     "jsonld": "^9.0.0",
     "lucide-react": "^0.555.0",
