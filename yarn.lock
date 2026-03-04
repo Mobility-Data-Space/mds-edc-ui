@@ -1078,10 +1078,10 @@
   resolved "https://registry.yarnpkg.com/@tanstack/virtual-core/-/virtual-core-3.13.19.tgz#ab7b5de0b7ba17f22530f4efda5bf2b771fbda9d"
   integrity sha512-/BMP7kNhzKOd7wnDeB8NrIRNLwkf5AhCYCvtfZV2GXWbBieFm/el0n6LOAXlTi6ZwHICSNnQcIxRCWHrLzDY+g==
 
-"@think-it-labs/edc-connector-client@0.9.1":
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/@think-it-labs/edc-connector-client/-/edc-connector-client-0.9.1.tgz#a8d07402966549bf2a6ae380144646dee98063c9"
-  integrity sha512-npkbQ3ZeWO9gdO/S8czvTsJZuw3cMDLPQepVPdxcFiTeLgpoObJxtqFA1ogk8vDBpn/UpNXWog1juoTc7DQ7+A==
+"@think-it-labs/edc-connector-client@^0.9.2":
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/@think-it-labs/edc-connector-client/-/edc-connector-client-0.9.2.tgz#f86685f50034cbe9b03e92e3c165002fa58bb845"
+  integrity sha512-uMQnnhsDHrv4C7YtGiVsHnvLXoD67YmMAmkRFc3staCJltBAC/daaYyQPZ6RBk4JgPQDCTmI28Y6XYR715Kr2A==
   dependencies:
     "@think-it-labs/typed-error" "^0.3.0"
     jsonld "^9.0.0"
