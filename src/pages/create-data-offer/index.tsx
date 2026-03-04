@@ -35,11 +35,7 @@ import {
 import { proxyConnectorManagement } from "@/constants/proxy";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
-import {
-  ASSET_ENDPOINT_DOCUMENTATION,
-  ASSET_TITLE,
-  ASSET_VERSION,
-} from "@/jsonld/asset";
+import { ASSET_TITLE, ASSET_VERSION } from "@/jsonld/asset";
 import { UNRESTRICTED_POLICY_ID } from "@/jsonld/policy";
 import {
   AssetProperties,
@@ -67,7 +63,6 @@ import {
   isXoneConstraint,
   MultiplicityConstraint,
 } from "@/utilities/policy-constraints";
-import { isUrl } from "@/utilities/utilities";
 import {
   Button,
   Divider,
@@ -83,7 +78,8 @@ import {
 } from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
 import { useSnackbar } from "notistack";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState, useMemo } from "react";
+import { useDebounce } from "@/hooks/use-debounce";
 
 interface DataOffer {
   asset: AssetInput;
@@ -100,9 +96,10 @@ export default function CreateDataOfferPage() {
 
   const { translator } = useTranslator();
 
-  const [existingAssetIds, setExistingAssetIds] = useState<string[]>([]);
+  const [assetIdExists, setAssetIdExists] = useState<boolean>(false);
+  const [isCheckingAssetId, setIsCheckingAssetId] = useState<boolean>(false);
 
-  const validateGeneralInfo = useValidateGeneralInfo(existingAssetIds);
+  const validateGeneralInfo = useValidateGeneralInfo();
 
   const [formData, setFormData] = useState<DataOffer>({
     asset: defaultCreateAssetFormData,
@@ -114,7 +111,7 @@ export default function CreateDataOfferPage() {
     (AtomicConstraint | MultiplicityConstraint)[]
   >([]);
   const [publishMode, setPublishMode] = useState(
-    PUBLISH_MODE_PUBLISH_UNRESTRICTED.value as string
+    PUBLISH_MODE_PUBLISH_UNRESTRICTED.value as string,
   );
 
   const [errors, setErrors] = useState({
@@ -126,18 +123,47 @@ export default function CreateDataOfferPage() {
     management: proxyConnectorManagement,
   });
 
-  useEffect(() => {
-    client.management.assets
-      .queryAll({ offset: 0, limit: 1000 })
-      .then((assets) =>
-        setExistingAssetIds(assets.map((asset) => asset["@id"]))
-      );
-  }, [client, setExistingAssetIds]);
+  const checkAssetIdExists = useCallback(
+    async (assetId: string) => {
+      console.log({ assetId });
+      if (!assetId) {
+        setAssetIdExists(false);
+        setIsCheckingAssetId(false);
+        return;
+      }
+      setIsCheckingAssetId(true);
+      try {
+        const assets = await client.management.assets.queryAll({
+          offset: 0,
+          limit: 1,
+          filterExpression: [
+            {
+              operandLeft: "https://w3id.org/edc/v0.0.1/ns/id",
+              operator: "=",
+              operandRight: assetId,
+            },
+          ],
+        });
+        setAssetIdExists(assets.length > 0);
+      } catch {
+        setAssetIdExists(false);
+      } finally {
+        setIsCheckingAssetId(false);
+      }
+    },
+    [client],
+  );
 
+  const { debounce: debouncedCheckAssetId } = useDebounce(
+    checkAssetIdExists,
+    500,
+  );
 
   const generalInfoIsNotValid = () => {
     return (
-      0 < Object.entries(validateGeneralInfo(formData.asset.properties)).length
+      0 <
+      Object.entries(validateGeneralInfo(formData.asset.properties)).length ||
+      assetIdExists
     );
   };
 
@@ -151,7 +177,7 @@ export default function CreateDataOfferPage() {
     return (
       0 <
       Object.entries(
-        validateDataAddress(formData.asset.dataAddress, translator)
+        validateDataAddress(formData.asset.dataAddress, translator),
       ).length
     );
   };
@@ -163,7 +189,7 @@ export default function CreateDataOfferPage() {
       }
 
       const checkInvalid = (
-        policies: (AtomicConstraint | MultiplicityConstraint)[]
+        policies: (AtomicConstraint | MultiplicityConstraint)[],
       ): boolean => {
         if (policies.length === 0) return true;
 
@@ -190,11 +216,12 @@ export default function CreateDataOfferPage() {
 
       return checkInvalid(policyExpressionArg);
     },
-    [publishMode]
+    [publishMode],
   );
 
   const cannotSubmit = () => {
     return (
+      isCheckingAssetId ||
       generalInfoIsNotValid() ||
       advancedInfoIsNotValid() ||
       dataAddressIsNotValid() ||
@@ -207,21 +234,29 @@ export default function CreateDataOfferPage() {
   };
 
   const generalInfoFormOnChange = (generalInfoFormData: AssetProperties) => {
+    const generatedOldId = generateId(
+      formData.asset.properties[ASSET_TITLE] as string,
+      formData.asset.properties[ASSET_VERSION] as string,
+    );
+    let newId = generalInfoFormData["@id"];
+    if (generatedOldId === generalInfoFormData["@id"]) {
+      newId = generateId(
+        generalInfoFormData[ASSET_TITLE] as string,
+        generalInfoFormData[ASSET_VERSION] as string,
+      );
+      generalInfoFormData["@id"] = newId;
+    }
+
+    if (newId !== formData.asset["@id"]) {
+      setIsCheckingAssetId(true);
+      setAssetIdExists(false);
+      debouncedCheckAssetId(newId);
+    }
+
     setErrors((oldErrors) => ({
       ...oldErrors,
       properties: validateGeneralInfo(generalInfoFormData),
     }));
-
-    const generatedOldId = generateId(
-      formData.asset.properties[ASSET_TITLE] as string,
-      formData.asset.properties[ASSET_VERSION] as string
-    );
-    if (generatedOldId === generalInfoFormData["@id"]) {
-      generalInfoFormData["@id"] = generateId(
-        generalInfoFormData[ASSET_TITLE] as string,
-        generalInfoFormData[ASSET_VERSION] as string
-      );
-    }
 
     return onChange({
       ...formData,
@@ -258,7 +293,7 @@ export default function CreateDataOfferPage() {
   };
 
   const policyExpressionFormOnChange = (
-    policy: (AtomicConstraint | MultiplicityConstraint)[]
+    policy: (AtomicConstraint | MultiplicityConstraint)[],
   ) => {
     return setPolicyExpression(policy);
   };
@@ -270,6 +305,17 @@ export default function CreateDataOfferPage() {
       dataAddress: validateDataAddress(formData.asset.dataAddress, translator),
     };
   };
+
+  const propertiesErrorsWithAssetIdCheck = useMemo(() => {
+    const baseErrors = errors.properties;
+    if (assetIdExists) {
+      return {
+        ...baseErrors,
+        "@id": translator("assets.new.fieldIdAlreadyExists"),
+      };
+    }
+    return baseErrors;
+  }, [errors.properties, assetIdExists, translator]);
 
   const onSubmit = () => {
     if (cannotSubmit()) {
@@ -300,11 +346,11 @@ export default function CreateDataOfferPage() {
               client.management.contractDefinitions
                 .create(fromContractDefinitionForm(formData.contract))
                 .catch((error) =>
-                  enqueueSnackbar(translator("common.errorOccurred"))
+                  enqueueSnackbar(translator("common.errorOccurred")),
                 );
             })
             .catch((error) =>
-              enqueueSnackbar(translator("common.errorOccurred"))
+              enqueueSnackbar(translator("common.errorOccurred")),
             );
         } else {
           formData.contract.accessPolicyId = UNRESTRICTED_POLICY_ID;
@@ -337,9 +383,9 @@ export default function CreateDataOfferPage() {
             push(
               publishMode === PUBLISH_MODE_DO_NOT_PUBLISH.value
                 ? "/assets"
-                : "/data-offers"
+                : "/data-offers",
             ),
-          2000
+          2000,
         );
       })
       .catch(() =>
@@ -353,7 +399,7 @@ export default function CreateDataOfferPage() {
               }}
             />
           ),
-        })
+        }),
       );
   };
 
@@ -427,9 +473,10 @@ export default function CreateDataOfferPage() {
                   <AssetId
                     hideLabel
                     formData={formData.asset.properties}
-                    errors={errors.properties}
+                    errors={propertiesErrorsWithAssetIdCheck}
                     onChange={generalInfoFormOnChange}
                     translator={translator}
+                    loading={isCheckingAssetId}
                   />
                 </div>
 
@@ -851,7 +898,7 @@ export default function CreateDataOfferPage() {
                     </div>
                     <Checkbox
                       label={translator(
-                        "contractDefinitions.new.manualApproval"
+                        "contractDefinitions.new.manualApproval",
                       )}
                       value={formData.contract.privateProperties.manualApproval}
                       onChange={(event) => {

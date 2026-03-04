@@ -2,6 +2,7 @@ import { Input } from "@/components/atoms/input";
 import { T } from "@/i18n";
 import { theme } from "@/theme/ThemeProvider";
 import { AssetProperties } from "@/utilities/asset";
+import { CircularProgress, InputAdornment } from "@mui/material";
 import React from "react";
 
 export interface AssetIdProps {
@@ -11,9 +12,10 @@ export interface AssetIdProps {
   errors: { [key: string]: boolean };
   hideLabel?: boolean;
   disabled?: boolean;
+  loading?: boolean;
 }
 
-export function AssetId({ translator, formData, onChange, errors, hideLabel = false, disabled = false }: AssetIdProps): React.ReactElement {
+export function AssetId({ translator, formData, onChange, errors, hideLabel = false, disabled = false, loading = false }: AssetIdProps): React.ReactElement {
 
   return (
     <Input
@@ -33,6 +35,15 @@ export function AssetId({ translator, formData, onChange, errors, hideLabel = fa
           '& p': { color: theme.palette.error.main },
         }
       } as any}
+      slotProps={{
+        input: {
+          endAdornment: loading ? (
+            <InputAdornment position="end">
+              <CircularProgress size={20} color="secondary" />
+            </InputAdornment>
+          ) : null,
+        },
+      }}
       onChange={(event) => onChange({ ...formData, ["@id"]: event.target.value })}
     />
   );
