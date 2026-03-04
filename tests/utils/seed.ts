@@ -149,6 +149,7 @@ export async function initiate_transfers(
     );
 
     const catalog = await client.management.catalog.request({
+        counterPartyId: "",
         counterPartyAddress: counterPartyParticipant.protocolUrl,
     });
 
@@ -166,6 +167,7 @@ export async function initiate_transfers(
 
     const negotiationResponse =
         await client.management.contractNegotiations.initiate({
+            counterPartyId: "",
             counterPartyAddress: counterPartyParticipant.protocolUrl,
             policy: p,
         });

@@ -72,6 +72,7 @@ export default function CatalogPage() {
     if (counterPartyAddress) {
       client.management.catalog
         .request({
+          counterPartyId: "",
           counterPartyAddress:
             counterPartyAddressWithDsp2025_1(counterPartyAddress),
         })
@@ -207,10 +208,7 @@ export default function CatalogPage() {
               </div>
             </div>
 
-            <div
-              className="flex flex-wrap gap-2.5"
-              data-testid="catalog-list"
-            >
+            <div className="flex flex-wrap gap-2.5" data-testid="catalog-list">
               {counterPartyAddress ? (
                 <ContractOffersList.Items key={listKey} limit={MAX_ITEMS}>
                   {({ item, index }) => (

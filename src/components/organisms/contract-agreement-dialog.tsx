@@ -102,7 +102,10 @@ export default function ContractAgreementDialog({
           );
           setCounterPartyAddress(providerCounterPartyAddress);
           edcClient.management.catalog
-            .request({ counterPartyAddress: providerCounterPartyAddress })
+            .request({
+              counterPartyId: "",
+              counterPartyAddress: providerCounterPartyAddress,
+            })
             .then((catalog) =>
               setAsset(
                 datasetToAsset(
