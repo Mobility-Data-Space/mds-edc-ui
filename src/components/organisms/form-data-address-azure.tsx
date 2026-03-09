@@ -84,6 +84,30 @@ export function FormDataAddressAzure({
           }
         />
       </div>
+       <div>
+        <label
+          htmlFor="data-address-keyname"
+          className="inline-block text-sm text-black font-medium mb-2"
+        >
+          <T string="assets.new.fieldKeyname" /> *
+        </label>
+        <Input
+          name="keyName"
+          id="data-address-keyname"
+          key="data-address-keyname"
+          label={translator("assets.new.fieldKeyname")}
+          placeholder={translator("assets.new.fieldKeyname")}
+          helperText={typeof errors.keyName === "string" ? errors.keyName : ""}
+          classes={
+            { textField: { "& p": { color: theme.palette.error.main } } } as any
+          }
+          error={errors.keyName}
+          value={formData.keyName}
+          onChange={(event) =>
+            onChange({ ...formData, keyName: event.target.value })
+          }
+        />
+      </div>
       {isDestination && (
         <div>
           <label
@@ -176,30 +200,7 @@ export function FormDataAddressAzure({
         )
       )}
 
-      <div>
-        <label
-          htmlFor="data-address-keyname"
-          className="inline-block text-sm text-black font-medium mb-2"
-        >
-          <T string="assets.new.fieldKeyname" /> *
-        </label>
-        <Input
-          name="keyName"
-          id="data-address-keyname"
-          key="data-address-keyname"
-          label={translator("assets.new.fieldKeyname")}
-          placeholder={translator("assets.new.fieldKeyname")}
-          helperText={typeof errors.keyName === "string" ? errors.keyName : ""}
-          classes={
-            { textField: { "& p": { color: theme.palette.error.main } } } as any
-          }
-          error={errors.keyName}
-          value={formData.keyName}
-          onChange={(event) =>
-            onChange({ ...formData, keyName: event.target.value })
-          }
-        />
-      </div>
+     
     </>
   );
 }
