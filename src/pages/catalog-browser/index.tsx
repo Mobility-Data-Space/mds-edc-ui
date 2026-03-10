@@ -72,7 +72,7 @@ export default function CatalogPage() {
     if (counterPartyAddress) {
       client.management.catalog
         .request({
-          counterPartyId: "",
+          counterPartyId: "", // Temporarily Empty
           counterPartyAddress:
             counterPartyAddressWithDsp2025_1(counterPartyAddress),
         })
