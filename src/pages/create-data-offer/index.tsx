@@ -33,7 +33,6 @@ import {
   PUBLISH_MODES,
 } from "@/constants/data-address-types";
 import { proxyConnectorManagement } from "@/constants/proxy";
-import { useGenerateNextContractDefinitionId } from "@/hooks/use-generate-next-contract-definition-id";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
 import {
@@ -52,7 +51,6 @@ import {
   validateDataAddress,
 } from "@/utilities/asset";
 import {
-  createDefaultContractDefinitionFormData,
   defaultCreateContractDefinitionFormData,
   fromContractDefinitionForm,
   MdsContractDefinitionInput,
@@ -136,30 +134,6 @@ export default function CreateDataOfferPage() {
       );
   }, [client, setExistingAssetIds]);
 
-  const nextIdGenerator = useGenerateNextContractDefinitionId();
-
-  useEffect(() => {
-    if (typeof nextIdGenerator.error === "string") {
-      enqueueSnackbar("", {
-        content: (key) => (
-          <Snackbar
-            type="error"
-            message={translator("contractDefinitions.failedToFetch")}
-            onClose={() => {
-              closeSnackbar(key);
-            }}
-          />
-        ),
-      });
-      return;
-    }
-
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- updating form data when id generator changes is a valid sync pattern
-    setFormData((prev) => ({
-      ...prev,
-      contract: createDefaultContractDefinitionFormData(nextIdGenerator.id),
-    }));
-  }, [nextIdGenerator.id, nextIdGenerator.error, enqueueSnackbar, closeSnackbar, translator]);
 
   const generalInfoIsNotValid = () => {
     return (
