@@ -1,7 +1,5 @@
 import {
   ContractNegotiationRequest,
-  expand,
-  IdResponse,
   Policy,
   PolicyBuilder,
 } from "@think-it-labs/edc-connector-client";
@@ -14,6 +12,7 @@ export const createNegotiationRequest = (
   assetId: string,
 ): ContractNegotiationRequest => {
   const negotiation: ContractNegotiationRequest = {
+    counterPartyId: counterPartyId,
     counterPartyAddress: counterPartyAddress,
     policy: new PolicyBuilder()
       .type("Offer")

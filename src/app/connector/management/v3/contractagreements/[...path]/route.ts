@@ -3,7 +3,7 @@ import { proxyConnectorManagement } from "@/constants/proxy";
 import { STATE_RUNNING } from "@/constants/transfer-process";
 import { ASSET_TITLE } from "@/jsonld/asset";
 import { EnrichedContractAgreement } from "@/types/enriched-contract-agreement";
-import { cache } from "@/utilities/cache";
+import { cache, CacheValue } from "@/utilities/cache";
 import { counterPartyAddressWithDsp2025_1 } from "@/utilities/catalog";
 import {
   AgreementsRetirementController,
@@ -267,27 +267,33 @@ const handleContractAgreementsQuery = async (
       (ca) => ca.providerId,
     );
     // fetch connector dsp
-    const dsps = await Promise.all(
+    const dsps: [string, CacheValue][] = await Promise.all(
       Array.from(connectorContractsMap, async ([connectorId, cas]) => [
         connectorId,
-        await cache.get(
-          connectorId,
-          async () =>
-            (
-              await client.management.contractAgreements.getNegotiation(
-                cas[0].id,
-              )
-            ).optionalValue("edc", "counterPartyAddress") as string,
-        ),
+        await cache.get(connectorId, async () => {
+          const negotiation =
+            await client.management.contractAgreements.getNegotiation(
+              cas[0].id,
+            );
+          return {
+            id: negotiation.optionalValue("edc", "counterPartyId") as string,
+            address: negotiation.optionalValue(
+              "edc",
+              "counterPartyAddress",
+            ) as string,
+          };
+        }),
       ]),
     );
+
     // fetch the asset titles using the dsp
     const assetsConnectorMap = await Promise.all(
       dsps.map(async ([connectorId, dsp]): Promise<[string, Catalog]> => {
         return [
           connectorId,
           await client.management.catalog.request({
-            counterPartyAddress: counterPartyAddressWithDsp2025_1(dsp),
+            counterPartyId: dsp.id,
+            counterPartyAddress: counterPartyAddressWithDsp2025_1(dsp.address),
             querySpec: {
               limit: 1000,
               offset: 0,

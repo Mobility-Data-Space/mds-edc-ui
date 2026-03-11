@@ -93,26 +93,38 @@ export default function ContractAgreementDialog({
         })
         .catch(() => enqueueSnackbar(translator("assets.[id].fetchError")));
     } else {
-      edcClient.management.contractAgreements
-        .getNegotiation(contractAgreement.id)
-        .then((negotiation) => {
-          const providerCounterPartyAddress = readValue(
-            removeJsonLdSchemaFromProperties(negotiation),
-            "counterPartyAddress",
+      const fetchConsumerAsset = async () => {
+        const negotiation =
+          await edcClient.management.contractAgreements.getNegotiation(
+            contractAgreement.id,
           );
-          setCounterPartyAddress(providerCounterPartyAddress);
-          edcClient.management.catalog
-            .request({ counterPartyAddress: providerCounterPartyAddress })
-            .then((catalog) =>
-              setAsset(
-                datasetToAsset(
-                  catalog.datasets.find(
-                    (dataset) => dataset.id === contractAgreement.assetId,
-                  ) || ({} as Dataset),
-                ),
-              ),
-            );
+        const cleanedNegotiation =
+          removeJsonLdSchemaFromProperties(negotiation);
+
+        const providerCounterPartyAddress = readValue(
+          cleanedNegotiation,
+          "counterPartyAddress",
+        );
+        const providerCounterPartyId = readValue(
+          cleanedNegotiation,
+          "counterPartyId",
+        );
+
+        setCounterPartyAddress(providerCounterPartyAddress);
+
+        const catalog = await edcClient.management.catalog.request({
+          counterPartyId: providerCounterPartyId,
+          counterPartyAddress: providerCounterPartyAddress,
         });
+
+        const dataset =
+          catalog.datasets.find((d) => d.id === contractAgreement.assetId) ||
+          ({} as Dataset);
+
+        setAsset(datasetToAsset(dataset));
+      };
+
+      fetchConsumerAsset();
     }
   }, [
     edcClient,

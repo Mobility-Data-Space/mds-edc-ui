@@ -23,7 +23,7 @@
     "@mui/material": "^7.3.7",
     "@mui/x-date-pickers": "^8.27.2",
     "@tailwindcss/typography": "^0.5.19",
-    "@think-it-labs/edc-connector-client": "0.9.1",
+    "@think-it-labs/edc-connector-client": "^0.9.2",
     "@think-it-labs/edc-connector-ui": "^0.2.5",
     "clsx": "^2.1.0",
     "date-fns": "2.0.0",

@@ -1,5 +1,7 @@
+export type CacheValue = { id: string; address: string };
+
 export default class CacheService {
-  private cache = new Map<string, string>();
+  private cache = new Map<string, CacheValue>();
   private static instance: CacheService | null = null;
 
   public static getInstance() {
@@ -9,11 +11,11 @@ export default class CacheService {
     return CacheService.instance;
   }
 
-  set(key: string, data: string): void {
+  set(key: string, data: CacheValue): void {
     this.cache.set(key, data);
   }
 
-  async get(key: string, callback: () => Promise<string>) {
+  async get(key: string, callback: () => Promise<CacheValue>) {
     const entry = this.cache.get(key);
 
     if (!entry) {
