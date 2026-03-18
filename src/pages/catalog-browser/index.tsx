@@ -124,6 +124,7 @@ export default function CatalogPage() {
             counterPartyAddress={counterPartyAddressWithDsp2025_1(
               counterPartyAddress,
             )}
+            counterPartyId=""
             usePagination
             navigate={navigateToPage}
             currentPage={parseInt(query.page as string) || 0}
