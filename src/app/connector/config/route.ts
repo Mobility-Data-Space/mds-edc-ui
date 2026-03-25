@@ -1,26 +1,39 @@
-import { Participant } from "@/utilities/participant";
-import { NextRequest, NextResponse } from "next/server";
+import { getConnectorConfig } from "@/utilities/connector-config";
+import { NextResponse } from "next/server";
 
-function participantConfig(): Participant {
-  return {
-    id: process.env.EDC_ID || "",
-    name: process.env.EDC_NAME || "",
-    description: process.env.EDC_DESCRIPTION || "",
-    publicUrl: process.env.EDC_PUBLIC_URL || "",
-    managementUrl: process.env.EDC_MANAGEMENT_URL || "",
-    defaultUrl: process.env.EDC_DEFAULT_URL || "",
-    protocolUrl: process.env.EDC_PROTOCOL_URL || "",
-    curatorName: process.env.EDC_CURATOR_ORGANIZATION || "",
-    curatorUrl: process.env.EDC_CURATOR_URL || "",
-    maintainerName: process.env.EDC_MAINTAINER_ORGANIZATION || "",
-    maintainerUrl: process.env.EDC_MAINTAINER_URL || "",
-    dapsUrl: process.env.MDS_DAPS_URL || "",
-    dapsJwksUrl: process.env.MDS_DAPS_JWKS_URL || ""
-  };
-}
+async function handler(): Promise<NextResponse> {
+  // To avoid leaking future config values
+  const {
+    id,
+    name,
+    description,
+    publicUrl,
+    managementUrl,
+    defaultUrl,
+    protocolUrl,
+    curatorName,
+    curatorUrl,
+    maintainerName,
+    maintainerUrl,
+    dapsUrl,
+    dapsJwksUrl,
+  } = getConnectorConfig();
 
-async function handler(req: NextRequest): Promise<NextResponse> {
-  const response = NextResponse.json(participantConfig());
+  const response = NextResponse.json({
+    id,
+    name,
+    description,
+    publicUrl,
+    managementUrl,
+    defaultUrl,
+    protocolUrl,
+    curatorName,
+    curatorUrl,
+    maintainerName,
+    maintainerUrl,
+    dapsUrl,
+    dapsJwksUrl,
+  });
   response.headers.set("Allow", "GET");
   return response;
 }

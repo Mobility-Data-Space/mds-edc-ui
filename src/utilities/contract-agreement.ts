@@ -3,6 +3,8 @@ import { CONTEXT_EDC, TRACTUS_X_CONTEXT } from "@/jsonld/context";
 import { formatDateTime } from "@/utilities/date.ts";
 import {
   ContractAgreement,
+  EdcConnectorClientContext,
+  EdcController,
   expandArray,
   JsonLdId,
 } from "@think-it-labs/edc-connector-client";
@@ -64,30 +66,34 @@ export class RetiredContractAgreement extends JsonLdId {
   }
 }
 
-export class AgreementsRetirementController {
-  #inner: Inner;
-  #management: string;
-  #pathPrefix = "/v3/contractagreements/retirements";
-  protocol: String = "dataspace-protocol-http:2025-1";
+export class AgreementsRetirementController extends EdcController {
+  #basePath = "/v3/contractagreements/retirements";
 
-  constructor(management: string) {
-    this.#inner = new Inner();
-    this.#management = management;
+  constructor(inner: Inner, context: EdcConnectorClientContext) {
+    super(inner, context);
   }
 
-  async retiredAgreementsRequest(): Promise<RetiredContractAgreement[]> {
-    const body = await this.#inner.request(this.#management, {
-      path: `${this.#pathPrefix}/request`,
+  async request(context?: EdcConnectorClientContext) {
+    const actualContext = context || this.context!;
+    const body = await this.inner.request(actualContext.management, {
+      path: `${this.#basePath}/request`,
       method: "POST",
+      apiToken: actualContext.apiToken,
     });
 
     return await expandArray(body, () => new RetiredContractAgreement());
   }
 
-  async retireAgreement(contractAgreementId: string, reason: string) {
-    return await this.#inner.request(this.#management, {
-      path: `${this.#pathPrefix}`,
+  async retire(
+    contractAgreementId: string,
+    reason: string,
+    context?: EdcConnectorClientContext,
+  ) {
+    const actualContext = context || this.context!;
+    return await this.inner.request(actualContext.management, {
+      path: `${this.#basePath}`,
       method: "POST",
+      apiToken: actualContext.apiToken,
       body: {
         "@context": {
           edc: CONTEXT_EDC.value,
@@ -97,11 +103,15 @@ export class AgreementsRetirementController {
       },
     });
   }
-
-  async reactivateRetired(contractAgreementId: string) {
-    return await this.#inner.request(this.#management, {
-      path: `${this.#pathPrefix}/${contractAgreementId}`,
+  async reactivate(
+    contractAgreementId: string,
+    context?: EdcConnectorClientContext,
+  ) {
+    const actualContext = context || this.context!;
+    return await this.inner.request(actualContext.management, {
+      path: `${this.#basePath}/${contractAgreementId}`,
       method: "DELETE",
+      apiToken: actualContext.apiToken,
     });
   }
 }
