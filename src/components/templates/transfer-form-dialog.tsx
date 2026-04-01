@@ -19,7 +19,7 @@ import {
 } from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
 import { closeSnackbar, enqueueSnackbar } from "notistack";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { Snackbar } from "../molecules/snackbar";
 
 export interface TransferFormDialogProps {
@@ -43,6 +43,7 @@ export function TransferFormDialog({
     defaultHttpDestinationDataAddress,
   );
 
+
   const [errors, setErrors] = useState({});
   const contractAgreement =
     removeJsonLdSchemaFromProperties(contractAgreementId);
@@ -51,6 +52,10 @@ export function TransferFormDialog({
   });
   const formRef = useRef<HTMLFormElement>(null);
 
+  const handleClose = useCallback(()=> {
+    setFormData(defaultHttpDestinationDataAddress);
+    onClose();
+  }, [onClose])
   const onSubmit = () => {
     const agreement: Partial<ContractAgreement> = {
       contractId: contractAgreement["@id"],
@@ -92,10 +97,10 @@ export function TransferFormDialog({
   };
 
   return (
-    <Dialog open={open} maxWidth="lg" className="my-7" onClose={onClose}>
+    <Dialog open={open} maxWidth="lg" className="my-7" onClose={handleClose}>
       <DialogTitle>
         <Typography variant="h4">
-          <T string="transferProcesses.new.initiateTransfer" />
+          <T string="transferProcesses.new.initiateTransfer" />xxx
         </Typography>
       </DialogTitle>
       <DialogContent style={{ maxWidth: "80vw", width: "800px" }}>
@@ -117,7 +122,7 @@ export function TransferFormDialog({
       </DialogContent>
       <DialogActions>
         <div className="flex justify-end flex-grow gap-x-3 p-3">
-          <Button color="secondary" onClick={onClose}>
+          <Button color="secondary" onClick={handleClose}>
             <T string="common.close" />
           </Button>
           <Button
