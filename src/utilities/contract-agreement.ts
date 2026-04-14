@@ -46,7 +46,7 @@ export const contractAgreementFieldsToShow = (
     },
     {
       label: "contractAgreements.status",
-      value: "",
+      value: `contractAgreements.[id].status${contractAgreement.isTerminated ? "Terminated" : "Active"}`,
       icon: "sync",
     },
   ];
