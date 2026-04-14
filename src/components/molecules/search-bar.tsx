@@ -1,7 +1,7 @@
 import { T } from "@/i18n";
 import { Input } from "@/components/atoms/input";
 import { Button, Icon } from "@mui/material";
-import { useCallback, useEffect, useRef } from "react";
+import { SyntheticEvent, useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import { useListContext } from "@think-it-labs/edc-connector-ui/list";
 
@@ -16,7 +16,7 @@ export default function SearchBar({
   searchTarget,
   searchOperator,
 }: SearchBarProps) {
-  const { query, push } = useRouter();
+  const { query, push, pathname } = useRouter();
 
   const { searchSpec, setSearchSpec } = useListContext();
 
@@ -29,22 +29,29 @@ export default function SearchBar({
   }, [setSearchSpec, searchTarget, searchOperator]);
 
   useEffect(() => {
-    setSearchSpec({ operandRight: searchQuery });
+    if (typeof searchQuery === "string") {
+      setSearchSpec({ operandRight: searchQuery });
+    }
   }, [searchQuery, setSearchSpec]);
 
-  const handleSearch = useCallback(() => {
+  const handleSearch = useCallback((event: SyntheticEvent) => {
+    event.preventDefault();
     // TODO: use useUpdateQueryParams when merged
     if (searchRef.current) {
-      push({
-        href: window.location.href,
-        query: {
-          ...query,
-          q: searchRef.current.value,
-          page: 0,
+      push(
+        {
+          pathname,
+          query: {
+            ...query,
+            q: searchRef.current.value,
+            page: 0,
+          },
         },
-      });
+        undefined,
+        { shallow: true },
+      );
     }
-  }, [push, query]);
+  }, [pathname, push, query]);
 
   return (
     <div className="relative flex rounded-lg h-full">
@@ -58,7 +65,7 @@ export default function SearchBar({
         }
         onKeyDown={(event) => {
           if (event.key === "Enter") {
-            handleSearch();
+            handleSearch(event);
           }
         }}
         slotProps={{
@@ -69,6 +76,7 @@ export default function SearchBar({
               <Button
                 data-testid="search-trigger"
                 variant="contained"
+                type="button"
                 className="gap-x-2 font-medium h-full hover:cursor-pointer"
                 style={{
                   borderTopRightRadius: 4,
@@ -76,7 +84,7 @@ export default function SearchBar({
                   boxShadow:
                     "0px 0px 1px -2px rgba(0,0,0,0.2),0px 0px 2px 0px rgba(0,0,0,0.14),0px 0px 5px 0px rgba(0,0,0,0.12)",
                 }}
-                onClick={() => handleSearch()}
+                onClick={(e) => handleSearch(e)}
               >
                 <span>
                   <T global string="search" />

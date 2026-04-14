@@ -13,7 +13,11 @@ import { useSessionState } from "@/hooks/use-session-state";
 import { useUpdateQueryParams } from "@/hooks/use-update-query-params";
 import { T, useTranslator } from "@/i18n";
 import { Badge, Icon, IconButton, Tooltip, Typography } from "@mui/material";
-import { Dataset } from "@think-it-labs/edc-connector-client";
+import {
+  Dataset,
+  EdcConnectorClientError,
+  EdcConnectorClientErrorType,
+} from "@think-it-labs/edc-connector-client";
 import { ContractOffersList } from "@think-it-labs/edc-connector-ui/contract-offers-list";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
 import { useRouter } from "next/router";
@@ -21,6 +25,7 @@ import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import { MAX_ITEMS } from "../../constants/lists";
 import { counterPartyAddressWithDsp2025_1 } from "@/utilities/catalog";
+import { useAppSnackbar } from "@/hooks/use-app-snackbar";
 
 export default function CatalogPage() {
   const { connector } = useParticipantConnectorState();
@@ -34,6 +39,7 @@ export default function CatalogPage() {
   const [isCounterPartyAddressDialogOpen, setIsCounterPartyAddressDialogOpen] =
     useState(false);
 
+  const { showSnackbar } = useAppSnackbar();
   const [counterPartyAddress, setCounterPartyAddress] = useSessionState(
     "counterPartyAddress",
     "",
@@ -41,11 +47,16 @@ export default function CatalogPage() {
   const [counterPartyAddressToSearch, setCounterPartyAddressToSearch] =
     useState(counterPartyAddress);
 
+  useEffect(() => {
+    setCounterPartyAddressToSearch(counterPartyAddress);
+  }, [counterPartyAddress]);
+
   const { debounce: debouncedSetCounterPartyAddress } = useDebounce((url) => {
-    setCounterPartyAddress(url);
     updateQueryParams({ page: String(0) });
+    setCounterPartyAddress(url);
+    setCounterPartyAddressToSearch(url);
     setHasBadUrlError(false);
-  });
+  }, 1_200);
 
   useEffect(() => {
     const handleBeforeUnload = () => {
@@ -69,20 +80,37 @@ export default function CatalogPage() {
   });
 
   useEffect(() => {
-    if (counterPartyAddress) {
-      client.management.catalog
-        .request({
+    async function showCatalog(counterPartyAddress: string) {
+      try {
+        const catalog = await client.management.catalog.request({
           counterPartyId: "", // Temporarily Empty
           counterPartyAddress:
             counterPartyAddressWithDsp2025_1(counterPartyAddress),
-        })
-        .then((catalog) => {
-          setCatalogParticipantId(
-            catalog["https://w3id.org/dspace/2025/1/participantId"][0]["@id"],
-          );
         });
+        setCatalogParticipantId(
+          catalog["https://w3id.org/dspace/2025/1/participantId"][0]["@id"],
+        );
+        setHasBadUrlError(false);
+      } catch (error) {
+        const connectorError = error as EdcConnectorClientError;
+
+        if (connectorError.type === EdcConnectorClientErrorType.BadGateway) {
+          setHasBadUrlError(true);
+        }
+
+        const message = translator("common.catalogLoadError");
+        showSnackbar({
+          type: "error",
+          message,
+          persist: true,
+        });
+      }
     }
-  }, [counterPartyAddress, client]);
+
+    if (counterPartyAddress) {
+      showCatalog(counterPartyAddress);
+    }
+  }, [counterPartyAddress, client, showSnackbar, translator]);
 
   const openDataOfferDialog = (dataset: Dataset) => {
     setIsDataOfferDialogOpen(true);
@@ -132,12 +160,7 @@ export default function CatalogPage() {
             shouldFetch={!!counterPartyAddress}
           >
             <div className="w-full grid grid-rows-1 grid-cols-5 gap-x-3.5 py-4 items-center">
-              <Badge
-                badgeContent={1}
-                color="error"
-                invisible={!hasBadUrlError}
-                className="col-span-2"
-              >
+              <div className="col-span-2">
                 <Input
                   id="catalog-url"
                   fullWidth
@@ -145,11 +168,7 @@ export default function CatalogPage() {
                   type="text"
                   label={<T string="catalog.connectorEndpoints" />}
                   placeholder="https://other-connector.com/api/dsp"
-                  value={
-                    counterPartyAddressToSearch
-                      ? counterPartyAddressToSearch
-                      : null
-                  }
+                  value={counterPartyAddressToSearch || null}
                   slotProps={{
                     inputLabel: {
                       shrink: true,
@@ -177,7 +196,7 @@ export default function CatalogPage() {
                     debouncedSetCounterPartyAddress(event.target.value);
                   }}
                 />
-              </Badge>
+              </div>
               <div className="col-span-2">
                 <SearchBar
                   searchTarget="http://purl.org/dc/terms/title"
@@ -235,21 +254,6 @@ export default function CatalogPage() {
                   </Typography>
                 </div>
               )}
-              {hasBadUrlError && (
-                <div
-                  className={
-                    "size-full flex flex-col items-center justify-center"
-                  }
-                >
-                  <Icon color="error" style={{ fontSize: "80px" }}>
-                    error
-                  </Icon>
-
-                  <Typography variant="h5" component="h5" color="error">
-                    <T string="catalog.failedFetchingCatalog" />
-                  </Typography>
-                </div>
-              )}
               <ContractOffersList.Loading>
                 <div className="max-w-20 mx-auto mt-4 flex flex-col bg-white border shadow-sm rounded-xl p-4 md:p-5 self-start">
                   <span
@@ -262,15 +266,6 @@ export default function CatalogPage() {
                 </div>
               </ContractOffersList.Loading>
             </div>
-
-            <ContractOffersList.Error>
-              {({ errors }) => (
-                <ErrorPopup
-                  errors={errors}
-                  errorMessageKey="common.catalogLoadError"
-                />
-              )}
-            </ContractOffersList.Error>
           </ContractOffersList>
         </div>
       </SideDrawer>
