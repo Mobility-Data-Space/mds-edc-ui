@@ -12,7 +12,6 @@ export function ErrorPopup({ errorMessageKey, errors }: ErrorPopupProps) {
   const { translator } = useTranslator();
   const { showSnackbar } = useAppSnackbar();
   useEffect(() => {
-    console.log('errors==.', errors)
     if (errors && errors.length > 0) {
       console.log("Running", errors.length)
       errors.forEach((errorItem) => {

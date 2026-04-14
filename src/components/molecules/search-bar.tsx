@@ -1,7 +1,7 @@
 import { T } from "@/i18n";
 import { Input } from "@/components/atoms/input";
 import { Button, Icon } from "@mui/material";
-import { SyntheticEvent, useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import { useListContext } from "@think-it-labs/edc-connector-ui/list";
 
@@ -34,8 +34,7 @@ export default function SearchBar({
     }
   }, [searchQuery, setSearchSpec]);
 
-  const handleSearch = useCallback((event: SyntheticEvent) => {
-    event.preventDefault();
+  const handleSearch = useCallback(() => {
     // TODO: use useUpdateQueryParams when merged
     if (searchRef.current) {
       push(
@@ -65,7 +64,7 @@ export default function SearchBar({
         }
         onKeyDown={(event) => {
           if (event.key === "Enter") {
-            handleSearch(event);
+            handleSearch();
           }
         }}
         slotProps={{
@@ -84,7 +83,7 @@ export default function SearchBar({
                   boxShadow:
                     "0px 0px 1px -2px rgba(0,0,0,0.2),0px 0px 2px 0px rgba(0,0,0,0.14),0px 0px 5px 0px rgba(0,0,0,0.12)",
                 }}
-                onClick={(e) => handleSearch(e)}
+                onClick={() => handleSearch()}
               >
                 <span>
                   <T global string="search" />

@@ -41,7 +41,6 @@ export const en = {
       total: "Total",
       listLoadError: "Failed to load list. Please try again.",
       catalogLoadError: "Failed to load Catalog. Please try again.",
-      invalidCatalogCounterPartyAddress: "Please check counter party address",
       assetsLoadError: "Failed to load Assets. Please try again.",
       dataOffersLoadError: "Failed to load Data Offers. Please try again.",
       contractAgreementsLoadError:

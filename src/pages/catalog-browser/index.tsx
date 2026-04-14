@@ -54,7 +54,6 @@ export default function CatalogPage() {
   const { debounce: debouncedSetCounterPartyAddress } = useDebounce((url) => {
     updateQueryParams({ page: String(0) });
     setCounterPartyAddress(url);
-    setCounterPartyAddressToSearch(url);
     setHasBadUrlError(false);
   }, 1_200);
 
@@ -110,7 +109,7 @@ export default function CatalogPage() {
     if (counterPartyAddress) {
       showCatalog(counterPartyAddress);
     }
-  }, [counterPartyAddress, client, showSnackbar, translator]);
+  }, [counterPartyAddress, client, translator, showSnackbar]);
 
   const openDataOfferDialog = (dataset: Dataset) => {
     setIsDataOfferDialogOpen(true);
