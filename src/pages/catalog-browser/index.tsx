@@ -225,12 +225,11 @@ export default function CatalogPage() {
               ) : (
                 <div
                   className={
-                    "size-full flex flex-col items-center justify-center"
+                    "size-full flex flex-col items-start justify-center"
                   }
                 >
-                  <Icon style={{ fontSize: "0px" }}>info</Icon>
 
-                  <Typography variant="h6" component="h6" color="info">
+                  <Typography variant="h6" fontSize="16px" component="h6" color="info">
                     <T string="catalog.emptyCounterPartyUrl" />
                   </Typography>
                 </div>
