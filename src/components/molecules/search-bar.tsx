@@ -35,7 +35,6 @@ export default function SearchBar({
   }, [searchQuery, setSearchSpec]);
 
   const handleSearch = useCallback(() => {
-    // TODO: use useUpdateQueryParams when merged
     if (searchRef.current) {
       push(
         {
