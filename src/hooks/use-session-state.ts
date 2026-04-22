@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 export function useSessionState<T>(key: string, defaultValue: T) {
   const [state, setState] = useState<T>(() => {
     try {
-      if (typeof window === 'undefined') {
+      if (typeof window === "undefined") {
         return defaultValue;
-      } const item = sessionStorage.getItem(key);
-
+      }
+      const item = sessionStorage.getItem(key);
       return item ? JSON.parse(item) : defaultValue;
     } catch (error) {
       console.warn(`Error reading sessionStorage key "${key}":`, error);
@@ -25,4 +25,3 @@ export function useSessionState<T>(key: string, defaultValue: T) {
 
   return [state, setValue] as const;
 }
-

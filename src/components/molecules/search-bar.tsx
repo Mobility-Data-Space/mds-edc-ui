@@ -16,7 +16,7 @@ export default function SearchBar({
   searchTarget,
   searchOperator,
 }: SearchBarProps) {
-  const { query, push } = useRouter();
+  const { query, push, pathname } = useRouter();
 
   const { searchSpec, setSearchSpec } = useListContext();
 
@@ -29,22 +29,27 @@ export default function SearchBar({
   }, [setSearchSpec, searchTarget, searchOperator]);
 
   useEffect(() => {
-    setSearchSpec({ operandRight: searchQuery });
+    if (typeof searchQuery === "string") {
+      setSearchSpec({ operandRight: searchQuery });
+    }
   }, [searchQuery, setSearchSpec]);
 
   const handleSearch = useCallback(() => {
-    // TODO: use useUpdateQueryParams when merged
     if (searchRef.current) {
-      push({
-        href: window.location.href,
-        query: {
-          ...query,
-          q: searchRef.current.value,
-          page: 0,
+      push(
+        {
+          pathname,
+          query: {
+            ...query,
+            q: searchRef.current.value,
+            page: 0,
+          },
         },
-      });
+        undefined,
+        { shallow: true },
+      );
     }
-  }, [push, query]);
+  }, [pathname, push, query]);
 
   return (
     <div className="relative flex rounded-lg h-full">
@@ -69,6 +74,7 @@ export default function SearchBar({
               <Button
                 data-testid="search-trigger"
                 variant="contained"
+                type="button"
                 className="gap-x-2 font-medium h-full hover:cursor-pointer"
                 style={{
                   borderTopRightRadius: 4,
