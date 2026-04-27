@@ -343,7 +343,7 @@ const assetAdvancedFieldsToShow = (asset: Asset): FieldShowProps[] => {
     advancedFields.push({
       icon: "commute",
       label: "assets.new.fieldAdvancedInfoTransportMode",
-      value: toTitleCase(transportMode),
+      value: toTitleCase(transportMode.replace(/_/g, ' ')),
     });
   }
 
