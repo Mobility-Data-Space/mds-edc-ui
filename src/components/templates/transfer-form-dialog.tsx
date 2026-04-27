@@ -100,7 +100,7 @@ export function TransferFormDialog({
     <Dialog open={open} maxWidth="lg" className="my-7" onClose={handleClose}>
       <DialogTitle>
         <Typography variant="h4">
-          <T string="transferProcesses.new.initiateTransfer" />xxx
+          <T string="transferProcesses.new.initiateTransfer" />
         </Typography>
       </DialogTitle>
       <DialogContent style={{ maxWidth: "80vw", width: "800px" }}>
