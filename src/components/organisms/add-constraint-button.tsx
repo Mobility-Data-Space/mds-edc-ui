@@ -133,7 +133,11 @@ export function AddConstraintButton({ showAddButton = false, onClick }: AddConst
         open={popoverOpen}
         anchorEl={anchorEl}
         onClose={handleClose}
-        hideBackdrop
+        slotProps={{
+          backdrop: {
+            invisible: true,
+          },
+        }}
         anchorOrigin={{
           vertical: 'top',
           horizontal: 'center',
