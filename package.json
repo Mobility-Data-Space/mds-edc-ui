@@ -20,7 +20,7 @@
     "@emotion/styled": "^11.14.1",
     "@fontsource/roboto": "^5.2.8",
     "@headlessui/react": "^2.2.9",
-    "@mui/icons-material": "^7.3.7",
+    "@mui/icons-material": "^7.3.9",
     "@mui/material": "^7.3.9",
     "@mui/x-date-pickers": "^8.27.2",
     "@tailwindcss/typography": "^0.5.19",
