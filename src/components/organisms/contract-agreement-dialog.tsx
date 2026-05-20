@@ -61,8 +61,6 @@ export default function ContractAgreementDialog({
     _contractAgreement,
   );
 
-  const assetTitle = contractAgreement.assetId || contractAgreement.assetId;
-
   const canTransfer =
     participantId !== contractAgreement.providerId &&
     !contractAgreement.isTerminated;
@@ -201,7 +199,7 @@ export default function ContractAgreementDialog({
                   (contractAgreement.isTerminated ? "_off" : "")}
               </Icon>
             }
-            title={assetTitle}
+            title={contractAgreement.assetTitle}
             subtitle={participantId}
           />
         </DialogTitle>
