@@ -19,7 +19,7 @@ export function EdcInfoCard({ name, description = "", managementUrl, protocolUrl
       <CardContent className="flex flex-col gap-y-4">
         <TitleWithIcon
           title={<T string="dashboard.edcConnector" />}
-          subtitle={name}
+          subtitle={name.toUpperCase()}
         />
 
         <Typography variant="body2">
