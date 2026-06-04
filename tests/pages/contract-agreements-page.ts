@@ -90,6 +90,11 @@ export class ContractAgreementsPage extends BaseListPage {
     await this.page.locator(`${this.agreementCardLocator}:has([data-testid="asset-id"])`).first().waitFor({ state: 'visible' });
   }
 
+  async filterByConsumer() {
+    await this.page.locator('text=Consumer').click();
+    await this.waitForAgreementCardsLoaded();
+  }
+
   async selectAgreement(agreementName: string) {
     await this.page.locator(this.agreementCardLocator).filter({ hasText: agreementName }).click();
   }
