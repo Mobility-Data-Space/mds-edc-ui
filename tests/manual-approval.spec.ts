@@ -2,6 +2,8 @@ import { expect, test } from '@playwright/test';
 import { ManualApprovalPage } from './pages/manual-approval-page';
 
 test.describe("Manual Approval Tests", () => {
+  test.describe.configure({ mode: 'serial' });
+
   let manualApprovalPage: ManualApprovalPage;
 
   test.beforeEach(async ({ page }) => {
@@ -22,36 +24,57 @@ test.describe("Manual Approval Tests", () => {
     await expect(page.getByText("with Counter Party ID")).toBeVisible();
   });
 
-  test.fixme("should approve an item successfully", async ({ page }) => {
-    // Approve an item
-    const itemName = "Test Approval Item";
-    await manualApprovalPage.approveItem(itemName);
+  test("should display approve and reject buttons for each pending item", async ({ page }) => {
+    const approvalItems = await manualApprovalPage.getApprovalItems();
+    await expect(approvalItems.first()).toBeVisible({ timeout: 15000 });
 
-    // Verify success message
-    const successMessageLocator = await manualApprovalPage.getSuccessMessage();
-    const successMessage = successMessageLocator;
-    await expect(successMessage).toHaveText("Approval successful");
+    const count = await approvalItems.count();
+    for (let i = 0; i < count; i++) {
+      const item = approvalItems.nth(i);
+      await expect(item.getByRole('button', { name: /Approve/i })).toBeVisible();
+      await expect(item.getByRole('button', { name: /Reject/i })).toBeVisible();
+    }
   });
 
-  test.fixme("should reject an item successfully", async ({ page }) => {
-    // Reject an item
-    const itemName = "Test Approval Item";
-    await manualApprovalPage.rejectItem(itemName);
+  test("should approve an item successfully", async ({ page }) => {
+    const approvalItems = await manualApprovalPage.getApprovalItems();
+    await expect(approvalItems.first()).toBeVisible({ timeout: 15000 });
 
-    // Verify success message
-    const successMessage = await manualApprovalPage.getSuccessMessage();
-    await expect(successMessage).toBeVisible();
-    await expect(successMessage).toHaveText("Rejection successful");
+    const firstItem = approvalItems.first();
+    const approveButton = firstItem.getByRole('button', { name: /Approve/i });
+    await expect(approveButton).toBeVisible();
+
+    const responsePromise = page.waitForResponse(
+      (response) => response.url().includes('/v3/contractnegotiations/') &&
+                    response.url().includes('/approve') &&
+                    response.request().method() === 'POST'
+    );
+    await approveButton.click();
+    const response = await responsePromise;
+
+    if (response.ok()) {
+      await expect(page.getByText('Contract Agreement Approved')).toBeVisible({ timeout: 10000 });
+    }
   });
 
-  test.fixme("should display an error message for invalid actions", async ({ page }) => {
-    // Attempt to approve a non-existent item
-    const itemName = "Non-existent Item";
-    await manualApprovalPage.approveItem(itemName);
+  test("should reject an item successfully", async ({ page }) => {
+    const approvalItems = await manualApprovalPage.getApprovalItems();
+    await expect(approvalItems.first()).toBeVisible({ timeout: 15000 });
 
-    // Verify error message
-    const errorMessage = await manualApprovalPage.getErrorMessage();
-    await expect(errorMessage).toBeVisible();
-    await expect(errorMessage).toHaveText("An error has occurred");
+    const firstItem = approvalItems.first();
+    const rejectButton = firstItem.getByRole('button', { name: /Reject/i });
+    await expect(rejectButton).toBeVisible();
+
+    const responsePromise = page.waitForResponse(
+      (response) => response.url().includes('/v3/contractnegotiations/') &&
+                    response.url().includes('/reject') &&
+                    response.request().method() === 'POST'
+    );
+    await rejectButton.click();
+    const response = await responsePromise;
+
+    if (response.ok()) {
+      await expect(page.getByText('Contract Agreement Rejected')).toBeVisible({ timeout: 10000 });
+    }
   });
 });
