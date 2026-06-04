@@ -21,12 +21,16 @@ export class CatalogBrowserPage extends BaseListPage {
   }
 
   async fillCatalogUrlInput(url: string) {
+    const responsePromise = this.page.waitForResponse(
+      (response) =>
+        response.url().includes('/connector/management/v3/catalog') &&
+        response.status() < 400,
+      { timeout: 60000 },
+    );
     await this.page.fill(this.catalogUrlInputLocator, url);
-    // Wait for the catalog API response with retry logic
-    const apiAvailable = await this.waitForApiResponse('/connector/management/v3/catalog');
-    if (!apiAvailable) {
-      console.warn('Catalog API not responding, proceeding with caution');
-    }
+    await responsePromise;
+    // Wait for items to actually render (handles HMR/Fast Refresh re-mounts)
+    await this.page.locator(`${this.catalogListLocator} ${this.catalogItemLocator}`).first().waitFor({ state: 'visible', timeout: 30000 });
   }
 
   async getCatalogList() {
