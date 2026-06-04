@@ -74,6 +74,9 @@ export default function CatalogPage() {
     {} as Dataset,
   );
 
+  // Temporarily dummy counterparty ID
+  const DUMMY_COUNTERPARTY_ID = "MDS_ID";
+
   const client = useEdcConnectorClient({
     management: proxyConnectorManagement,
   });
@@ -82,7 +85,7 @@ export default function CatalogPage() {
     async function showCatalog(counterPartyAddress: string) {
       try {
         const catalog = await client.management.catalog.request({
-          counterPartyId: "", // Temporarily Empty
+          counterPartyId: DUMMY_COUNTERPARTY_ID,
           counterPartyAddress:
             counterPartyAddressWithDsp2025_1(counterPartyAddress),
         });
@@ -151,7 +154,7 @@ export default function CatalogPage() {
             counterPartyAddress={counterPartyAddressWithDsp2025_1(
               counterPartyAddress,
             )}
-            counterPartyId=""
+            counterPartyId={DUMMY_COUNTERPARTY_ID}
             usePagination
             navigate={navigateToPage}
             currentPage={parseInt(query.page as string) || 0}
