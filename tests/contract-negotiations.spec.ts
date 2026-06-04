@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { ContractNegotiationsPage } from './pages/contract-negotiations-page';
+import { MAX_ITEMS } from '@/constants/lists';
 
 test.describe("Contract Negotiations Tests", () => {
   let negotiationsPage: ContractNegotiationsPage;
@@ -44,7 +45,7 @@ test.describe("Contract Negotiations Tests", () => {
       await expect(searchTrigger).toBeVisible();
     });
 
-    test.fixme("should clear search and show all negotiations", async ({ page }) => {
+    test("should clear search and show all negotiations", async ({ page }) => {
       await negotiationsPage.searchNegotiations('test');
 
       await negotiationsPage.clearSearch();
@@ -92,7 +93,7 @@ test.describe("Contract Negotiations Tests", () => {
         await negotiationsPage.goToPreviousPage();
         const pageAfterPrevFirstIndex = await negotiationsPage.getFirstElementIndex();
 
-        expect(pageAfterPrevFirstIndex).toBe(pageAfterNextFirstIndex - 1);
+        expect(pageAfterPrevFirstIndex).toBe(pageAfterNextFirstIndex - MAX_ITEMS);
       } else {
         const isPrevEnabled = await negotiationsPage.isPreviousPageEnabled();
         const currentFirstIndex = await negotiationsPage.getFirstElementIndex();
@@ -113,8 +114,10 @@ test.describe("Contract Negotiations Tests", () => {
     });
 
     test("should disable next button on last page", async ({ page }) => {
-      while (await negotiationsPage.isNextPageEnabled()) {
+      let pages = 0;
+      while (await negotiationsPage.isNextPageEnabled() && pages < 50) {
         await negotiationsPage.goToNextPage();
+        pages++;
       }
 
       const isNextEnabled = await negotiationsPage.isNextPageEnabled();
