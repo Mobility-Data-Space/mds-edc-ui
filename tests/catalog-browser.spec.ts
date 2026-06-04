@@ -34,11 +34,7 @@ test.describe("Catalog Browser Tests", () => {
       if (!COUNTER_PARTY_ADDRESS) throw new Error('EDC_PROTOCOL_URL environment variable must be set');
       catalogPage = new CatalogBrowserPage(page);
       await catalogPage.navigate();
-      try {
-        await catalogPage.fillCatalogUrlInput(COUNTER_PARTY_ADDRESS);
-      } catch (error) {
-        console.warn('Failed to fill catalog URL, EDC service may be unavailable:', error);
-      }
+      await catalogPage.fillCatalogUrlInput(COUNTER_PARTY_ADDRESS);
     });
 
     test.describe("List Functionality", () => {
@@ -46,33 +42,20 @@ test.describe("Catalog Browser Tests", () => {
       test("Fills catalog URL input and loads catalog", async ({ page }) => {
         const input = page.locator('#catalog-url');
         await expect(input).toHaveValue(COUNTER_PARTY_ADDRESS);
-        
-        // Wait for catalog list to be available, skip if service unavailable
+
         const catalogList = await catalogPage.getCatalogList();
-        try {
-          await expect(catalogList).toBeVisible({ timeout: 30000 });
-          const catalogCards = await catalogPage.getCatalogCards();
-          expect(await catalogCards.count()).toBeGreaterThan(0);
-        } catch (error) {
-          console.warn('Catalog service appears to be unavailable, skipping validation');
-          test.skip(true, 'EDC catalog service not responding');
-        }
+        await expect(catalogList).toBeVisible({ timeout: 45000 });
+        const catalogCards = await catalogPage.getCatalogCards();
+        expect(await catalogCards.count()).toBeGreaterThan(0);
       });
 
       test("Displays the catalog list on the first visit", async ({ page }) => {
-        // Verify the catalog list is visible
         const catalogList = await catalogPage.getCatalogList();
-        try {
-          await expect(catalogList).toBeVisible({ timeout: 30000 });
-          
-          // Verify there is at least one catalog card
-          const catalogCards = await catalogPage.getCatalogCards();
-          const catalogs = await catalogCards.allTextContents();
-          expect(catalogs.length).toBeGreaterThan(0);
-        } catch (error) {
-          console.warn('Catalog service appears to be unavailable, skipping validation');
-          test.skip(true, 'EDC catalog service not responding');
-        }
+        await expect(catalogList).toBeVisible({ timeout: 45000 });
+
+        const catalogCards = await catalogPage.getCatalogCards();
+        const catalogs = await catalogCards.allTextContents();
+        expect(catalogs.length).toBeGreaterThan(0);
       });
     })
     test.describe("View Functionality", () => {
@@ -121,21 +104,13 @@ test.describe("Catalog Browser Tests", () => {
       });
 
       test("should clear search and show all catalog items", async ({ page }) => {
-        // First verify catalog items are visible before searching
         const initialCatalogs = await catalogPage.getCatalogCards();
-        try {
-          await initialCatalogs.first().waitFor({ state: 'visible', timeout: 30000 });
-        } catch {
-          console.warn('Catalog service appears to be unavailable, skipping validation');
-          test.skip(true, 'EDC catalog service not responding');
-          return;
-        }
+        await initialCatalogs.first().waitFor({ state: 'visible', timeout: 45000 });
 
         await catalogPage.searchCatalog('test');
         await catalogPage.clearSearch();
 
         const allCatalogs = await catalogPage.getCatalogCards();
-        // Wait for items to render after API response with longer timeout
         await allCatalogs.first().waitFor({ state: 'visible', timeout: 30000 });
         await expect(allCatalogs.first()).toBeVisible();
       });
@@ -200,9 +175,11 @@ test.describe("Catalog Browser Tests", () => {
         }
       });
 
-      test.fixme("should disable next button on last page", async () => {
-        while (await catalogPage.isNextPageEnabled()) {
+      test("should disable next button on last page", async () => {
+        let pages = 0;
+        while (await catalogPage.isNextPageEnabled() && pages < 50) {
           await catalogPage.goToNextPage();
+          pages++;
         }
 
         const isNextEnabled = await catalogPage.isNextPageEnabled();
