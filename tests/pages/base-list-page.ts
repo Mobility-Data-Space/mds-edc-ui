@@ -38,10 +38,9 @@ export class BaseListPage {
                 return true;
             } catch (error) {
                 if (attempt === retries) {
-                    console.warn(`Failed to get response from ${apiEndpoint} after ${retries} attempts`);
                     return false;
                 }
-                await this.page.waitForTimeout(1000 * attempt); // Exponential backoff
+                await this.page.waitForTimeout(1000 * attempt);
             }
         }
         return false;

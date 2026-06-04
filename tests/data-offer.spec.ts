@@ -124,8 +124,6 @@ test.describe("Data Offer Tests", () => {
       const successMessage = await page.getByTestId('toast-success-message').textContent();
       expect(successMessage).toContain("Data offer deleted successfully!");
 
-      // Wait for the redirect and verify the data offer is removed
-      await page.waitForTimeout(1000);
       const deletedDataOfferCard = dataOfferCards.locator('[data-testid="contract-definition-id"]', { hasText: randomId });
       await expect(deletedDataOfferCard).toBeHidden();
     });
