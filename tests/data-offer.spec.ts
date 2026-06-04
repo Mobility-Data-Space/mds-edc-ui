@@ -240,8 +240,10 @@ test.describe("Data Offer Tests", () => {
     });
 
     test("should disable next button on last page", async ({ page }) => {
-      while (await dataOfferPage.isNextPageEnabled()) {
+      let pages = 0;
+      while (await dataOfferPage.isNextPageEnabled() && pages < 50) {
         await dataOfferPage.goToNextPage();
+        pages++;
       }
 
       const isNextEnabled = await dataOfferPage.isNextPageEnabled();
