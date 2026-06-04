@@ -822,7 +822,10 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
   }
 
   if (formDataToTransform.type === DataAddressTypes.HttpData) {
-    const headers = (formDataToTransform.headers || [])
+    const headersArray = Array.isArray(formDataToTransform.headers)
+      ? formDataToTransform.headers
+      : [];
+    const headers = headersArray
       .filter(
         (value: { input: { key: string; value: string } }) =>
           value?.input?.key && value?.input?.value,
@@ -842,7 +845,10 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
     if (typeof formDataToTransform.queryParams === "string") {
       queryParams = formDataToTransform.queryParams;
     } else {
-      queryParams = (formDataToTransform.queryParams || [])
+      const queryParamsArray = Array.isArray(formDataToTransform.queryParams)
+        ? formDataToTransform.queryParams
+        : [];
+      queryParams = queryParamsArray
         .filter(
           (value: { input: { key: string; value: string } }) =>
             value?.input?.key && value?.input?.value,
