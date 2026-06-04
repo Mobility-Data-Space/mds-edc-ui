@@ -1,19 +1,14 @@
 import { expect, test } from '@playwright/test';
 import { PoliciesPage } from './pages/policies-page';
+import { MAX_ITEMS } from '@/constants/lists';
 import { randomUUID } from 'node:crypto';
-import { beforeEach } from 'node:test';
 
 test.describe("Policy Definitions Page Tests", () => {
   let policiesPage: PoliciesPage;
 
   test.beforeEach(async ({ page }) => {
     policiesPage = new PoliciesPage(page);
-    try {
-      await policiesPage.navigate();
-    } catch (error) {
-      console.warn('Failed to navigate to policies page, EDC service may be unavailable:', error);
-      test.skip(true, 'EDC policies service not responding');
-    }
+    await policiesPage.navigate();
   });
 
   test.describe("List Functionality", () => {
@@ -43,24 +38,25 @@ test.describe("Policy Definitions Page Tests", () => {
   });
 
   test.describe("Create Functionality", () => {
-    test.fixme("should allow manual date input in the DatePicker field", async ({ page }) => {
-      // Navigate to the Create Policy page
+    test("should allow manual date input in the DatePicker field", async ({ page }) => {
       await policiesPage.clickCreatePolicyButton();
+      await page.waitForURL("**/new");
 
-      // Interact with the DatePicker field
-      const datePickerInput = page.locator('[data-testid="date-picker-input"]');
-      await datePickerInput.click();
+      // Add a Time Restriction expression (which contains a DatePicker)
+      await policiesPage.clickAddExpressionButton();
+      await page.getByTestId('participant-id-expression').waitFor({ state: 'visible' });
+      await page.getByText('Time Restriction', { exact: true }).click();
 
-      // Select a date using the calendar
-      const calendarDay = page.locator('[data-testid="calendar-day"]').first();
-      await calendarDay.click();
+      // The DatePicker renders a TextField with placeholder "DD/MM/YYYY"
+      const dateInput = page.getByPlaceholder('DD/MM/YYYY');
+      await expect(dateInput).toBeVisible();
 
-      // Manually edit the date in the input field
-      await datePickerInput.fill("15/07/2025");
+      // Manually type a date
+      await dateInput.fill("15/07/2025");
+      await dateInput.blur();
 
-      // Verify the manually entered date is displayed correctly
-      const inputValue = datePickerInput;
-      await expect(inputValue).toHaveValue("15/07/2025");
+      // Verify the manually entered date is retained
+      await expect(dateInput).toHaveValue("15/07/2025");
     });
 
     test("should create a policy using the '=' operator for Consumer's Participant ID", async ({ page }) => {
@@ -260,7 +256,7 @@ test.describe("Policy Definitions Page Tests", () => {
         await policiesPage.goToPreviousPage();
         const pageAfterPrevFirstIndex = await policiesPage.getFirstElementIndex();
 
-        expect(pageAfterPrevFirstIndex).toBe(pageAfterNextFirstIndex - 1);
+        expect(pageAfterPrevFirstIndex).toBe(pageAfterNextFirstIndex - MAX_ITEMS);
       } else {
         const isPrevEnabled = await policiesPage.isPreviousPageEnabled();
         const currentFirstIndex = await policiesPage.getFirstElementIndex();
@@ -281,8 +277,10 @@ test.describe("Policy Definitions Page Tests", () => {
     });
 
     test("should disable next button on last page", async ({ page }) => {
-      while (await policiesPage.isNextPageEnabled()) {
+      let pages = 0;
+      while (await policiesPage.isNextPageEnabled() && pages < 50) {
         await policiesPage.goToNextPage();
+        pages++;
       }
 
       const isNextEnabled = await policiesPage.isNextPageEnabled();
