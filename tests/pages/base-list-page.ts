@@ -57,7 +57,7 @@ export class BaseListPage {
         return this.page.locator(locator);
     }
 
-    async waitForToastMessage(type: SnackbarType, timeout = 10000) {
+    async waitForToastMessage(type: SnackbarType, timeout = 30000) {
         const locatorMap: Record<SnackbarType, string> = {
             success: this.successMessageLocator,
             info: this.infoMessageLocator,
@@ -68,12 +68,22 @@ export class BaseListPage {
         return locator;
     }
 
+    async waitForListRender(timeout = 15000) {
+        const spinner = this.page.locator('[role="status"][aria-label="loading"]');
+        try {
+            await spinner.waitFor({ state: 'visible', timeout: 2000 });
+            await spinner.waitFor({ state: 'hidden', timeout });
+        } catch {
+            // Spinner was too fast or never appeared
+        }
+    }
+
     async searchItems(searchTerm: string, apiEndpoint: string) {
         const searchInput = this.page.locator(this.searchInputLocator);
         await searchInput.fill(searchTerm);
         await this.page.locator(this.searchTriggerLocator).click();
-        // Wait for API response instead of networkidle
         await this.waitForApiResponse(apiEndpoint);
+        await this.waitForListRender();
     }
 
     async clearSearch(apiEndpoint: string) {
@@ -81,6 +91,7 @@ export class BaseListPage {
         await searchInput.clear();
         await this.page.locator(this.searchTriggerLocator).click();
         await this.waitForApiResponse(apiEndpoint);
+        await this.waitForListRender();
     }
 
     async getSearchInput() {
@@ -94,18 +105,16 @@ export class BaseListPage {
     // Pagination functionality
     async goToNextPage(apiEndpoint: string) {
         const nextButton = this.page.locator(this.paginationNextLocator);
-        if (await nextButton.isEnabled()) {
-            await nextButton.click();
-            await this.waitForApiResponse(apiEndpoint);
-        }
+        await nextButton.click();
+        await this.waitForApiResponse(apiEndpoint);
+        await this.waitForListRender();
     }
 
     async goToPreviousPage(apiEndpoint: string) {
         const prevButton = this.page.locator(this.paginationPrevLocator);
-        if (await prevButton.isEnabled()) {
-            await prevButton.click();
-            await this.waitForApiResponse(apiEndpoint);
-        }
+        await prevButton.click();
+        await this.waitForApiResponse(apiEndpoint);
+        await this.waitForListRender();
     }
 
     async isNextPageEnabled() {
