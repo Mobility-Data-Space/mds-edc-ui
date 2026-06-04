@@ -79,16 +79,9 @@ export class PoliciesPage extends BaseListPage {
     await this.page.waitForSelector('button:has-text("Cancel")');
   }
 
-  async waitForURL(url:string){
-     await this.page.waitForURL(url);
-  }
-
   async navigate() {
     await this.page.goto('/policy-definitions');
-    const apiAvailable = await this.waitForApiResponse('/connector/management/v3/policydefinitions');
-    if (!apiAvailable) {
-      console.warn('Policy definitions API not responding, tests may be unreliable');
-    }
+    await this.waitForApiResponse('/connector/management/v3/policydefinitions');
   }
 
   async getPoliciesList() {

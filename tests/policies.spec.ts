@@ -125,7 +125,7 @@ test.describe("Policy Definitions Page Tests", () => {
 
       // Create again with same ID (expect 409)
       await policiesPage.clickCreatePolicyButton();
-      await policiesPage.waitForURL("**/new");
+      await page.waitForURL("**/new");
       await policiesPage.fillPolicyId(policyText);
       const res = await policiesPage.clickCreateButtonAndWaitForCreateResponse(409);
       expect(res.status()).toBe(409);
@@ -168,8 +168,6 @@ test.describe("Policy Definitions Page Tests", () => {
 
       await confirmDeleteButton.click() ;
       await expect(page.getByTestId('toast-success-message').filter({ hasText: 'Policy deleted successfully!' })).toBeVisible();
-
-      await page.waitForTimeout(1000);
       await expect(policyCard).toBeHidden() ;
     });
 

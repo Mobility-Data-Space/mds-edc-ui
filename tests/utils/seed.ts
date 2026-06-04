@@ -161,10 +161,6 @@ export async function create_pending_negotiations(
       .apiToken(process.env.TEST_API_KEY || "default-test-api-key")
       .build();
 
-  console.log(
-    "Create manual-approval contract definition on",
-    participant.id,
-  );
   await participantClient.management.contractDefinitions.create({
     "@id": "manual-approval-contract-def",
     accessPolicyId: "always-true",
@@ -181,9 +177,6 @@ export async function create_pending_negotiations(
     },
   } as any);
 
-  console.log(
-    "Fetch participant catalog from counter-party to initiate pending negotiations",
-  );
   const catalog = await counterPartyClient.management.catalog.request({
     counterPartyId: participant.id,
     counterPartyAddress: participant.protocolUrl,
@@ -196,17 +189,8 @@ export async function create_pending_negotiations(
       d.id === "asset-10-id",
   );
 
-  console.log(
-    `  Found ${targetAssets.length} target assets, initiating pending negotiations`,
-  );
-
   for (const dataset of targetAssets) {
-    const offers = dataset.offers;
-    console.log(
-      `  Dataset ${dataset.id}: ${offers.length} offer(s), offer IDs: ${offers.map((o: any) => o["@id"] || o.id).join(", ")}`,
-    );
-    const offer = offers[0];
-    console.log(`  Using offer:`, JSON.stringify(offer, null, 2));
+    const offer = dataset.offers[0];
 
     const policy = new PolicyBuilder()
       .type("Offer")
@@ -217,43 +201,14 @@ export async function create_pending_negotiations(
       })
       .build();
 
-    console.log(
-      `  Initiating negotiation for ${dataset.id} from counter-party toward ${participant.id} at ${participant.protocolUrl}`,
-    );
-    const initiateResponse =
-      await counterPartyClient.management.contractNegotiations.initiate({
-        counterPartyId: participant.id,
-        counterPartyAddress: participant.protocolUrl,
-        policy,
-      });
-    console.log(
-      `  Negotiation initiated, response ID: ${initiateResponse.id}`,
-    );
+    await counterPartyClient.management.contractNegotiations.initiate({
+      counterPartyId: participant.id,
+      counterPartyAddress: participant.protocolUrl,
+      policy,
+    });
   }
 
-  // Check what the counter-party sees (consumer side)
-  const counterPartyNegotiations =
-    await counterPartyClient.management.contractNegotiations.queryAll({});
-  console.log(
-    `  Counter-party has ${counterPartyNegotiations.length} total negotiations`,
-  );
-  for (const n of counterPartyNegotiations) {
-    const state = n.state;
-    console.log(`    Negotiation ${n["@id"]}: state=${state}, type=${n.type}`);
-  }
-
-  // Check what the participant sees (provider side)
-  const participantNegotiations =
-    await participantClient.management.contractNegotiations.queryAll({});
-  console.log(
-    `  Participant has ${participantNegotiations.length} total negotiations`,
-  );
-  for (const n of participantNegotiations) {
-    const state = n.state;
-    console.log(`    Negotiation ${n["@id"]}: state=${state}, type=${n.type}`);
-  }
-
-  // Now poll for pending
+  // Poll for pending
   const expectedCount = targetAssets.length;
   let attempts = 0;
   const maxAttempts = 15;
@@ -263,7 +218,6 @@ export async function create_pending_negotiations(
     attempts++;
     await new Promise((resolve) => setTimeout(resolve, pollInterval));
 
-    // Query with pending filter
     const pendingNegotiations =
       await participantClient.management.contractNegotiations.queryAll({
         filterExpression: [
@@ -271,26 +225,16 @@ export async function create_pending_negotiations(
         ],
       });
 
-    // Also query all to check current states
-    const allNegotiations =
-      await participantClient.management.contractNegotiations.queryAll({});
-
-    console.log(
-      `  Poll ${attempts}: pending filter=${pendingNegotiations.length}, total=${allNegotiations.length}, states: ${allNegotiations.map((n) => `${n["@id"]?.slice(-8)}=${n.state}`).join(", ")}`,
-    );
-
     if (pendingNegotiations.length >= expectedCount) {
       break;
     }
 
     if (attempts === maxAttempts) {
       throw new Error(
-        `Timed out waiting for ${expectedCount} pending negotiations (got ${pendingNegotiations.length}, total=${allNegotiations.length})`,
+        `Timed out waiting for ${expectedCount} pending negotiations (got ${pendingNegotiations.length})`,
       );
     }
   }
-
-  console.log("  Pending negotiations created on", participant.id);
 }
 
 export async function initiate_transfers(
