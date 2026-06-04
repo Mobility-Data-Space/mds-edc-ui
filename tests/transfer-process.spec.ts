@@ -131,8 +131,10 @@ test.describe("Transfer Processes Page Tests", () => {
     });
 
     test("should disable next button on last page", async ({ page }) => {
-      while (await transferProcessesPage.isNextPageEnabled()) {
+      let pages = 0;
+      while (await transferProcessesPage.isNextPageEnabled() && pages < 50) {
         await transferProcessesPage.goToNextPage();
+        pages++;
       }
 
       const isNextEnabled = await transferProcessesPage.isNextPageEnabled();
