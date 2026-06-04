@@ -38,9 +38,9 @@ test.describe('Create and Update Kafka Data Offer Tests', () => {
 
     // Set up listener for the assets API endpoint before clicking submit
     const responsePromise = page.waitForResponse((response) => {
-      const urlMatches = response
-        .url()
-        .includes("/connector/management/v3/assets");
+      const url = response.url();
+      const urlMatches = url.includes("/connector/management/v3/assets") &&
+        !url.includes("/connector/management/v3/assets/");
       const isPost = response.request().method() === "POST";
       return urlMatches && isPost;
     });
@@ -104,6 +104,7 @@ test.describe('Create and Update Kafka Data Offer Tests', () => {
     // Now we edit what we did
 
     await page.goto(`/assets/${initialInput.asset.id}/edit`);
+    await page.waitForResponse((response) => response.url().includes('/connector/management/v3/assets'));
 
     const editedKafkaAsset = {
       kafka: {
@@ -123,16 +124,18 @@ test.describe('Create and Update Kafka Data Offer Tests', () => {
     await page
       .getByRole("radio", { name: "Available (with data source)" })
       .check();
-    await  page.getByRole("combobox", { name: /type/i }).click();
+    const typeCombobox = page.getByRole("combobox", { name: /type/i });
+    await expect(typeCombobox).toBeVisible({ timeout: 15000 });
+    await typeCombobox.click();
     await createDataOfferPage.fillKafkaDataInput(editedKafkaAsset);
 
     // Set up listener for the assets API endpoint before clicking submit
     const response = page.waitForResponse((response) => {
-      const urlMatches = response
-        .url()
-        .includes("/connector/management/v3/assets");
-      const isPost = response.request().method() === "PUT";
-      return urlMatches && isPost;
+      const url = response.url();
+      const urlMatches = url.includes("/connector/management/v3/assets") &&
+        !url.includes("/connector/management/v3/assets/");
+      const isPut = response.request().method() === "PUT";
+      return urlMatches && isPut;
     });
 
     await createDataOfferPage.submitButton().click();
