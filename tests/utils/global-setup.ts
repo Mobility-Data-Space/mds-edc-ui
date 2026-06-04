@@ -1,5 +1,9 @@
 import { execSync } from "child_process";
-import { initiate_transfers, publish_offers } from "./seed.ts";
+import {
+  create_pending_negotiations,
+  initiate_transfers,
+  publish_offers,
+} from "./seed.ts";
 import {
   participantConfig,
   counterPartyParticipantConfig,
@@ -148,6 +152,7 @@ async function globalSetup() {
     await publish_offers(counterPartyParticipant);
 
     await initiate_transfers(participant, counterPartyParticipant);
+    await create_pending_negotiations(participant, counterPartyParticipant);
 
     console.log("Dataspace seeding completed successfully.");
   } catch (error) {

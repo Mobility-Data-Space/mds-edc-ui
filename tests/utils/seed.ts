@@ -124,12 +124,173 @@ export async function publish_offers(participant: Participant) {
       "@id": randomUUID(),
       accessPolicyId: policyDefinitionId,
       contractPolicyId: policyDefinitionId,
-      assetsSelector: [],
+      assetsSelector: [
+        {
+          operandLeft: "https://w3id.org/edc/v0.0.1/ns/id",
+          operator: "in",
+          operandRight: [
+            "asset-1-id",
+            "asset-2-id",
+            "asset-3-id",
+            "asset-4-id",
+            "asset-5-id",
+            "asset-6-id",
+            "asset-7-id",
+          ],
+        },
+      ],
     }),
   );
   console.log("  awaiting creation contract definitions for", participant.id);
   await Promise.all(contractDefinitionPromises);
   console.log("  contract definitions created", participant.id);
+}
+
+export async function create_pending_negotiations(
+  participant: Participant,
+  counterPartyParticipant: Participant,
+) {
+  const participantClient: EdcConnectorClient = new EdcConnectorClient.Builder()
+    .managementUrl(participant.managementUrl)
+    .apiToken(process.env.TEST_API_KEY || "default-test-api-key")
+    .build();
+
+  const counterPartyClient: EdcConnectorClient =
+    new EdcConnectorClient.Builder()
+      .managementUrl(counterPartyParticipant.managementUrl)
+      .apiToken(process.env.TEST_API_KEY || "default-test-api-key")
+      .build();
+
+  console.log(
+    "Create manual-approval contract definition on",
+    participant.id,
+  );
+  await participantClient.management.contractDefinitions.create({
+    "@id": "manual-approval-contract-def",
+    accessPolicyId: "always-true",
+    contractPolicyId: "always-true",
+    assetsSelector: [
+      {
+        operandLeft: "https://w3id.org/edc/v0.0.1/ns/id",
+        operator: "in",
+        operandRight: ["asset-8-id", "asset-9-id", "asset-10-id"],
+      },
+    ],
+    privateProperties: {
+      manualApproval: "true",
+    },
+  } as any);
+
+  console.log(
+    "Fetch participant catalog from counter-party to initiate pending negotiations",
+  );
+  const catalog = await counterPartyClient.management.catalog.request({
+    counterPartyId: participant.id,
+    counterPartyAddress: participant.protocolUrl,
+  });
+
+  const targetAssets = catalog.datasets.filter(
+    (d: any) =>
+      d.id === "asset-8-id" ||
+      d.id === "asset-9-id" ||
+      d.id === "asset-10-id",
+  );
+
+  console.log(
+    `  Found ${targetAssets.length} target assets, initiating pending negotiations`,
+  );
+
+  for (const dataset of targetAssets) {
+    const offers = dataset.offers;
+    console.log(
+      `  Dataset ${dataset.id}: ${offers.length} offer(s), offer IDs: ${offers.map((o: any) => o["@id"] || o.id).join(", ")}`,
+    );
+    const offer = offers[0];
+    console.log(`  Using offer:`, JSON.stringify(offer, null, 2));
+
+    const policy = new PolicyBuilder()
+      .type("Offer")
+      .raw({
+        ...offer,
+        assigner: participant.id,
+        target: dataset.id,
+      })
+      .build();
+
+    console.log(
+      `  Initiating negotiation for ${dataset.id} from counter-party toward ${participant.id} at ${participant.protocolUrl}`,
+    );
+    const initiateResponse =
+      await counterPartyClient.management.contractNegotiations.initiate({
+        counterPartyId: participant.id,
+        counterPartyAddress: participant.protocolUrl,
+        policy,
+      });
+    console.log(
+      `  Negotiation initiated, response ID: ${initiateResponse.id}`,
+    );
+  }
+
+  // Check what the counter-party sees (consumer side)
+  const counterPartyNegotiations =
+    await counterPartyClient.management.contractNegotiations.queryAll({});
+  console.log(
+    `  Counter-party has ${counterPartyNegotiations.length} total negotiations`,
+  );
+  for (const n of counterPartyNegotiations) {
+    const state = n.state;
+    console.log(`    Negotiation ${n["@id"]}: state=${state}, type=${n.type}`);
+  }
+
+  // Check what the participant sees (provider side)
+  const participantNegotiations =
+    await participantClient.management.contractNegotiations.queryAll({});
+  console.log(
+    `  Participant has ${participantNegotiations.length} total negotiations`,
+  );
+  for (const n of participantNegotiations) {
+    const state = n.state;
+    console.log(`    Negotiation ${n["@id"]}: state=${state}, type=${n.type}`);
+  }
+
+  // Now poll for pending
+  const expectedCount = targetAssets.length;
+  let attempts = 0;
+  const maxAttempts = 15;
+  const pollInterval = 2000;
+
+  while (attempts < maxAttempts) {
+    attempts++;
+    await new Promise((resolve) => setTimeout(resolve, pollInterval));
+
+    // Query with pending filter
+    const pendingNegotiations =
+      await participantClient.management.contractNegotiations.queryAll({
+        filterExpression: [
+          { operandLeft: "pending", operator: "=", operandRight: true },
+        ],
+      });
+
+    // Also query all to check current states
+    const allNegotiations =
+      await participantClient.management.contractNegotiations.queryAll({});
+
+    console.log(
+      `  Poll ${attempts}: pending filter=${pendingNegotiations.length}, total=${allNegotiations.length}, states: ${allNegotiations.map((n) => `${n["@id"]?.slice(-8)}=${n.state}`).join(", ")}`,
+    );
+
+    if (pendingNegotiations.length >= expectedCount) {
+      break;
+    }
+
+    if (attempts === maxAttempts) {
+      throw new Error(
+        `Timed out waiting for ${expectedCount} pending negotiations (got ${pendingNegotiations.length}, total=${allNegotiations.length})`,
+      );
+    }
+  }
+
+  console.log("  Pending negotiations created on", participant.id);
 }
 
 export async function initiate_transfers(
