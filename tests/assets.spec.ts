@@ -276,9 +276,20 @@ test.describe("Assets Page Tests", () => {
       await page.waitForURL("assets/**/edit") ;
       await page.waitForResponse((response) => response.url().includes('/connector/management/v3/assets'))
 
+      // Wait for form hydration — title field should be populated with existing asset title
+      const titleInput = page.getByRole('textbox', { name: 'Title' });
+      await expect(titleInput).not.toHaveValue('', { timeout: 30000 });
+
       await assetsPage.fillEditAssetForm(updatedTitle, updatedDescription);
 
+      // Set up response listener BEFORE clicking submit to avoid race condition
+      const updateResponsePromise = page.waitForResponse(
+        (response) => response.url().includes('/connector/management/v3/assets') &&
+                      !response.url().includes('/connector/management/v3/assets/') &&
+                      response.request().method() === 'PUT'
+      );
       await assetsPage.submitEditAssetForm();
+      await updateResponsePromise;
 
       // Verify the success message is displayed
       const successMessage = await assetsPage.waitForToastMessage("success");
@@ -401,8 +412,10 @@ test.describe("Assets Page Tests", () => {
     });
 
     test("should disable next button on last page", async ({ page }) => {
-      while (await assetsPage.isNextPageEnabled()) {
+      let pages = 0;
+      while (await assetsPage.isNextPageEnabled() && pages < 50) {
         await assetsPage.goToNextPage();
+        pages++;
       }
 
       const isNextEnabled = await assetsPage.isNextPageEnabled();
