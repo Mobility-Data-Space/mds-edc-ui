@@ -13,7 +13,8 @@
     "lint": "eslint .",
     "test": "playwright test",
     "test:ui": "playwright test --ui",
-    "seed:e2e": "ts-node tests/utils/global-setup.ts"
+    "security-scan": "trivy fs --scanners vuln,secret --severity MEDIUM,HIGH,CRITICAL .",
+    "image-scan": "docker build -t mds-connector-ui:local-scan . && trivy image --severity MEDIUM,HIGH,CRITICAL mds-connector-ui:local-scan"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -49,6 +50,14 @@
     "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.1",
     "server-only": "^0.0.1"
+  },
+  "resolutions": {
+    "i18next-fs-backend": ">=2.6.4",
+    "lodash": ">=4.18.0",
+    "lodash-es": ">=4.18.0",
+    "postcss": ">=8.5.10",
+    "undici": ">=6.24.0",
+    "yaml": ">=1.10.3"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
