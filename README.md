@@ -10,17 +10,6 @@
    ```
 
 
-### Run with Docker 
-
-You can run the app using docker by running 
-
-
-```bash
-docker compose -f docker-compose.local.yml
-```
-
-This would run the connectors and the UI for you
-
 ### Run E2E tests 
 
 To run the tests in the app use the following command
