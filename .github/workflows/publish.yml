@@ -11,25 +11,29 @@ jobs:
   push_to_registry:
     name: Push Docker image to registry
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: write
+      packages: write
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v4
+        uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4
         with:
-            registry: ghcr.io
-            username: ${{ github.actor }}
-            password: ${{ secrets.GITHUB_TOKEN }}
-      
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - id: lowercase_gh_repo
-        uses: ASzc/change-string-case-action@v8
+        uses: ASzc/change-string-case-action@ecd1412d078f2e06e9eedcbaa6fcd988151c3f82 # v8
         with:
           string: ${{ github.repository }}
-        
+
       - name: Generate Docker metadata
         id: meta
-        uses: docker/metadata-action@v6
+        uses: docker/metadata-action@030e881283bb7a6894de51c315a6bfe6a94e05cf # v6
         with:
           images: ghcr.io/${{ steps.lowercase_gh_repo.outputs.lowercase }}/mds-connector-ui
           labels: |
@@ -42,11 +46,55 @@ jobs:
             type=sha
             type=raw,value=latest,enable={{is_default_branch}}
 
-      - name: Build and push Docker image with metadata
-        uses: docker/build-push-action@v7
+      - name: Build Docker image (local)
+        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7
+        with:
+          context: ./
+          file: Dockerfile
+          push: false
+          load: true
+          tags: ghcr.io/${{ steps.lowercase_gh_repo.outputs.lowercase }}/mds-connector-ui:scan
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Trivy image scan (report)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: ghcr.io/${{ steps.lowercase_gh_repo.outputs.lowercase }}/mds-connector-ui:scan
+          format: table
+          output: trivy-image-results.txt
+          severity: MEDIUM,HIGH,CRITICAL
+          scanners: vuln
+
+      - name: Upload image scan report
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: trivy-image-report
+          path: trivy-image-results.txt
+
+      - name: Fail on HIGH/CRITICAL image vulnerabilities
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: ghcr.io/${{ steps.lowercase_gh_repo.outputs.lowercase }}/mds-connector-ui:scan
+          format: table
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '1'
+          trivyignores: .trivyignore
+          scanners: vuln
+
+      - name: Generate SBOM
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0
+        with:
+          image: ghcr.io/${{ steps.lowercase_gh_repo.outputs.lowercase }}/mds-connector-ui:scan
+          artifact-name: sbom-mds-connector-ui
+          output-file: sbom-mds-connector-ui.spdx.json
+
+      - name: Push Docker image
+        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7
         with:
           context: ./
           file: Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

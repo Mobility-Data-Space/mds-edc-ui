@@ -1,0 +1,7 @@
+# Trivy CVE suppressions for mds-edc-ui.
+#
+# Add CVE IDs below (one per line) to suppress vulnerabilities that are
+# confirmed false positives or transitive dependencies with no available fix.
+#
+# Maintenance: review this file on every major dependency upgrade and remove
+# any entry that no longer appears in the scan output.
