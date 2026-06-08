@@ -91,7 +91,7 @@ export class ContractAgreementsPage extends BaseListPage {
   }
 
   async filterByConsumer() {
-    await this.page.locator('text=Consumer').click();
+    await this.page.getByTestId('offer-publish-mode-consumer').click();
     await this.waitForAgreementCardsLoaded();
   }
 
