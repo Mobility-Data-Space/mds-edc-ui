@@ -1,4 +1,5 @@
 FROM node:26-alpine AS base
+RUN npm install -g yarn
 
 # Install dependencies only when needed
 FROM base AS deps
