@@ -29,7 +29,7 @@
     "@think-it-labs/edc-connector-ui": "^0.2.10",
     "clsx": "^2.1.0",
     "date-fns": "2.0.0",
-    "dayjs": "^1.11.19",
+    "dayjs": "^1.11.21",
     "formik": "^2.4.9",
     "i18next": "^25.8.18",
     "javascript-time-ago": "^2.5.12",
