@@ -248,6 +248,28 @@ export function ProviderFormDataAddressKafka({
             }
           />
         </div>
+        <label
+          htmlFor="data-address-sasl-oauthbearer-extensions"
+          className="inline-block text-sm text-black font-medium mb-2"
+        >
+          <T string="SASL OAuthBearer Extensions" />
+        </label>
+        <div className="sm:col-span-1 flex flex-col gap-y-3">
+          <Input
+            name="data-address-sasl-oauthbearer-extensions"
+            id="data-address-sasl-oauthbearer-extensions"
+            data-testid="data-address-sasl-oauthbearer-extensions"
+            placeholder={"logicalCluster=abc,identityPoolId=xyz"}
+            label={translator("SASL OAuthBearer Extensions")}
+            value={formData["kafka.sasl.oauthbearer.extensions"]}
+            onChange={(event) =>
+              onChange({
+                ...formData,
+                "kafka.sasl.oauthbearer.extensions": event.target.value,
+              })
+            }
+          />
+        </div>
       </div>
     </>
   );
