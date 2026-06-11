@@ -15,6 +15,7 @@ export type KafkaTestDataAssetInput = {
     securityProtocol: 'SASL_SSL';
     oidcRegisterClientTokenKey: string;
     kafkaAdminPropertiesKey: string;
+    saslOauthbearerExtensions?: string;
   }
 };
 
@@ -122,6 +123,12 @@ export class CreateDataOfferPage {
     await this.page
       .getByRole("textbox", { name: "Admin Properties Key Kafka" })
       .fill(input.kafka.kafkaAdminPropertiesKey);
+
+    if (input.kafka.saslOauthbearerExtensions) {
+      await this.page
+        .getByRole("textbox", { name: "SASL OAuthBearer Extensions" })
+        .fill(input.kafka.saslOauthbearerExtensions);
+    }
 
     // Fill Asset Input
 

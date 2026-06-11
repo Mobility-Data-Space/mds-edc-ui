@@ -236,27 +236,6 @@ test.describe("Assets Page Tests", () => {
     })
   });
 
-  test.describe("Delete Functionality", () => {
-    test("Deletes an asset and verifies it is removed from the list", async ({ page }) => {
-      // Select an asset to delete
-      const assetCards = await assetsPage.getAssetCards();
-      const assetCard = assetCards.first();
-      const assetName = (await assetCard.textContent()) || "";
-      await assetCard.click();
-      await assetsPage.submitDeleteAsset();
-
-      // Confirm deletion
-      await assetsPage.confirmDeleteAsset();
-
-      // Verify the success message is displayed
-      const successMessage = await assetsPage.waitForToastMessage("success");
-      await expect(successMessage).toBeVisible();
-
-      // Verify the asset is removed
-      await expect(page.locator(assetsPage.assetListLocator).locator(assetsPage.assetCardLocator).filter({ hasText: assetName })).toHaveCount(0);
-    });
-  });
-
   test.describe("Edit Functionality", () => {
     test("Updates an asset and verifies the changes", async ({ page }) => {
       // Select an asset to view details
@@ -294,6 +273,27 @@ test.describe("Assets Page Tests", () => {
       // Verify the success message is displayed
       const successMessage = await assetsPage.waitForToastMessage("success");
       await expect(successMessage).toBeVisible();
+    });
+  });
+
+  test.describe("Delete Functionality", () => {
+    test("Deletes an asset and verifies it is removed from the list", async ({ page }) => {
+      // Select an asset to delete
+      const assetCards = await assetsPage.getAssetCards();
+      const assetCard = assetCards.first();
+      const assetName = (await assetCard.textContent()) || "";
+      await assetCard.click();
+      await assetsPage.submitDeleteAsset();
+
+      // Confirm deletion
+      await assetsPage.confirmDeleteAsset();
+
+      // Verify the success message is displayed
+      const successMessage = await assetsPage.waitForToastMessage("success");
+      await expect(successMessage).toBeVisible();
+
+      // Verify the asset is removed
+      await expect(page.locator(assetsPage.assetListLocator).locator(assetsPage.assetCardLocator).filter({ hasText: assetName })).toHaveCount(0);
     });
   });
 

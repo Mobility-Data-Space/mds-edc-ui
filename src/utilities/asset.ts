@@ -922,6 +922,7 @@ export const transformDataAddress = (formDataToTransform: DataAddress) => {
       formDataToTransform.oidcRegisterClientTokenKey,
       kafkaAdminPropertiesKey: formDataToTransform.kafkaAdminPropertiesKey,
       oidcDiscoveryUrl: formDataToTransform.oidcDiscoveryUrl,
+      "kafka.sasl.oauthbearer.extensions": formDataToTransform["kafka.sasl.oauthbearer.extensions"],
     });
   }
 
