@@ -4067,10 +4067,10 @@ ms@^2.1.1, ms@^2.1.3:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
 
-mui-chips-input@^7.0.1:
-  version "7.0.1"
-  resolved "https://registry.yarnpkg.com/mui-chips-input/-/mui-chips-input-7.0.1.tgz#405b7e90fb9996c9f6c30362d4210c9f376317c6"
-  integrity sha512-9dd5yvem/E0Ft/Gk8SptgYcG7tmmF1khy+Q7cvKBiJXTJf77zsENlSUETFd661ug/edtNEHeI82qFGhh/cmhGg==
+mui-chips-input@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/mui-chips-input/-/mui-chips-input-9.0.0.tgz#d7dc990711a14b8afc5793674dbd43198fd763bc"
+  integrity sha512-2GSHSK6fp+s6fJWEEMUsYIecgy6Iy6AzB1/7CM048a3GERzDJMbebTYdQbaokpCyx+Fg4mh7yGLRcO5O/yEYFg==
 
 nanoid@^3.3.12:
   version "3.3.12"
