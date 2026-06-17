@@ -125,11 +125,11 @@ const fetchForeignAssetTitles = async (
     (ca) => ca.providerId,
   );
 
-  // fetch connector dsp
-  const dsps: [string, CacheValue][] = await Promise.all(
-    Array.from(connectorContractsMap, async ([connectorId, cas]) => [
-      connectorId,
-      await cache.get(connectorId, async () => {
+  // fetch each provider's catalog independently; a provider that is
+  // offline (e.g. outside its business hours) only loses its titles
+  const results = await Promise.allSettled(
+    Array.from(connectorContractsMap, async ([connectorId, cas]) => {
+      const dsp: CacheValue = await cache.get(connectorId, async () => {
         const negotiation =
           await client.management.contractAgreements.getNegotiation(cas[0].id);
         return {
@@ -139,38 +139,38 @@ const fetchForeignAssetTitles = async (
             "counterPartyAddress",
           ) as string,
         };
-      }),
-    ]),
-  );
+      });
 
-  // fetch the asset titles using the dsp
-  const assetsConnectorMap = await Promise.all(
-    dsps.map(async ([connectorId, dsp]): Promise<[string, Catalog]> => {
-      return [
-        connectorId,
-        await client.management.catalog.request({
-          counterPartyId: dsp.id,
-          counterPartyAddress: counterPartyAddressWithDsp2025_1(dsp.address),
-          querySpec: {
-            limit: 1000,
-            offset: 0,
-            filterExpression: [
-              {
-                operandLeft: "id",
-                operator: "in",
-                operandRight: connectorContractsMap
-                  .get(connectorId)
-                  ?.map((ca) => ca.assetId),
-              },
-            ],
-          },
-        }),
-      ];
+      const catalog = await client.management.catalog.request({
+        counterPartyId: dsp.id,
+        counterPartyAddress: counterPartyAddressWithDsp2025_1(dsp.address),
+        querySpec: {
+          limit: 1000,
+          offset: 0,
+          filterExpression: [
+            {
+              operandLeft: "id",
+              operator: "in",
+              operandRight: cas.map((ca) => ca.assetId),
+            },
+          ],
+        },
+      });
+
+      return [connectorId, catalog] as [string, Catalog];
     }),
   );
 
   return new Map(
-    assetsConnectorMap.flatMap(([connectorId, catalog]) => {
+    results.flatMap((result) => {
+      if (result.status === "rejected") {
+        console.warn(
+          "Skipping unreachable provider:",
+          result.reason instanceof Error ? result.reason.message : result.reason,
+        );
+        return [];
+      }
+      const [connectorId, catalog] = result.value;
       return catalog.datasets.map((dataset) => {
         return [
           `${connectorId}-${dataset.id}`,
