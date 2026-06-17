@@ -60,7 +60,7 @@
     "yaml": ">=1.10.3"
   },
   "devDependencies": {
-    "@playwright/test": "^1.58.2",
+    "@playwright/test": "^1.61.0",
     "@tailwindcss/forms": "^0.5.11",
     "@tailwindcss/postcss": "^4.3.1",
     "@types/json-schema": "^7.0.15",
