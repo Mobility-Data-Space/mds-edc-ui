@@ -45,10 +45,15 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - id: lowercase_gh_repo
+        uses: ASzc/change-string-case-action@ecd1412d078f2e06e9eedcbaa6fcd988151c3f82 # v8
+        with:
+          string: ${{ github.repository }}
+
       - name: Trivy image scan (report)
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
-          image-ref: ghcr.io/${{ github.repository }}/mds-connector-ui:${{ matrix.tag }}
+          image-ref: ghcr.io/${{ steps.lowercase_gh_repo.outputs.lowercase }}/mds-connector-ui:${{ matrix.tag }}
           format: table
           output: trivy-rescan-${{ matrix.tag }}.txt
           severity: MEDIUM,HIGH,CRITICAL
@@ -64,7 +69,7 @@ jobs:
       - name: Fail on HIGH/CRITICAL vulnerabilities
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
-          image-ref: ghcr.io/${{ github.repository }}/mds-connector-ui:${{ matrix.tag }}
+          image-ref: ghcr.io/${{ steps.lowercase_gh_repo.outputs.lowercase }}/mds-connector-ui:${{ matrix.tag }}
           format: table
           severity: HIGH,CRITICAL
           ignore-unfixed: true

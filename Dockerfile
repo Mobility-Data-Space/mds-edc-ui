@@ -1,4 +1,5 @@
 FROM node:26-alpine AS base
+RUN apk upgrade --no-cache
 RUN npm install -g yarn
 
 # Install dependencies only when needed
