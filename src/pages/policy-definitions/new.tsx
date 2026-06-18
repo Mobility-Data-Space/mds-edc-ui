@@ -117,7 +117,7 @@ export default function CreatePolicyDefinitionPage() {
               </div>
             </div>
 
-            <div className="flex justify-end gap-x-2">
+            <div className="flex justify-end gap-x-2 px-6 py-4">
               <Button
                 color="secondary"
                 onClick={() => push("/policy-definitions")}
