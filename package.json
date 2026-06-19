@@ -56,7 +56,7 @@
     "lodash": ">=4.18.0",
     "lodash-es": ">=4.18.0",
     "postcss": ">=8.5.10",
-    "undici": ">=6.24.0",
+    "undici": ">=8.5.0",
     "yaml": ">=1.10.3"
   },
   "devDependencies": {
