@@ -196,8 +196,10 @@ async function globalSetup() {
       await seed_dead_provider(participant, deadProvider);
 
       // Stop edc-3 so the UI sees a permanently-unreachable counterparty.
-      // Try the compose service label (local) first, then fall back to a name
-      // match (CI uses GitHub `services:` blocks which don't carry that label).
+      // Locally compose names containers `<project>-edc-3-<n>` and labels
+      // them with the service name. GitHub `services:` blocks do neither
+      // (containers get hashed names, no compose label) — fall back to the
+      // unique host port we mapped for edc-3 (10182) to find the right one.
       const findContainer = (filter: string) =>
         execSync(`docker ps --filter "${filter}" --format "{{.ID}}"`)
           .toString()
@@ -205,9 +207,22 @@ async function globalSetup() {
           .split("\n")
           .filter(Boolean)[0];
 
+      const findContainerByPort = (hostPort: number) => {
+        const out = execSync(
+          `docker ps --format "{{.ID}} {{.Ports}}"`,
+        ).toString();
+        for (const line of out.split("\n")) {
+          if (line.includes(`:${hostPort}->`)) {
+            return line.split(" ")[0];
+          }
+        }
+        return undefined;
+      };
+
       const deadId =
         findContainer("label=com.docker.compose.service=edc-3") ||
-        findContainer("name=edc-3");
+        findContainer("name=edc-3") ||
+        findContainerByPort(10182);
       if (!deadId) {
         throw new Error("edc-3 container not found; cannot stop dead provider");
       }
