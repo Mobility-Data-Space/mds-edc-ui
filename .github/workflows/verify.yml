@@ -127,10 +127,142 @@ jobs:
             test-results/
           retention-days: 30
 
+  # Separate job because it needs a 3rd connector (edc-3) that gets stopped
+  # mid-setup to simulate an unreachable provider, and the playwright container
+  # needs the docker socket to issue that stop.
+  test-unreachable-provider:
+    runs-on: ubuntu-latest
+
+    services:
+      edc-1:
+        image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
+        ports:
+          - 8181:8181
+          - 8186:8186
+          - 8182:8182
+          - 8183:8183
+          - 8184:8184
+          - 8185:8185
+        env:
+          EDC_PARTICIPANT_ID: "MDSXXXXXXX.YYYYYYY"
+          EDC_COMPONENT_ID: "participant_1"
+          WEB_HTTP_PATH: "/api"
+          WEB_HTTP_PORT: "8181"
+          WEB_HTTP_CONTROL_PATH: "/api/control"
+          WEB_HTTP_CONTROL_PORT: "8186"
+          WEB_HTTP_MANAGEMENT_PATH: "/api/management"
+          WEB_HTTP_MANAGEMENT_PORT: "8182"
+          WEB_HTTP_MANAGEMENT_AUTH_TYPE: "tokenbased"
+          WEB_HTTP_MANAGEMENT_AUTH_KEY: "${{ secrets.TEST_API_KEY || 'default-test-api-key' }}"
+          WEB_HTTP_PROTOCOL_PATH: "/api/dsp"
+          WEB_HTTP_PROTOCOL_PORT: "8183"
+          WEB_HTTP_VERSION_PATH: "/api/version"
+          WEB_HTTP_VERSION_PORT: "8184"
+          WEB_HTTP_PUBLIC_PATH: "/public"
+          WEB_HTTP_PUBLIC_PORT: "8185"
+          EDC_DSP_CALLBACK_ADDRESS: "http://edc-1:8183/api/dsp"
+          EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: "transfer-proxy-token-signer-public-key"
+          EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: "transfer-proxy-token-signer-private-key"
+          EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "false"
+
+      edc-2:
+        image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
+        ports:
+          - 9181:8181
+          - 9186:8186
+          - 9182:8182
+          - 9183:8183
+          - 9184:8184
+          - 9185:8185
+        env:
+          EDC_PARTICIPANT_ID: "MDSXXXXXXX.ZZZZZZZ"
+          EDC_COMPONENT_ID: "participant_2"
+          WEB_HTTP_PATH: "/api"
+          WEB_HTTP_PORT: "8181"
+          WEB_HTTP_CONTROL_PATH: "/api/control"
+          WEB_HTTP_CONTROL_PORT: "8186"
+          WEB_HTTP_MANAGEMENT_PATH: "/api/management"
+          WEB_HTTP_MANAGEMENT_PORT: "8182"
+          WEB_HTTP_MANAGEMENT_AUTH_TYPE: "tokenbased"
+          WEB_HTTP_MANAGEMENT_AUTH_KEY: "${{ secrets.TEST_API_KEY || 'default-test-api-key' }}"
+          WEB_HTTP_PROTOCOL_PATH: "/api/dsp"
+          WEB_HTTP_PROTOCOL_PORT: "8183"
+          WEB_HTTP_VERSION_PATH: "/api/version"
+          WEB_HTTP_VERSION_PORT: "8184"
+          WEB_HTTP_PUBLIC_PATH: "/public"
+          WEB_HTTP_PUBLIC_PORT: "8185"
+          EDC_DSP_CALLBACK_ADDRESS: "http://edc-2:8183/api/dsp"
+          EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: "transfer-proxy-token-signer-public-key"
+          EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: "transfer-proxy-token-signer-private-key"
+          EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "false"
+
+      edc-3:
+        image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
+        ports:
+          - 10181:8181
+          - 10186:8186
+          - 10182:8182
+          - 10183:8183
+          - 10184:8184
+          - 10185:8185
+        env:
+          EDC_PARTICIPANT_ID: "MDSXXXXXXX.WWWWWWW"
+          EDC_COMPONENT_ID: "participant_3"
+          WEB_HTTP_PATH: "/api"
+          WEB_HTTP_PORT: "8181"
+          WEB_HTTP_CONTROL_PATH: "/api/control"
+          WEB_HTTP_CONTROL_PORT: "8186"
+          WEB_HTTP_MANAGEMENT_PATH: "/api/management"
+          WEB_HTTP_MANAGEMENT_PORT: "8182"
+          WEB_HTTP_MANAGEMENT_AUTH_TYPE: "tokenbased"
+          WEB_HTTP_MANAGEMENT_AUTH_KEY: "${{ secrets.TEST_API_KEY || 'default-test-api-key' }}"
+          WEB_HTTP_PROTOCOL_PATH: "/api/dsp"
+          WEB_HTTP_PROTOCOL_PORT: "8183"
+          WEB_HTTP_VERSION_PATH: "/api/version"
+          WEB_HTTP_VERSION_PORT: "8184"
+          WEB_HTTP_PUBLIC_PATH: "/public"
+          WEB_HTTP_PUBLIC_PORT: "8185"
+          EDC_DSP_CALLBACK_ADDRESS: "http://edc-3:8183/api/dsp"
+          EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: "transfer-proxy-token-signer-public-key"
+          EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: "transfer-proxy-token-signer-private-key"
+          EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "false"
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run Playwright unreachable-provider spec
+        run: |
+          docker run --rm \
+            --network host \
+            -v ${{ github.workspace }}:/app \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -w /app \
+            -e CI=true \
+            -e SEED_DEAD_PROVIDER=true \
+            -e TEST_API_KEY=${{ secrets.TEST_API_KEY || 'default-test-api-key' }} \
+            mcr.microsoft.com/playwright:v1.61.0-jammy \
+            sh -c "apt-get update && apt-get install -y --no-install-recommends docker.io && yarn install --frozen-lockfile && yarn playwright test tests/unreachable-provider.spec.ts"
+
+      - uses: actions/upload-artifact@v7
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report-unreachable-provider
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 30
+
   # Build Phase - Only runs if all tests pass
   build:
     runs-on: ubuntu-latest
-    needs: test
+    needs: [test, test-unreachable-provider]
     steps:
       - uses: actions/checkout@v6
 
