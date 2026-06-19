@@ -165,6 +165,37 @@ jobs:
           EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: "transfer-proxy-token-signer-private-key"
           EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "false"
 
+      edc-2:
+        image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
+        ports:
+          - 9181:8181
+          - 9186:8186
+          - 9182:8182
+          - 9183:8183
+          - 9184:8184
+          - 9185:8185
+        env:
+          EDC_PARTICIPANT_ID: "MDSXXXXXXX.ZZZZZZZ"
+          EDC_COMPONENT_ID: "participant_2"
+          WEB_HTTP_PATH: "/api"
+          WEB_HTTP_PORT: "8181"
+          WEB_HTTP_CONTROL_PATH: "/api/control"
+          WEB_HTTP_CONTROL_PORT: "8186"
+          WEB_HTTP_MANAGEMENT_PATH: "/api/management"
+          WEB_HTTP_MANAGEMENT_PORT: "8182"
+          WEB_HTTP_MANAGEMENT_AUTH_TYPE: "tokenbased"
+          WEB_HTTP_MANAGEMENT_AUTH_KEY: "${{ secrets.TEST_API_KEY || 'default-test-api-key' }}"
+          WEB_HTTP_PROTOCOL_PATH: "/api/dsp"
+          WEB_HTTP_PROTOCOL_PORT: "8183"
+          WEB_HTTP_VERSION_PATH: "/api/version"
+          WEB_HTTP_VERSION_PORT: "8184"
+          WEB_HTTP_PUBLIC_PATH: "/public"
+          WEB_HTTP_PUBLIC_PORT: "8185"
+          EDC_DSP_CALLBACK_ADDRESS: "http://edc-2:8183/api/dsp"
+          EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: "transfer-proxy-token-signer-public-key"
+          EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: "transfer-proxy-token-signer-private-key"
+          EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "false"
+
       edc-3:
         image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
         ports:
