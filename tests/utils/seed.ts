@@ -323,6 +323,25 @@ export async function seed_dead_provider(
       "http://purl.org/dc/terms/title": "Dead Provider Asset",
       "http://purl.org/dc/terms/description":
         "Asset whose provider is stopped after seed",
+      "https://w3id.org/mobilitydcat-ap/mobilityTheme": {
+        "https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category":
+          "PUBLIC_TRANSPORT_SCHEDULED_TRANSPORT",
+        "https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category":
+          "OPERATIONAL_CALENDAR",
+      },
+      "https://w3id.org/mobilitydcat-ap/mobilityDataStandard": {
+        "@id": "my-data-model-001",
+      },
+      "https://w3id.org/mobilitydcat-ap/transportMode": "LONG_DISTANCE_COACH",
+      "https://w3id.org/mobilitydcat-ap/georeferencingMethod":
+        "my-geo-reference-method",
+      "http://purl.org/dc/terms/language": "code/EN",
+      "http://purl.org/dc/terms/publisher":
+        "https://data-source.my-org/about",
+      "http://purl.org/dc/terms/license":
+        "https://data-source.my-org/license",
+      "http://purl.org/dc/terms/rightsHolder": "Think-it GmbH",
+      "http://purl.org/dc/terms/accessRights": "usage policies and rights",
     },
     dataAddress: {
       type: "HttpData",
