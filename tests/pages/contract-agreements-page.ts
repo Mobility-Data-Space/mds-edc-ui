@@ -85,6 +85,12 @@ export class ContractAgreementsPage extends BaseListPage {
     return this.page.locator(`${this.agreementCardLocator}:has([data-testid="asset-id"])`);
   }
 
+  async getAgreementCardByAssetId(assetId: string) {
+    return this.page
+      .locator(this.agreementCardLocator)
+      .filter({ has: this.page.locator(`[data-testid="asset-id"]`).filter({ hasText: assetId }) });
+  }
+
   async waitForAgreementCardsLoaded() {
     // Wait for at least one card to be fully loaded (not skeleton)
     await this.page.locator(`${this.agreementCardLocator}:has([data-testid="asset-id"])`).first().waitFor({ state: 'visible' });

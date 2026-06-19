@@ -6,6 +6,7 @@ import {
   PolicyBuilder,
 } from "@think-it-labs/edc-connector-client";
 import { randomUUID } from "node:crypto";
+import { DEAD_PROVIDER_ASSET_ID } from "./tests-config.ts";
 
 async function waitForNegotiationState(
   client: EdcConnectorClient,
@@ -304,4 +305,77 @@ export async function initiate_transfers(
     "with transfer ID",
     transferResponse.id,
   );
+}
+
+export async function seed_dead_provider(
+  consumer: Participant,
+  dead: Participant,
+) {
+  const deadClient: EdcConnectorClient = new EdcConnectorClient.Builder()
+    .managementUrl(dead.managementUrl)
+    .apiToken(process.env.TEST_API_KEY || "default-test-api-key")
+    .build();
+
+  console.log("Create dead-provider asset on", dead.id);
+  await deadClient.management.assets.create({
+    "@id": DEAD_PROVIDER_ASSET_ID,
+    properties: {
+      "http://purl.org/dc/terms/title": "Dead Provider Asset",
+      "http://purl.org/dc/terms/description":
+        "Asset whose provider is stopped after seed",
+    },
+    dataAddress: {
+      type: "HttpData",
+      baseUrl: "https://jsonplaceholder.typicode.com/users",
+    },
+  });
+
+  await deadClient.management.contractDefinitions.create({
+    "@id": "dead-provider-contract-def",
+    accessPolicyId: "always-true",
+    contractPolicyId: "always-true",
+    assetsSelector: [
+      {
+        operandLeft: "https://w3id.org/edc/v0.0.1/ns/id",
+        operator: "=",
+        operandRight: DEAD_PROVIDER_ASSET_ID,
+      },
+    ],
+  });
+
+  const consumerClient: EdcConnectorClient = new EdcConnectorClient.Builder()
+    .managementUrl(consumer.managementUrl)
+    .apiToken(process.env.TEST_API_KEY || "default-test-api-key")
+    .build();
+
+  console.log("Negotiate dead-provider agreement from", consumer.id);
+  const catalog = await consumerClient.management.catalog.request({
+    counterPartyId: dead.id,
+    counterPartyAddress: dead.protocolUrl,
+  });
+
+  const dataset = catalog.datasets.find(
+    (d: any) => d.id === DEAD_PROVIDER_ASSET_ID,
+  );
+  if (!dataset) {
+    throw new Error(
+      `Dead-provider asset ${DEAD_PROVIDER_ASSET_ID} missing from catalog`,
+    );
+  }
+
+  const offer = dataset.offers[0];
+  const policy = new PolicyBuilder()
+    .type("Offer")
+    .raw({ ...offer, assigner: dead.id, target: dataset.id })
+    .build();
+
+  const negotiation =
+    await consumerClient.management.contractNegotiations.initiate({
+      counterPartyId: dead.id,
+      counterPartyAddress: dead.protocolUrl,
+      policy,
+    });
+
+  await waitForNegotiationState(consumerClient, negotiation.id, "FINALIZED");
+  console.log("  dead-provider agreement finalized");
 }

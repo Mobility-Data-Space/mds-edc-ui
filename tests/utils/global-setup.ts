@@ -3,10 +3,12 @@ import {
   create_pending_negotiations,
   initiate_transfers,
   publish_offers,
+  seed_dead_provider,
 } from "./seed.ts";
 import {
   participantConfig,
   counterPartyParticipantConfig,
+  deadProviderConfig,
   SERVICES,
 } from "./tests-config.ts";
 import { type Participant } from "../../src/utilities/participant.ts";
@@ -114,6 +116,17 @@ async function globalSetup() {
   }
   console.log("Counter-party EDC API is ready.");
 
+  const deadProviderReady = await checkApiReadiness(
+    deadProviderConfig.EDC_MANAGEMENT_URL,
+    apiKey,
+  );
+  if (!deadProviderReady) {
+    throw new Error(
+      `EDC API at ${deadProviderConfig.EDC_MANAGEMENT_URL} failed to become ready`,
+    );
+  }
+  console.log("Dead-provider EDC API is ready.");
+
   console.log("Seeding dataspace ...");
   try {
     const participant: Participant = {
@@ -148,11 +161,48 @@ async function globalSetup() {
       dapsJwksUrl: counterPartyParticipantConfig.MDS_DAPS_JWKS_URL,
     };
 
+    const deadProvider: Participant = {
+      id: deadProviderConfig.EDC_ID,
+      name: deadProviderConfig.EDC_NAME,
+      description: deadProviderConfig.EDC_DESCRIPTION,
+      publicUrl: deadProviderConfig.EDC_PUBLIC_URL,
+      managementUrl: deadProviderConfig.EDC_MANAGEMENT_URL,
+      defaultUrl: deadProviderConfig.EDC_DEFAULT_URL,
+      protocolUrl: deadProviderConfig.EDC_PROTOCOL_URL,
+      curatorName: deadProviderConfig.EDC_CURATOR_ORGANIZATION,
+      curatorUrl: deadProviderConfig.EDC_CURATOR_URL,
+      maintainerName: deadProviderConfig.EDC_MAINTAINER_ORGANIZATION,
+      maintainerUrl: deadProviderConfig.EDC_MAINTAINER_URL,
+      dapsUrl: deadProviderConfig.MDS_DAPS_URL,
+      dapsJwksUrl: deadProviderConfig.MDS_DAPS_JWKS_URL,
+    };
+
     await publish_offers(participant);
     await publish_offers(counterPartyParticipant);
 
     await initiate_transfers(participant, counterPartyParticipant);
     await create_pending_negotiations(participant, counterPartyParticipant);
+
+    await seed_dead_provider(participant, deadProvider);
+
+    // Stop edc-3 so the UI sees a permanently-unreachable counterparty.
+    // Try the compose service label (local) first, then fall back to a name
+    // match (CI uses GitHub `services:` blocks which don't carry that label).
+    const findContainer = (filter: string) =>
+      execSync(`docker ps --filter "${filter}" --format "{{.ID}}"`)
+        .toString()
+        .trim()
+        .split("\n")
+        .filter(Boolean)[0];
+
+    const deadId =
+      findContainer("label=com.docker.compose.service=edc-3") ||
+      findContainer("name=edc-3");
+    if (!deadId) {
+      throw new Error("edc-3 container not found; cannot stop dead provider");
+    }
+    execSync(`docker stop ${deadId}`, { stdio: "pipe" });
+    console.log("edc-3 stopped; dead-provider state ready.");
 
     console.log("Dataspace seeding completed successfully.");
   } catch (error) {

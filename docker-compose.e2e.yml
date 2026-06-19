@@ -96,3 +96,52 @@ services:
       timeout: 10s
       retries: 5
       start_period: 30s
+
+  # Ephemeral "dead provider" used by tests/unreachable-provider.spec.ts.
+  # Stays up just long enough for globalSetup to seed an agreement against it,
+  # then is stopped so the UI sees an unreachable counterparty.
+  edc-3:
+    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
+    platform: linux/amd64
+    entrypoint: ["/app/bin/connector-inmemory", "--log-level=debug"]
+    environment:
+      EDC_PARTICIPANT_ID: "MDSXXXXXXX.WWWWWWW"
+      EDC_COMPONENT_ID: "participant_3_MDS_COMPONENT"
+
+      WEB_HTTP_PATH: "/api"
+      WEB_HTTP_PORT: "8181"
+      WEB_HTTP_CONTROL_PATH: "/api/control"
+      WEB_HTTP_CONTROL_PORT: "8186"
+      WEB_HTTP_MANAGEMENT_PATH: "/api/management"
+      WEB_HTTP_MANAGEMENT_PORT: "8182"
+      WEB_HTTP_MANAGEMENT_AUTH_TYPE: "tokenbased"
+      WEB_HTTP_MANAGEMENT_AUTH_KEY: "${TEST_API_KEY:-default-test-api-key}"
+      WEB_HTTP_PROTOCOL_PATH: "/api/dsp"
+      WEB_HTTP_PROTOCOL_PORT: "8183"
+      WEB_HTTP_VERSION_PATH: "/api/version"
+      WEB_HTTP_VERSION_PORT: "8184"
+      WEB_HTTP_PUBLIC_PATH: "/public"
+      WEB_HTTP_PUBLIC_PORT: "8185"
+
+      EDC_DSP_CALLBACK_ADDRESS: "http://edc-3:8183/api/dsp"
+
+      EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: "transfer-proxy-token-signer-public-key"
+      EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: "transfer-proxy-token-signer-private-key"
+
+      EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "false"
+    ports:
+      - "10181:8181" # API
+      - "10186:8186" # Control
+      - "10182:8182" # Management
+      - "10183:8183" # Protocol
+      - "10184:8184" # Version
+      - "10185:8185" # Public
+    post_start:
+      - command: apk --no-cache add curl
+        user: root
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://edc-3:8181/api/check/liveness"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
