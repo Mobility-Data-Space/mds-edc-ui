@@ -214,6 +214,7 @@ jobs:
             -v /var/run/docker.sock:/var/run/docker.sock \
             -w /app \
             -e CI=true \
+            -e SEED_DEAD_PROVIDER=true \
             -e TEST_API_KEY=${{ secrets.TEST_API_KEY || 'default-test-api-key' }} \
             mcr.microsoft.com/playwright:v1.58.1-jammy \
             sh -c "apt-get update && apt-get install -y --no-install-recommends docker.io && yarn install --frozen-lockfile && yarn playwright test tests/unreachable-provider.spec.ts"

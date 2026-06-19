@@ -116,16 +116,25 @@ async function globalSetup() {
   }
   console.log("Counter-party EDC API is ready.");
 
-  const deadProviderReady = await checkApiReadiness(
-    deadProviderConfig.EDC_MANAGEMENT_URL,
-    apiKey,
-  );
-  if (!deadProviderReady) {
-    throw new Error(
-      `EDC API at ${deadProviderConfig.EDC_MANAGEMENT_URL} failed to become ready`,
+  // edc-3 is only spun up by the dedicated unreachable-provider CI job (and
+  // by the local docker-compose stack). Other CI matrix jobs don't run that
+  // spec, so they skip the readiness wait + dead-provider seed. Local runs
+  // (CI=false) opt in by default since compose always brings edc-3 up.
+  const seedDeadProvider =
+    process.env.SEED_DEAD_PROVIDER === "true" || !isCI;
+
+  if (seedDeadProvider) {
+    const deadProviderReady = await checkApiReadiness(
+      deadProviderConfig.EDC_MANAGEMENT_URL,
+      apiKey,
     );
+    if (!deadProviderReady) {
+      throw new Error(
+        `EDC API at ${deadProviderConfig.EDC_MANAGEMENT_URL} failed to become ready`,
+      );
+    }
+    console.log("Dead-provider EDC API is ready.");
   }
-  console.log("Dead-provider EDC API is ready.");
 
   console.log("Seeding dataspace ...");
   try {
@@ -183,26 +192,28 @@ async function globalSetup() {
     await initiate_transfers(participant, counterPartyParticipant);
     await create_pending_negotiations(participant, counterPartyParticipant);
 
-    await seed_dead_provider(participant, deadProvider);
+    if (seedDeadProvider) {
+      await seed_dead_provider(participant, deadProvider);
 
-    // Stop edc-3 so the UI sees a permanently-unreachable counterparty.
-    // Try the compose service label (local) first, then fall back to a name
-    // match (CI uses GitHub `services:` blocks which don't carry that label).
-    const findContainer = (filter: string) =>
-      execSync(`docker ps --filter "${filter}" --format "{{.ID}}"`)
-        .toString()
-        .trim()
-        .split("\n")
-        .filter(Boolean)[0];
+      // Stop edc-3 so the UI sees a permanently-unreachable counterparty.
+      // Try the compose service label (local) first, then fall back to a name
+      // match (CI uses GitHub `services:` blocks which don't carry that label).
+      const findContainer = (filter: string) =>
+        execSync(`docker ps --filter "${filter}" --format "{{.ID}}"`)
+          .toString()
+          .trim()
+          .split("\n")
+          .filter(Boolean)[0];
 
-    const deadId =
-      findContainer("label=com.docker.compose.service=edc-3") ||
-      findContainer("name=edc-3");
-    if (!deadId) {
-      throw new Error("edc-3 container not found; cannot stop dead provider");
+      const deadId =
+        findContainer("label=com.docker.compose.service=edc-3") ||
+        findContainer("name=edc-3");
+      if (!deadId) {
+        throw new Error("edc-3 container not found; cannot stop dead provider");
+      }
+      execSync(`docker stop ${deadId}`, { stdio: "pipe" });
+      console.log("edc-3 stopped; dead-provider state ready.");
     }
-    execSync(`docker stop ${deadId}`, { stdio: "pipe" });
-    console.log("edc-3 stopped; dead-provider state ready.");
 
     console.log("Dataspace seeding completed successfully.");
   } catch (error) {
