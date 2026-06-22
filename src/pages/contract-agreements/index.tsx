@@ -165,15 +165,15 @@ export default function ContractAgreementsListPage() {
         currentPage={parseInt(query.page as string) || 0}
         firstPage={0}
       >
-        <div className="flex flex-wrap justify-end gap-4 pb-6 min-h-[56px]">
-          <div className="h-full flex-grow min-w-3xs">
-            <SearchBar
-              searchTarget="assetId"
-              placeholder={translator("contractAgreements.searchPlaceholder")}
-              searchOperator="ilike"
-            />
-          </div>
-          <div className="flex gap-x-4 flex-grow">
+        <div className="flex flex-wrap justify-between gap-y-4 pb-6">
+          <div className="flex flex-wrap justify-start gap-x-5 gap-y-4 items-center">
+            <div className="min-w-xl">
+              <SearchBar
+                searchTarget="assetId"
+                placeholder={translator("contractAgreements.searchPlaceholder")}
+                searchOperator="ilike"
+              />
+            </div>
             <ButtonGroup
               className="min-h-[54px]"
               color="info"
