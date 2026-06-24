@@ -1,11 +1,11 @@
 FROM node:26-alpine AS base
 RUN apk upgrade --no-cache
-RUN npm install -g yarn
 
 # Install dependencies only when needed
 FROM base AS deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat git
+RUN npm install -g yarn
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
@@ -14,6 +14,7 @@ RUN yarn --frozen-lockfile
 
 # Rebuild the source code only when needed
 FROM base AS builder
+RUN npm install -g yarn
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -25,6 +26,17 @@ FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
+
+# `node server.js` needs no package manager at runtime; strip npm/yarn/corepack so their bundled deps can't trigger image CVEs.
+RUN rm -rf \
+    /usr/local/lib/node_modules/npm \
+    /usr/local/lib/node_modules/corepack \
+    /usr/local/bin/npm \
+    /usr/local/bin/npx \
+    /usr/local/bin/corepack \
+    /usr/local/bin/yarn \
+    /usr/local/bin/yarnpkg \
+    /opt/yarn-*
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
