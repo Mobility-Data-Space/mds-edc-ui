@@ -2396,10 +2396,10 @@ eslint-plugin-jsx-a11y@^6.10.0:
     safe-regex-test "^1.0.3"
     string.prototype.includes "^2.0.1"
 
-eslint-plugin-playwright@^2.10.4:
-  version "2.10.4"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-playwright/-/eslint-plugin-playwright-2.10.4.tgz#24e3e6123dbb06089ba0ef1cf9a6c6c5b34deb3b"
-  integrity sha512-l0V/VxyqfFbtqCTxj5AdRn3Q6S/hIW4nKBnKZVleVbZ24N2My6Usj//ytX3dKKqAoSbvKck9YtSytfdZ5qjLuA==
+eslint-plugin-playwright@^2.10.5:
+  version "2.10.5"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-playwright/-/eslint-plugin-playwright-2.10.5.tgz#89017d4a0ab066815e4453e29a25252c98ca23e9"
+  integrity sha512-4k+ml4cEd55kePUIW1WsCiOLDwZkAdPZPKMFulR83XpplCaVOTKHF6yvXLYixLtdVbkMjmKV5F3BaGuI3aH8aQ==
   dependencies:
     globals "^17.3.0"
 
