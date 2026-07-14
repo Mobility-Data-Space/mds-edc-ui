@@ -31,7 +31,7 @@
     "date-fns": "4.4.0",
     "dayjs": "^1.11.21",
     "formik": "^2.4.9",
-    "i18next": "^26.3.1",
+    "i18next": "^26.3.6",
     "javascript-time-ago": "^2.5.12",
     "json-schema": "^0.4.0",
     "jsonld": "^9.0.0",
