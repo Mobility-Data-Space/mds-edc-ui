@@ -72,7 +72,7 @@
     "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.12",
-    "eslint-plugin-playwright": "^2.10.5",
+    "eslint-plugin-playwright": "^2.11.0",
     "postcss": "^8",
     "tailwindcss": "^4.3.2",
     "ts-node": "^10.9.2",
