@@ -42,7 +42,7 @@
     "next-runtime-env": "2.x",
     "notistack": "^3.0.2",
     "react": "19.2.8",
-    "react-dom": "19.2.3",
+    "react-dom": "19.2.8",
     "react-i18next": "^17.0.8",
     "react-json-view": "^1.21.3",
     "react-markdown": "^10.1.0",
