@@ -115,7 +115,7 @@ jobs:
             -w /app \
             -e CI=true \
             -e TEST_API_KEY=${{ secrets.TEST_API_KEY || 'default-test-api-key' }} \
-            mcr.microsoft.com/playwright:v1.61.0-jammy \
+            mcr.microsoft.com/playwright:v1.62.1-jammy \
             sh -c "yarn install --frozen-lockfile && yarn playwright test ${{ matrix.test-group.tests }}"
 
       - uses: actions/upload-artifact@v7
@@ -247,7 +247,7 @@ jobs:
             -e CI=true \
             -e SEED_DEAD_PROVIDER=true \
             -e TEST_API_KEY=${{ secrets.TEST_API_KEY || 'default-test-api-key' }} \
-            mcr.microsoft.com/playwright:v1.61.0-jammy \
+            mcr.microsoft.com/playwright:v1.62.1-jammy \
             sh -c "apt-get update && apt-get install -y --no-install-recommends docker.io && yarn install --frozen-lockfile && yarn playwright test tests/unreachable-provider.spec.ts"
 
       - uses: actions/upload-artifact@v7
