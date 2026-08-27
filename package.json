@@ -55,9 +55,10 @@
     "i18next-fs-backend": ">=2.6.4",
     "lodash": ">=4.18.0",
     "lodash-es": ">=4.18.0",
+    "nanoid": "^3.3.17",
     "postcss": ">=8.5.18",
     "sharp": ">=0.35.0",
-    "undici": ">=8.5.0",
+    "undici": ">=8.9.0",
     "yaml": ">=1.10.3"
   },
   "devDependencies": {
