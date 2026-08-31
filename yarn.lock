@@ -2991,10 +2991,10 @@ i18next-fs-backend@>=2.6.4:
   resolved "https://registry.yarnpkg.com/i18next-fs-backend/-/i18next-fs-backend-2.6.6.tgz#d7a0b4595cc3d504c9d0b267e527d2b4926d9418"
   integrity sha512-mYGu6Nt8RIp3X/U8Y+Gej1wo5xmYWmGKLqBGMCC2OCAou5rW5epeHgHmVcw20mJs9Z9+DAPHIxQPNCgFyPRMeg==
 
-i18next-resources-to-backend@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/i18next-resources-to-backend/-/i18next-resources-to-backend-1.2.1.tgz#fded121e63e3139ce839c9901b9449dbbea7351d"
-  integrity sha512-okHbVA+HZ7n1/76MsfhPqDou0fptl2dAlhRDu2ideXloRRduzHsqDOznJBef+R3DFZnbvWoBW+KxJ7fnFjd6Yw==
+i18next-resources-to-backend@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/i18next-resources-to-backend/-/i18next-resources-to-backend-1.2.3.tgz#f2f58dab29f5514a6010b4e13c76f0714d62134e"
+  integrity sha512-8Y/LLAm5fqZc2ckQxtTWbu75ndjNLzF7mcYl6rhc4g+WBopIsG3YhdYqF5qhJy64tlYhlU2KSSnEgW3gGHLqwg==
   dependencies:
     "@babel/runtime" "^7.23.2"
 
@@ -4092,14 +4092,14 @@ natural-compare@^1.4.0:
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==
 
-next-i18next@^16.0.8:
-  version "16.0.8"
-  resolved "https://registry.yarnpkg.com/next-i18next/-/next-i18next-16.0.8.tgz#b6ff2fd4c21a75fa0f060d7facf951e37f411d5b"
-  integrity sha512-yn7aFSrrass39Hv+BJGtCS/t36HTSwmPilcI64kbGfxHSXEVRzFrkJdSW4GDJMBahHCWliEc4X9xParL5vtiaw==
+next-i18next@^16.0.11:
+  version "16.0.11"
+  resolved "https://registry.yarnpkg.com/next-i18next/-/next-i18next-16.0.11.tgz#242e3e397c8fd0364c5b4b0d47fdbd19020fb703"
+  integrity sha512-kyUd7CUcHKaUIG1T4nVSDss7+3dyJUxmB0f16mg/zcAWekbDFx2FypPezpI/fAwAlrJVXxJYx1nAlUm4uFR7xw==
   dependencies:
     "@types/hoist-non-react-statics" "^3.3.7"
     hoist-non-react-statics "^3.3.2"
-    i18next-resources-to-backend "^1.2.1"
+    i18next-resources-to-backend "^1.2.3"
 
 next-runtime-env@2.x:
   version "2.0.1"
