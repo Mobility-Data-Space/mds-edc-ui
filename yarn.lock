@@ -4077,7 +4077,7 @@ mui-chips-input@^9.0.0:
   resolved "https://registry.yarnpkg.com/mui-chips-input/-/mui-chips-input-9.0.0.tgz#d7dc990711a14b8afc5793674dbd43198fd763bc"
   integrity sha512-2GSHSK6fp+s6fJWEEMUsYIecgy6Iy6AzB1/7CM048a3GERzDJMbebTYdQbaokpCyx+Fg4mh7yGLRcO5O/yEYFg==
 
-nanoid@^3.3.16, nanoid@^3.3.17:
+nanoid@^3.3.17:
   version "3.3.18"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.18.tgz#f66a2de1199ffde0fcf21c8a5f13106b1c081913"
   integrity sha512-DTg4MJbGMWkfi6VZFdNt2/caMbQy4Ou+Op/hJQvGEWcnVfoA1QA+xzRKAzw9jD6+GVOOeYr/mIcuDSdug6F6+w==
@@ -4361,11 +4361,11 @@ postcss-selector-parser@6.0.10:
     util-deprecate "^1.0.2"
 
 postcss@8.5.23, postcss@>=8.5.18, postcss@^8, postcss@^8.5.16:
-  version "8.5.25"
-  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.5.25.tgz#5012a598eaaa897f21bbe8553be3cb7bd2bd78cb"
-  integrity sha512-DTPx3RWSSnWyzLxQnlH0rJP+EW5ekl16ZU4/psbIhA0e53kJfdgaN5vKM+xP7yJtXVu+nfdVFmlgFDEKAe4Pyw==
+  version "8.5.26"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.5.26.tgz#6e75135780c7e10df3433bf2266c552d35c8c620"
+  integrity sha512-u82N74LFzG8ca+dD8puPnplTXoGH4fTPpVGuIbt36G3qvNlkvfD0lEAZSxaly3KX8TS/L1A1gsCEmvKmBcVbkQ==
   dependencies:
-    nanoid "^3.3.16"
+    nanoid "^3.3.17"
     picocolors "^1.1.1"
     source-map-js "^1.2.1"
 
