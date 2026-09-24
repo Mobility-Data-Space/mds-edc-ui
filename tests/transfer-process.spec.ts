@@ -1,6 +1,13 @@
 import { expect, test } from '@playwright/test';
 import { MAX_ITEMS } from '../src/constants/lists';
 import { TransferProcessesPage } from './pages/transfer-process-page';
+import { counterPartyParticipantConfig, participantConfig } from './utils/tests-config';
+
+const EDC_CONTEXT = { "@vocab": "https://w3id.org/edc/v0.0.1/ns/" };
+const managementHeaders = {
+  "content-type": "application/json",
+  "x-api-key": participantConfig.EDC_MANAGEMENT_API_KEY,
+};
 
 test.describe("Transfer Processes Page Tests", () => {
   let transferProcessesPage: TransferProcessesPage;
@@ -151,6 +158,85 @@ test.describe("Transfer Processes Page Tests", () => {
         const searchInput = await transferProcessesPage.getSearchInput();
         const searchValue = searchInput;
         await expect(searchValue).toHaveValue('test');
+      }
+    });
+  });
+
+  test.describe("Sensitive Data", () => {
+    const secret = `e2e-destination-secret-${Date.now()}`;
+    let transferProcessId: string;
+    let assetId: string;
+
+    test.beforeAll(async ({ request }) => {
+      const agreements = await (await request.post(
+        `${participantConfig.EDC_MANAGEMENT_URL}/v3/contractagreements/request`,
+        { headers: managementHeaders, data: { "@context": EDC_CONTEXT, "@type": "QuerySpec" } },
+      )).json();
+      const agreement = agreements.find((a: any) => a.consumerId === participantConfig.EDC_ID);
+      expect(agreement).toBeDefined();
+      assetId = agreement.assetId;
+
+      const initiated = await request.post(
+        `${participantConfig.EDC_MANAGEMENT_URL}/v3/transferprocesses`,
+        {
+          headers: managementHeaders,
+          data: {
+            "@context": EDC_CONTEXT,
+            "@type": "TransferRequest",
+            protocol: "dataspace-protocol-http:2025-1",
+            counterPartyAddress: counterPartyParticipantConfig.EDC_PROTOCOL_URL,
+            contractId: agreement["@id"],
+            transferType: "HttpData-PUSH",
+            dataDestination: { type: "HttpData", baseUrl: "http://example.com", secret },
+          },
+        },
+      );
+      expect(initiated.ok()).toBeTruthy();
+      transferProcessId = (await initiated.json())["@id"];
+
+      const raw = await request.get(
+        `${participantConfig.EDC_MANAGEMENT_URL}/v3/transferprocesses/${transferProcessId}`,
+        { headers: managementHeaders },
+      );
+      test.skip(!(await raw.text()).includes(secret), "Connector no longer exposes dataDestination");
+    });
+
+    test("does not forward the data destination through the proxy", async ({ request }) => {
+      const single = await request.get(`/connector/management/v3/transferprocesses/${transferProcessId}`);
+      expect(single.ok()).toBeTruthy();
+      const singleBody = await single.text();
+      expect(singleBody).toContain(transferProcessId);
+      expect(singleBody).not.toContain(secret);
+      expect(singleBody).not.toContain("dataDestination");
+
+      const query = await request.post("/connector/management/v3/transferprocesses/request", {
+        data: {
+          "@context": EDC_CONTEXT,
+          "@type": "QuerySpec",
+          filterExpression: [{ operandLeft: "id", operator: "=", operandRight: transferProcessId }],
+        },
+      });
+      expect(query.ok()).toBeTruthy();
+      const queryBody = await query.text();
+      expect(queryBody).toContain(transferProcessId);
+      expect(queryBody).not.toContain(secret);
+      expect(queryBody).not.toContain("dataDestination");
+    });
+
+    test("does not show the data destination in transfer process details", async () => {
+      await transferProcessesPage.searchTransferProcesses(assetId);
+      const rows = await transferProcessesPage.getTransferProcessRows();
+      const count = await rows.count();
+      expect(count).toBeGreaterThan(0);
+
+      const dialog = await transferProcessesPage.getTransferProcessDetails();
+      for (let i = 0; i < count; i++) {
+        await rows.nth(i).getByTestId("show-transfer-process-details").click();
+        await expect(dialog).toBeVisible();
+        await expect(dialog).not.toContainText(secret);
+        await expect(dialog).not.toContainText("dataDestination");
+        await dialog.getByRole("button", { name: /close/i }).click();
+        await expect(dialog).toBeHidden();
       }
     });
   });

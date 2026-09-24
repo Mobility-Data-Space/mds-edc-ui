@@ -54,6 +54,63 @@ export const createProxyRequest = async (
   return response;
 };
 
+const DATA_DESTINATION_KEYS = [
+  "dataDestination",
+  "edc:dataDestination",
+  "https://w3id.org/edc/v0.0.1/ns/dataDestination",
+];
+
+// Legacy signaling connectors return the destination, including its resolved `secret`.
+export const stripDataDestination = (payload: unknown): unknown => {
+  if (Array.isArray(payload)) {
+    return payload.map(stripDataDestination);
+  }
+  if (!payload || typeof payload !== "object") {
+    return payload;
+  }
+  return Object.fromEntries(
+    Object.entries(payload).filter(
+      ([key]) => !DATA_DESTINATION_KEYS.includes(key),
+    ),
+  );
+};
+
+export const createSanitizedProxyRequest = async (
+  url: string,
+  method: string,
+  apiKey: string,
+  sanitize: (payload: unknown) => unknown,
+  body?: string,
+): Promise<NextResponse> => {
+  const proxy = await fetchProxy(url, {
+    method,
+    headers: {
+      ...(body && { "content-type": "application/json" }),
+      "x-api-key": apiKey,
+    },
+    credentials: "same-origin",
+    body: body && body !== "{}" ? body : undefined,
+  });
+
+  let responseBody = await proxy.text();
+  if (proxy.ok && responseBody) {
+    try {
+      responseBody = JSON.stringify(sanitize(JSON.parse(responseBody)));
+    } catch {
+      // Fail closed: never forward a body we could not sanitize.
+      return NextResponse.json(
+        { message: "Invalid upstream response", type: "BadGateway" },
+        { status: 502 },
+      );
+    }
+  }
+
+  const response = new NextResponse(responseBody, { status: proxy.status });
+  setResponseHeaders(proxy, response);
+
+  return response;
+};
+
 export const proxyGet = async (req: NextRequest): Promise<NextResponse> => {
   const url = buildUrl(req);
   const config = getConnectorConfig();
