@@ -16,10 +16,12 @@ test.describe("Contract Agreements Page Tests", () => {
       const agreementsList = await agreementsPage.getAgreementsList();
       await expect(agreementsList).toBeVisible();
 
-      // Verify there is at least one agreement card
+      // Verify there is at least one agreement card. The cards render only
+      // after the agreement-enrichment response, which is slow here because it
+      // resolves each counterparty's catalog (including the seeded dead provider
+      // it must wait to time out). Poll instead of reading the count once.
       const agreementCards = await agreementsPage.getAgreementCards();
-      const agreements = await agreementCards.allTextContents();
-      expect(agreements.length).toBeGreaterThan(0);
+      await expect.poll(() => agreementCards.count(), { timeout: 60000 }).toBeGreaterThan(0);
     });
   });
 
@@ -133,9 +135,10 @@ test.describe("Contract Agreements Page Tests", () => {
         const searchTerm = "asset";
         await agreementsPage.searchAgreements(searchTerm);
 
+        // Poll: results re-render asynchronously after the search response,
+        // so a one-shot count() can run while the list is still updating.
         const agreementCards = await agreementsPage.getAgreementCards();
-        const resultCount = await agreementCards.count();
-        expect(resultCount).toBeGreaterThan(0);
+        await expect.poll(() => agreementCards.count(), { timeout: 15000 }).toBeGreaterThan(0);
       }
     });
 

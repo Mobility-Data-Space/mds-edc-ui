@@ -18,6 +18,24 @@ import {
   TransferProcessStates,
 } from "@think-it-labs/edc-connector-client";
 
+// Rejects with a timeout error if `promise` doesn't settle within `timeoutMs`.
+const withTimeout = <T>(
+  promise: Promise<T>,
+  timeoutMs: number,
+  label: string,
+): Promise<T> => {
+  let timer: ReturnType<typeof setTimeout>;
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(
+      () => reject(new Error(`Timed out after ${timeoutMs}ms: ${label}`)),
+      timeoutMs,
+    );
+  });
+  return Promise.race([promise, timeout]).finally(() =>
+    clearTimeout(timer),
+  ) as Promise<T>;
+};
+
 const extractStatusFilter = (body: QuerySpec): CriterionInput | null => {
   const statusFilterIndex = body.filterExpression?.findIndex(
     (filterExpression) => filterExpression.operandLeft === "isTerminated",
@@ -141,21 +159,29 @@ const fetchForeignAssetTitles = async (
         };
       });
 
-      const catalog = await client.management.catalog.request({
-        counterPartyId: dsp.id,
-        counterPartyAddress: counterPartyAddressWithDsp2025_1(dsp.address),
-        querySpec: {
-          limit: 1000,
-          offset: 0,
-          filterExpression: [
-            {
-              operandLeft: "id",
-              operator: "in",
-              operandRight: cas.map((ca) => ca.assetId),
-            },
-          ],
-        },
-      });
+      // An offline/unreachable provider's connector does not fail fast: because
+      // its host may still resolve, the DSP catalog request keeps retrying and
+      // only errors after ~20-40s. Bounding it keeps one offline provider from
+      // stalling the whole agreements list (it just "loses its titles" below).
+      const catalog = await withTimeout(
+        client.management.catalog.request({
+          counterPartyId: dsp.id,
+          counterPartyAddress: counterPartyAddressWithDsp2025_1(dsp.address),
+          querySpec: {
+            limit: 1000,
+            offset: 0,
+            filterExpression: [
+              {
+                operandLeft: "id",
+                operator: "in",
+                operandRight: cas.map((ca) => ca.assetId),
+              },
+            ],
+          },
+        }),
+        8000, // timeout
+        `catalog request to ${connectorId}`,
+      );
 
       return [connectorId, catalog] as [string, Catalog];
     }),

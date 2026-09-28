@@ -77,10 +77,11 @@ test.describe("Policy Definitions Page Tests", () => {
       const response = await listener;
       expect(response.status()).toBe(200);
 
-      // Verify policy was added
+      // Verify policy was added. The list re-renders asynchronously after the
+      // create response resolves, so poll instead of a one-shot count() that can
+      // run before the new card has mounted.
       const policyCards = await policiesPage.getPolicyCards();
-      const policiesCount = await policyCards.count();
-      expect(policiesCount).toBeGreaterThan(1);
+      await expect.poll(() => policyCards.count(), { timeout: 15000 }).toBeGreaterThan(1);
     });
 
     test("should create a policy using the IN ('isPartOf') operator for Consumer's Participant ID", async ({ page }) => {
@@ -107,10 +108,11 @@ test.describe("Policy Definitions Page Tests", () => {
       expect(response.status()).toBe(200);
       // Verify the success message
 
-      // Verify policy was added
+      // Verify policy was added. The list re-renders asynchronously after the
+      // create response resolves, so poll instead of a one-shot count() that can
+      // run before the new card has mounted.
       const policyCards = await policiesPage.getPolicyCards();
-      const policiesCount = await policyCards.count();
-      expect(policiesCount).toBeGreaterThan(1);
+      await expect.poll(() => policyCards.count(), { timeout: 15000 }).toBeGreaterThan(1);
     });
 
     test("should display a clear error message for duplicate policy ID", async ({ page }) => {
