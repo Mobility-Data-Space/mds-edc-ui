@@ -55,10 +55,11 @@ test.describe("Data Offer Tests", () => {
       await dataOfferPage.submitCreateDataOfferForm();
       await page.waitForResponse((response) => response.url().includes('/connector/management/v3/contractdefinitions/request'));
 
-      // Verify contract offer was added
+      // Verify contract offer was added. The list re-renders asynchronously
+      // after the create response resolves, so poll instead of a one-shot count()
+      // that can run before the new cards have mounted.
       const dataOfferCards = await dataOfferPage.getDataOfferCards();
-      const dataOffersCount = await dataOfferCards.count();
-      expect(dataOffersCount).toBeGreaterThan(1);
+      await expect.poll(() => dataOfferCards.count(), { timeout: 15000 }).toBeGreaterThan(1);
     });
 
     test("Creates a new data offer for 2 assets and verifies its visibility", async ({ page }) => {
@@ -78,10 +79,11 @@ test.describe("Data Offer Tests", () => {
       await dataOfferPage.submitCreateDataOfferForm();
       await page.waitForResponse((response) => response.url().includes('/connector/management/v3/contractdefinitions/request'));
 
-      // Verify contract offer was added
+      // Verify contract offer was added. The list re-renders asynchronously
+      // after the create response resolves, so poll instead of a one-shot count()
+      // that can run before the new cards have mounted.
       const dataOfferCards = await dataOfferPage.getDataOfferCards();
-      const dataOffersCount = await dataOfferCards.count();
-      expect(dataOffersCount).toBeGreaterThan(2);
+      await expect.poll(() => dataOfferCards.count(), { timeout: 15000 }).toBeGreaterThan(2);
     });
   });
 
