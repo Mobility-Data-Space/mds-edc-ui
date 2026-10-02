@@ -17,11 +17,12 @@ import { Input } from "@/components/atoms/input";
 import {
   TERMINATION_DETAILED_REASON_MAX_LENGTH,
   TERMINATION_REASON_BY_USER,
-} from "@/constants/contract-agreement.ts";
+} from "@/constants/contract-agreement";
 import { Checkbox } from "@/components/atoms/checkbox";
 import { AgreementsRetirementController } from "@/utilities/contract-agreement";
 import { proxyConnectorManagement } from "@/constants/proxy";
 import { useAppSnackbar } from "@/hooks/use-app-snackbar";
+import { extractEdcErrorMessage } from "@/utilities/edc-error";
 
 interface ContractAgreementTerminateDialogProps {
   contractAgreement: ContractAgreement;
@@ -81,11 +82,10 @@ export default function ContractAgreementTerminateDialog({
         onClose();
       })
       .catch((error) => {
-        const match = /"message":"(.*?)"/.exec(error.message);
         showSnackbar({
           type: "error",
           message:
-            (match && match[1]) ||
+            extractEdcErrorMessage(error) ||
             translator("contractAgreements.[id].terminationError"),
         });
       });
@@ -173,7 +173,7 @@ export default function ContractAgreementTerminateDialog({
             <T string="common.close" />
           </Button>
           <Button
-            data-testid="transfer-process-submit"
+            data-testid="contract-agreement-terminate-submit"
             variant="contained"
             color="error"
             disabled={!formData.confirmTermination || !!detailedReasonError}

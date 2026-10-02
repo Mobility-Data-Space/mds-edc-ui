@@ -4,12 +4,12 @@ import { MuiSelect } from "@/components/atoms/mui-select";
 
 import { HIGHLIGHTED_LANGUAGE_SELECT_DATA, LANGUAGE_SELECT_DATA } from "@/constants/languages";
 import { ASSET_LANGUAGE } from "@/jsonld/asset";
-import { AssetProperties } from "@/utilities/asset";
+import { AssetProperties } from "@/domain/asset/model";
 
 export interface AssetLanguageProps {
   formData: AssetProperties;
   onChange: (formData: AssetProperties) => void;
-  errors: { [key: string]: boolean };
+  errors: { [key: string]: boolean | string };
 }
 
 export function AssetLanguage({ formData, onChange, errors }: AssetLanguageProps): React.ReactElement {

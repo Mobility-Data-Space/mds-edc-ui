@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { enqueueSnackbar } from "notistack";
+import { useAppSnackbar } from "@/hooks/use-app-snackbar";
+import { extractEdcErrorMessage } from "@/utilities/edc-error";
 import {
   Button,
   Dialog,
@@ -21,8 +22,8 @@ import { Input } from "@/components/atoms/input";
 import { Checkbox } from "@/components/atoms/checkbox";
 import { idMultipleReader, idMultipleSelector } from "@/utilities/data-offer";
 import { Asset } from "@think-it-labs/edc-connector-client";
-import AssetDialog from "@/components/organisms/asset-dialog.tsx";
-import { assetToAssetInput, fromAssetForm } from "@/utilities/asset";
+import AssetDialog from "@/components/organisms/asset-dialog";
+import { assetToAssetInput, fromAssetForm } from "@/domain/asset/mapper";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 
 interface DataOfferCreateDialogProps {
@@ -67,6 +68,7 @@ export default function DataOfferCreateDialog({
 }: DataOfferCreateDialogProps) {
   const submitButtonRef = useRef<HTMLButtonElement>(null);
 
+  const { showSnackbar } = useAppSnackbar();
   const [assetDialogIsOpen, setAssetDialogIsOpen] = useState(false);
   const [clickedAsset, setClickedAsset] = useState({} as Asset);
   const [assetsById, setAssetsById] = useState<{ [key: string]: Asset }>({});
@@ -89,7 +91,7 @@ export default function DataOfferCreateDialog({
         });
         setAssetsById(assets);
       })
-      .catch((error) => {
+      .catch(() => {
         setAssetIds([]);
         setAssetsById({});
       });
@@ -97,7 +99,7 @@ export default function DataOfferCreateDialog({
     edcClient.management.policyDefinitions
       .queryAll({ offset: 0 })
       .then((result) => setPolicyIds(optionsGenerator(result)))
-      .catch((error) => setPolicyIds([]));
+      .catch(() => setPolicyIds([]));
   }, [edcClient]);
 
   const [formData, setFormData] = useState<MdsContractDefinitionInput>(
@@ -143,7 +145,7 @@ export default function DataOfferCreateDialog({
             },
           };
           await edcClient.management.assets.update(
-            fromAssetForm(updatedAssetInput, connector.curatorName)
+            fromAssetForm(updatedAssetInput, connector?.curatorName ?? "")
           );
         } catch (e) {
           console.log("Error updating asset", e);
@@ -156,10 +158,12 @@ export default function DataOfferCreateDialog({
   };
 
   const onFormSubmitFail = (error: Error) => {
-    const match = /"message":"(.*?)"/.exec(error.message);
-    enqueueSnackbar(
-      (match && match[1]) || translator("policyDefinition.new.saveFail"),
-    );
+    showSnackbar({
+      type: "error",
+      message:
+        extractEdcErrorMessage(error) || translator("policyDefinitions.new.saveFail"),
+      persist: false,
+    });
   };
 
   return (
@@ -248,7 +252,7 @@ export default function DataOfferCreateDialog({
                 onChange={(event) =>
                   onChange({
                     ...formData,
-                    assetsSelector: idMultipleSelector(event.target.value),
+                    assetsSelector: idMultipleSelector(event.target.value as string[]),
                   })
                 }
               />

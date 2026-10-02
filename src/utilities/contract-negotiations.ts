@@ -29,7 +29,7 @@ export const createNegotiationRequest = (
 export class MDSManualApprovalController {
   #inner: Inner;
   #management: string;
-  protocol: String = "dataspace-protocol-http:2025-1";
+  protocol: string = "dataspace-protocol-http:2025-1";
 
   constructor(management: string) {
     this.#inner = new Inner();

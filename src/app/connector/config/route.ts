@@ -1,4 +1,4 @@
-import { getConnectorConfig } from "@/utilities/connector-config";
+import { getConnectorConfig } from "@/server/connector-config";
 import { NextResponse } from "next/server";
 
 async function handler(): Promise<NextResponse> {

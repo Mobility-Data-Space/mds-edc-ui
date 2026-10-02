@@ -1,6 +1,6 @@
-import { FieldShowProps } from "@/components/molecules/field-show";
-import { CONTEXT_EDC, TRACTUS_X_CONTEXT } from "@/jsonld/context";
-import { formatDateTime } from "@/utilities/date.ts";
+import type { FieldShowProps } from "@/types/field-show";
+import { CONTEXT_EDC } from "@/jsonld/context";
+import { formatDateTime } from "@/utilities/date";
 import {
   ContractAgreement,
   EdcConnectorClientContext,

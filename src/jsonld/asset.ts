@@ -42,7 +42,22 @@ export const ASSET_ADVANCED_INFO_SOVEREIGN_LEGAL_NAME = `${CONTEXT_DCT.value}rig
 
 export const ASSET_QUERY_PARAMS = `${CONTEXT_EDC.value}queryParams`
 
+export const AUTH_HEADER_TYPE_VAULT_SECRET = "Vault-Secret";
+const AUTH_HEADER_TYPE_VALUE = "Vault";
+
 export const ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_SELECT_OPTIONS = [
-  { value: "Vault-Secret", text: "assets.new.fieldHttpAuthHeaderTypeWithVaultSecret" },
-  { value: "Vault", text: "assets.new.fieldHttpAuthHeaderTypeWithValue" }
+  { value: AUTH_HEADER_TYPE_VAULT_SECRET, text: "assets.new.fieldHttpAuthHeaderTypeWithVaultSecret" },
+  { value: AUTH_HEADER_TYPE_VALUE, text: "assets.new.fieldHttpAuthHeaderTypeWithValue" }
 ]
+
+// Effective auth header type: the explicit choice, else inferred from stored fields (existing assets carry
+// no `authHeaderType`), else the vault-secret default shown in the UI.
+export const resolveAuthHeaderType = (dataAddress?: Record<string, string | undefined>): string => {
+  if (dataAddress?.authHeaderType) {
+    return dataAddress.authHeaderType;
+  }
+  if (dataAddress?.authCode && !dataAddress?.secretName) {
+    return AUTH_HEADER_TYPE_VALUE;
+  }
+  return AUTH_HEADER_TYPE_VAULT_SECRET;
+};

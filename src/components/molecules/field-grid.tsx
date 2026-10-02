@@ -1,6 +1,7 @@
 import React from "react";
 import Typography from "@mui/material/Typography";
-import {FieldShowProps, FieldShow} from "@/components/molecules/field-show";
+import { FieldShow } from "@/components/molecules/field-show";
+import type { FieldShowProps } from "@/types/field-show";
 import { T } from "@/i18n";
 
 interface FieldGridProps {

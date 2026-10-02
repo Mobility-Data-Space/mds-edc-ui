@@ -9,7 +9,7 @@ export type Tag = {
 
 export type KeyValuePairInputProps = Omit<TextFieldProps, "onChange"> & {
   onChange: ({ input, valid }: { input: Partial<Tag>; valid: boolean }) => void;
-  onRemove: (event: any) => void;
+  onRemove: (event: React.MouseEvent<HTMLButtonElement>) => void;
   value: Tag;
   ensureValueIsALink?: boolean;
   removeText?: string;

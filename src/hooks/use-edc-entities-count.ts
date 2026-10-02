@@ -1,6 +1,5 @@
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
 import { useEffect, useState } from "react";
-import { ManagementController } from "@think-it-labs/edc-connector-client/dist/src/facades/management";
 import { proxyConnectorManagement } from "@/constants/proxy";
 
 export interface EdcEntitiesCount {
@@ -19,7 +18,13 @@ const defaultEdcEntitiesCount = {
   contractAgreements: 0,
 };
 
-const endpoints: [string, keyof ManagementController][] = Object.entries({
+type CountedEndpoint =
+  | "contractDefinitions"
+  | "assets"
+  | "policyDefinitions"
+  | "contractAgreements";
+
+const endpoints: [string, CountedEndpoint][] = Object.entries({
   dataOffers: "contractDefinitions",
   assets: "assets",
   policies: "policyDefinitions",
@@ -34,9 +39,9 @@ export const useEdcEntitiesCount = (): EdcEntitiesCount => {
 
   useEffect(() => {
     endpoints.forEach(([countEntryName, endpoint]) => {
-      (edcClient.management[endpoint] as any)
+      edcClient.management[endpoint]
         .queryAll({ offset: 0 })
-        .then((result: any[]) =>
+        .then((result: unknown[]) =>
           setCount((count) => ({ ...count, [countEntryName]: result.length })),
         )
         .catch(() => setCount((count) => ({ ...count, [countEntryName]: 0 })));

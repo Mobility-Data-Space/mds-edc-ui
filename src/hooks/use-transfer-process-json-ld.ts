@@ -7,18 +7,18 @@ const isDataDestinationKey = (key: string) =>
 
 export const useTransferProcessJsonLd = (transferProcess: TransferProcess, contractNegotiation: ContractNegotiation) => {
   return useMemo(() => {
-    const additionalTransferProcessFields: any = {};
+    const additionalTransferProcessFields: Record<string, unknown> = {};
     Object.entries(contractNegotiation).forEach(([key, value]) => {
       if (key.includes("counterPartyId") || key.includes("counterPartyAddress")) {
         additionalTransferProcessFields[key] = value;
       }
     });
 
-    const auxJsonLdObject = {
+    const auxJsonLdObject: Record<string, unknown> = {
       ...transferProcess,
       ...additionalTransferProcessFields,
     };
-    const jsonLdObject: any = {};
+    const jsonLdObject: Record<string, unknown> = {};
     Object.keys(auxJsonLdObject).filter((key) => !isDataDestinationKey(key)).sort().forEach(async (key) => {
       jsonLdObject[key] = auxJsonLdObject[key];
     });

@@ -10,6 +10,7 @@ import { Card, CardContent, Chip } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { Asset } from "@think-it-labs/edc-connector-client";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
+import { clickableProps } from "@/utilities/a11y";
 
 export interface AssetCardProps {
   asset: Asset,
@@ -27,7 +28,7 @@ export default function AssetCard({ asset, participantId, onClick = () => { } }:
   const version = readValue(asset.properties, ASSET_VERSION);
 
   return (
-    <Card className="asset-card w-full max-w-[300px]" onClick={onClick}>
+    <Card className="asset-card w-full max-w-[300px]" {...clickableProps(onClick)}>
       <CardContent className="flex flex-col gap-y-3">
         <div className="flex flex-row gap-x-4 items-start">
           <AssetIcon asset={asset} fontSize="large" />

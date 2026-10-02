@@ -3,7 +3,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import type { PickersActionBarProps } from "@mui/x-date-pickers/PickersActionBar";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { DATE_FORMAT, dateToString, DateType } from "@/utilities/date";
 import {
   DateRangePickerTextFieldSlot,
@@ -60,7 +60,7 @@ export default function DateRangePicker({
     setDatesPicked(0);
   };
 
-  const datePickerOnChange = (date: any) => {
+  const datePickerOnChange = (date: Dayjs | null) => {
     setDatesPicked(datesPicked + 1);
     if (datesPicked % 2 === 0) {
       formattedOnChange([date, null]);
@@ -116,7 +116,7 @@ export default function DateRangePicker({
         closeOnSelect={false}
         slots={{
           textField: DateRangePickerTextFieldSlot,
-          day: DatePickerDaySlot as any
+          day: DatePickerDaySlot
         }}
         slotProps={slotProps}
       />

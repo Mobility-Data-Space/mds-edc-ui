@@ -70,7 +70,7 @@ export function AddConstraintButton({ showAddButton = false, onClick }: AddConst
   }
 
   const addButton = (
-    <IconButton
+    <IconButton aria-label={translator("common.add")}
       data-testid="add-expression-button"
       size="large"
       aria-describedby={id}
@@ -117,7 +117,7 @@ export function AddConstraintButton({ showAddButton = false, onClick }: AddConst
               <T string="common.cancel" />
             </MuiButton>
             <MuiButton
-              data-testid="asset-create-submit"
+              data-testid="timespan-constraint-submit"
               variant="contained"
               disabled={dateRangeModalValue[0] === "" || dateRangeModalValue[1] === ""}
               onClick={() => onAddWithClose(createTimespanAndConstraint(dateRangeModalValue))}

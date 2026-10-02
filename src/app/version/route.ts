@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import packageJson from "../../../package.json";
 
 interface VersionInfo {
@@ -13,7 +13,7 @@ function getVersionInfo(): VersionInfo {
   };
 }
 
-async function handler(req: NextRequest): Promise<NextResponse> {
+async function handler(): Promise<NextResponse> {
   const response = NextResponse.json(getVersionInfo());
   response.headers.set("Allow", "GET");
   return response;

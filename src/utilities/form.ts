@@ -1,7 +1,6 @@
-import { ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE } from "@/jsonld/asset";
-
-export const removeEmptyFields = (object: { [key: string]: any }) => {
-  const newFormData: { [key: string]: any } = {};
+export const removeEmptyFields = <T extends object>(source: T): T => {
+  const object = source as Record<string, unknown>;
+  const newFormData: Record<string, unknown> = {};
   for (const key in object) {
     if (typeof object[key] === "boolean") {
       newFormData[key] = "" + object[key];
@@ -9,14 +8,14 @@ export const removeEmptyFields = (object: { [key: string]: any }) => {
     }
 
     if (Array.isArray(object[key])) {
-      if (object[key].length > 0) {
+      if ((object[key] as unknown[]).length > 0) {
         newFormData[key] = object[key];
       }
       continue;
     }
 
     if (typeof object[key] === "object") {
-      newFormData[key] = removeEmptyFields(object[key]);
+      newFormData[key] = removeEmptyFields(object[key] as object);
       continue;
     }
 
@@ -26,5 +25,5 @@ export const removeEmptyFields = (object: { [key: string]: any }) => {
     }
   }
 
-  return newFormData;
+  return newFormData as T;
 };

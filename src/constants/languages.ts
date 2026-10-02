@@ -1,4 +1,4 @@
-export interface LanguageSelectItem {
+interface LanguageSelectItem {
   id: string;
   label: string;
   comment?: string;
@@ -6,7 +6,7 @@ export interface LanguageSelectItem {
   sameAs?: string;
 }
 
-export const ENGLISH =   {
+const ENGLISH =   {
   id: 'https://w3id.org/idsa/code/EN',
   idShort: 'EN',
   label: 'English',
@@ -15,7 +15,7 @@ export const ENGLISH =   {
 
 export const ENGLISH_SELECT_DATA = { value: ENGLISH.id, text: ENGLISH.label };
 
-export const HIGHLIGHTED_LANGUAGE_LIST: LanguageSelectItem[] = [
+const HIGHLIGHTED_LANGUAGE_LIST: LanguageSelectItem[] = [
   {
     id: "",
     label: "-",
@@ -38,7 +38,7 @@ export const HIGHLIGHTED_LANGUAGE_LIST: LanguageSelectItem[] = [
   },
 ];
 
-export const LANGUAGE_LIST: LanguageSelectItem[] = [
+const LANGUAGE_LIST: LanguageSelectItem[] = [
   {
     id: 'https://w3id.org/idsa/code/AB',
     idShort: 'AB',

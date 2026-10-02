@@ -2,14 +2,14 @@ import { Input } from "@/components/atoms/input";
 import { T } from "@/i18n";
 import { DataAddress } from "@think-it-labs/edc-connector-client";
 import React from "react";
-import { Checkbox } from "../atoms/checkbox";
-import { MuiSelect } from "../atoms/mui-select";
+import { Checkbox } from "@/components/atoms/checkbox";
+import { MuiSelect } from "@/components/atoms/mui-select";
 
 export interface FormDataAddressKafkaProps {
   translator: (key: string) => string;
   formData: DataAddress;
   isDestination?: boolean;
-  onChange: any;
+  onChange: (formData: DataAddress) => void;
 
   errors: { [key: string]: boolean | string };
 }
@@ -24,7 +24,7 @@ export function FormDataAddressKafka({
   );
 }
 
-export function ConsumerFormDataAddressKafka({
+function ConsumerFormDataAddressKafka({
   formData,
   errors,
   onChange,
@@ -72,7 +72,7 @@ export function ConsumerFormDataAddressKafka({
   );
 }
 
-export function ProviderFormDataAddressKafka({
+function ProviderFormDataAddressKafka({
   formData,
   errors,
   onChange,

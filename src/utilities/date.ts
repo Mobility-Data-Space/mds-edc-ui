@@ -1,11 +1,11 @@
 import dayjs, { Dayjs } from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import TimeAgo from "javascript-time-ago";
-import { TIME_LOCALE } from "@/constants/time-locale.ts";
+import { TIME_LOCALE } from "@/constants/time-locale";
 
 export type DateType = Dayjs | Date | null;
 
-export const defaultTimeLocale = () => {
+const defaultTimeLocale = () => {
   return TIME_LOCALE;
 };
 
@@ -39,7 +39,7 @@ export const formatDateTime = (
   return formatter.format(milliSecondsTimestamp);
 };
 
-export const browserDateFormat = () => {
+const browserDateFormat = () => {
   const customDate = new Date(2025, 11, 18);
   const strDate = formatDateTime(customDate.getTime(), {
     showHour: false,

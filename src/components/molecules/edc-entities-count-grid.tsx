@@ -1,5 +1,5 @@
-import { EdcEntityCount } from "@/components/molecules/edc-entity-count.tsx";
-import { EdcEntitiesCount } from "@/hooks/use-edc-entities-count.ts";
+import { EdcEntityCount } from "@/components/molecules/edc-entity-count";
+import { EdcEntitiesCount } from "@/hooks/use-edc-entities-count";
 import React from "react";
 
 export interface EdcEntitiesCountProps {

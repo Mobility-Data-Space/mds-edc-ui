@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import Typography from "@mui/material/Typography";
 
-import { Checkbox } from "@/components/atoms/checkbox.tsx";
+import { Checkbox } from "@/components/atoms/checkbox";
 import { T } from "@/i18n";
 
 interface ConfirmDialogProps {

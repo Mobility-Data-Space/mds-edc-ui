@@ -7,17 +7,9 @@ import { KeyValuePairInputList } from "@/components/molecules/key-value-pair-inp
 
 import { T } from "@/i18n";
 import { ASSET_ADVANCED_INFO_GEO_LOCATION, ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS } from "@/jsonld/asset";
-import { AssetProperties } from "@/utilities/asset";
+import type { AssetFieldProps } from "@/types/asset-field";
 
-export interface AssetNutsLocationsProps {
-  translator: (key: string) => string;
-  formData: AssetProperties;
-  onChange: (formData: AssetProperties) => void;
-  errors: { [key: string]: boolean };
-  required?: boolean;
-}
-
-export function AssetNutsLocations({ translator, formData, onChange, errors }: AssetNutsLocationsProps): React.ReactElement {
+export function AssetNutsLocations({ translator, formData, onChange, errors }: AssetFieldProps): React.ReactElement {
   return (<>
     <label
       htmlFor="advanced-info-nuts-locations"
@@ -25,7 +17,7 @@ export function AssetNutsLocations({ translator, formData, onChange, errors }: A
     >
       <T string="assets.new.fieldAdvancedInfoNutsLocation" />
       <Tooltip
-        title={translator("assets.new.fieldAdvancedInfoNutsLocationTooltip")}><IconButton><InfoOutlined /></IconButton></Tooltip>
+        title={translator("assets.new.fieldAdvancedInfoNutsLocationTooltip")}><IconButton aria-label={translator("common.moreInfo")}><InfoOutlined /></IconButton></Tooltip>
     </label>
 
     <KeyValuePairInputList
@@ -36,7 +28,7 @@ export function AssetNutsLocations({ translator, formData, onChange, errors }: A
       addText={translator("assets.new.fieldAdvancedInfoNutsLocationAddText")}
       valueLabel={translator("assets.new.fieldAdvancedInfoNutsLocationValueLabel")}
       valuePlaceholder="DE929"
-      error={errors[ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS]}
+      error={!!errors[ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS]}
       value={formData[ASSET_ADVANCED_INFO_GEO_LOCATION][ASSET_ADVANCED_INFO_GEO_LOCATION_NUTS] as []}
       valueOnly
       onChange={(value) => onChange({

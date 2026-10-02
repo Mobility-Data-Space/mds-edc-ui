@@ -11,6 +11,7 @@ import { Card, CardContent, Chip } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { Dataset } from "@think-it-labs/edc-connector-client";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
+import { clickableProps } from "@/utilities/a11y";
 
 export interface DataOfferCardProps {
   dataset: Dataset,
@@ -29,7 +30,7 @@ export default function DataOfferCard({ dataset, participantId, dataTestId, onCl
   const version = readValue(dataset, ASSET_VERSION);
 
   return (
-    <Card className="w-full max-w-[300px]" onClick={onClick} data-testid={dataTestId}>
+    <Card className="w-full max-w-[300px]" {...clickableProps(onClick)} data-testid={dataTestId}>
       <CardContent className="flex flex-col gap-y-3">
         <div className="flex flex-row gap-x-4 items-start">
           <AssetIcon asset={datasetToAsset(dataset)} fontSize="large" />

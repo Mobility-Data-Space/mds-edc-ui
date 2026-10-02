@@ -1,4 +1,4 @@
-import { TitleWithIcon } from "@/components/atoms/TitleWithIcon";
+import { TitleWithIcon } from "@/components/atoms/title-with-icon";
 import ContractNegotiationDetails from "@/components/organisms/contract-negotiation-details";
 import { T } from "@/i18n";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
@@ -13,7 +13,7 @@ interface ContractNegotiationDialogProps {
   translator: (key: string) => string;
 
 }
-export default function ContractNegotiationDialog({ open, onClose, contractNegotiation, participantId, contentStyle = {}, translator }: ContractNegotiationDialogProps) {
+export default function ContractNegotiationDialog({ open, onClose, contractNegotiation, participantId, contentStyle = {} }: ContractNegotiationDialogProps) {
 
   return (
     <>

@@ -1,5 +1,5 @@
 import { KeyValuePairInput, Tag } from "@/components/atoms/key-value-pair-input";
-import { uid } from "@/utilities/utilities.ts";
+import { uid } from "@/utilities/utilities";
 import { Button, FormHelperText } from "@mui/material";
 import { TextFieldProps } from "@mui/material/TextField";
 
@@ -15,7 +15,7 @@ export type KeyValuePairInputListProps = Omit<TextFieldProps, "onChange"> & {
   valueOnly?: boolean;
   additionalActions?: React.ReactElement[];
   ensureValueIsALink?: boolean
-  value: TagsList | any[];
+  value: TagsList;
   onChange: (tagList: TagsList) => void;
 };
 
@@ -35,7 +35,7 @@ const withAddedTag = (tagsList: TagsList): TagsList => {
   ];
 };
 
-function withRemovedTag(tagsList: TagsList, tag: { input: Tag; valid: boolean; id: any }): TagsList {
+function withRemovedTag(tagsList: TagsList, tag: { input: Tag; valid: boolean; id: string }): TagsList {
   return tagsList.filter(
     (currentElement) => currentElement.id !== tag.id,
   );
@@ -43,7 +43,7 @@ function withRemovedTag(tagsList: TagsList, tag: { input: Tag; valid: boolean; i
 const withUpdatedTag = (
   tagsList: TagsList,
   { input, valid }: { input: Partial<Tag>; valid: boolean },
-  tag: any,
+  tag: TagsList[number],
   index: number,
 ): TagsList => {
   let updatedTag = {

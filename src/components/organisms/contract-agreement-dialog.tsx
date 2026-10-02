@@ -1,8 +1,8 @@
-import { TitleWithIcon } from "@/components/atoms/TitleWithIcon";
+import { TitleWithIcon } from "@/components/atoms/title-with-icon";
 import ContractAgreementDetails from "@/components/organisms/contract-agreement-details";
 import ContractAgreementTerminateDialog from "@/components/organisms/contract-agreement-terminate-dialog";
-import { TransferFormDialog } from "@/components/templates/transfer-form-dialog";
-import { TERMINATION_REASON_BY_USER } from "@/constants/contract-agreement.ts";
+import { TransferFormDialog } from "@/components/organisms/transfer-form-dialog";
+import { TERMINATION_REASON_BY_USER } from "@/constants/contract-agreement";
 import { T } from "@/i18n";
 import { EnrichedContractAgreement } from "@/types/enriched-contract-agreement";
 import {
@@ -28,8 +28,8 @@ import { TransferProcess } from "@think-it-labs/edc-connector-client/dist/src/en
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
 import { Timestamp } from "@think-it-labs/edc-connector-ui/timestamp";
-import { enqueueSnackbar } from "notistack";
 import { useCallback, useEffect, useState } from "react";
+import { useAppSnackbar } from "@/hooks/use-app-snackbar";
 
 interface ContractAgreementDialogProps {
   contractAgreement: ContractAgreement;
@@ -66,6 +66,7 @@ export default function ContractAgreementDialog({
     !contractAgreement.isTerminated;
   const canTerminate = !contractAgreement.isTerminated;
 
+  const { showSnackbar } = useAppSnackbar();
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [isTerminateModalOpen, setIsTerminateModalOpen] = useState(false);
 
@@ -89,7 +90,13 @@ export default function ContractAgreementDialog({
           setAsset(fetchedAsset);
           setCounterPartyAddress(connectorEndpoint);
         })
-        .catch(() => enqueueSnackbar(translator("assets.[id].fetchError")));
+        .catch(() =>
+          showSnackbar({
+            type: "error",
+            message: translator("assets.[id].fetchError"),
+            persist: false,
+          }),
+        );
     } else {
       const fetchConsumerAsset = async () => {
         const negotiation =
@@ -130,6 +137,7 @@ export default function ContractAgreementDialog({
     participantId,
     connectorEndpoint,
     translator,
+    showSnackbar,
     setCounterPartyAddress,
     contractAgreement.assetId,
     contractAgreement.id,

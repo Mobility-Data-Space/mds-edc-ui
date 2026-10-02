@@ -1,4 +1,4 @@
-import {DATA_CATEGORY_SELECT_DATA, DATA_SUBCATEGORIES_DATA} from "@/constants/data-category.ts";
+import {DATA_CATEGORY_SELECT_DATA, DATA_SUBCATEGORIES_DATA} from "@/constants/data-category";
 
 export const dataCategoryValueToText = (categoryValue: string) => {
   return DATA_CATEGORY_SELECT_DATA.find(

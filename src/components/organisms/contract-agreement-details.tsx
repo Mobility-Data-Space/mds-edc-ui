@@ -1,8 +1,8 @@
 import React from "react";
 import { T } from "@/i18n";
-import { Asset, ContractAgreement } from "@think-it-labs/edc-connector-client";
+import { Asset, Constraint, ContractAgreement } from "@think-it-labs/edc-connector-client";
 import { Icon } from "@mui/material";
-import { TitleWithIcon } from "@/components/atoms/TitleWithIcon";
+import { TitleWithIcon } from "@/components/atoms/title-with-icon";
 import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog";
 import Typography from "@mui/material/Typography";
 import { contractAgreementFieldsToShow } from "@/utilities/contract-agreement";
@@ -11,10 +11,10 @@ import { MarkdownCollapsableText } from "@/components/molecules/markdown-collaps
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
 import { ASSET_DESCRIPTION } from "@/jsonld/asset";
 import Divider from "@mui/material/Divider";
-import { assetGeneralFieldsToShow } from "@/utilities/asset";
+import { assetGeneralFieldsToShow } from "@/domain/asset/view";
 import { PolicyConstraintShow } from "@/components/molecules/policy-constraint-show";
 import { TransferProcess } from "@think-it-labs/edc-connector-client/dist/src/entities";
-import TransferProcessList from "@/components/molecules/transfer-process-list.tsx";
+import TransferProcessList from "@/components/molecules/transfer-process-list";
 
 interface ContractAgreementDetailsProps {
   contractAgreement: ContractAgreement;
@@ -65,9 +65,11 @@ export default function ContractAgreementDetails({
             <T string="contractAgreements.contractPolicy" />
           </Typography>
           <PolicyConstraintShow
-            constraints={removeJsonLdSchemaFromProperties(
+            constraints={removeJsonLdSchemaFromProperties<
+              { constraint: Constraint[] }[]
+            >(
               contractAgreement.policy?.permissions,
-            ).map((p: any)=> p.constraint)[0]}
+            ).map((p) => p.constraint)[0]}
             jsonLdObject={contractAgreement?.policy?.permissions}
             jsonLdDialogTitle={
               <TitleWithIcon

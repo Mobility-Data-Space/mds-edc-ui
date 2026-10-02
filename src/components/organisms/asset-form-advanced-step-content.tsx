@@ -1,35 +1,17 @@
-import { FormHelperText, Link } from "@mui/material";
 import React from "react";
 
-import { Input } from "@/components/atoms/input";
-import { AssetConditionsForUse } from "@/components/molecules/asset-conditions-for-use";
 import { AssetDataCategoryAndSubcategory } from "@/components/molecules/asset-data-category-and-subcategory";
-import { AssetDataModel } from "@/components/molecules/asset-data-model";
 import { AssetDataSamples } from "@/components/molecules/asset-data-samples";
-import { AssetDataUpdateFrequency } from "@/components/molecules/asset-data-update-frequency";
-import { AssetGeoLocations } from "@/components/molecules/asset-geo-locations";
-import { AssetGeoReferenceMethod } from "@/components/molecules/asset-geo-reference-method";
 import { AssetNutsLocations } from "@/components/molecules/asset-nuts-locations";
 import { AssetReferenceFileUrls } from "@/components/molecules/asset-reference-file-urls";
-import { AssetSovereignLegalName } from "@/components/molecules/asset-sovereign-legal-name";
 import { AssetTemporalCoverage } from "@/components/molecules/asset-temporal-coverage";
+import { AssetTextField } from "@/components/molecules/asset-text-field";
 import { AssetTransportMode } from "@/components/molecules/asset-transport-mode";
 
 import { T } from "@/i18n";
-import {
-  ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA,
-  ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION,
-} from "@/jsonld/asset";
-import { AssetProperties } from "@/utilities/asset";
+import type { AssetFieldProps } from "@/types/asset-field";
 
-export interface AssetFormAdvancedInfoStepProps {
-  translator: (key: string) => string;
-  formData: AssetProperties;
-  onChange: (formData: any) => void;
-  errors: { [key: string]: boolean };
-}
-
-export function AssetFormAdvancedInfoStepContent({ translator, formData, onChange, errors }: AssetFormAdvancedInfoStepProps): React.ReactElement {
+export function AssetFormAdvancedInfoStepContent({ translator, formData, onChange, errors }: AssetFieldProps): React.ReactElement {
 
   return (
     <div className="flex flex-col gap-y-5">
@@ -43,7 +25,8 @@ export function AssetFormAdvancedInfoStepContent({ translator, formData, onChang
       </div>
 
       <div>
-        <AssetDataModel
+        <AssetTextField
+          field="dataModel"
           translator={translator}
           formData={formData}
           onChange={onChange}
@@ -68,7 +51,8 @@ export function AssetFormAdvancedInfoStepContent({ translator, formData, onChang
         </div>
 
         <div className="sm:col-span-7 content-end">
-          <AssetGeoReferenceMethod
+          <AssetTextField
+            field="geoReferenceMethod"
             translator={translator}
             formData={formData}
             onChange={onChange}
@@ -78,7 +62,8 @@ export function AssetFormAdvancedInfoStepContent({ translator, formData, onChang
       </div>
 
       <div>
-        <AssetSovereignLegalName
+        <AssetTextField
+          field="sovereignLegalName"
           translator={translator}
           formData={formData}
           onChange={onChange}
@@ -87,14 +72,16 @@ export function AssetFormAdvancedInfoStepContent({ translator, formData, onChang
       </div>
 
       <div className="grid sm:grid-cols-2 gap-2 w-full">
-        <AssetDataUpdateFrequency
+        <AssetTextField
+          field="dataUpdateFrequency"
           translator={translator}
           formData={formData}
           onChange={onChange}
           errors={errors}
         />
 
-        <AssetGeoLocations
+        <AssetTextField
+          field="geoLocation"
           translator={translator}
           formData={formData}
           onChange={onChange}
@@ -130,32 +117,13 @@ export function AssetFormAdvancedInfoStepContent({ translator, formData, onChang
       </div>
 
       <div>
-        <Input
-          name={ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION}
-          id="advanced-info-description"
-          label={<T string="assets.new.fieldAdvancedInfoReferenceFileDescription" />}
-          placeholder={"..."}
-          multiline
-          rows={6}
-          value={formData[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA][ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION]}
-          error={errors[ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION]}
-          onChange={(event) => onChange({
-            ...formData,
-            [ASSET_ADVANCED_INFO_DATA_MODEL]: {
-              ...formData[ASSET_ADVANCED_INFO_DATA_MODEL],
-              [ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA]: {
-                ...formData[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA],
-                [ASSET_ADVANCED_INFO_REFERENCE_FILE_DESCRIPTION]: event.target.value
-              }
-            }
-          })}
+        <AssetTextField
+          field="referenceFileDescription"
+          translator={translator}
+          formData={formData}
+          onChange={onChange}
+          errors={errors}
         />
-        <FormHelperText className="flex flex-row gap-x-1">
-          <T string="assets.new.fieldAdvancedInfoReferenceFileDescriptionSupport" />
-          <Link href="https://www.markdownguide.org/basic-syntax" target="_blank" color="secondary" >
-            Markdown syntax
-          </Link>
-        </FormHelperText>
       </div>
 
       <div>
@@ -168,7 +136,8 @@ export function AssetFormAdvancedInfoStepContent({ translator, formData, onChang
       </div>
 
       <div>
-        <AssetConditionsForUse
+        <AssetTextField
+          field="conditionsForUse"
           translator={translator}
           formData={formData}
           onChange={onChange}

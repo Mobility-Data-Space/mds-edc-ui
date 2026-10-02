@@ -1,22 +1,25 @@
 export const en = {
   translation: {
     _app: {
-      logIn: "Log in",
-      useCases: "Use cases",
       search: "Search",
-      searchPlaceholder: "Enter your search query",
-      buttonSearch: "Search",
-      useCasesList: {
-        quality: "Quality",
-        "circular-economy": "Circular economy",
-      },
-      environments: {
-        development: "Development",
-        integration: "Integration",
-        production: "Production",
-      },
+    },
+    navigation: {
+      dashboard: "Dashboard",
+      catalogBrowser: "Catalog Browser",
+      contractAgreements: "Contract Agreements",
+      transferProcesses: "Transfer Processes",
+      edrs: "EDRs",
+      provide: "Provide",
+      createDataOffer: "Create Data Offer",
+      assets: "Assets",
+      policies: "Policies",
+      dataOffers: "Data offers",
+      contractNegotiations: "Contract negotiations",
+      manualApprovals: "Manual Approvals",
     },
     common: {
+      loading: "Loading...",
+      noConnector: "No connector",
       add: "Add",
       create: "Create",
       edit: "Edit",
@@ -29,6 +32,7 @@ export const en = {
       terminate: "Terminate",
       contact: "Contact",
       showMore: "Show more",
+      somethingWentWrong: "Something went wrong",
       showLess: "Show less",
       negotiate: "Negotiate",
       showJsonLd: "Show JSON-LD",
@@ -36,10 +40,12 @@ export const en = {
       cleanedJson: "Cleaned JSON",
       errorOccurred: "An error has occurred",
       copyToClipboard: "Copy to clipboard",
+      moreInfo: "More information",
+      remove: "Remove",
+      openCalendar: "Open calendar",
       title: "Title",
       description: "Description",
       total: "Total",
-      listLoadError: "Failed to load list. Please try again.",
       catalogLoadError: "Failed to load Catalog. Please try again.",
       assetsLoadError: "Failed to load Assets. Please try again.",
       dataOffersLoadError: "Failed to load Data Offers. Please try again.",
@@ -47,11 +53,8 @@ export const en = {
         "Failed to load Contract Agreements. Please try again.",
       contractNegotiationsLoadError:
         "Failed to load Contract Negotiations. Please try again.",
-      transferProcessesLoadError:
-        "Failed to load Transfer Processes. Please try again.",
       policyDefinitionsLoadError:
         "Failed to load Policy Definitions. Please try again.",
-      loading: "Loading...",
       showSensitiveValues: "Show Sensitive Values",
     },
     dashboard: {
@@ -119,22 +122,14 @@ export const en = {
     },
     assets: {
       title: "My assets",
-      description: "Assets shared by my connector",
       search: "Search assets",
       buttonAdd: "Create New Asset",
-      headingName: "Name",
-      headingTitle: "Title",
-      headingDescription: "Description",
-      headingVersion: "Version",
-      headingContentType: "Content type",
-      headingDataAddressName: "Data address name",
-      headingDataAddressType: "Data address type",
-      headingDataAddressUrl: "Data address url",
       searchPlaceholder: "Search Assets by Title",
       "[id]": {
-        title: "View asset",
-        dataAddress: "Data address",
         deleteTitle: "Deletion confirmation",
+        deleteConfirmation:
+          "Please confirm you want to delete Asset {{name}}. This action cannot be undone.",
+        deleteFailed: "Failed deleting asset {{name}}",
         fetchError: "Failed to fetch asset",
       },
       edit: {
@@ -143,8 +138,6 @@ export const en = {
       },
       new: {
         title: "Create new asset",
-        description:
-          "Describe a new asset, hence a virtual presentation of physical data. Assets are the sharing unit of the EDC connector.",
         generalInformation: "General Information",
         datasourceInformation: "Datasource Information",
         advancedInformation: "Advanced Information",
@@ -160,13 +153,10 @@ export const en = {
         fieldKeywords: "Keywords",
         fieldLanguage: "Language",
         fieldEndpointDocumentation: "Endpoint Documentation",
-        fieldEndpointDocumentationPlaceholder: "Endpoint Documentation",
         fieldPublisher: "Publisher",
         fieldStandardLicense: "Standard License",
-        fieldPrivateNotes: "Private notes",
         fieldIdPlaceholder: "Asset ID",
         fieldManualApproval: "Manual Approval",
-        fieldVersionPlaceholder: "Asset version",
         fieldTitlePlaceholder: "My Asset",
         fieldDescriptionPlaceholder:
           "# My Asset\n\nAt vero eos et accusam et justo duo dolores et ea rebum.\n\n## Details\n\nAt vero eos et accusam et justo duo dolores et ea **rebum**.",
@@ -176,8 +166,6 @@ export const en = {
           "Keywords make the data offer easier to find. They appear as tags on 'Assets' and 'Catalog Browser' pages.",
         fieldContentTypeSupport:
           "Describes the content type of the data as a MIME type, see",
-        fieldPrivateNotesPlaceholder:
-          "Some notes which won't be shared with external participants",
 
         fieldAdvancedInfoDataCategory: "Data Category",
         fieldAdvancedInfoDataCategoryPlaceholder: "Select data category",
@@ -230,22 +218,12 @@ export const en = {
         fieldAdvancedInfoConditionsForUseSupport:
           "Additional not legally relevant usage instructions (e.g. how to cite the dataset). The field supports",
         fieldAdvancedInfoTemporalCoverage: "Temporal coverage",
-        fieldAdvancedInfoTemporalCoverageHelper:
-          "Start and/or end date when the dataset is availabl for consumption. Format: (optional) – (optional)",
 
         fieldDataAddressType: "Type",
-        fieldDataAddressMethodAndContentType: "Method",
         fieldDataAddressUrl: "Base URL",
-        fieldDataAddressBaseUrlPlaceholder:
-          "The base URL for the data address location",
-        fieldDataAddressName: "Name",
-        fieldDataAddressNamePlaceholder:
-          "Data address human readable identifier",
         fieldDataAddressPathPlaceholder: "The default URL path",
         fieldDataAddressPath: "Path",
         fieldDataAddressAuth: "Authorization",
-        fieldDataAddressAuthKeyPlaceholder: "Authorization header",
-        fieldDataAddressAuthCodePlaceholder: "Secret code",
         fieldVersionTooltip:
           "Asset ID, used internally, is an auto-generated string in a URL-compatible format, combining the asset name and version with a urn:artifact: prefix. You can customize it if needed.",
         fieldEndpointDocumentationTooltip:
@@ -254,13 +232,9 @@ export const en = {
         fieldStandardLicenseTooltip:
           "URL of the license under which the data is offered.",
 
-        fieldDataAddressHttpProxyMethodHelper:
-          "The consuming side must provide a Custom HTTP Method with method parameterization enabled.",
         fieldDataAddressMethod: "Method",
         fieldDataAddressHttpProxyMethodTrue: "Disable Proxy Method",
         fieldDataAddressHttpProxyMethodFalse: "Enable Proxy Method",
-        fieldDataAddressHttpProxyPathHelper:
-          "The consuming side must provide a Custom HTTP Subpath with method parameterization is enabled. The Custom HTTP Subpath will be appended to the base path.",
         fieldDataAddressHttpProxyPathTrue: "Disable Proxy Path",
         fieldDataAddressHttpProxyPathFalse: "Enable Proxy Path",
         fieldDataAddressHttpProxyBodyTrue: "Disable Proxy Body",
@@ -270,18 +244,9 @@ export const en = {
 
         fieldDataAddressQueryParamsAddText: "Add Query Param",
         fieldDataAddressQueryParams: "Query Params",
-        fieldDataAddressDefaultQueryParams: "Default Query Params",
-        fieldDataAddressQueryParamsHelper:
-          "With query param parameterization enabled, the default query params and the query params provided by the consumer will be merged.",
         fieldDataAddressQueryParamsKeyLabel: "Query Param Name",
         fieldDataAddressQueryParamsKeyPlaceholder: "Key",
         fieldDataAddressQueryParamsValueLabel: "Value",
-        fieldDataAddressQueryParameterizationTrue:
-          "Disable Query Param Parameterization",
-        fieldDataAddressQueryParameterizationFalse:
-          "Enable Query Param Parameterization",
-        fieldDataAddressQueryParameterizationDescription:
-          "With query param parameterization enabled, the default query params and the query params provided by the consumer will be merged.",
         fieldDataAddressHeaderAuth: "Authentication",
         fieldDataAddressHeaderTypeTrue: "Remove Authentication",
         fieldDataAddressHeaderTypeFalse: "Add Authentication",
@@ -295,14 +260,7 @@ export const en = {
         fieldDataAddressHttpHeadersAddText: "Add Additional Headers",
         fieldDataAddressHttpHeaderName: "Header Name",
         fieldDataAddressHttpHeaderNamePlaceholder: "Header",
-        fieldDataAddressHttpHeaderValue: "Header Value",
-        fieldDataAddressProxyMethod: "Proxy Method",
-        fieldDataAddressProxyPath: "Proxy Path",
-        fieldDataAddressContentType: "Request Body Content Type",
-        fieldDataAddressProxyBody: "Proxy Request Body",
         fieldEnableProxyBody: "Request Body",
-        fieldEnableProxyBodyDescription:
-          "The request body can only be set from the consumer side, if parameterization is enabled.",
 
         fieldContainer: "Container",
         fieldAccount: "Account",
@@ -319,27 +277,21 @@ export const en = {
         participantId: "Participant ID",
         creatorOrganizationName: "Organization",
         connectorEndpoint: "Connector Endpoint",
-        httpProxyMethod: "Method",
-        httpProxyPath: "Path",
         noDescription: "No description",
         showDataSamples: "Show Data Samples",
         urls: "URLs",
         showReferenceFiles: "Show Reference Files",
         referenceFileImportant: "This reference file is important",
         showConditionsForUse: "Show Conditions for Use",
-        customProperties: "Custom Properties",
         privateProperties: "Private Properties",
 
         isPull: "Data address PULL",
         fieldMultipleObjects: "Multiple S3 Objects",
         fieldMultipleBlobs: "Multiple Azure Blobs",
-        buttonCancel: "Cancel",
-        buttonSave: "Add asset",
 
         saveFail: "Failed saving asset!",
         formHasErrors: "Please fix the errors above.",
         duplicateId: "Asset ID already exists.",
-        saveFailDetails: "Failed to save asset. See details below.",
         invalidWhitespacesOrColons: "Must not contain whitespaces or colons.",
         mustBeValidJson: "Must be valid JSON",
         mustBeValidUrl: "Must be valid Url",
@@ -363,8 +315,6 @@ export const en = {
         dataOfferTypeDescription: "Define the type of your offer",
         type: "Offer Type",
         negotiationType: "Negotiation Type",
-        typeDataSource: "Available (with data source)",
-        typeOnRequest: "On Request (without data source)",
         contactEmail: "Contact E-mail",
         contactEmailTooltip:
           "This email address will be offered to potential consumers for contacting you. This is done in place of having an actual data source connected.",
@@ -429,69 +379,42 @@ export const en = {
       id: "Data Offer Id",
       contractOffer: "Data Offer",
       title: "List all data offers",
-      description:
-        "List all of your contracts offered to the external network. Contract definitions define how other participants would consume owned assets.",
-      buttonAdd: "Add data offer",
-      headingId: "ID",
       contractPolicy: "Contract Policy",
       contractPolicyJsonLd: "Contract Policy JSON-LD",
-      headingContractPolicy: "Contract policy",
-      headingAccessPolicy: "Access policy",
       dataOffer: "Data Offer",
       accessPolicy: "Access Policy",
       assets: "Assets",
       publishDataOffer: "Publish Data Offer",
       searchPlaceholder: "Search Data Offers by Offer ID",
       deleteSuccess: "Data offer deleted successfully!",
-      failedToFetch:
-        "failed to load contract definitions, Please try again later",
-      "[id]": {
-        title: "View data offer",
-        deleteButton: "Delete",
-        fieldId: "ID",
-        fieldCreatedAt: "Created At",
-        fieldAccessPolicyId: "Access Policy Id",
-        fieldContractPolicyId: "Contract Policy Id",
-        fieldAssetSelector: "Assets",
-      },
+      deleteConfirmation:
+        "Please confirm you want to delete Data Offer {{name}}. This action cannot be undone.",
+      deleteFailed: "Failed deleting data offer {{name}}",
       new: {
-        title: "Create a data offer",
-        description:
-          "Describe a new policy by defining rules which ensure owned data is accessed in a specific way, following strict requirements.",
         id: "ID",
         publishNewDataOffer: "Publish New Data Offer",
         accessPolicy: "Access Policy",
         contractPolicy: "Contract Policy",
         assets: "Assets",
         manualApproval: "Manual Approval",
-        buttonCancel: "Cancel",
-        buttonSave: "Save changes",
       },
     },
     policyDefinitions: {
       title: "List all policy definition",
-      description:
-        "List all owned policies containing rules that describe how others can consume the data you offer.",
-      buttonAdd: "Add policy definition",
-      headingId: "ID",
       headingCreatedAt: "Time",
       policy: "Policy",
       createPolicy: "Create Policy",
       searchPlaceholder: "Search Policies by Policy ID",
       deleteSuccess: "Policy deleted successfully!",
-      "[id]": {
-        title: "View policy definition",
-        deleteButton: "Delete",
-      },
+      deleteConfirmation:
+        "Please confirm you want to delete Policy {{name}}. This action cannot be undone.",
+      deleteFailed: "Failed deleting policy {{name}}",
       new: {
         title: "Create a policy definition",
         successCreate: "Policy created successfully!",
-        description:
-          "Describe a new policy by defining rules which ensure owned data is accessed in a specific way, following strict requirements.",
-        buttonCancel: "Cancel",
-        buttonSave: "Save changes",
         policyId: "Policy ID",
         policyExpression: "Policy Expression",
+        saveFail: "Failed saving policy!",
       },
       constraint: {
         POLICY_EVALUATION_TIME: "Time Restriction",
@@ -510,9 +433,6 @@ export const en = {
     },
     catalog: {
       title: "Catalog Browser",
-      description: "List all participants which you can check their catalogs.",
-      headingName: "Name",
-      headingStatus: "Status",
       connectorEndpoints: "Connector Endpoints",
       clickForDetails: "Click for details",
       fetchStatus: "Fetch Status",
@@ -520,31 +440,18 @@ export const en = {
       otherConnectorEndpointCatalogs: "Other Connector Endpoint Catalogs",
       negotiationConfirmationCheckbox:
         "I agree to the Data Offer Terms & Conditions",
-      failedFetchingCatalog: "Failed Fetching Catalog",
       emptyCounterPartyUrl:
         "Please enter a connector endpoint to fetch its catalog.",
-      "[participant]": {
-        title: "List contract offers for ",
-        description: "List participants for the selected participant.",
-        headingId: "ID",
-        headingAssets: "Assets",
-        headingContracts: "Contracts",
-      },
     },
     contractAgreements: {
       title: "List all contract agreements",
-      titleProviding: "Providing Contract Agreements",
-      titleConsuming: "Consuming Contract Agreements",
       allContracts: "All Contracts",
       activeContracts: "Active Contracts",
       terminatedContracts: "Terminated Contracts",
-      description:
-        "List of contract agreements that owned connectors can consume. Listed agreements are the successful outcome of contract negotiations between two EDC connectors.",
       headingId: "ID",
       headingConsumer: "Consumer",
       headingProvider: "Provider",
       headingAsset: "Asset",
-      headingContractSigningDate: "Contract signing date",
       contractPolicy: "Contract Policy",
       signed: "Signed",
       direction: "Direction",
@@ -557,19 +464,10 @@ export const en = {
       status: "Status",
       transfers: "Transfers",
       otherConnector: "Other Connector",
-      retiredFetchError: "Error while fetching retired contract agreements",
       searchPlaceholder: "Search Contract Agreements by Asset ID",
       terminationSuccess: "Contract terminated successful",
       noContractsFound: "No Contracts Found",
       "[id]": {
-        title: "View contract agreement",
-        description: "A single contract agreement",
-        fieldId: "ID",
-        fieldAssetId: "Asset ID",
-        fieldConsumerId: "Consumer ID",
-        fieldProviderId: "Provider ID",
-        fieldContractSigningDate: "Contract Signing Date",
-        fieldPolicy: "Policy",
         terminateContractAgreementTitle: "Terminate Contract Agreement",
         terminateContractAgreementDescription:
           "By clicking the 'Terminate Contract' button, you will terminate the contract agreement. New data transfers via this agreement will no longer be possible and current transfer processes will be canceled.",
@@ -590,16 +488,12 @@ export const en = {
     contractNegotiations: {
       title: "List all contract negotiations",
       manualApprovalTitle: "Negotiations with manual approval",
-      description:
-        "List of contract agreements that owned connectors can consume. Listed agreements are the successful outcome of contract negotiations between two EDC connectors.",
-      headingId: "ID",
       headingState: "State",
       headingContractAgreement: "Contract agreement",
       headingCounterPartyAddress: "Counter party address",
       headingCounterPartyId: "with Counter Party ID",
       headingAssetName: "For asset",
       headingNegotiationId: "Negotiation ID",
-      headingOfferPolicy: "Offer Policy",
       headingCreatedAt: "Time",
       headingApprove: "Approve",
       headingReject: "Reject",
@@ -616,8 +510,6 @@ export const en = {
       searchPlaceholder:
         "Search Contract Negotiations by CounterParty Connector ID",
       "[id]": {
-        title: "View contract negotiation",
-        description: "A single contract negotiation",
         fieldId: "ID",
         fieldContractAgreementId: "Contract agreement",
         fieldCounterPartyAddress: "Counter party address",
@@ -626,71 +518,34 @@ export const en = {
         fieldProtocol: "Protocol",
         fieldState: "State",
         fieldType: "Type",
-        fieldErrorDetail: "Error detail",
       },
     },
     transferProcesses: {
       noItems: "No transfer processes started yet.",
       history: "Transfer History",
       title: "List all transfer processes",
-      description: "List all outgoing and incoming transfer processes.",
-      headingId: "ID",
       headingState: "State",
       headingLastUpdated: "Last updated",
-      headingContractAgreement: "Contract agreement",
       headingCounterpartyParticipantId: "Counterparty Participant ID",
       headingCounterpartyConnectorEndpoint: "Counterparty Connector Endpoint",
       headingContractDetails: "Contract Details",
       headingAsset: "Asset",
-      headingCorrelationId: "Correlation ID",
       direction: "Direction",
       searchPlaceholder: "Search Transfer Processes by Asset ID",
-      "[id]": {
-        title: "View transfer process",
-        description: "A single transfer process",
-        fieldId: "ID",
-        fieldState: "State",
-        fieldContractAgreement: "Contract agreement",
-        fieldAsset: "Asset",
-        fieldCorrelationId: "Correlation ID",
-        fieldErrorDetail: "Error detail",
-      },
       new: {
-        httpParameterizationTitle: "Http Datasource Parameterization",
-        httpParameterizationDescription:
-          "When the data offer on the provider side is of the type HttpData and certain data source fields are set, certain parts of the request to the data source can be customized from the consumer side and will be passed to the other connector when initiating the transfer. This allows an asset to contain more than just one kind of data, allowing additional filtering or even sharing of entire APIs with multiple data sets via a single asset and a single contract.",
-        showHttpParameterization:
-          "Show Http Datasource Parameterization Fields",
-        hideHttpParameterization:
-          "Hide Http Datasource Parameterization Fields",
-        customMethod: "Custom Method",
-        customSubpath: "Custom Subpath",
-        addCustomQueryParam: "Add Custom Query Param",
-        requireProxyBodyTrue: "Requires proxyBody to be true.",
         initiateTransfer: "Initiate Transfer",
-        customRequestBodyContentType: "Custom Request Body Content Type",
-        customRequestBody: "Custom Request Body",
         success: "Transfer Process Initiated Successfully",
       },
     },
     edrs: {
       title: "List all EDRs",
-      edrsLoadError: "Failed to Load EDRs",
       noEdrsFound: "No EDRs found",
       assetId: "Asset ID",
       createdAt: "Created At",
       providerId: "Provider ID",
-      endpoint: "Endpoint",
-      authorization: "Authorization Token",
+      details: "Details",
       searchPlaceholder: "Search EDRs by Asset ID",
       failedToFetchEdr: "Failed To Fetch EDR",
-      "[id]": {
-        type: "Type",
-        authType: "Authentication Type",
-        endpointType: "Endpoint Type",
-        endpoint: "Endpoint",
-        authorization: "Authorization Token",
-      },
     },
   },
 };

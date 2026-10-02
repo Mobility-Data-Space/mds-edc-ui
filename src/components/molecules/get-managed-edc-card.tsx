@@ -1,9 +1,9 @@
 import React from "react";
 import { Card, CardContent, Box, Typography, ButtonBase } from "@mui/material";
 import { T, useTranslator } from "@/i18n";
-import { TitleWithIcon } from "@/components/atoms/TitleWithIcon.tsx";
+import { TitleWithIcon } from "@/components/atoms/title-with-icon";
 import Link from "next/link";
-import { MarkdownText } from "../atoms/markdown-text";
+import { MarkdownText } from "@/components/atoms/markdown-text";
 
 export function GetManagedEDC() {
   const { translator } = useTranslator();

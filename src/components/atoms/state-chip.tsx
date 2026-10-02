@@ -1,7 +1,7 @@
 import {
   transferProcessStateBgColor,
   transferProcessStateTextColor,
-} from "@/utilities/transfer-process.ts";
+} from "@/utilities/transfer-process";
 import { Chip, ChipProps } from "@mui/material";
 import React from "react";
 

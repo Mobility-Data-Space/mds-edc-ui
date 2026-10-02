@@ -6,7 +6,7 @@ import React from "react";
 export interface ContactEmailAndSubjectProps {
   translator: (key: string) => string;
   formData: DataAddress;
-  onChange: (formData: any) => void;
+  onChange: (formData: DataAddress) => void;
   errors: { [key: string]: boolean | string };
   required?: boolean;
 }

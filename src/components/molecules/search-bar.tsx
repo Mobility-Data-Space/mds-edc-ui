@@ -18,11 +18,17 @@ export default function SearchBar({
 }: SearchBarProps) {
   const { query, push, pathname } = useRouter();
 
-  const { searchSpec, setSearchSpec } = useListContext();
+  const { searchSpec, setSearchSpec, triggerSearch } = useListContext();
 
   const searchRef = useRef<HTMLInputElement>(null);
 
   const searchQuery = query.q;
+  const lastSearchQuery = useRef(searchQuery);
+  // The list context recreates `triggerSearch` on every render; keep it out of effect deps.
+  const triggerSearchRef = useRef(triggerSearch);
+  useEffect(() => {
+    triggerSearchRef.current = triggerSearch;
+  });
 
   useEffect(() => {
     setSearchSpec({ operator: searchOperator, operandLeft: searchTarget });
@@ -31,6 +37,12 @@ export default function SearchBar({
   useEffect(() => {
     if (typeof searchQuery === "string") {
       setSearchSpec({ operandRight: searchQuery });
+    }
+    // The list only refetches on base-query changes, so a new `q` on the same page needs an explicit search.
+    // Skipped on mount, where the initial fetch already includes `q`.
+    if (lastSearchQuery.current !== searchQuery) {
+      lastSearchQuery.current = searchQuery;
+      triggerSearchRef.current();
     }
   }, [searchQuery, setSearchSpec]);
 

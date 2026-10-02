@@ -4,16 +4,9 @@ import { MuiSelect } from "@/components/atoms/mui-select";
 import { DATA_CATEGORY_SELECT_DATA, DATA_SUBCATEGORIES_DATA, TYPE_DATA_CATEGORY } from "@/constants/data-category";
 import { T } from "@/i18n";
 import { ASSET_ADVANCED_INFO_DATA_CATEGORY, ASSET_ADVANCED_INFO_DATA_SUBCATEGORY, ASSET_ADVANCED_INFO_MOBILITY_THEME } from "@/jsonld/asset";
-import { AssetProperties } from "@/utilities/asset";
+import type { AssetFieldProps } from "@/types/asset-field";
 
-export interface AssetDataCategoryAndSubcategoryProps {
-  translator: (key: string) => string;
-  formData: AssetProperties;
-  onChange: (formData: any) => void;
-  errors: { [key: string]: boolean };
-}
-
-export function AssetDataCategoryAndSubcategory({ translator, formData, onChange, errors }: AssetDataCategoryAndSubcategoryProps): React.ReactElement {
+export function AssetDataCategoryAndSubcategory({ translator, formData, onChange, errors }: AssetFieldProps): React.ReactElement {
   const labelColor = errors[ASSET_ADVANCED_INFO_DATA_CATEGORY] ? `text-red-500` : "text-gray-800"
 
   return (

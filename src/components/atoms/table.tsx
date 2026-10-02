@@ -7,7 +7,7 @@ import {
   TdHTMLAttributes,
 } from "react";
 
-interface TableProps extends TableHTMLAttributes<HTMLTableElement> {}
+type TableProps = TableHTMLAttributes<HTMLTableElement>;
 
 export function Table({
   children,
@@ -26,8 +26,7 @@ export function Table({
   );
 }
 
-interface TableSectionProps
-  extends BaseHTMLAttributes<HTMLTableSectionElement> {}
+type TableSectionProps = BaseHTMLAttributes<HTMLTableSectionElement>;
 
 function TableHead({
   children,
@@ -42,11 +41,10 @@ function TableHead({
 }
 Table.Head = TableHead;
 
-interface TableCellProps
-  extends DetailedHTMLProps<
-    TdHTMLAttributes<HTMLTableDataCellElement>,
-    HTMLTableDataCellElement
-  > {}
+type TableCellProps = DetailedHTMLProps<
+  TdHTMLAttributes<HTMLTableDataCellElement>,
+  HTMLTableDataCellElement
+>;
 
 Table.Heading = function TableHeading({
   children,
@@ -79,7 +77,7 @@ Table.Body = function TableBody({
   );
 };
 
-interface TableRowProps extends BaseHTMLAttributes<HTMLTableRowElement> {}
+type TableRowProps = BaseHTMLAttributes<HTMLTableRowElement>;
 
 Table.Row = function TableBodyRow({
   children,

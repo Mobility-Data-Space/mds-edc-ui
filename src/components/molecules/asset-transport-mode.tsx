@@ -4,17 +4,9 @@ import { MuiSelect } from "@/components/atoms/mui-select";
 
 import { GEO_REFERENCE_DATA } from "@/constants/data-category";
 import { ASSET_ADVANCED_INFO_TRANSPORT_MODE } from "@/jsonld/asset";
-import { AssetProperties } from "@/utilities/asset";
+import type { AssetFieldProps } from "@/types/asset-field";
 
-export interface AssetTransportModeProps {
-  translator: (key: string) => string;
-  formData: AssetProperties;
-  onChange: (formData: AssetProperties) => void;
-  errors: { [key: string]: boolean };
-  required?: boolean;
-}
-
-export function AssetTransportMode({ translator, formData, onChange, errors }: AssetTransportModeProps): React.ReactElement {
+export function AssetTransportMode({ translator, formData, onChange, errors }: AssetFieldProps): React.ReactElement {
 
   return (
     <MuiSelect

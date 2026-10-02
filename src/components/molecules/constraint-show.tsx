@@ -12,7 +12,7 @@ import { isDate, tryTranslatingWithTooltip } from "@/utilities/utilities";
 import { operators } from "@/utilities/policy-operators";
 
 interface ConstraintShowProps {
-  data: any;
+  data: unknown;
   passedFirstLevel?: boolean;
 }
 
@@ -57,11 +57,10 @@ export function ConstraintShow({
     const parts = data.split(",");
     const result = [parts[0], parts[1], parts.slice(2).join(",")];
 
-    let operatorToCheck = result[1];
     return (
       <div className="flex gap-x-2 items-center">
         {result.map((value, index) => {
-          const [tooltipTitle, computedValue] = constraintTooltipAndValue(
+          const [, computedValue] = constraintTooltipAndValue(
             value,
             index,
             translator,
@@ -105,11 +104,12 @@ export function ConstraintShow({
   }
 
   if (typeof data !== "object" || !data) {
-    return [null, undefined].indexOf(data) === -1 ? String(data) : "";
+    return data === null || data === undefined ? "" : String(data);
   }
 
-  let html = [];
-  for (const key in data) {
+  const html = [];
+  const record = data as Record<string, unknown>;
+  for (const key in record) {
     const [tooltip] = tryTranslatingWithTooltip(
       key,
       "policyDefinitions.constraint",
@@ -127,7 +127,7 @@ export function ConstraintShow({
         </Tooltip>
         <div>
           <ShowTreeBranch bottomLeafHidden>
-            <ConstraintShow data={data[key]} passedFirstLevel />
+            <ConstraintShow data={record[key]} passedFirstLevel />
           </ShowTreeBranch>
         </div>
       </div>,

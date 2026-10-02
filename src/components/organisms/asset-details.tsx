@@ -7,12 +7,7 @@ import { MarkdownCollapsableText } from "@/components/molecules/markdown-collaps
 import FieldGrid from "@/components/molecules/field-grid";
 import { T } from "@/i18n";
 import { ASSET_KEYWORDS, ASSET_DESCRIPTION } from "@/jsonld/asset";
-import {
-  assetDataAddressFieldsTitle,
-  assetDataAddressFieldsToShow,
-  assetFieldsToShow,
-  assetPrivateFieldsToShow,
-} from "@/utilities/asset";
+import { assetDataAddressFieldsTitle, assetDataAddressFieldsToShow, assetFieldsToShow, assetPrivateFieldsToShow } from "@/domain/asset/view";
 
 interface AssetDetailsProps {
   asset: Asset;

@@ -1,31 +1,31 @@
 import { DataAddressTypes } from "@/utilities/data-address";
 
-export const DATA_ADDRESS_TYPE_HTTP = {
+const DATA_ADDRESS_TYPE_HTTP = {
   value: DataAddressTypes.HttpData,
   text: "REST-API Endpoint",
 };
 
-export const DATA_ADDRESS_TYPE_S3 = {
+const DATA_ADDRESS_TYPE_S3 = {
   value: DataAddressTypes.AmazonS3,
   text: "Amazon S3",
 };
 
-export const DATA_ADDRESS_TYPE_AZURE = {
+const DATA_ADDRESS_TYPE_AZURE = {
   value: DataAddressTypes.AzureStorage,
   text: "Azure Blob Storage",
 };
 
-export const DATA_ADDRESS_TYPE_ON_REQUEST = {
+const DATA_ADDRESS_TYPE_ON_REQUEST = {
   value: DataAddressTypes.MDSOnRequestOffer,
   text: "On Request",
 };
 
-export const DATA_ADDRESS_TYPE_CUSTOM_JSON = {
+const DATA_ADDRESS_TYPE_CUSTOM_JSON = {
   value: DataAddressTypes.CustomJson,
   text: `Custom Json Data Address (JSON)`,
 };
 
-export const DATA_ADDRESS_TYPE_KAFKA = {
+const DATA_ADDRESS_TYPE_KAFKA = {
   value: DataAddressTypes.Kafka,
   text: "Kafka Streaming",
 };
@@ -50,16 +50,6 @@ export const DATA_ADDRESS_DESTINATION_SELECT_DATA = [
 export const DATA_OFFER_TYPE_DATA_SOURCE = {
   text: "Available (with data source)",
   value: "Datasource",
-};
-
-export const DATA_OFFER_TYPE_ON_REQUEST = {
-  text: "On Request (without data source)",
-  value: "On-Request",
-};
-
-export const DATA_OFFER_TYPE_LIVE = {
-  text: "LIVE",
-  value: "LIVE",
 };
 
 export const PUBLISH_MODE_PUBLISH_UNRESTRICTED = {

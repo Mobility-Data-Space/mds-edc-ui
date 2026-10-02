@@ -1,22 +1,23 @@
-import { StateChip } from "@/components/atoms/state-chip.tsx";
+import { StateChip } from "@/components/atoms/state-chip";
 import { Table } from "@/components/atoms/table";
-import PaginationControls from "@/components/molecules/pagination-controls";
+import { renderPagination } from "@/components/molecules/pagination-controls";
 import SearchBar from "@/components/molecules/search-bar";
 import ContractNegotiationDialog from "@/components/organisms/contract-negotiation-dialog";
-import SideDrawer from "@/components/organisms/side-drawer";
 import { proxyConnectorManagement } from "@/constants/proxy";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
-import { formatDateTime, formatDateTimeAgo } from "@/utilities/date.ts";
+import { formatDateTime, formatDateTimeAgo } from "@/utilities/date";
 import { Tooltip } from "@mui/material";
 import { ContractNegotiation } from "@think-it-labs/edc-connector-client";
 import { ContractAgreementView } from "@think-it-labs/edc-connector-ui/contract-agreement-view";
 import { ContractNegotiationsList } from "@think-it-labs/edc-connector-ui/contract-negotiations-list";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
-import { useRouter } from "next/router";
-import { useCallback, useState } from "react";
-import { ErrorPopup } from "../../components/molecules/error-popup";
-import { MAX_ITEMS } from "../../constants/lists";
+import { useState } from "react";
+import { ErrorPopup } from "@/components/molecules/error-popup";
+import { MAX_ITEMS } from "@/constants/lists";
+import { useListPage } from "@/hooks/use-list-page";
+import { LoadingSpinner } from "@/components/atoms/loading-spinner";
+import { ListToolbar } from "@/components/molecules/list-toolbar";
 
 const CreatedAt = ({ item }: { item: ContractNegotiation }) => {
   const createdAtValue = readValue(
@@ -35,14 +36,6 @@ const CreatedAt = ({ item }: { item: ContractNegotiation }) => {
   );
 };
 
-const CounterPartyId = ({ item }: { item: ContractNegotiation }) => {
-  const counterPartyIdValue = readValue(
-    item,
-    "https://w3id.org/edc/v0.0.1/ns/counterPartyId",
-  );
-  return <>{counterPartyIdValue}</>;
-};
-
 const CounterPartyAddress = ({ item }: { item: ContractNegotiation }) => {
   const counterPartyAddressValue = readValue(
     item,
@@ -52,9 +45,7 @@ const CounterPartyAddress = ({ item }: { item: ContractNegotiation }) => {
 };
 
 export default function ContractNegotiationsListPage() {
-  const { push, query } = useRouter();
   const { connector } = useParticipantConnectorState();
-  const managementUrl = connector?.managementUrl as string;
   const { translator } = useTranslator();
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
@@ -68,28 +59,16 @@ export default function ContractNegotiationsListPage() {
     setOpenContractNegotiationData({ contractNegotiation });
   };
 
-  const currentPage = parseInt(query.page as string) || 0;
 
-  const navigate = useCallback(
-    (newPage: number) => {
-      push({
-        href: window.location.href,
-        query: {
-          ...query,
-          page: newPage,
-        },
-      });
-    },
-    [push, query],
-  );
+  const { currentPage, navigate } = useListPage();
 
   return (
-    <SideDrawer title={<T string="contractNegotiations.title" />}>
+    <>
       <ContractNegotiationDialog
         open={isDetailsModalOpen}
         contractNegotiation={openContractNegotiationData.contractNegotiation}
         onClose={() => setIsDetailsModalOpen(false)}
-        participantId={connector.id}
+        participantId={connector?.id ?? ""}
         contentStyle={{ maxWidth: "90vw", width: "1000px" }}
         translator={translator}
       />
@@ -108,41 +87,18 @@ export default function ContractNegotiationsListPage() {
             />
           )}
         </ContractNegotiationsList.Error>
-        <div className="flex justify-between pb-6">
-          <div className="flex justify-start gap-x-5 items-center">
-            <div className="min-w-xl">
-              <SearchBar
-                searchTarget="counterPartyId"
-                placeholder={translator(
-                  "contractNegotiations.searchPlaceholder",
-                )}
-                searchOperator="ilike"
-              />
-            </div>
-          </div>
-          <div className="flex justify-end items-center">
-            <ContractNegotiationsList.Pagination>
-              {({
-                decrementPage,
-                hasPrev,
-                hasNext,
-                incrementPage,
-                page,
-                itemsCount,
-              }) => (
-                <PaginationControls
-                  page={page}
-                  hasPrev={hasPrev}
-                  hasNext={hasNext}
-                  decrementPage={decrementPage}
-                  incrementPage={incrementPage}
-                  maxItems={MAX_ITEMS}
-                  itemsCount={itemsCount}
-                />
+        <ListToolbar
+          search={
+            <SearchBar
+              searchTarget="counterPartyId"
+              placeholder={translator(
+                "contractNegotiations.searchPlaceholder",
               )}
-            </ContractNegotiationsList.Pagination>
-          </div>
-        </div>
+              searchOperator="ilike"
+            />
+          }
+          pagination={<ContractNegotiationsList.Pagination>{renderPagination}</ContractNegotiationsList.Pagination>}
+        />
         <div
           className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200"
           data-testid="negotiations-list"
@@ -229,17 +185,11 @@ export default function ContractNegotiationsListPage() {
         </div>
 
         <ContractNegotiationsList.Loading>
-          <div className="max-w-20 mx-auto mt-4 flex flex-col bg-white border shadow-sm rounded-xl p-4 md:p-5">
-            <span
-              className="animate-spin mx-auto inline-block size-8 border-[3px] border-current border-t-transparent text-blue-600 rounded-full"
-              role="status"
-              aria-label="loading"
-            >
-              <span className="sr-only">Loading...</span>
-            </span>
-          </div>
+          <LoadingSpinner />
         </ContractNegotiationsList.Loading>
       </ContractNegotiationsList>
-    </SideDrawer>
+    </>
   );
 }
+
+ContractNegotiationsListPage.titleKey = "contractNegotiations.title";

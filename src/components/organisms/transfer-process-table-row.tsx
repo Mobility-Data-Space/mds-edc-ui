@@ -1,13 +1,13 @@
-import { StateChip } from "@/components/atoms/state-chip.tsx";
-import { Table } from "@/components/atoms/table.tsx";
-import { TransferProcessIcon } from "@/components/atoms/transfer-process-icon.tsx";
-import { TransferProcessStateIcon } from "@/components/atoms/transfer-process-state-icon.tsx";
-import { JsonLdDialog } from "@/components/molecules/JsonLdDialog.tsx";
-import AssetDialog from "@/components/organisms/asset-dialog.tsx";
-import { useTransferProcessJsonLd } from "@/hooks/use-transfer-process-json-ld.ts";
+import { StateChip } from "@/components/atoms/state-chip";
+import { Table } from "@/components/atoms/table";
+import { TransferProcessIcon } from "@/components/atoms/transfer-process-icon";
+import { TransferProcessStateIcon } from "@/components/atoms/transfer-process-state-icon";
+import { JsonLdDialog } from "@/components/molecules/json-ld-dialog";
+import AssetDialog from "@/components/organisms/asset-dialog";
+import { useTransferProcessJsonLd } from "@/hooks/use-transfer-process-json-ld";
 import { T } from "@/i18n";
-import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog.ts";
-import { formatDateTime, formatDateTimeAgo } from "@/utilities/date.ts";
+import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog";
+import { formatDateTime, formatDateTimeAgo } from "@/utilities/date";
 import { Icon, Tooltip } from "@mui/material";
 import {
   Asset,

@@ -8,17 +8,9 @@ import { KeyValuePairInputList } from "@/components/molecules/key-value-pair-inp
 import { T } from "@/i18n";
 import { ASSET_ADVANCED_INFO_DATA_MODEL, ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA, ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS } from "@/jsonld/asset";
 
-import { AssetProperties } from "@/utilities/asset";
+import type { AssetFieldProps } from "@/types/asset-field";
 
-export interface AssetReferenceFileUrlsProps {
-  translator: (key: string) => string;
-  formData: AssetProperties;
-  onChange: (formData: AssetProperties) => void;
-  errors: { [key: string]: boolean };
-  required?: boolean;
-}
-
-export function AssetReferenceFileUrls({ translator, formData, onChange, errors }: AssetReferenceFileUrlsProps): React.ReactElement {
+export function AssetReferenceFileUrls({ translator, formData, onChange, errors }: AssetFieldProps): React.ReactElement {
 
   return (<>
     <label
@@ -27,7 +19,7 @@ export function AssetReferenceFileUrls({ translator, formData, onChange, errors 
     >
       <T string="assets.new.fieldAdvancedInfoReferenceFileUrls" />
       <Tooltip
-        title={translator("assets.new.fieldAdvancedInfoReferenceFileUrlsTooltip")}><IconButton><InfoOutlined /></IconButton></Tooltip>
+        title={translator("assets.new.fieldAdvancedInfoReferenceFileUrlsTooltip")}><IconButton aria-label={translator("common.moreInfo")}><InfoOutlined /></IconButton></Tooltip>
     </label>
 
     <KeyValuePairInputList
@@ -38,7 +30,7 @@ export function AssetReferenceFileUrls({ translator, formData, onChange, errors 
       addText={translator("assets.new.fieldAdvancedInfoReferenceFileUrlsAddText")}
       valueLabel={translator("assets.new.fieldAdvancedInfoReferenceFileUrlsValueLabel")}
       valuePlaceholder="https://my-org.com/my-data-offer/documentation/api-reference"
-      error={errors[ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS]}
+      error={!!errors[ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS]}
       value={formData[ASSET_ADVANCED_INFO_DATA_MODEL][ASSET_ADVANCED_INFO_DATA_MODEL_SCHEMA][ASSET_ADVANCED_INFO_REFERENCE_FILE_URLS] as []}
       valueOnly
       ensureValueIsALink

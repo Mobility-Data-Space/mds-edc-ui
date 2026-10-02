@@ -30,11 +30,11 @@ export const CONTEXT_RDF = {
   prefix: "rdf:",
   value: "http://www.w3.org/2000/01/rdf-schema#",
 } as const;
-export const CONTEXT_XSD = {
+const CONTEXT_XSD = {
   prefix: "xsd:",
   value: "http://www.w3.org/2001/XMLSchema#",
 } as const;
-export const CONTEXT_ODRL = {
+const CONTEXT_ODRL = {
   prefix: "odrl:",
   value: "http://www.w3.org/ns/odrl/2/",
 } as const;
@@ -42,12 +42,7 @@ export const CONTEXT_EDC = {
   prefix: "edc:",
   value: "https://w3id.org/edc/v0.0.1/ns/",
 } as const;
-export const TRACTUS_X_CONTEXT = {
-  prefix: "tx:",
-  value: "https://w3id.org/tractusx/v0.0.1/ns/",
-} as const;
-
-export const contextsList = [
+const contextsList = [
   CONTEXT_DCT,
   CONTEXT_DCAT,
   CONTEXT_MOBILITYDCAT_AP,
@@ -71,10 +66,4 @@ contextsList.forEach((context) => {
 
 contextsList.forEach((context) => {
   contextWithNoPrefixToCompact[context.value] = context.value;
-});
-
-export const contextPrefixes: { [key: string]: string } = {};
-
-contextsList.forEach((context) => {
-  contextPrefixes[context.value] = context.prefix;
 });

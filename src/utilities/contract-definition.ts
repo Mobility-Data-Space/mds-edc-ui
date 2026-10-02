@@ -23,9 +23,3 @@ export const defaultCreateContractDefinitionFormData: MdsContractDefinitionInput
     },
   };
 
-export const createDefaultContractDefinitionFormData = (
-  id: string,
-): MdsContractDefinitionInput => ({
-  ...defaultCreateContractDefinitionFormData,
-  "@id": id,
-});

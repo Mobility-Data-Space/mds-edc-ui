@@ -1,3 +1,4 @@
+import { useTranslator } from "@/i18n";
 import { InfoOutlined } from '@mui/icons-material';
 import { IconButton, Tooltip } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
@@ -17,11 +18,7 @@ export type KeywordsInputProps = Omit<TextFieldProps, "onChange"> & {
 };
 
 export function KeywordsInput({ tooltip = "", label = "", placeholder = "", error, value, onChange, }: KeywordsInputProps): React.ReactElement {
-  const onDelete = (chip: string, index: number) => {
-    value.splice(index, 1);
-    return onChange(value);
-  };
-
+  const { translator } = useTranslator();
   return (
     <FormControl fullWidth>
       <MuiChipsInput
@@ -39,7 +36,7 @@ export function KeywordsInput({ tooltip = "", label = "", placeholder = "", erro
           input: {
             classes: { root: "!pr-2.5" },
             endAdornment: <Tooltip title={tooltip}>
-              <IconButton >
+              <IconButton aria-label={translator("common.moreInfo")} >
                 <InfoOutlined />
               </IconButton>
             </Tooltip>

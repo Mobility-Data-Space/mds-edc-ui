@@ -1,5 +1,5 @@
 import { ConstraintShow } from "@/components/molecules/constraint-show";
-import { JsonLdDialog } from "@/components/molecules/JsonLdDialog";
+import { JsonLdDialog } from "@/components/molecules/json-ld-dialog";
 import { T } from "@/i18n";
 import { convertOdrlToJsonHtml } from "@/utilities/catalog";
 import { Icon } from "@mui/material";
@@ -10,7 +10,7 @@ import React, { ReactNode, useState } from "react";
 export interface FieldShowProps {
   constraints: Constraint[];
   jsonLdDialogTitle: ReactNode;
-  jsonLdObject: any;
+  jsonLdObject: unknown;
 }
 
 export function PolicyConstraintShow({ constraints, jsonLdDialogTitle, jsonLdObject }: FieldShowProps): React.ReactElement {

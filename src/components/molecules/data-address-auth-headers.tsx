@@ -2,12 +2,14 @@ import React from "react";
 
 
 
-import { Input } from "@/components/atoms/input.tsx";
-import { MuiSelect } from "@/components/atoms/mui-select.tsx";
-import { RadioButton } from "@/components/atoms/radio-button.tsx";
+import { Input } from "@/components/atoms/input";
+import { MuiSelect } from "@/components/atoms/mui-select";
+import { RadioButton } from "@/components/atoms/radio-button";
 import { T } from "@/i18n";
 import {
-  ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_SELECT_OPTIONS
+  ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_SELECT_OPTIONS,
+  AUTH_HEADER_TYPE_VAULT_SECRET,
+  resolveAuthHeaderType,
 } from "@/jsonld/asset";
 import { DataAddress } from "@think-it-labs/edc-connector-client/dist/src/entities/data-address";
 
@@ -20,6 +22,7 @@ export interface AssetDataSamplesProps {
 }
 
 export function DataAddressAuthHeaders({ translator, formData, onChange, errors }: AssetDataSamplesProps): React.ReactElement {
+  const isVaultSecret = resolveAuthHeaderType(formData) === AUTH_HEADER_TYPE_VAULT_SECRET;
 
   return (
     <div className="flex flex-col gap-y-5 items-start w-full">
@@ -37,9 +40,8 @@ export function DataAddressAuthHeaders({ translator, formData, onChange, errors 
             value: option.value,
             text: translator(option.text)
           }))}
-          defaultValue="Vault-Secret"
           error={errors.authHeaderType}
-          value={formData.authHeaderType || "Vault-Secret"}
+          value={resolveAuthHeaderType(formData)}
           onChange={(event) => onChange({ ...formData, authHeaderType: event.target.value })}
         />
 
@@ -62,11 +64,11 @@ export function DataAddressAuthHeaders({ translator, formData, onChange, errors 
             id="data-address-auth-code"
             type="text"
             label={<T
-              string={`assets.new.fieldDataAddressAuthHeader${formData.authHeaderType === "Vault-Secret" ? "Vault" : ""}Value`} />}
-            placeholder={formData.authHeaderType === "Vault-Secret" ? "Mysecret123" : "Bearer ..."}
-            value={formData.authHeaderType === "Vault-Secret" ? formData.secretName : formData.authCode}
-            error={formData.authHeaderType === "Vault-Secret" ? errors.secretName : errors.authCode}
-            onChange={(event) => formData.authHeaderType === "Vault-Secret" ?
+              string={`assets.new.fieldDataAddressAuthHeader${isVaultSecret ? "Vault" : ""}Value`} />}
+            placeholder={isVaultSecret ? "Mysecret123" : "Bearer ..."}
+            value={isVaultSecret ? formData.secretName : formData.authCode}
+            error={isVaultSecret ? errors.secretName : errors.authCode}
+            onChange={(event) => isVaultSecret ?
               onChange({ ...formData, secretName: event.target.value }) :
               onChange({ ...formData, authCode: event.target.value })}
           />

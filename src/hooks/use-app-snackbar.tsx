@@ -27,7 +27,7 @@ export function useAppSnackbar() {
         persist: persist ?? false,
         content: (key) => (
           <Snackbar
-            id={key as any}
+            id={key as string}
             type={type}
             message={message}
             details={details}

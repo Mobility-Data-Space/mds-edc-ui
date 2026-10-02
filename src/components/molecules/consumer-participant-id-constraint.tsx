@@ -1,6 +1,6 @@
 import { Input } from "@/components/atoms/input";
 import { MuiSelect } from "@/components/atoms/mui-select";
-import { ConstraintProps } from "@/components/molecules/constraint";
+import type { ConstraintProps } from "@/types/constraint";
 import { T, useTranslator } from "@/i18n";
 import { consumerParticipantIdOperators } from "@/utilities/policy-operators";
 import { FormHelperText, Icon, IconButton } from "@mui/material";
@@ -34,7 +34,7 @@ export function ConsumerParticipantIdConstraint({ value, onChange, onRemove }: C
             placeholder={translator("dataOffer.new.policyExpressionConsumerParticipantIdExamples")}
             error={!value.rightOperand} value={value.rightOperand}
             onChange={(event) => onChange({ ...value, rightOperand: event.target.value })} />
-          <IconButton
+          <IconButton aria-label={translator("common.remove")}
             size="large"
             onClick={onRemove}
             className="font-medium"
