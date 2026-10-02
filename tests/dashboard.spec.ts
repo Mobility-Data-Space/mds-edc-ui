@@ -10,7 +10,7 @@ test.describe("Dashboard Tests", () => {
     await dashboardPage.navigate();
   });
 
-  test("Displays the correct number of EDC resources in the connector", async ({ page }) => {
+  test("Displays the correct number of EDC resources in the connector", async () => {
     // Wait for dashboard data to load
     await dashboardPage.waitForDataLoaded();
 
@@ -27,7 +27,7 @@ test.describe("Dashboard Tests", () => {
     expect(contractAgreementsCount).toBeGreaterThanOrEqual(0);
   });
   
-  test("Displays the connector management and protocol endpoints", async ({ page }) => {
+  test("Displays the connector management and protocol endpoints", async () => {
     // Wait for connector endpoint to be loaded
     await dashboardPage.waitForConnectorEndpointLoaded();
 

@@ -33,10 +33,10 @@ test.describe('Create Data Offer for REST source Tests', () => {
     await createDataOfferPage.fillCreateDataOfferForm(title, assetId, "https://google.com")
     await createDataOfferPage.getDataOfferPublishMode("PUBLISH_RESTRICTED").check()
 
-    await page.click('text=Publish restricted');
+    await page.locator('text=Publish restricted').click();
 
-    await page.click('[data-testid="add-expression-button"]');
-    await page.click('[data-testid="participant-id-expression"]');
+    await page.locator('[data-testid="add-expression-button"]').click();
+    await page.locator('[data-testid="participant-id-expression"]').click();
     await createDataOfferPage.fillParticipantId('test-participant')
 
     await createDataOfferPage.submitButton().click();
@@ -54,7 +54,7 @@ test.describe('Create Data Offer for REST source Tests', () => {
     await createDataOfferPage.fillCreateDataOfferForm(title, assetId, "https://google.com")
     await createDataOfferPage.getDataOfferPublishMode("DO_NOT_PUBLISH").check()
 
-    await page.click('text=Create asset only (without data offer)');
+    await page.locator('text=Create asset only (without data offer)').click();
 
     await createDataOfferPage.submitButton().click();
 
@@ -91,8 +91,8 @@ test.describe('Create Data Offer for REST source Tests', () => {
 
     await createDataOfferPage.getDataOfferPublishMode("PUBLISH_RESTRICTED").check();
 
-    page.click('[data-testid="add-expression-button"]');
-    await page.click('[data-testid="participant-id-expression"]');
+    await page.locator('[data-testid="add-expression-button"]').click();
+    await page.locator('[data-testid="participant-id-expression"]').click();
 
     await expect(submitButton).toBeDisabled();
     await createDataOfferPage.fillParticipantId('test-participant')

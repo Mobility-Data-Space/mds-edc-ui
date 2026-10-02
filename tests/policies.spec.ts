@@ -12,7 +12,7 @@ test.describe("Policy Definitions Page Tests", () => {
   });
 
   test.describe("List Functionality", () => {
-    test("Displays the policies list on the first visit", async ({ page }) => {
+    test("Displays the policies list on the first visit", async () => {
       // Verify the policies list is visible
       const policiesList = await policiesPage.getPoliciesList();
       await expect(policiesList).toBeVisible();
@@ -25,7 +25,7 @@ test.describe("Policy Definitions Page Tests", () => {
   });
 
   test.describe("View Functionality", () => {
-    test("Displays policy details correctly", async ({ page }) => {
+    test("Displays policy details correctly", async () => {
       // Select a policy
       const policyCards = await policiesPage.getPolicyCards();
       const policyCard = policyCards.first();
@@ -176,7 +176,7 @@ test.describe("Policy Definitions Page Tests", () => {
   });
 
   test.describe("Search Functionality", () => {
-    test("should display search input and trigger button", async ({ page }) => {
+    test("should display search input and trigger button", async () => {
       const searchInput = await policiesPage.getSearchInput();
       const searchTrigger = await policiesPage.getSearchTrigger();
 
@@ -184,7 +184,7 @@ test.describe("Policy Definitions Page Tests", () => {
       await expect(searchTrigger).toBeVisible();
     });
 
-    test("should search for policies by ID", async ({ page }) => {
+    test("should search for policies by ID", async () => {
       const initialPolicies = await policiesPage.getPolicyCards();
       const initialCount = await initialPolicies.count();
 
@@ -206,7 +206,7 @@ test.describe("Policy Definitions Page Tests", () => {
       }
     });
 
-    test("should clear search and show all policies", async ({ page }) => {
+    test("should clear search and show all policies", async () => {
       await policiesPage.searchPolicies('test');
 
       await policiesPage.clearPolicySearch();
@@ -215,7 +215,7 @@ test.describe("Policy Definitions Page Tests", () => {
       await expect(allPolicies.first()).toBeVisible();
     });
 
-    test("should handle empty search results", async ({ page }) => {
+    test("should handle empty search results", async () => {
       await policiesPage.searchPolicies('nonexistentpolicy12345');
 
       const searchResults = await policiesPage.getPolicyCards();
@@ -226,13 +226,12 @@ test.describe("Policy Definitions Page Tests", () => {
   });
 
   test.describe("Pagination Functionality", () => {
-    test("should display pagination controls", async ({ page }) => {
+    test("should display pagination controls", async () => {
       const paginationInfo = await policiesPage.getPaginationInfo();
       await expect(paginationInfo).toBeVisible();
     });
 
-    test("should navigate to next page when available", async ({ page }) => {
-      const initialFirstIndex = await policiesPage.getFirstElementIndex();
+    test("should navigate to next page when available", async () => {
       const initialLastIndex = await policiesPage.getLastElementIndex();
       const isNextEnabled = await policiesPage.isNextPageEnabled();
 
@@ -247,7 +246,7 @@ test.describe("Policy Definitions Page Tests", () => {
       }
     });
 
-    test("should navigate to previous page when available", async ({ page }) => {
+    test("should navigate to previous page when available", async () => {
       const isNextEnabled = await policiesPage.isNextPageEnabled();
       if (isNextEnabled) {
         await policiesPage.goToNextPage();
@@ -267,7 +266,7 @@ test.describe("Policy Definitions Page Tests", () => {
       }
     });
 
-    test("should disable previous button on first page", async ({ page }) => {
+    test("should disable previous button on first page", async () => {
       const currentFirstIndex = await policiesPage.getFirstElementIndex();
 
       if (currentFirstIndex === 1) {
@@ -276,7 +275,7 @@ test.describe("Policy Definitions Page Tests", () => {
       }
     });
 
-    test("should disable next button on last page", async ({ page }) => {
+    test("should disable next button on last page", async () => {
       let pages = 0;
       while (await policiesPage.isNextPageEnabled() && pages < 50) {
         await policiesPage.goToNextPage();
@@ -287,7 +286,7 @@ test.describe("Policy Definitions Page Tests", () => {
       expect(isNextEnabled).toBeFalsy();
     });
 
-    test("should maintain search results across pagination", async ({ page }) => {
+    test("should maintain search results across pagination", async () => {
       await policiesPage.searchPolicies('test');
 
       const isNextEnabled = await policiesPage.isNextPageEnabled();

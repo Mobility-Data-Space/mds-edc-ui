@@ -36,6 +36,8 @@ export class AssetsPage extends BaseListPage {
 
   async addAuthHeaders() {
     await this.page.getByRole('button', { name: 'Add Authentication' }).click() ;
+    await this.page.getByRole('combobox').filter({ hasText: 'Header With Vault Secret' }).click();
+    await this.page.getByRole('option', { name: 'Header With Value' }).click();
     await this.page.getByRole('textbox', { name: 'Auth Header Name' }).fill('Authorization');
     await this.page.getByRole('textbox', { name: 'Auth Header Value' }).fill('Bearer token123');
   }

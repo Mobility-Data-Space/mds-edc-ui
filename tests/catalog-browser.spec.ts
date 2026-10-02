@@ -5,6 +5,8 @@ import { counterPartyParticipantConfig } from './utils/tests-config';
 
 const COUNTER_PARTY_ADDRESS = counterPartyParticipantConfig.EDC_PROTOCOL_URL;
 
+const BOGUS_DSP_URL = "http://offline-host.invalid:9999/api/dsp";
+
 test.describe("Catalog Browser Tests", () => {
   let catalogPage: CatalogBrowserPage;
 
@@ -26,6 +28,15 @@ test.describe("Catalog Browser Tests", () => {
 
       const snackbars = await catalogPage.getToastMessage("error")
       await expect(snackbars).toBeHidden();
+    });
+
+    test('Surface an error and stay interactive for an unreachable connector', async ({ page }) => {
+      const input = page.locator(catalogPage.catalogUrlInputLocator);
+      await input.fill(BOGUS_DSP_URL);
+
+      const errorToasts = await catalogPage.getToastMessage("error");
+      await expect(errorToasts.first()).toBeVisible({ timeout: 60_000 });
+      await expect(input).toBeEditable();
     });
   });
 
@@ -49,7 +60,7 @@ test.describe("Catalog Browser Tests", () => {
         expect(await catalogCards.count()).toBeGreaterThan(0);
       });
 
-      test("Displays the catalog list on the first visit", async ({ page }) => {
+      test("Displays the catalog list on the first visit", async () => {
         const catalogList = await catalogPage.getCatalogList();
         await expect(catalogList).toBeVisible({ timeout: 45000 });
 
@@ -58,6 +69,7 @@ test.describe("Catalog Browser Tests", () => {
         expect(catalogs.length).toBeGreaterThan(0);
       });
     })
+
     test.describe("View Functionality", () => {
 
       test("Displays catalog item details when a catalog item is selected", async ({ page }) => {
@@ -73,7 +85,7 @@ test.describe("Catalog Browser Tests", () => {
     })
 
     test.describe("Search Functionality", () => {
-      test("should display search input and trigger button", async ({ page }) => {
+      test("should display search input and trigger button", async () => {
         const searchInput = await catalogPage.getSearchInput();
         const searchTrigger = await catalogPage.getSearchTrigger();
 
@@ -81,7 +93,7 @@ test.describe("Catalog Browser Tests", () => {
         await expect(searchTrigger).toBeVisible();
       });
 
-      test("should search for catalog items by title", async ({ page }) => {
+      test("should search for catalog items by title", async () => {
         const initialCatalogs = await catalogPage.getCatalogCards();
         const initialCount = await initialCatalogs.count();
 
@@ -103,7 +115,7 @@ test.describe("Catalog Browser Tests", () => {
         }
       });
 
-      test("should clear search and show all catalog items", async ({ page }) => {
+      test("should clear search and show all catalog items", async () => {
         const initialCatalogs = await catalogPage.getCatalogCards();
         await initialCatalogs.first().waitFor({ state: 'visible', timeout: 45000 });
 
@@ -115,7 +127,7 @@ test.describe("Catalog Browser Tests", () => {
         await expect(allCatalogs.first()).toBeVisible();
       });
 
-      test("should handle empty search results", async ({ page }) => {
+      test("should handle empty search results", async () => {
         await catalogPage.searchCatalog('nonexistentcatalogitem12345');
 
         const searchResults = await catalogPage.getSearchResults();
@@ -125,13 +137,12 @@ test.describe("Catalog Browser Tests", () => {
     });
 
     test.describe("Pagination Functionality", () => {
-      test("should display pagination controls", async ({ page }) => {
+      test("should display pagination controls", async () => {
         const paginationInfo = await catalogPage.getPaginationInfo();
         await expect(paginationInfo).toBeVisible();
       });
 
-      test("should navigate to next page when available", async ({ page }) => {
-        const initialFirstIndex = await catalogPage.getFirstElementIndex();
+      test("should navigate to next page when available", async () => {
         const initialLastIndex = await catalogPage.getLastElementIndex();
         const isNextEnabled = await catalogPage.isNextPageEnabled();
 
@@ -146,7 +157,7 @@ test.describe("Catalog Browser Tests", () => {
         }
       });
 
-      test("should navigate to previous page when available", async ({ page }) => {
+      test("should navigate to previous page when available", async () => {
         const isNextEnabled = await catalogPage.isNextPageEnabled();
         if (isNextEnabled) {
           await catalogPage.goToNextPage();

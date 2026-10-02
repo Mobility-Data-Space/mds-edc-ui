@@ -36,11 +36,11 @@ export class BaseListPage {
                     { timeout: timeout / retries }
                 );
                 return true;
-            } catch (error) {
+            } catch {
                 if (attempt === retries) {
                     return false;
                 }
-                await this.page.waitForTimeout(1000 * attempt);
+                await new Promise((resolve) => setTimeout(resolve, 1000 * attempt));
             }
         }
         return false;
@@ -133,15 +133,15 @@ export class BaseListPage {
     }
 
     async getFirstElementIndex() {
-        const pageInfo = this.page.locator(this.paginationPageInfoLocator);
-        const text = await pageInfo.textContent();
+        const info = this.page.locator(this.paginationPageInfoLocator);
+        const text = await info.textContent();
         const match = text?.match(/(\d+)-(\d+)/);
         return match ? parseInt(match[1]) : 1;
     }
 
     async getLastElementIndex() {
-        const pageInfo = this.page.locator(this.paginationPageInfoLocator);
-        const text = await pageInfo.textContent();
+        const info = this.page.locator(this.paginationPageInfoLocator);
+        const text = await info.textContent();
         const match = text?.match(/(\d+)-(\d+)/);
         return match ? parseInt(match[2]) : 1;
     }

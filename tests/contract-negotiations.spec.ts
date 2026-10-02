@@ -11,7 +11,7 @@ test.describe("Contract Negotiations Tests", () => {
   });
 
   test.describe("List Functionality", () => {
-    test("Displays the negotiations list on the first visit", async ({ page }) => {
+    test("Displays the negotiations list on the first visit", async () => {
       // Verify the negotiations list is visible
       const negotiationsList = await negotiationsPage.getNegotiationsList();
       await expect(negotiationsList).toBeVisible();
@@ -24,7 +24,7 @@ test.describe("Contract Negotiations Tests", () => {
   });
 
   test.describe("View Functionality", () => {
-    test("Displays negotiation details when a negotiation is selected", async ({ page }) => {
+    test("Displays negotiation details when a negotiation is selected", async () => {
       // Select a negotiation
       const negotiationCards = await negotiationsPage.getNegotiationCards();
       const negotiationCard = negotiationCards.first();
@@ -37,7 +37,7 @@ test.describe("Contract Negotiations Tests", () => {
   });
 
   test.describe("Search Functionality", () => {
-    test("should display search input and trigger button", async ({ page }) => {
+    test("should display search input and trigger button", async () => {
       const searchInput = await negotiationsPage.getSearchInput();
       const searchTrigger = await negotiationsPage.getSearchTrigger();
 
@@ -45,7 +45,7 @@ test.describe("Contract Negotiations Tests", () => {
       await expect(searchTrigger).toBeVisible();
     });
 
-    test("should clear search and show all negotiations", async ({ page }) => {
+    test("should clear search and show all negotiations", async () => {
       await negotiationsPage.searchNegotiations('test');
 
       await negotiationsPage.clearSearch();
@@ -54,7 +54,7 @@ test.describe("Contract Negotiations Tests", () => {
       await expect(allNegotiations.first()).toBeVisible();
     });
 
-    test("should handle empty search results", async ({ page }) => {
+    test("should handle empty search results", async () => {
       await negotiationsPage.searchNegotiations('nonexistentnegotiation12345');
 
       const searchResults = await negotiationsPage.getSearchResults();
@@ -64,12 +64,12 @@ test.describe("Contract Negotiations Tests", () => {
   });
 
   test.describe("Pagination Functionality", () => {
-    test("should display pagination controls", async ({ page }) => {
+    test("should display pagination controls", async () => {
       const paginationInfo = await negotiationsPage.getPaginationInfo();
       await expect(paginationInfo).toBeVisible();
     });
 
-    test("should navigate to next page when available", async ({ page }) => {
+    test("should navigate to next page when available", async () => {
       const initialLastIndex = await negotiationsPage.getLastElementIndex();
       const isNextEnabled = await negotiationsPage.isNextPageEnabled();
 
@@ -84,7 +84,7 @@ test.describe("Contract Negotiations Tests", () => {
       }
     });
 
-    test("should navigate to previous page when available", async ({ page }) => {
+    test("should navigate to previous page when available", async () => {
       const isNextEnabled = await negotiationsPage.isNextPageEnabled();
       if (isNextEnabled) {
         await negotiationsPage.goToNextPage();
@@ -104,7 +104,7 @@ test.describe("Contract Negotiations Tests", () => {
       }
     });
 
-    test("should disable previous button on first page", async ({ page }) => {
+    test("should disable previous button on first page", async () => {
       const currentFirstIndex = await negotiationsPage.getFirstElementIndex();
 
       if (currentFirstIndex === 1) {
@@ -113,7 +113,7 @@ test.describe("Contract Negotiations Tests", () => {
       }
     });
 
-    test("should disable next button on last page", async ({ page }) => {
+    test("should disable next button on last page", async () => {
       let pages = 0;
       while (await negotiationsPage.isNextPageEnabled() && pages < 50) {
         await negotiationsPage.goToNextPage();
@@ -124,7 +124,7 @@ test.describe("Contract Negotiations Tests", () => {
       expect(isNextEnabled).toBeFalsy();
     });
 
-    test("should maintain search results across pagination", async ({ page }) => {
+    test("should maintain search results across pagination", async () => {
       await negotiationsPage.searchNegotiations('test');
 
       const isNextEnabled = await negotiationsPage.isNextPageEnabled();
