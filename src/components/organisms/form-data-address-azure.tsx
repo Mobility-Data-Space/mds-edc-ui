@@ -1,14 +1,13 @@
 import { Checkbox } from "@/components/atoms/checkbox";
 import { Input } from "@/components/atoms/input";
 import { T } from "@/i18n";
-import { theme } from "@/theme/ThemeProvider";
 import { DataAddress } from "@think-it-labs/edc-connector-client";
 import React, { useState } from "react";
 
 export interface FormDataAddressAzureProps {
   translator: (key: string) => string;
   formData: DataAddress;
-  onChange: any;
+  onChange: (formData: DataAddress) => void;
   errors: { [key: string]: boolean | string };
   isDestination?: boolean;
 }
@@ -49,9 +48,6 @@ export function FormDataAddressAzure({
           helperText={
             typeof errors.container === "string" ? errors.container : ""
           }
-          classes={
-            { textField: { "& p": { color: theme.palette.error.main } } } as any
-          }
           error={errors.container}
           value={formData.container}
           onChange={(event) =>
@@ -74,9 +70,6 @@ export function FormDataAddressAzure({
           placeholder={translator("assets.new.fieldAccount")}
           required
           helperText={typeof errors.account === "string" ? errors.account : ""}
-          classes={
-            { textField: { "& p": { color: theme.palette.error.main } } } as any
-          }
           error={errors.account}
           value={formData.account}
           onChange={(event) =>
@@ -98,9 +91,6 @@ export function FormDataAddressAzure({
           label={translator("assets.new.fieldKeyname")}
           placeholder={translator("assets.new.fieldKeyname")}
           helperText={typeof errors.keyName === "string" ? errors.keyName : ""}
-          classes={
-            { textField: { "& p": { color: theme.palette.error.main } } } as any
-          }
           error={errors.keyName}
           value={formData.keyName}
           onChange={(event) =>
@@ -124,11 +114,6 @@ export function FormDataAddressAzure({
             placeholder={translator("assets.new.fieldFolderName")}
             helperText={
               typeof errors.folderName === "string" ? errors.folderName : ""
-            }
-            classes={
-              {
-                textField: { "& p": { color: theme.palette.error.main } },
-              } as any
             }
             error={errors.folderName}
             value={formData.folderName}
@@ -155,11 +140,6 @@ export function FormDataAddressAzure({
             helperText={
               typeof errors.blobName === "string" ? errors.blobName : ""
             }
-            classes={
-              {
-                textField: { "& p": { color: theme.palette.error.main } },
-              } as any
-            }
             error={errors.blobName}
             value={formData.blobName}
             onChange={(event) =>
@@ -184,11 +164,6 @@ export function FormDataAddressAzure({
               placeholder={translator("assets.new.fieldBlobPrefix")}
               helperText={
                 typeof errors.blobPrefix === "string" ? errors.blobPrefix : ""
-              }
-              classes={
-                {
-                  textField: { "& p": { color: theme.palette.error.main } },
-                } as any
               }
               error={errors.blobPrefix}
               value={formData.blobPrefix}

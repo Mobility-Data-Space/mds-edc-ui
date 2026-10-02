@@ -3,17 +3,17 @@ import {
   DataAddress,
   TransferProcessInput,
 } from "@think-it-labs/edc-connector-client";
-import { DataAddressTypes } from "./data-address";
-import { transformDataAddress } from "@/utilities/asset.ts";
+import { DataAddressTypes } from "@/utilities/data-address";
+import { transformDataAddress } from "@/domain/asset/mapper";
 import {
   BG_COLORS,
   BG_HOVER_COLORS,
   TEXT_COLORS,
-} from "@/constants/transfer-process.ts";
-import { theme } from "@/theme/ThemeProvider.tsx";
+} from "@/constants/transfer-process";
+import { theme } from "@/theme/theme-provider";
 
-export const TRANSFER_TYPE_PULL = "-PULL";
-export const TRANSFER_TYPE_PUSH = "-PUSH";
+const TRANSFER_TYPE_PULL = "-PULL";
+const TRANSFER_TYPE_PUSH = "-PUSH";
 
 type TransferProcessInputWithCallback = TransferProcessInput & {
   callbackAddresses: {
@@ -29,16 +29,16 @@ export const createTransferProcessRequest = (
   dataDestination: DataAddress,
   counterPartyAddress: string,
 ): TransferProcessInput => {
-  let transferProcess: TransferProcessInputWithCallback =
+  const transferProcess: TransferProcessInputWithCallback =
     {} as TransferProcessInputWithCallback;
 
   const transferType =
     dataDestination.type +
     (dataDestination.isPull ? TRANSFER_TYPE_PULL : TRANSFER_TYPE_PUSH);
 
-  ((transferProcess.counterPartyAddress = counterPartyAddress),
-    (transferProcess.contractId = agreement.contractId),
-    (transferProcess.transferType = transferType));
+  transferProcess.counterPartyAddress = counterPartyAddress;
+  transferProcess.contractId = agreement.contractId;
+  transferProcess.transferType = transferType;
 
   if (!dataDestination.isPull) {
     transferProcess.dataDestination = transformDataAddress(dataDestination);

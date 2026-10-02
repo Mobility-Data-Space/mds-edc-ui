@@ -6,38 +6,30 @@ import React, {
   PropsWithChildren,
   useContext,
   useEffect,
+  useMemo,
 } from "react";
 import {
   I18nextProvider,
   initReactI18next,
   useTranslation,
 } from "react-i18next";
-import { cn } from "./translations/cn";
-import { de } from "./translations/de";
-import { en } from "./translations/en";
+import { en } from "@/i18n/translations/en";
 
-type TranslatorFn = (key: string) => string;
+type TranslatorFn = (key: string, values?: Record<string, string>) => string;
 
 interface TranslatorContextType {
   translator: TranslatorFn;
   globalTranslator: TranslatorFn;
 }
 
-export interface TranslatorProviderProps extends TranslatorContextType {
-  Setup: ({ children }: PropsWithChildren) => React.ReactElement;
-}
-
-const TranslatorContext = createContext<TranslatorContextType>({} as any);
-export function TranslatorProvider({ children }: PropsWithChildren<{}>) {
-  const { Setup, translator, globalTranslator } = useInitTranslator();
+const TranslatorContext = createContext<TranslatorContextType>(
+  {} as TranslatorContextType,
+);
+export function TranslatorProvider({ children }: PropsWithChildren) {
+  const value = useInitTranslator();
   return (
-    <TranslatorContext.Provider
-      value={{
-        translator,
-        globalTranslator,
-      }}
-    >
-      <Setup>{children}</Setup>
+    <TranslatorContext.Provider value={value}>
+      <I18nextProvider i18n={i18nInstance}>{children}</I18nextProvider>
     </TranslatorContext.Provider>
   );
 }
@@ -52,7 +44,7 @@ interface TranslateProps {
   delimiter?: string;
 }
 
-export function Translate({ string, global = false }: TranslateProps): string {
+function Translate({ string, global = false }: TranslateProps): string {
   const { translator, globalTranslator } = useTranslator();
   const t = global ? globalTranslator : translator;
   return t(string);
@@ -88,32 +80,24 @@ const i18nInstance = createInstance({
   },
   resources: {
     en,
-    de,
-    cn,
   },
 });
 
 i18nInstance.use(initReactI18next).init();
 
-const useInitTranslator = (): TranslatorProviderProps => {
+const useInitTranslator = (): TranslatorContextType => {
   const { t } = useTranslation();
-  const { locale, route } = useRouter();
-
-  // const i18nInstance = useMemo(() => {
-
-  // i18nInstance.changeLanguage(locale);
-  // return i18nInstance;
-  // }, [locale]);
+  const { locale } = useRouter();
 
   useEffect(() => {
     i18nInstance.changeLanguage(locale);
   }, [locale]);
 
-  return {
-    Setup: ({ children }) => (
-      <I18nextProvider i18n={i18nInstance}>{children}</I18nextProvider>
-    ),
-    translator: t,
-    globalTranslator: (value) => t(`_app.${value}`),
-  };
+  return useMemo(
+    () => ({
+      translator: t,
+      globalTranslator: (value: string) => t(`_app.${value}`),
+    }),
+    [t],
+  );
 };

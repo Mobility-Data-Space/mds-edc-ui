@@ -1,3 +1,4 @@
+import { useTranslator } from "@/i18n";
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
@@ -20,6 +21,7 @@ interface RadioButtonsGroup {
 }
 
 export default function RadioButtonsGroup({ name, id = "", label = "", value, defaultValue, options, onChange }: RadioButtonsGroup) {
+  const { translator } = useTranslator();
   return (
     <FormControl color="secondary">
       <label
@@ -42,7 +44,7 @@ export default function RadioButtonsGroup({ name, id = "", label = "", value, de
             control={<Radio color="default" />}
             label={option.text || option.value}
           />
-          {!option.tooltip ? "" : <Tooltip title={option.tooltip}><IconButton><InfoOutlined /></IconButton></Tooltip>}
+          {!option.tooltip ? "" : <Tooltip title={option.tooltip}><IconButton aria-label={translator("common.moreInfo")}><InfoOutlined /></IconButton></Tooltip>}
         </div>)}
       </RadioGroup>
     </FormControl>

@@ -42,7 +42,7 @@ export const EdcInfoDisplayInput = forwardRef<HTMLInputElement, Omit<TextFieldPr
             classes: { root: "flex-grow" },
             startAdornment: <LinkIcon className="size-7 mr-2" />,
             endAdornment: <Tooltip title={translator("common.copyToClipboard")}>
-              <IconButton color="secondary" onClick={() => navigator.clipboard.writeText(value)}>
+              <IconButton aria-label={translator("common.copyToClipboard")} color="secondary" onClick={() => navigator.clipboard.writeText(value)}>
                 <Icon>content_copy</Icon>
               </IconButton>
             </Tooltip>

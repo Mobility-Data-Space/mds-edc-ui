@@ -1,12 +1,11 @@
 import Typography from "@mui/material/Typography";
-import { ContractAgreementView } from "@think-it-labs/edc-connector-ui/contract-agreement-view";
-import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { Card, CardContent, Icon } from "@mui/material";
 import { T } from "@/i18n";
 import { PolicyDefinition } from "@think-it-labs/edc-connector-client";
 import { Timestamp } from "@think-it-labs/edc-connector-ui/timestamp";
 import { ConstraintShow } from "@/components/molecules/constraint-show";
 import { convertOdrlToJsonHtml, removeJsonLdSchemaFromProperties } from "@/utilities/catalog";
+import { clickableProps } from "@/utilities/a11y";
 
 
 export interface PolicyCardProps {
@@ -24,7 +23,7 @@ function getConstraintData(policyDefinition: PolicyDefinition) {
 
 export default function PolicyCard({ policyDefinition, onClick }: PolicyCardProps) {
   return (
-    <Card className="policy-card w-full max-w-[500px]" onClick={onClick}>
+    <Card className="policy-card w-full max-w-[500px]" {...clickableProps(onClick)}>
       <CardContent className="flex flex-col gap-y-3">
         <div>
           <div className="flex gap-x-4">

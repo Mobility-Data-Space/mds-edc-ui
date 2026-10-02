@@ -1,30 +1,30 @@
 import { upperAndSnakeCase } from "@/utilities/utilities";
 
-export const AIR_AND_SPACE_TRAVEL = "Air and Space Travel";
-export const CYCLE_NETWORK_DATA = "Cycle Network Data";
-export const DYNAMIC_TRAFFIC_SIGNS_AND_REGULATIONS =
+const AIR_AND_SPACE_TRAVEL = "Air and Space Travel";
+const CYCLE_NETWORK_DATA = "Cycle Network Data";
+const DYNAMIC_TRAFFIC_SIGNS_AND_REGULATIONS =
   "Dynamic Traffic Signs and Regulations";
-export const FILLING_AND_CHARGING_STATIONS = "Filling and Charging Stations";
-export const FREIGHT_AND_LOGISTICS = "Freight and Logistics";
-export const GENERAL_INFORMATION_FOR_TRIP_PLANNING =
+const FILLING_AND_CHARGING_STATIONS = "Filling and Charging Stations";
+const FREIGHT_AND_LOGISTICS = "Freight and Logistics";
+const GENERAL_INFORMATION_FOR_TRIP_PLANNING =
   "General Information for Trip-Planning";
-export const OTHER = "Other";
-export const PARKING_SERVICE_AND_REST_AREA_INFORMATION =
+const OTHER = "Other";
+const PARKING_SERVICE_AND_REST_AREA_INFORMATION =
   "Parking Service and Rest Area Information";
-export const PEDESTRIAN_NETWORK_DATA = "Pedestrian Network Data";
-export const PUBLIC_TRANSPORT_NON_SCHEDULED_TRANSPORT =
+const PEDESTRIAN_NETWORK_DATA = "Pedestrian Network Data";
+const PUBLIC_TRANSPORT_NON_SCHEDULED_TRANSPORT =
   "Public Transport non Scheduled Transport";
-export const PUBLIC_TRANSPORT_SCHEDULED_TRANSPORT =
+const PUBLIC_TRANSPORT_SCHEDULED_TRANSPORT =
   "Public Transport Scheduled Transport";
-export const REAL_TIME_TRAFFIC_DATA = "Real Time Traffic Data";
-export const ROAD_EVENTS_AND_CONDITIONS = "Road Events and Conditions";
-export const ROAD_WORK_INFORMATION = "Road Work Information";
-export const SHARING_AND_HIRING_SERVICES = "Sharing and Hiring Services";
-export const STATIC_ROAD_NETWORK_DATA = "Static Road Network Data";
-export const STATIC_TRAFFIC_SIGNS_AND_REGULATIONS =
+const REAL_TIME_TRAFFIC_DATA = "Real Time Traffic Data";
+const ROAD_EVENTS_AND_CONDITIONS = "Road Events and Conditions";
+const ROAD_WORK_INFORMATION = "Road Work Information";
+const SHARING_AND_HIRING_SERVICES = "Sharing and Hiring Services";
+const STATIC_ROAD_NETWORK_DATA = "Static Road Network Data";
+const STATIC_TRAFFIC_SIGNS_AND_REGULATIONS =
   "Static Traffic Signs and Regulations";
-export const TOLL_INFORMATION = "Toll Information";
-export const WATERWAYS_AND_WATER_BODIES = "Waterways and Water Bodies";
+const TOLL_INFORMATION = "Toll Information";
+const WATERWAYS_AND_WATER_BODIES = "Waterways and Water Bodies";
 
 export type TYPE_DATA_CATEGORY =
   | typeof AIR_AND_SPACE_TRAVEL
@@ -47,7 +47,7 @@ export type TYPE_DATA_CATEGORY =
   | typeof TOLL_INFORMATION
   | typeof WATERWAYS_AND_WATER_BODIES;
 
-export const SUBCATEGORIES = {
+const SUBCATEGORIES = {
   [AIR_AND_SPACE_TRAVEL]: ["-"],
   [CYCLE_NETWORK_DATA]: [
     "Network Closures Diversions",

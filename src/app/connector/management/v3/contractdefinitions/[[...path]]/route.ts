@@ -1,8 +1,8 @@
-import { getConnectorConfig } from "@/utilities/connector-config";
+import { getConnectorConfig } from "@/server/connector-config";
 import {
   ContractDefinitionBody,
   createContractDefinitionWithRetry,
-} from "@/utilities/contract-definition-creation";
+} from "@/server/contract-definition-creation";
 import {
   buildUrl,
   createProxyRequest,
@@ -11,7 +11,7 @@ import {
   proxyHead,
   proxyPost,
   proxyPut,
-} from "@/utilities/proxy";
+} from "@/server/proxy";
 import { NextRequest, NextResponse } from "next/server";
 
 const handleContractDefinitionCreate = async (

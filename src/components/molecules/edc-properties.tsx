@@ -1,6 +1,6 @@
-import { TitleWithIcon } from "@/components/atoms/TitleWithIcon.tsx";
-import FieldGrid from "@/components/molecules/field-grid.tsx";
-import { FieldShowProps } from "@/components/molecules/field-show.tsx";
+import { TitleWithIcon } from "@/components/atoms/title-with-icon";
+import FieldGrid from "@/components/molecules/field-grid";
+import type { FieldShowProps } from "@/types/field-show";
 import { T } from "@/i18n";
 import { Card, CardContent, Typography } from "@mui/material";
 import React from "react";

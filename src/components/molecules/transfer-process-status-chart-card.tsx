@@ -1,5 +1,5 @@
-import { TitleWithIcon } from "@/components/atoms/TitleWithIcon.tsx";
-import { TransferProcessChartContent } from "@/components/molecules/transfer-process-chart-content.tsx";
+import { TitleWithIcon } from "@/components/atoms/title-with-icon";
+import { TransferProcessChartContent } from "@/components/molecules/transfer-process-chart-content";
 import { T } from "@/i18n";
 import { Card, CardContent, CircularProgress } from "@mui/material";
 import { TransferProcess } from "@think-it-labs/edc-connector-client/dist/src/entities";

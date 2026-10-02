@@ -1,14 +1,13 @@
 import { Checkbox } from "@/components/atoms/checkbox";
 import { Input } from "@/components/atoms/input";
 import { T } from "@/i18n";
-import { theme } from "@/theme/ThemeProvider";
 import { DataAddress } from "@think-it-labs/edc-connector-client";
 import React, { useState } from "react";
 
 export interface FormDataAddressAmazonS3Props {
   translator: (key: string) => string;
   formData: DataAddress;
-  onChange: any;
+  onChange: (formData: DataAddress) => void;
   errors: { [key: string]: boolean | string };
   isDestination?: boolean;
 }
@@ -47,9 +46,6 @@ export function FormDataAddressAmazonS3({
           placeholder={translator("assets.new.fieldRegion")}
           required
           helperText={typeof errors.region === "string" ? errors.region : ""}
-          classes={
-            { textField: { "& p": { color: theme.palette.error.main } } } as any
-          }
           error={errors.region}
           value={formData.region}
           onChange={(event) =>
@@ -73,9 +69,6 @@ export function FormDataAddressAmazonS3({
           required
           helperText={
             typeof errors.bucketName === "string" ? errors.bucketName : ""
-          }
-          classes={
-            { textField: { "& p": { color: theme.palette.error.main } } } as any
           }
           error={errors.bucketName}
           value={formData.bucketName}
@@ -103,11 +96,6 @@ export function FormDataAddressAmazonS3({
             required={!isDestination && !formData.objectPrefix}
             helperText={
               typeof errors.objectName === "string" ? errors.objectName : ""
-            }
-            classes={
-              {
-                textField: { "& p": { color: theme.palette.error.main } },
-              } as any
             }
             error={errors.objectName}
             value={formData.objectName}
@@ -138,11 +126,6 @@ export function FormDataAddressAmazonS3({
                   ? errors.objectPrefix
                   : ""
               }
-              classes={
-                {
-                  textField: { "& p": { color: theme.palette.error.main } },
-                } as any
-              }
               error={errors.objectPrefix}
               value={formData.objectPrefix}
               onChange={(event) =>
@@ -170,11 +153,6 @@ export function FormDataAddressAmazonS3({
             helperText={
               typeof errors.folderName === "string" ? errors.folderName : ""
             }
-            classes={
-              {
-                textField: { "& p": { color: theme.palette.error.main } },
-              } as any
-            }
             error={errors.folderName}
             value={formData.folderName}
             onChange={(event) =>
@@ -197,9 +175,6 @@ export function FormDataAddressAmazonS3({
           label={translator("assets.new.fieldKeyname")}
           placeholder={translator("assets.new.fieldKeyname")}
           helperText={typeof errors.keyName === "string" ? errors.keyName : ""}
-          classes={
-            { textField: { "& p": { color: theme.palette.error.main } } } as any
-          }
           error={errors.keyName}
           value={formData.keyName}
           onChange={(event) =>

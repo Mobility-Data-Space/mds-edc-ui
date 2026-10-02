@@ -2,8 +2,10 @@ import { InfoOutlined } from "@mui/icons-material";
 import { IconButton, TextField, Tooltip } from "@mui/material";
 import { TextFieldProps } from "@mui/material/TextField";
 import React, { ForwardedRef, forwardRef } from "react";
+import { useTranslator } from "@/i18n";
 
 export const Input = forwardRef(({ tooltip = "", onChange, value, error, ...rest }: Omit<TextFieldProps, "error"> & { tooltip?: string, error?: string | boolean }, ref: ForwardedRef<HTMLInputElement>): React.ReactElement => {
+  const { translator } = useTranslator();
 
   return (
     <TextField
@@ -17,7 +19,7 @@ export const Input = forwardRef(({ tooltip = "", onChange, value, error, ...rest
       error={!!error}
       slotProps={{
         input: {
-          endAdornment: !tooltip ? "" : <Tooltip title={tooltip}><IconButton><InfoOutlined /></IconButton></Tooltip>
+          endAdornment: !tooltip ? "" : <Tooltip title={tooltip}><IconButton aria-label={translator("common.moreInfo")}><InfoOutlined /></IconButton></Tooltip>
         },
         ...rest.slotProps
       }}

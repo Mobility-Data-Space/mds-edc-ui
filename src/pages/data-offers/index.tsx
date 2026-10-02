@@ -1,11 +1,10 @@
-import { TitleWithIcon } from "@/components/atoms/TitleWithIcon";
-import { JsonLdDialog } from "@/components/molecules/JsonLdDialog";
-import PaginationControls from "@/components/molecules/pagination-controls";
+import { TitleWithIcon } from "@/components/atoms/title-with-icon";
+import { JsonLdDialog } from "@/components/molecules/json-ld-dialog";
+import { renderPagination } from "@/components/molecules/pagination-controls";
 import SearchBar from "@/components/molecules/search-bar";
-import { Snackbar } from "@/components/molecules/snackbar";
+import { useAppSnackbar } from "@/hooks/use-app-snackbar";
 import ContractDefinitionCard from "@/components/organisms/contract-definition-card";
-import DataOfferCreateDialog from "@/components/organisms/data-offer-create-dialog.tsx";
-import SideDrawer from "@/components/organisms/side-drawer";
+import DataOfferCreateDialog from "@/components/organisms/data-offer-create-dialog";
 import { proxyConnectorManagement } from "@/constants/proxy";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
@@ -14,16 +13,18 @@ import { ContractDefinition } from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
 import { ContractDefinitionsList } from "@think-it-labs/edc-connector-ui/contract-definitions-list";
 import { useRouter } from "next/router";
-import { useSnackbar } from "notistack";
-import { useCallback, useState } from "react";
-import { ErrorPopup } from "../../components/molecules/error-popup";
-import { MAX_ITEMS } from "../../constants/lists";
+import { useState } from "react";
+import { ErrorPopup } from "@/components/molecules/error-popup";
+import { MAX_ITEMS } from "@/constants/lists";
+import { useListPage } from "@/hooks/use-list-page";
+import { LoadingSpinner } from "@/components/atoms/loading-spinner";
+import { ListToolbar } from "@/components/molecules/list-toolbar";
 
 export default function DataOffersPage() {
-  const { push, query } = useRouter();
+  const { push } = useRouter();
   const { connector } = useParticipantConnectorState();
   const { translator } = useTranslator();
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { showSnackbar } = useAppSnackbar();
   const edcClient = useEdcConnectorClient({
     management: proxyConnectorManagement,
   });
@@ -50,27 +51,16 @@ export default function DataOffersPage() {
     });
   };
 
-  const navigate = useCallback(
-    (newPage: number) => {
-      push({
-        href: window.location.href,
-        query: {
-          ...query,
-          page: newPage,
-        },
-      });
-    },
-    [push, query],
-  );
+  const { currentPage, navigate } = useListPage();
 
   return (
-    <SideDrawer title={<T string="contractDefinitions.title" />}>
+    <>
       <DataOfferCreateDialog
         key={`DataOfferCreateDialog${isCreateModalOpen}`}
         open={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-        participantId={connector.id}
-        connectorEndpoint={connector.protocolUrl}
+        participantId={connector?.id ?? ""}
+        connectorEndpoint={connector?.protocolUrl ?? ""}
         managementUrl={proxyConnectorManagement}
         translator={translator}
         onSuccess={() => setListKey((key) => key + 1)}
@@ -87,21 +77,15 @@ export default function DataOffersPage() {
             icon={<Icon fontSize="large">policy</Icon>}
           />
         }
-        deleteConfirmationMessage={`Please confirm you want to delete Data Offer ${openDataOfferData.contractDefinition?.id}. This action cannot be undone.`}
-        deleteFailMessage={`Failed deleting data offer ${openDataOfferData.contractDefinition?.id}`}
+        deleteConfirmationMessage={translator("contractDefinitions.deleteConfirmation", { name: openDataOfferData.contractDefinition?.id })}
+        deleteFailMessage={translator("contractDefinitions.deleteFailed", { name: openDataOfferData.contractDefinition?.id })}
         deleteButtonTestId="delete-data-offer-modal-btn"
         deleteItem={openDataOfferData.deleteItem}
         onDeleteSuccess={() => {
-          enqueueSnackbar("", {
-            content: (key) => (
-              <Snackbar
-                type="success"
-                message={translator("contractDefinitions.deleteSuccess")}
-                onClose={() => {
-                  closeSnackbar(key);
-                }}
-              />
-            ),
+          showSnackbar({
+            type: "success",
+            message: translator("contractDefinitions.deleteSuccess"),
+            persist: false,
           });
 
           setListKey((key) => key + 1);
@@ -112,7 +96,7 @@ export default function DataOffersPage() {
         managementUrl={proxyConnectorManagement}
         usePagination
         navigate={navigate}
-        currentPage={parseInt(query.page as string) || 0}
+        currentPage={currentPage}
         firstPage={0}
       >
         <ContractDefinitionsList.Error>
@@ -123,54 +107,30 @@ export default function DataOffersPage() {
             />
           )}
         </ContractDefinitionsList.Error>
-        <div className="flex justify-between pb-6">
-          <div className="flex justify-start gap-x-5">
-            <div className="min-w-xl h-full">
-              <SearchBar
-                searchTarget="id"
-                placeholder={translator(
-                  "contractDefinitions.searchPlaceholder",
-                )}
-                searchOperator="ilike"
-              />
-            </div>
-            <div className="flex gap-x-4">
-              <MuiButton
-                className="min-h-12"
-                onClick={() => setIsCreateModalOpen(true)}
-                variant="contained"
-              >
-                <Icon fontSize="medium" className="mr-2">
-                  add_circle_outline
-                </Icon>
-                <T string="contractDefinitions.publishDataOffer" />
-              </MuiButton>
-            </div>
-          </div>
-          <div className="flex justify-end items-center">
-            <ContractDefinitionsList.Pagination>
-              {({
-                decrementPage,
-                hasPrev,
-                hasNext,
-                incrementPage,
-                page,
-                itemsCount,
-              }) => (
-                <PaginationControls
-                  page={page}
-                  hasPrev={hasPrev}
-                  hasNext={hasNext}
-                  decrementPage={decrementPage}
-                  incrementPage={incrementPage}
-                  maxItems={MAX_ITEMS}
-                  dataTestIdPrefix="pagination"
-                  itemsCount={itemsCount}
-                />
+        <ListToolbar
+          search={
+            <SearchBar
+              searchTarget="id"
+              placeholder={translator(
+                "contractDefinitions.searchPlaceholder",
               )}
-            </ContractDefinitionsList.Pagination>
-          </div>
-        </div>
+              searchOperator="ilike"
+            />
+          }
+          actions={
+            <MuiButton
+              className="min-h-12"
+              onClick={() => setIsCreateModalOpen(true)}
+              variant="contained"
+            >
+              <Icon fontSize="medium" className="mr-2">
+                add_circle_outline
+              </Icon>
+              <T string="contractDefinitions.publishDataOffer" />
+            </MuiButton>
+          }
+          pagination={<ContractDefinitionsList.Pagination>{renderPagination}</ContractDefinitionsList.Pagination>}
+        />
 
         <div
           className="flex flex-wrap gap-4 py-4"
@@ -194,17 +154,11 @@ export default function DataOffersPage() {
         </div>
 
         <ContractDefinitionsList.Loading>
-          <div className="max-w-20 mx-auto mt-4 flex flex-col bg-white border shadow-sm rounded-xl p-4 md:p-5">
-            <span
-              className="animate-spin mx-auto inline-block size-8 border-[3px] border-current border-t-transparent text-blue-600 rounded-full"
-              role="status"
-              aria-label="loading"
-            >
-              <span className="sr-only">Loading...</span>
-            </span>
-          </div>
+          <LoadingSpinner />
         </ContractDefinitionsList.Loading>
       </ContractDefinitionsList>
-    </SideDrawer>
+    </>
   );
 }
+
+DataOffersPage.titleKey = "contractDefinitions.title";

@@ -1,6 +1,6 @@
 import { Input } from "@/components/atoms/input";
 import { MuiSelect } from "@/components/atoms/mui-select";
-import { AssetContactEmailAndSubject } from "@/components/molecules/asset-contact-email-and-subject.tsx";
+import { AssetContactEmailAndSubject } from "@/components/molecules/asset-contact-email-and-subject";
 import { FormDataAddressAmazonS3 } from "@/components/organisms/form-data-address-amazon-s3";
 import { FormDataAddressAzure } from "@/components/organisms/form-data-address-azure";
 import { FormDataAddressHttp } from "@/components/organisms/form-data-address-http";
@@ -9,16 +9,15 @@ import {
   DATA_ADDRESS_SELECT_DATA,
 } from "@/constants/data-address-types";
 import { T } from "@/i18n";
-import { theme } from "@/theme/ThemeProvider";
-import { DataAddressTypes } from "@/utilities/data-address.ts";
+import { DataAddressTypes } from "@/utilities/data-address";
 import { DataAddress } from "@think-it-labs/edc-connector-client";
 import React from "react";
-import { FormDataAddressKafka } from "./form-data-address-kafka";
+import { FormDataAddressKafka } from "@/components/organisms/form-data-address-kafka";
 
 export interface DataAddressFormStepProps {
   translator: (key: string) => string;
   formData: DataAddress;
-  onChange: any;
+  onChange: (formData: DataAddress) => void;
   errors: { [key: string]: boolean | string };
   methodAlwaysShowing?: boolean;
   customDataAddressConfigRows?: number;
@@ -105,9 +104,6 @@ export function FormDataAddressStep({
             '{"https://w3id.org/edc/v0.0.1/ns/type": "HttpData", ...}'
           }
           required
-          classes={
-            { textField: { "& p": { color: theme.palette.error.main } } } as any
-          }
           error={errors.dataAddress}
           value={formData.dataAddress}
           onChange={(event) =>

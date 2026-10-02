@@ -1,3 +1,5 @@
+import { T } from "@/i18n";
+
 interface LoadingSpinnerProps {
     containerClassName?: string;
 }
@@ -10,7 +12,7 @@ export function LoadingSpinner({ containerClassName = "" }: LoadingSpinnerProps)
                 role="status"
                 aria-label="loading"
             >
-                <span className="sr-only">Loading...</span>
+                <span className="sr-only"><T string="common.loading" /></span>
             </span>
         </div>
     );

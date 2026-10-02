@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import {FieldShowProps} from "@/components/molecules/field-show.tsx";
+import type { FieldShowProps } from "@/types/field-show";
 
 interface VersionInfo {
   mdsEdcUiVersion: string;

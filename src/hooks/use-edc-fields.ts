@@ -1,5 +1,5 @@
-import {FieldShowProps} from "@/components/molecules/field-show.tsx";
-import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state.ts";
+import type { FieldShowProps } from "@/types/field-show";
+import {useParticipantConnectorState} from "@/hooks/use-participant-connector-state";
 
 export const useEdcFields = (): FieldShowProps[] => {
   const { connector } = useParticipantConnectorState();
@@ -7,52 +7,52 @@ export const useEdcFields = (): FieldShowProps[] => {
   return [
     {
       label: "dashboard.connectorEndpoint",
-      value: connector.protocolUrl,
+      value: connector?.protocolUrl,
       icon: 'link',
     },
     {
       label: "dashboard.edcId",
-      value: connector.id,
+      value: connector?.id,
       icon: 'policy',
     },
     {
       label: "common.title",
-      value: connector.name,
+      value: connector?.name,
       icon: 'title',
     },
     {
       label: "dashboard.curatorOrganizationName",
-      value: connector.curatorName,
+      value: connector?.curatorName,
       icon: 'apartment',
     },
     {
       label: "dashboard.curatorUrl",
-      value: connector.curatorUrl,
+      value: connector?.curatorUrl,
       icon: 'apartment',
     },
     {
       label: "common.description",
-      value: connector.description,
+      value: connector?.description,
       icon: 'title',
     },
     {
       label: "dashboard.maintainerName",
-      value: connector.maintainerName,
+      value: connector?.maintainerName,
       icon: 'contact_support',
     },
     {
       label: "dashboard.maintainerUrl",
-      value: connector.maintainerUrl,
+      value: connector?.maintainerUrl,
       icon: 'contact_support',
     },
     {
       label: "dashboard.dapsTokenUrl",
-      value: connector.dapsUrl,
+      value: connector?.dapsUrl,
       icon: 'vpn_key',
     },
     {
       label: "dashboard.dapsJwksUrl",
-      value: connector.dapsJwksUrl,
+      value: connector?.dapsJwksUrl,
       icon: 'lock',
     }
   ];

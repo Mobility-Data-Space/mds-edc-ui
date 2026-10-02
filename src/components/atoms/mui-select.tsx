@@ -1,17 +1,18 @@
-import { Checkbox } from "@/components/atoms/checkbox.tsx";
-import { Divider, FormControl, FormHelperText, InputLabel, MenuItem, SelectProps as MuiSelectProps, Select, Stack, Typography } from "@mui/material";
-import React, { ReactNode, useEffect, useState } from "react";
+import { Checkbox } from "@/components/atoms/checkbox";
+import { Divider, FormControl, FormHelperText, InputLabel, MenuItem, SelectProps as MuiSelectProps, Select, SelectChangeEvent, Stack, Typography } from "@mui/material";
+import React, { ReactNode, useState } from "react";
 
 type Option = { text?: string; value: string };
 
-export type SelectProps = Partial<MuiSelectProps> & {
+type SelectValue = string | string[];
+
+export type SelectProps<V extends SelectValue = string> = Omit<Partial<MuiSelectProps<V>>, "onChange"> & {
   options: Option[],
   highlights?: Option[],
-  defaultValue?: string,
   id?: string,
   label?: string
   required?: boolean,
-  onChange: (event: any) => void,
+  onChange: (event: SelectChangeEvent<V>) => void,
   placeholder?: string,
   helperText?: ReactNode,
 };
@@ -20,7 +21,7 @@ function valueIsEmpty(value: unknown): boolean {
   return (Array.isArray(value) && value.length === 0) || !value;
 }
 
-export function renderSelectOptions(options: Option[], value: unknown): React.ReactElement[] {
+function renderSelectOptions(options: Option[], value: unknown): React.ReactElement[] {
   let isMultiple = false;
   if (Array.isArray(value)) {
     isMultiple = true;
@@ -40,7 +41,7 @@ export function renderSelectOptions(options: Option[], value: unknown): React.Re
   ));
 }
 
-export function renderSelectValue(value: unknown, placeholder: string = "", options: Option[] = [], highlights: Option[] = []) {
+function renderSelectValue(value: unknown, placeholder: string = "", options: Option[] = [], highlights: Option[] = []) {
   if (!value) {
     return <Typography color="gray">{placeholder}</Typography>;
   }
@@ -58,16 +59,9 @@ export function renderSelectValue(value: unknown, placeholder: string = "", opti
   return <>{option && option.text ? option.text : value}</>;
 }
 
-export function MuiSelect({ label, options, highlights = [], id = "", defaultValue = "", name, value = "", error = false, onChange, placeholder = "", required = false, disabled = false, helperText = "", multiple = false }: Omit<SelectProps, "label" | "error"> & { label?: string, error?: string | boolean }): React.ReactElement {
+export function MuiSelect<V extends SelectValue = string>({ label, options, highlights = [], id = "", defaultValue, value, error = false, onChange, placeholder = "", required = false, disabled = false, helperText = "", multiple = false }: Omit<SelectProps<V>, "label" | "error"> & { label?: string, error?: string | boolean }): React.ReactElement {
   const hasHighlights = highlights && highlights.length > 0;
-  const notValue = !value;
   const [labelPlaceholder, setLabelPlaceholder] = useState(valueIsEmpty(value) ? "" : label);
-
-  useEffect(() => {
-    if (defaultValue && name && notValue) {
-      onChange(defaultValue)
-    }
-  }, [defaultValue, name, onChange, notValue]);
 
   const onFocus = () => {
     if (valueIsEmpty(value)) {
@@ -84,7 +78,7 @@ export function MuiSelect({ label, options, highlights = [], id = "", defaultVal
   return (
     <FormControl fullWidth disabled={disabled} required={required} color="secondary">
       <InputLabel id={id}>{label}</InputLabel>
-      <Select
+      <Select<V>
         id={id}
         onFocus={onFocus}
         onBlur={onBlur}

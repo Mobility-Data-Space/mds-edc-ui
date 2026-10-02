@@ -1,7 +1,6 @@
 import { AssetIcon } from "@/components/atoms/asset-icon";
-import { TitleWithIcon } from "@/components/atoms/TitleWithIcon";
+import { TitleWithIcon } from "@/components/atoms/title-with-icon";
 import { DeleteDialog } from "@/components/molecules/delete-dialog";
-import { Snackbar } from "@/components/molecules/snackbar";
 import AssetDetails from "@/components/organisms/asset-details";
 import {
   Button,
@@ -17,8 +16,7 @@ import { T, useTranslator } from "@/i18n";
 import { ASSET_TITLE } from "@/jsonld/asset";
 import { Asset, EdcConnectorClient } from "@think-it-labs/edc-connector-client";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
-import { enqueueSnackbar, useSnackbar } from "notistack";
-import { use, useState } from "react";
+import { useState } from "react";
 import { proxyConnectorManagement } from "@/constants/proxy";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
 import { useAppSnackbar } from "@/hooks/use-app-snackbar";
@@ -45,7 +43,7 @@ const hasContract = async (client: EdcConnectorClient, assetId: string) => {
       ],
     });
     return agreements.length > 0;
-  } catch (error) {
+  } catch {
     return false;
   }
 };
@@ -64,7 +62,6 @@ export default function AssetDialog({
   const id = asset["@id"];
   const title = readValue(asset.properties, ASSET_TITLE) || "";
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const { closeSnackbar } = useSnackbar();
   const { translator } = useTranslator();
 
   const client = useEdcConnectorClient({
@@ -87,13 +84,11 @@ export default function AssetDialog({
         onDeleteSuccess();
       }
     } catch (error) {
-      let message = `Failed deleting asset ${id}`;
+      let message = translator("assets.[id].deleteFailed", { name: id });
 
       if (error instanceof Error) {
         message = error.message;
       }
-      /* TODO: translate */
-
       showSnackbar({
         type: "error",
         message,
@@ -108,7 +103,7 @@ export default function AssetDialog({
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
         title="assets.[id].deleteTitle"
-        content={`Please confirm you want to delete Asset ${title}. This action cannot be undone.`}
+        content={translator("assets.[id].deleteConfirmation", { name: title })}
         onConfirm={onDeleteConfirm}
       />
 
@@ -129,7 +124,7 @@ export default function AssetDialog({
             <div>
               {onEditClick && (
                 <Tooltip title={translator("common.edit")}>
-                  <IconButton
+                  <IconButton aria-label={translator("common.edit")}
                     data-testid="edit-asset-button"
                     onClick={onEditClick}
                   >
@@ -139,7 +134,7 @@ export default function AssetDialog({
               )}
               {deleteEnabled && (
                 <Tooltip title={translator("common.delete")}>
-                  <IconButton
+                  <IconButton aria-label={translator("common.delete")}
                     data-testid="delete-asset-modal-btn"
                     onClick={() => setDeleteDialogOpen(true)}
                   >

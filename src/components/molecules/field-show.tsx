@@ -5,20 +5,11 @@ import Typography from "@mui/material/Typography";
 
 import { FieldDialog } from "@/components/molecules/field-dialog";
 
-import { MultiTranslate, T } from "@/i18n";
-
-export interface FieldShowProps {
-  icon: string;
-  label: string;
-  testDataId?: string;
-  value?: string;
-  openModalText?: string;
-  subLabel?: string;
-  valueTitle?: string;
-  copyTextIcon?: boolean
-}
+import { MultiTranslate, T, useTranslator } from "@/i18n";
+import type { FieldShowProps } from "@/types/field-show";
 
 export function FieldShow({ icon, label, value, valueTitle, subLabel, openModalText, testDataId, copyTextIcon = false }: FieldShowProps): React.ReactElement {
+  const { translator } = useTranslator();
   const nonNullValue = value || "";
   const shouldNotTranslateValue = 0 === nonNullValue.indexOf('http') || (typeof nonNullValue === "string" && nonNullValue.match(/^\d/));
   const [dialogIsOpen, setDialogIsOpen] = React.useState(false);
@@ -58,7 +49,7 @@ export function FieldShow({ icon, label, value, valueTitle, subLabel, openModalT
           </div>
         </>
       }
-      {copyTextIcon && <IconButton color="secondary" onClick={() => navigator.clipboard.writeText(nonNullValue)}>
+      {copyTextIcon && <IconButton aria-label={translator("common.copyToClipboard")} color="secondary" onClick={() => navigator.clipboard.writeText(nonNullValue)}>
         <Icon>content_copy</Icon>
       </IconButton>}
     </div>

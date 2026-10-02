@@ -1,5 +1,6 @@
 import {Icon, IconButton} from '@mui/material';
 import React from 'react';
+import { MAX_ITEMS } from '@/constants/lists';
 
 interface PaginationControlsProps {
     page: number;
@@ -57,3 +58,18 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
 };
 
 export default PaginationControls;
+
+type ListPaginationProps = Omit<PaginationControlsProps, 'maxItems' | 'dataTestIdPrefix'>;
+
+// Render prop for the connector-ui lists' `.Pagination` slot.
+export const renderPagination = ({ page, hasPrev, hasNext, decrementPage, incrementPage, itemsCount }: ListPaginationProps) => (
+    <PaginationControls
+        page={page}
+        hasPrev={hasPrev}
+        hasNext={hasNext}
+        decrementPage={decrementPage}
+        incrementPage={incrementPage}
+        itemsCount={itemsCount}
+        maxItems={MAX_ITEMS}
+    />
+);

@@ -1,6 +1,6 @@
 import { Head, Html, Main, NextScript } from "next/document";
 import Script from 'next/script'
-import {backgroundColor} from "@/theme/ThemeProvider.tsx";
+import {backgroundColor} from "@/theme/theme-provider";
 
 export default function Document() {
   return (

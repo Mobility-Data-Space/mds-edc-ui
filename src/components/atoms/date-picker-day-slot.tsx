@@ -1,7 +1,7 @@
 import React from "react";
 import { PickersDay, PickersDayProps } from "@mui/x-date-pickers";
 import { Dayjs } from "dayjs";
-import { theme } from "@/theme/ThemeProvider";
+import { theme } from "@/theme/theme-provider";
 
 export type DaySlotCustomProps = PickersDayProps & {
   dayjsStartDate?: Dayjs | null;
@@ -16,7 +16,6 @@ export const DatePickerDaySlot = React.forwardRef(function DatePickerDaySlot(
     bothDatesAreSet = false,
     ...props
   }: DaySlotCustomProps,
-  ref,
 ) {
   const isStartDate = props.day.isSame(dayjsStartDate, "day");
   const isEndDate = props.day.isSame(dayjsEndDate, "day");
@@ -54,7 +53,7 @@ export const DatePickerDaySlot = React.forwardRef(function DatePickerDaySlot(
           "&.MuiPickersDay-root.Mui-selected": {
             backgroundColor: theme.palette.secondary.main,
             color: theme.palette.secondary.light,
-          } as any,
+          },
         }}
         color="secondary"
         selected={dayHighlighted}

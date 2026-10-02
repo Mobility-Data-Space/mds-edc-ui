@@ -1,38 +1,27 @@
 import React from "react";
 
-import { AssetContentType } from "@/components/molecules/asset-content-type";
-import { AssetDescription } from "@/components/molecules/asset-description";
-import { AssetEndpointDocumentation } from "@/components/molecules/asset-endpoint-documentation";
 import { AssetId } from "@/components/molecules/asset-id";
 import { AssetKeywords } from "@/components/molecules/asset-keywords";
 import { AssetLanguage } from "@/components/molecules/asset-language";
-import { AssetPublisher } from "@/components/molecules/asset-publisher";
-import { AssetStandardLicense } from "@/components/molecules/asset-standard-license";
-import { AssetTitle } from "@/components/molecules/asset-title";
-import { AssetVersion } from "@/components/molecules/asset-version";
+import { AssetTextField } from "@/components/molecules/asset-text-field";
 
 import { T } from "@/i18n";
-import { AssetProperties } from "@/utilities/asset";
+import type { AssetFieldProps } from "@/types/asset-field";
 
-export interface AssetFormGeneralInfoStepProps {
-  translator: (key: string) => string;
-  formData: AssetProperties;
-  onChange: (formData: AssetProperties) => void;
-  errors: { [key: string]: boolean };
-}
-
-export function AssetFormGeneralInfoStepContent({ translator, formData, onChange, errors }: AssetFormGeneralInfoStepProps): React.ReactElement {
+export function AssetFormGeneralInfoStepContent({ translator, formData, onChange, errors }: AssetFieldProps): React.ReactElement {
 
   return (
     <div className="flex flex-col gap-y-5">
       <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 w-full">
-        <AssetTitle
+        <AssetTextField
+          field="title"
           formData={formData}
           errors={errors}
           onChange={onChange}
           translator={translator}
         />
-        <AssetVersion
+        <AssetTextField
+          field="version"
           formData={formData}
           errors={errors}
           onChange={onChange}
@@ -49,7 +38,8 @@ export function AssetFormGeneralInfoStepContent({ translator, formData, onChange
         />
       </div>
       <div>
-        <AssetDescription
+        <AssetTextField
+          field="description"
           formData={formData}
           errors={errors}
           onChange={onChange}
@@ -87,15 +77,18 @@ export function AssetFormGeneralInfoStepContent({ translator, formData, onChange
       </div>
 
       <div>
-        <AssetContentType
+        <AssetTextField
+          field="contentType"
           formData={formData}
           errors={errors}
           onChange={onChange}
+          translator={translator}
         />
       </div>
 
       <div>
-        <AssetEndpointDocumentation
+        <AssetTextField
+          field="endpointDocumentation"
           formData={formData}
           errors={errors}
           onChange={onChange}
@@ -108,19 +101,21 @@ export function AssetFormGeneralInfoStepContent({ translator, formData, onChange
           htmlFor="properties-publisher"
           className="inline-block text-sm text-gray-800 mt-2.5"
         >
-          <T string="fieldPublisher" />
+          <T string="assets.new.fieldPublisher" />
         </label>
       </div>
 
       <div className="grid sm:grid-cols-2 gap-2 w-full">
-        <AssetPublisher
+        <AssetTextField
+          field="publisher"
           formData={formData}
           errors={errors}
           onChange={onChange}
           translator={translator}
         />
 
-        <AssetStandardLicense
+        <AssetTextField
+          field="standardLicense"
           formData={formData}
           errors={errors}
           onChange={onChange}

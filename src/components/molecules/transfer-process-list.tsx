@@ -1,11 +1,11 @@
 import Typography from "@mui/material/Typography";
 import { T } from "@/i18n";
 import { TransferProcess } from "@think-it-labs/edc-connector-client/dist/src/entities";
-import { formatDateTime, formatDateTimeAgo } from "@/utilities/date.ts";
+import { formatDateTime, formatDateTimeAgo } from "@/utilities/date";
 import { Icon, Tooltip } from "@mui/material";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
-import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog.ts";
-import { TransferProcessStateIcon } from "@/components/atoms/transfer-process-state-icon.tsx";
+import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog";
+import { TransferProcessStateIcon } from "@/components/atoms/transfer-process-state-icon";
 
 interface TransferProcessListProps {
   transferProcesses: TransferProcess[];

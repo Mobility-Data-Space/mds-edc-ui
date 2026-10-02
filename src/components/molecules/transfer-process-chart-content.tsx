@@ -1,9 +1,9 @@
 import { T } from "@/i18n";
-import { theme } from "@/theme/ThemeProvider.tsx";
+import { theme } from "@/theme/theme-provider";
 import {
   transferProcessStateBgColor,
   transferProcessStateHoverColor,
-} from "@/utilities/transfer-process.ts";
+} from "@/utilities/transfer-process";
 import { Typography } from "@mui/material";
 import { TransferProcess } from "@think-it-labs/edc-connector-client/dist/src/entities";
 import React, { useMemo, useState } from "react";
@@ -160,7 +160,7 @@ export function TransferProcessChartContent({
               onMouseOut={handleMouseLeave}
               onMouseLeave={handleMouseLeave}
             >
-              {data.map((entry, index) => (
+              {data.map((entry) => (
                 <Cell
                   key={`${title}-${entry.name}`}
                   fill={

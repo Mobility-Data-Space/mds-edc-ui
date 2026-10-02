@@ -1,17 +1,16 @@
 import { LoadingSpinner } from "@/components/atoms/loading-spinner";
 import RadioButtonsGroup from "@/components/atoms/radio-group";
-import PaginationControls from "@/components/molecules/pagination-controls";
+import { renderPagination } from "@/components/molecules/pagination-controls";
 import SearchBar from "@/components/molecules/search-bar";
 import ContractAgreementCard from "@/components/organisms/contract-agreement-card";
 import ContractAgreementDialog from "@/components/organisms/contract-agreement-dialog";
-import SideDrawer from "@/components/organisms/side-drawer";
 import { proxyConnectorManagement } from "@/constants/proxy";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { useUpdateQueryParams } from "@/hooks/use-update-query-params";
 import { T, useTranslator } from "@/i18n";
-import { theme } from "@/theme/ThemeProvider.tsx";
+import { theme } from "@/theme/theme-provider";
 import { Button, ButtonGroup, Icon, Typography } from "@mui/material";
-import { operatorEqual } from "@/utilities/data-offer";
+import { criterionOperatorEqual } from "@/utilities/data-offer";
 import {
   ContractAgreement,
   CriterionInput,
@@ -19,9 +18,10 @@ import {
 import { ContractAgreementsList } from "@think-it-labs/edc-connector-ui/contract-agreements-list";
 import { useRouter } from "next/router";
 import { useCallback, useMemo, useState } from "react";
-import { ErrorPopup } from "../../components/molecules/error-popup";
-import { MAX_ITEMS } from "../../constants/lists";
+import { ErrorPopup } from "@/components/molecules/error-popup";
+import { MAX_ITEMS } from "@/constants/lists";
 import { useAppSnackbar } from "@/hooks/use-app-snackbar";
+import { useListPage } from "@/hooks/use-list-page";
 
 type OwnershipFilter = "all" | "provider" | "consumer";
 
@@ -45,12 +45,12 @@ export default function ContractAgreementsListPage() {
       [StatusFilter.All]: undefined,
       [StatusFilter.Active]: {
         operandLeft: "isTerminated",
-        operator: operatorEqual.value,
+        operator: criterionOperatorEqual,
         operandRight: false,
       },
       [StatusFilter.Terminated]: {
         operandLeft: "isTerminated",
-        operator: operatorEqual.value,
+        operator: criterionOperatorEqual,
         operandRight: true,
       },
     }),
@@ -58,12 +58,7 @@ export default function ContractAgreementsListPage() {
   );
 
   const { showSnackbar } = useAppSnackbar();
-  const navigateToPage = useCallback(
-    (newPage: number) => {
-      updateQueryParams({ page: String(newPage) });
-    },
-    [updateQueryParams],
-  );
+  const { currentPage, navigate } = useListPage();
 
   const setSelectedStatusFilter = useCallback(
     (statusFilter: StatusFilter) => {
@@ -97,12 +92,12 @@ export default function ContractAgreementsListPage() {
       filters.push(statusFilterExpression[selectedStatusFilter]);
     }
 
-    if (connector.id) {
+    if (connector?.id) {
       if (selectedOwnershipFilter === "provider") {
         filters.push({
           operandLeft: "providerId",
           operator: "=",
-          operandRight: connector.id,
+          operandRight: connector?.id,
         });
       }
 
@@ -110,7 +105,7 @@ export default function ContractAgreementsListPage() {
         filters.push({
           operandLeft: "consumerId",
           operator: "=",
-          operandRight: connector.id,
+          operandRight: connector?.id,
         });
       }
     }
@@ -120,15 +115,15 @@ export default function ContractAgreementsListPage() {
     statusFilterExpression,
     selectedStatusFilter,
     selectedOwnershipFilter,
-    connector.id,
+    connector?.id,
   ]);
 
   if (!connector) {
-    return "No connector";
+    return <T string="common.noConnector" />;
   }
 
   return (
-    <SideDrawer title={<T string="contractAgreements.title" />}>
+    <>
       {openContractAgreementData && (
         <ContractAgreementDialog
           key={openContractAgreementData.id}
@@ -150,8 +145,8 @@ export default function ContractAgreementsListPage() {
 
             setTimeout(()=> push("/contract-agreements?status=Terminated&page=0"), 2_500);
           }}
-          participantId={connector.id}
-          connectorEndpoint={connector.protocolUrl}
+          participantId={connector?.id}
+          connectorEndpoint={connector?.protocolUrl}
           managementUrl={proxyConnectorManagement}
           contentStyle={{ maxWidth: "90vw", width: "1000px" }}
           translator={translator}
@@ -161,8 +156,8 @@ export default function ContractAgreementsListPage() {
       <ContractAgreementsList
         managementUrl={proxyConnectorManagement}
         usePagination={true}
-        navigate={navigateToPage}
-        currentPage={parseInt(query.page as string) || 0}
+        navigate={navigate}
+        currentPage={currentPage}
         firstPage={0}
       >
         <div className="flex flex-wrap justify-between gap-y-4 pb-6">
@@ -208,27 +203,7 @@ export default function ContractAgreementsListPage() {
             </ButtonGroup>
           </div>
           <div className="flex justify-end items-center">
-            <ContractAgreementsList.Pagination>
-              {({
-                decrementPage,
-                hasPrev,
-                hasNext,
-                incrementPage,
-                page,
-                itemsCount,
-              }) => (
-                <PaginationControls
-                  page={page}
-                  hasPrev={hasPrev}
-                  hasNext={hasNext}
-                  decrementPage={decrementPage}
-                  incrementPage={incrementPage}
-                  maxItems={MAX_ITEMS}
-                  dataTestIdPrefix="pagination"
-                  itemsCount={itemsCount}
-                />
-              )}
-            </ContractAgreementsList.Pagination>
+            <ContractAgreementsList.Pagination>{renderPagination}</ContractAgreementsList.Pagination>
           </div>
         </div>
 
@@ -296,6 +271,8 @@ export default function ContractAgreementsListPage() {
           </div>
         </div>
       </ContractAgreementsList>
-    </SideDrawer>
+    </>
   );
 }
+
+ContractAgreementsListPage.titleKey = "contractAgreements.title";

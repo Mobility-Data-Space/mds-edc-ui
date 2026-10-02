@@ -3,10 +3,10 @@ import React from "react";
 
 export type RadioButtonProps = {
   id?: string;
-  value: any;
-  trueValue?: any;
-  falseValue?: any;
-  onChange: (value: boolean) => void;
+  value: unknown;
+  trueValue?: string;
+  falseValue?: string;
+  onChange: (value: string) => void;
   labelTrue: string,
   labelFalse: string
 }

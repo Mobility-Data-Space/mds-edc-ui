@@ -1,3 +1,4 @@
+import { useTranslator } from "@/i18n";
 import * as React from "react";
 import { DATE_FORMAT } from "@/utilities/date";
 
@@ -23,6 +24,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 dayjs.extend(customParseFormat);
 
 function FreeTypingField(props: DatePickerFieldProps) {
+  const { translator } = useTranslator();
   const { internalProps, forwardedProps } = useSplitFieldProps(props, "date");
   const pickerContext = usePickerContext();
   const [inputValue, setInputValue] = React.useState("");
@@ -69,7 +71,7 @@ function FreeTypingField(props: DatePickerFieldProps) {
   };
 
   const openPickerIcon = (
-    <IconButton
+    <IconButton aria-label={translator("common.openCalendar")}
       onClick={() => pickerContext.setOpen((prev) => !prev)}
       size="small"
     >
@@ -105,7 +107,7 @@ function FreeTypingField(props: DatePickerFieldProps) {
   );
 }
 
-export type DatePickerProps = Partial<MuiDatePickerProps<any>> & {
+export type DatePickerProps = Partial<MuiDatePickerProps> & {
   name?: string;
   id?: string;
   label?: string;

@@ -1,8 +1,8 @@
 import { AtomicConstraint, Constraint } from "@think-it-labs/edc-connector-client";
 
-import { consumerParticipantIdLeft, operatorIn, operatorLessThan, timeRestrictionLeft } from "./policy-operators";
+import { consumerParticipantIdLeft, operatorGreaterThanOrEqual, operatorIn, operatorLessThan, timeRestrictionLeft } from "@/utilities/policy-operators";
 import dayjs from "dayjs";
-import { DATE_FORMAT } from "./date";
+import { DATE_FORMAT } from "@/utilities/date";
 
 export const createParticipantIdConstraint = (): AtomicConstraint => ({
   leftOperand: consumerParticipantIdLeft,
@@ -19,7 +19,7 @@ export const createTimeRestrictionConstraint = (rightOperand = "", operator = op
 // Multi
 export const createTimespanAndConstraint = ([startDate, endDate]: [string, string]): AndConstraint => ({
   and: [
-    createTimeRestrictionConstraint(dayjs(startDate, DATE_FORMAT).toISOString(), operatorLessThan.value),
+    createTimeRestrictionConstraint(dayjs(startDate, DATE_FORMAT).toISOString(), operatorGreaterThanOrEqual.value),
     createTimeRestrictionConstraint(dayjs(endDate, DATE_FORMAT).toISOString(), operatorLessThan.value)
   ],
 });
@@ -40,14 +40,6 @@ export function isAtomicConstraint(constraint: Constraint): constraint is Atomic
     typeof (constraint as AtomicConstraint).leftOperand === 'string' &&
     typeof (constraint as AtomicConstraint).operator === 'string' &&
     typeof (constraint as AtomicConstraint).rightOperand === 'string'
-  );
-}
-
-export function isMultiplicityConstraint(constraint: Constraint): constraint is MultiplicityConstraint {
-  return (
-    (Array.isArray((constraint as OrConstraint).or)) ||
-    (Array.isArray((constraint as AndConstraint).and)) ||
-    (Array.isArray((constraint as XoneConstraint).xone))
   );
 }
 

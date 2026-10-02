@@ -15,7 +15,14 @@ const fetchConnectorConfig = async (): Promise<Participant> => {
   }
 
   fetchPromise = fetch("/connector/config")
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(
+          `Failed to load connector config: ${response.status} ${response.statusText}`,
+        );
+      }
+      return response.json();
+    })
     .then((data) => {
       cachedConnector = data;
       fetchPromise = null;
@@ -31,16 +38,30 @@ const fetchConnectorConfig = async (): Promise<Participant> => {
 
 export const useParticipantConnectorState = () => {
   const router = useRouter();
-  const [connector, setConnector] = useState<Participant>(
-    cachedConnector || ({} as Participant),
+  const [connector, setConnector] = useState<Participant | null>(
+    cachedConnector,
   );
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    fetchConnectorConfig().then(setConnector);
+    let cancelled = false;
+    fetchConnectorConfig()
+      .then((data) => {
+        if (!cancelled) setConnector(data);
+      })
+      .catch((reason: unknown) => {
+        if (cancelled) return;
+        console.error(reason);
+        setError(reason instanceof Error ? reason : new Error(String(reason)));
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return {
     connector,
+    error,
     push: (href: string) => router.push(`${href}`),
   };
 };

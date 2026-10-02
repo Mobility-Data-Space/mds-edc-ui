@@ -1,4 +1,4 @@
-import { getConnectorConfig } from "@/utilities/connector-config";
+import { getConnectorConfig } from "@/server/connector-config";
 import {
   buildUrl,
   createSanitizedProxyRequest,
@@ -7,7 +7,7 @@ import {
   proxyPost,
   proxyPut,
   stripDataDestination,
-} from "@/utilities/proxy";
+} from "@/server/proxy";
 import { NextRequest, NextResponse } from "next/server";
 
 // The destination address can hold credentials, so it never reaches the browser.

@@ -1,16 +1,17 @@
-import { TitleWithIcon } from "@/components/atoms/TitleWithIcon";
+import { TitleWithIcon } from "@/components/atoms/title-with-icon";
 import { ConfirmDialog } from "@/components/molecules/confirm-dialog";
 import { FieldShow } from "@/components/molecules/field-show";
 import { PolicyConstraintShow } from "@/components/molecules/policy-constraint-show";
 import { proxyConnectorManagement } from "@/constants/proxy";
+import { useAppSnackbar } from "@/hooks/use-app-snackbar";
 import { T, useTranslator } from "@/i18n";
 import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog";
 import { createNegotiationRequest } from "@/utilities/contract-negotiations";
+import { extractEdcErrorMessage } from "@/utilities/edc-error";
 import { Button, Icon, Tooltip } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { compact, Policy } from "@think-it-labs/edc-connector-client";
+import { compact, Constraint, Policy } from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
-import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 
 interface DataOfferDetailsProps {
@@ -31,8 +32,9 @@ export default function DataOfferDetails({
   onNegotiateSuccess = () => {},
 }: DataOfferDetailsProps) {
   const { translator } = useTranslator();
+  const { showSnackbar } = useAppSnackbar();
 
-  const [compactContractDefinitions, setCompactContractDefinitions] = useState<
+  const [, setCompactContractDefinitions] = useState<
     Policy[]
   >([]);
 
@@ -68,13 +70,19 @@ export default function DataOfferDetails({
           ...prev,
           [offer["@id"]]: false,
         }));
-        enqueueSnackbar(translator("contractNegotiations.negotiationSuccess"));
+        showSnackbar({
+          type: "success",
+          message: translator("contractNegotiations.negotiationSuccess"),
+          persist: false,
+        });
       })
       .catch((error) => {
-        const match = /"message":"(.*?)"/.exec(error.message);
-        enqueueSnackbar(
-          (match && match[1]) || translator("dataOffer.negotiateError"),
-        );
+        showSnackbar({
+          type: "error",
+          message:
+            extractEdcErrorMessage(error) || translator("dataOffer.negotiateError"),
+          persist: false,
+        });
       });
   };
 
@@ -97,8 +105,10 @@ export default function DataOfferDetails({
               </div>
               <PolicyConstraintShow
                 constraints={
-                  removeJsonLdSchemaFromProperties(offer)?.permission.map(
-                    (p: any) => p.constraint,
+                  removeJsonLdSchemaFromProperties<{
+                    permission: { constraint: Constraint[] }[];
+                  }>(offer)?.permission.map(
+                    (p) => p.constraint,
                   )[0]
                 }
                 jsonLdObject={offer}

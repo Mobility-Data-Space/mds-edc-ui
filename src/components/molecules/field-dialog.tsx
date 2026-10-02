@@ -1,4 +1,4 @@
-import { FieldShowProps } from "@/components/molecules/field-show";
+import type { FieldShowProps } from "@/types/field-show";
 import { T } from "@/i18n";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon } from "@mui/material";
 import Typography from "@mui/material/Typography";

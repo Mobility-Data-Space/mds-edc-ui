@@ -12,11 +12,6 @@ interface CounterPartyAddressDialogProps {
 }
 
 export function CounterPartyAddressDialog({ open, onClose, content = "", contentStyle = {} }: CounterPartyAddressDialogProps): React.ReactElement {
-  const onConfirmAndClose = () => {
-    // TODO: refresh behaviour
-    onClose();
-  };
-
   return (
     <Dialog
       open={open}

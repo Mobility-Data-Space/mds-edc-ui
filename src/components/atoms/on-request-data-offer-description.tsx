@@ -1,10 +1,10 @@
 import { T, useTranslator } from "@/i18n";
-import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog.ts";
+import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog";
 import Typography from "@mui/material/Typography";
 import { Asset } from "@think-it-labs/edc-connector-client";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
 import React from "react";
-import { MarkdownText } from "./markdown-text";
+import { MarkdownText } from "@/components/atoms/markdown-text";
 
 export function OnRequestDataOfferDescription({
   asset,

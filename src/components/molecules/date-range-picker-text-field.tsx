@@ -13,7 +13,7 @@ export type DateRangePickerTextFieldSlotProps = TextFieldProps & {
 }
 
 export const DateRangePickerTextFieldSlot = React.forwardRef(
-  function DateRangePickerTextFieldSlot(props: DateRangePickerTextFieldSlotProps, ref) {
+  function DateRangePickerTextFieldSlot(props: DateRangePickerTextFieldSlotProps) {
     return (
       <TextField
         color="secondary"

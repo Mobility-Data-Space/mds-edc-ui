@@ -1,33 +1,16 @@
-import {
-  CriterionInput,
-  EdcConnectorClient,
-} from "@think-it-labs/edc-connector-client";
+import { CriterionInput } from "@think-it-labs/edc-connector-client";
 
 export const EDC_ID_FIELD = "https://w3id.org/edc/v0.0.1/ns/id";
 
-export const operatorEqual = {
-  value: "=",
-  text: "Equal",
-  tooltip: "Equal",
-};
-
-export const operatorLike = {
-  value: "like",
-  text: "Like",
-  tooltip: "Like",
-};
-
-export const operatorIn = {
-  value: "in",
-  text: "In",
-  tooltip: "In",
-};
+// QuerySpec criterion operators, distinct from the ODRL operators in policy-operators.ts.
+export const criterionOperatorEqual = "=";
+export const criterionOperatorIn = "in";
 
 export const idSelector = (id: string): CriterionInput[] => {
   return [
     {
       operandLeft: EDC_ID_FIELD,
-      operator: operatorIn.value,
+      operator: criterionOperatorIn,
       operandRight: id,
     },
   ];
@@ -37,13 +20,13 @@ export const idMultipleSelector = (ids: string[]): CriterionInput[] => {
   return [
     {
       operandLeft: EDC_ID_FIELD,
-      operator: operatorIn.value,
+      operator: criterionOperatorIn,
       operandRight: transformIdsToString(ids),
     },
   ];
 };
 
-export const transformIdsToString = (ids: string[]): string => {
+const transformIdsToString = (ids: string[]): string => {
   return ids.join(",");
 };
 

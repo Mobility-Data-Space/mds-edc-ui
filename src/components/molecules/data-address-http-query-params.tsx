@@ -5,7 +5,7 @@ import { KeyValuePairInputList } from "@/components/molecules/key-value-pair-inp
 
 import { T } from "@/i18n";
 import { DataAddress } from "@think-it-labs/edc-connector-client/dist/src/entities/data-address";
-import { RadioButton } from "../atoms/radio-button";
+import { RadioButton } from "@/components/atoms/radio-button";
 
 export interface DataAddressHttpQueryParamsProps {
   translator: (key: string) => string;
@@ -16,7 +16,7 @@ export interface DataAddressHttpQueryParamsProps {
   isDestination: boolean;
 }
 
-export function DataAddressHttpQueryParams({ translator, formData, onChange, errors, isDestination = false }: DataAddressHttpQueryParamsProps): React.ReactElement {
+export function DataAddressHttpQueryParams({ translator, formData, onChange, isDestination = false }: DataAddressHttpQueryParamsProps): React.ReactElement {
 
   return (
     <div className="flex flex-col gap-y-5 items-start">

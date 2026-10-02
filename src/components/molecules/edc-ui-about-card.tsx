@@ -1,4 +1,4 @@
-import { TitleWithIcon } from "@/components/atoms/TitleWithIcon.tsx";
+import { TitleWithIcon } from "@/components/atoms/title-with-icon";
 import { T } from "@/i18n";
 import CheckIcon from '@mui/icons-material/CheckSharp';
 import { Card, CardContent, Typography } from "@mui/material";

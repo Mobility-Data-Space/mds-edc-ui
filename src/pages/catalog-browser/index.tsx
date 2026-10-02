@@ -1,18 +1,16 @@
 import { Input } from "@/components/atoms/input";
 import { CounterPartyAddressDialog } from "@/components/molecules/counter-party-address-dialog";
-import { ErrorPopup } from "@/components/molecules/error-popup";
-import PaginationControls from "@/components/molecules/pagination-controls";
+import { renderPagination } from "@/components/molecules/pagination-controls";
 import SearchBar from "@/components/molecules/search-bar";
 import DataOfferCard from "@/components/organisms/data-offer-card";
 import DataOfferDialog from "@/components/organisms/data-offer-dialog";
-import SideDrawer from "@/components/organisms/side-drawer";
 import { proxyConnectorManagement } from "@/constants/proxy";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { useSessionState } from "@/hooks/use-session-state";
 import { useUpdateQueryParams } from "@/hooks/use-update-query-params";
 import { T, useTranslator } from "@/i18n";
-import { Badge, Icon, IconButton, Tooltip, Typography } from "@mui/material";
+import { Icon, IconButton, Tooltip, Typography } from "@mui/material";
 import {
   Dataset,
   EdcConnectorClientError,
@@ -20,17 +18,18 @@ import {
 } from "@think-it-labs/edc-connector-client";
 import { ContractOffersList } from "@think-it-labs/edc-connector-ui/contract-offers-list";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
-import { useRouter } from "next/router";
 
-import { useCallback, useEffect, useState } from "react";
-import { MAX_ITEMS } from "../../constants/lists";
+import { useEffect, useState } from "react";
+import { MAX_ITEMS } from "@/constants/lists";
 import { counterPartyAddressWithDsp2025_1 } from "@/utilities/catalog";
 import { useAppSnackbar } from "@/hooks/use-app-snackbar";
+import { getId } from "@/jsonld/accessors";
+import { useListPage } from "@/hooks/use-list-page";
+import { LoadingSpinner } from "@/components/atoms/loading-spinner";
 
 export default function CatalogPage() {
   const { connector } = useParticipantConnectorState();
   const { translator } = useTranslator();
-  const { query } = useRouter();
   const updateQueryParams = useUpdateQueryParams();
   const [hasBadUrlError, setHasBadUrlError] = useState(false);
 
@@ -51,7 +50,7 @@ export default function CatalogPage() {
     setCounterPartyAddressToSearch(counterPartyAddress);
   }, [counterPartyAddress]);
 
-  const { debounce: debouncedSetCounterPartyAddress } = useDebounce((url) => {
+  const { debounce: debouncedSetCounterPartyAddress } = useDebounce((url: string) => {
     updateQueryParams({ page: String(0) });
     setCounterPartyAddress(url);
     setHasBadUrlError(false);
@@ -90,7 +89,7 @@ export default function CatalogPage() {
             counterPartyAddressWithDsp2025_1(counterPartyAddress),
         });
         setCatalogParticipantId(
-          catalog["https://w3id.org/dspace/2025/1/participantId"][0]["@id"],
+          getId(catalog["https://w3id.org/dspace/2025/1/participantId"]) ?? "",
         );
         setHasBadUrlError(false);
       } catch (error) {
@@ -119,12 +118,7 @@ export default function CatalogPage() {
     setDatasetToNegotiate(dataset);
   };
 
-  const navigateToPage = useCallback(
-    (newPage: number) => {
-      updateQueryParams({ page: String(newPage) });
-    },
-    [updateQueryParams],
-  );
+  const { currentPage, navigate } = useListPage();
 
   return (
     <>
@@ -135,7 +129,7 @@ export default function CatalogPage() {
         counterPartyAddress={counterPartyAddressWithDsp2025_1(
           counterPartyAddress,
         )}
-        assetIsOwned={counterPartyAddress === connector.protocolUrl}
+        assetIsOwned={counterPartyAddress === connector?.protocolUrl}
         onClose={() => setIsDataOfferDialogOpen(false)}
         contentStyle={{ maxWidth: "90vw", minWidth: "1000px" }}
         onNegotiateSuccess={() => setListKey((key) => key + 1)}
@@ -147,129 +141,102 @@ export default function CatalogPage() {
         content={counterPartyAddress}
       />
 
-      <SideDrawer title={<T string="catalog.title" />}>
-        <div className="h-[70vh]">
-          <ContractOffersList
-            managementUrl={proxyConnectorManagement}
-            counterPartyAddress={counterPartyAddressWithDsp2025_1(
-              counterPartyAddress,
+      <div className="h-[70vh]">
+        <ContractOffersList
+          managementUrl={proxyConnectorManagement}
+          counterPartyAddress={counterPartyAddressWithDsp2025_1(
+            counterPartyAddress,
+          )}
+          counterPartyId={DUMMY_COUNTERPARTY_ID}
+          usePagination
+          navigate={navigate}
+          currentPage={currentPage}
+          firstPage={0}
+          shouldFetch={!!counterPartyAddress}
+        >
+          <div className="w-full grid grid-rows-1 grid-cols-5 gap-x-3.5 py-4 items-center">
+            <div className="col-span-2">
+              <Input
+                id="catalog-url"
+                fullWidth
+                data-testid="catalog-url"
+                type="text"
+                label={<T string="catalog.connectorEndpoints" />}
+                placeholder="https://other-connector.com/api/dsp"
+                value={counterPartyAddressToSearch || null}
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                  input: {
+                    classes: { root: "flex-grow" },
+                    startAdornment: <Icon className="mr-2">link</Icon>,
+                    endAdornment: hasBadUrlError ? (
+                      <Icon color="error">warning</Icon>
+                    ) : (
+                      <Tooltip title={translator("catalog.clickForDetails")}>
+                        <IconButton aria-label={translator("catalog.clickForDetails")}
+                          onClick={() =>
+                            setIsCounterPartyAddressDialogOpen(true)
+                          }
+                        >
+                          <Icon color="primary">info</Icon>
+                        </IconButton>
+                      </Tooltip>
+                    ),
+                  },
+                }}
+                onChange={(event) => {
+                  setCounterPartyAddressToSearch(event.target.value);
+                  debouncedSetCounterPartyAddress(event.target.value);
+                }}
+              />
+            </div>
+            <div className="col-span-2">
+              <SearchBar
+                searchTarget="http://purl.org/dc/terms/title"
+                placeholder={translator("catalog.searchPlaceholder")}
+                searchOperator="ilike"
+              />
+            </div>
+            <div className="justify-self-center">
+              <ContractOffersList.Pagination>{renderPagination}</ContractOffersList.Pagination>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2.5" data-testid="catalog-list">
+            {counterPartyAddress ? (
+              <ContractOffersList.Items key={listKey} limit={MAX_ITEMS}>
+                {({ item, index }) => (
+                  <DataOfferCard
+                    key={index}
+                    dataset={item}
+                    participantId={catalogParticipantId}
+                    onClick={() => openDataOfferDialog(item)}
+                    dataTestId="catalog-item"
+                  />
+                )}
+              </ContractOffersList.Items>
+            ) : (
+              <div
+                className={
+                  "size-full flex flex-col items-start justify-center"
+                }
+              >
+
+                <Typography variant="h6" fontSize="16px" component="h6" color="info">
+                  <T string="catalog.emptyCounterPartyUrl" />
+                </Typography>
+              </div>
             )}
-            counterPartyId={DUMMY_COUNTERPARTY_ID}
-            usePagination
-            navigate={navigateToPage}
-            currentPage={parseInt(query.page as string) || 0}
-            firstPage={0}
-            shouldFetch={!!counterPartyAddress}
-          >
-            <div className="w-full grid grid-rows-1 grid-cols-5 gap-x-3.5 py-4 items-center">
-              <div className="col-span-2">
-                <Input
-                  id="catalog-url"
-                  fullWidth
-                  data-testid="catalog-url"
-                  type="text"
-                  label={<T string="catalog.connectorEndpoints" />}
-                  placeholder="https://other-connector.com/api/dsp"
-                  value={counterPartyAddressToSearch || null}
-                  slotProps={{
-                    inputLabel: {
-                      shrink: true,
-                    },
-                    input: {
-                      classes: { root: "flex-grow" },
-                      startAdornment: <Icon className="mr-2">link</Icon>,
-                      endAdornment: hasBadUrlError ? (
-                        <Icon color="error">warning</Icon>
-                      ) : (
-                        <Tooltip title={translator("catalog.clickForDetails")}>
-                          <IconButton
-                            onClick={() =>
-                              setIsCounterPartyAddressDialogOpen(true)
-                            }
-                          >
-                            <Icon color="primary">info</Icon>
-                          </IconButton>
-                        </Tooltip>
-                      ),
-                    },
-                  }}
-                  onChange={(event) => {
-                    setCounterPartyAddressToSearch(event.target.value);
-                    debouncedSetCounterPartyAddress(event.target.value);
-                  }}
-                />
-              </div>
-              <div className="col-span-2">
-                <SearchBar
-                  searchTarget="http://purl.org/dc/terms/title"
-                  placeholder={translator("catalog.searchPlaceholder")}
-                  searchOperator="ilike"
-                />
-              </div>
-              <div className="justify-self-center">
-                <ContractOffersList.Pagination>
-                  {({
-                    decrementPage,
-                    hasPrev,
-                    hasNext,
-                    incrementPage,
-                    page,
-                    itemsCount,
-                  }) => (
-                    <PaginationControls
-                      page={page}
-                      hasPrev={hasPrev}
-                      hasNext={hasNext}
-                      decrementPage={decrementPage}
-                      incrementPage={incrementPage}
-                      maxItems={MAX_ITEMS}
-                      itemsCount={itemsCount}
-                    />
-                  )}
-                </ContractOffersList.Pagination>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap gap-2.5" data-testid="catalog-list">
-              {counterPartyAddress ? (
-                <ContractOffersList.Items key={listKey} limit={MAX_ITEMS}>
-                  {({ item, index }) => (
-                    <DataOfferCard
-                      key={index}
-                      dataset={item}
-                      participantId={catalogParticipantId}
-                      onClick={() => openDataOfferDialog(item)}
-                      dataTestId="catalog-item"
-                    />
-                  )}
-                </ContractOffersList.Items>
-              ) : (
-                <div
-                  className={
-                    "size-full flex flex-col items-start justify-center"
-                  }
-                >
-
-                  <Typography variant="h6" fontSize="16px" component="h6" color="info">
-                    <T string="catalog.emptyCounterPartyUrl" />
-                  </Typography>
-                </div>
-              )}
-              <ContractOffersList.Loading>
-                <div className="max-w-20 mx-auto mt-4 flex flex-col bg-white border shadow-sm rounded-xl p-4 md:p-5 self-start">
-                  <span
-                    className="animate-spin mx-auto inline-block size-8 border-[3px] border-current border-t-transparent text-blue-600 rounded-full"
-                    role="status"
-                    aria-label="loading"
-                  >
-                    <span className="sr-only">Loading...</span>
-                  </span>
-                </div>
-              </ContractOffersList.Loading>
-            </div>
-          </ContractOffersList>
-        </div>
-      </SideDrawer>
+            <ContractOffersList.Loading>
+              <LoadingSpinner containerClassName="self-start" />
+            </ContractOffersList.Loading>
+          </div>
+        </ContractOffersList>
+      </div>
     </>
   );
 }
+
+CatalogPage.titleKey = "catalog.title";

@@ -2,7 +2,7 @@ import { proxyConnectorManagement } from "@/constants/proxy";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T } from "@/i18n";
 import { EnrichedContractAgreement } from "@/types/enriched-contract-agreement";
-import { formatDateTimeAgo } from "@/utilities/date.ts";
+import { formatDateTimeAgo } from "@/utilities/date";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import FileDownloadOffIcon from "@mui/icons-material/FileDownloadOff";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
@@ -11,6 +11,7 @@ import { Card, CardContent, LinearProgress, Skeleton } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { ContractAgreement } from "@think-it-labs/edc-connector-client";
 import { ContractAgreementView } from "@think-it-labs/edc-connector-ui/contract-agreement-view";
+import { clickableProps } from "@/utilities/a11y";
 
 export interface ContractAgreementCard {
   contractAgreement: ContractAgreement;
@@ -39,7 +40,7 @@ export default function ContractAgreementCard({
   );
   const assetTitle = contractAgreement.assetTitle || contractAgreement.assetId;
 
-  const isConsumer = contractAgreement.consumerId === connector.id;
+  const isConsumer = contractAgreement.consumerId === connector?.id;
   const Icon =
     contractIcons[contractAgreement.isTerminated ? "terminated" : "active"][
     isConsumer ? "consumer" : "provider"
@@ -113,7 +114,7 @@ export default function ContractAgreementCard({
       >
         <Card
           className="contract-agreement-card w-full max-w-[300px]"
-          onClick={onClick}
+          {...clickableProps(onClick)}
         >
           <CardContent className="flex flex-col gap-y-3">
             <div>

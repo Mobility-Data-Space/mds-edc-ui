@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import { AtomicConstraint } from "@think-it-labs/edc-connector-client";
 import { MuiSelect } from "@/components/atoms/mui-select";
 import { DatePicker } from "@/components/atoms/date-picker";
-import { ConstraintProps } from "@/components/molecules/constraint";
+import type { ConstraintProps } from "@/types/constraint";
 import { T, useTranslator } from "@/i18n";
 import dayjs, { Dayjs } from "dayjs";
 import { timeRestrictionOperators } from "@/utilities/policy-operators";
@@ -75,7 +75,7 @@ export function TimeRestrictionConstraint({
       </div>
 
       <div className="flex items-center">
-        <IconButton
+        <IconButton aria-label={translator("common.remove")}
           size="large"
           onClick={onRemove}
           className="font-medium !-mt-5"

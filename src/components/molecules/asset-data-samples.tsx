@@ -7,17 +7,9 @@ import { KeyValuePairInputList } from "@/components/molecules/key-value-pair-inp
 
 import { T } from "@/i18n";
 import { ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS } from "@/jsonld/asset";
-import { AssetProperties } from "@/utilities/asset";
+import type { AssetFieldProps } from "@/types/asset-field";
 
-export interface AssetDataSamplesProps {
-  translator: (key: string) => string;
-  formData: AssetProperties;
-  onChange: (formData: AssetProperties) => void;
-  errors: { [key: string]: boolean };
-  required?: boolean;
-}
-
-export function AssetDataSamples({ translator, formData, onChange, errors }: AssetDataSamplesProps): React.ReactElement {
+export function AssetDataSamples({ translator, formData, onChange, errors }: AssetFieldProps): React.ReactElement {
 
   return (<>
     <label
@@ -26,7 +18,7 @@ export function AssetDataSamples({ translator, formData, onChange, errors }: Ass
     >
       <T string="assets.new.fieldAdvancedInfoDataSampleUrl" />
       <Tooltip
-        title={translator("assets.new.fieldAdvancedInfoDataSampleUrlTooltip")}><IconButton><InfoOutlined /></IconButton></Tooltip>
+        title={translator("assets.new.fieldAdvancedInfoDataSampleUrlTooltip")}><IconButton aria-label={translator("common.moreInfo")}><InfoOutlined /></IconButton></Tooltip>
     </label>
 
     <KeyValuePairInputList
@@ -37,7 +29,7 @@ export function AssetDataSamples({ translator, formData, onChange, errors }: Ass
       addText={translator("assets.new.fieldAdvancedInfoDataSampleUrlAddText")}
       valueLabel={translator("assets.new.fieldAdvancedInfoDataSampleUrlValueLabel")}
       valuePlaceholder="https://my-org.com/my-data-offer"
-      error={errors[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS]}
+      error={!!errors[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS]}
       value={formData[ASSET_ADVANCED_INFO_DATA_SAMPLE_URLS] as []}
       valueOnly
       errorText="This field must be a link"

@@ -1,13 +1,13 @@
 // EDC Operator Registry
 // https://github.com/eclipse-edc/Connector/blob/main/spi/common/core-spi/src/main/java/org/eclipse/edc/spi/query/CriterionOperatorRegistry.java
 
-export const operatorEqual = {
+const operatorEqual = {
   value: 'eq',
   text: '=',
   tooltip: 'Equal to',
 }
 
-export const operatorNotEqual = {
+const operatorNotEqual = {
   value: 'neq',
   text: '!=',
   tooltip: 'Not equal to',
@@ -25,13 +25,13 @@ export const operatorLessThan = {
   tooltip: '<',
 };
 
-export const operatorLessThanOrEqual = {
+const operatorLessThanOrEqual = {
   value: 'lteq',
   text: '<=',
   tooltip: '<=',
 };
 
-export const operatorGreaterThan = {
+const operatorGreaterThan = {
   value: 'gt',
   text: '>',
   tooltip: '>',
@@ -43,31 +43,31 @@ export const operatorGreaterThanOrEqual = {
   tooltip: '>=',
 };
 
-export const operatorHasPart = {
+const operatorHasPart = {
   value: 'hasPart',
   text: 'Has Part',
   tooltip: 'Has Part',
 };
 
-export const operatorIsA = {
+const operatorIsA = {
   value: 'isA',
   text: 'Is a',
   tooltip: 'Is a',
 };
 
-export const operatorIsAnyOf = {
+const operatorIsAnyOf = {
   value: 'isAnyOf',
   text: 'Is any of',
   tooltip: 'Is any of',
 };
 
-export const operatorIsAllOf = {
+const operatorIsAllOf = {
   value: 'isAllOf',
   text: 'IS all of',
   tooltip: 'Is all of',
 };
 
-export const operatorIsNoneOf = {
+const operatorIsNoneOf = {
   value: 'isNoneOf',
   text: 'IS none of',
   tooltip: 'Is none of',

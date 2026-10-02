@@ -1,4 +1,4 @@
-import { proxyDelete, proxyGet, proxyHead, proxyPost, proxyPut } from "@/utilities/proxy";
+import { proxyDelete, proxyGet, proxyHead, proxyPost, proxyPut } from "@/server/proxy";
 
 export const GET = proxyGet;
 export const POST = proxyPost;

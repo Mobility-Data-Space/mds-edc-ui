@@ -1,5 +1,5 @@
-import { EdcInfoDisplayInput } from "@/components/atoms/edc-info-display-input.tsx";
-import { TitleWithIcon } from "@/components/atoms/TitleWithIcon.tsx";
+import { EdcInfoDisplayInput } from "@/components/atoms/edc-info-display-input";
+import { TitleWithIcon } from "@/components/atoms/title-with-icon";
 import { T } from "@/i18n";
 import { Card, CardContent, Typography } from "@mui/material";
 import React from "react";

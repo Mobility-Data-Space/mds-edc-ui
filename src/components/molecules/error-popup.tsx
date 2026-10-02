@@ -1,4 +1,3 @@
-import { Snackbar } from "@/components/molecules/snackbar";
 import { useAppSnackbar } from "@/hooks/use-app-snackbar";
 import { useTranslator } from "@/i18n";
 import { useEffect } from "react";

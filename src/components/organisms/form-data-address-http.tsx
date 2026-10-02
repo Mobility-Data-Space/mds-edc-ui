@@ -1,18 +1,18 @@
 import { Input } from "@/components/atoms/input";
 import { MuiSelect } from "@/components/atoms/mui-select";
 import { RadioButton } from "@/components/atoms/radio-button";
-import { DataAddressAuthHeaders } from "@/components/molecules/data-address-auth-headers.tsx";
-import { DataAddressHttpHeaders } from "@/components/molecules/data-address-http-headers.tsx";
+import { DataAddressAuthHeaders } from "@/components/molecules/data-address-auth-headers";
+import { DataAddressHttpHeaders } from "@/components/molecules/data-address-http-headers";
 import { T } from "@/i18n";
 import { DataAddress } from "@think-it-labs/edc-connector-client";
 import React from "react";
-import { Checkbox } from "../atoms/checkbox";
-import { DataAddressHttpQueryParams } from "../molecules/data-address-http-query-params";
+import { Checkbox } from "@/components/atoms/checkbox";
+import { DataAddressHttpQueryParams } from "@/components/molecules/data-address-http-query-params";
 
 export interface FormDataAddressHttpProps {
   translator: (key: string) => string,
   formData: DataAddress,
-  onChange: any,
+  onChange: (formData: DataAddress) => void,
   errors: { [key: string]: boolean | string },
   methodAlwaysShowing?: boolean,
   isPull?: boolean,

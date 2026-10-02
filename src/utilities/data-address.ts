@@ -17,11 +17,6 @@ export enum DataAddressTypes {
   CallbackAddress = "CallbackAddress",
 }
 
-export const remoteTypes = [
-  DataAddressTypes.AzureStorage,
-  DataAddressTypes.AmazonS3,
-];
-
 export interface OnRequestDataAddress extends BaseDataAddress {
   type: DataAddressTypes.MDSOnRequestOffer;
   email?: string;
@@ -58,6 +53,3 @@ export const defaultHttpDestinationDataAddress: HttpDataAddress = {
   isPull: false,
 };
 
-export const defaultOnRequestDataAddress: OnRequestDataAddress = {
-  type: DataAddressTypes.MDSOnRequestOffer,
-};

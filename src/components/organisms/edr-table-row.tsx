@@ -1,17 +1,16 @@
-import { Table } from "@/components/atoms/table.tsx";
+import { Table } from "@/components/atoms/table";
 import { T, useTranslator } from "@/i18n";
 import { Edr, JsonLdObject } from "@think-it-labs/edc-connector-client";
 import { useState } from "react";
-import { proxyConnectorManagement } from "../../constants/proxy";
+import { proxyConnectorManagement } from "@/constants/proxy";
 import { formatDateTime, formatDateTimeAgo } from "@/utilities/date";
 import { Tooltip } from "@mui/material";
-import { JsonLdDialog } from "../molecules/JsonLdDialog";
+import { JsonLdDialog } from "@/components/molecules/json-ld-dialog";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
-import { useSnackbar } from "notistack";
-import { Snackbar } from "../molecules/snackbar";
+import { useAppSnackbar } from "@/hooks/use-app-snackbar";
 
 export default function EdrTableRow({ edr }: { edr: Edr }) {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { showSnackbar } = useAppSnackbar();
   const { translator } = useTranslator();
   const [edrDataAddress, setEdrDataAddress] = useState<JsonLdObject>();
   const [isEdrDialogOpen, setIsEdrDialogOpen] = useState(false);
@@ -27,16 +26,10 @@ export default function EdrTableRow({ edr }: { edr: Edr }) {
       setIsEdrDialogOpen(true);
     } catch (error) {
       console.error(error);
-      enqueueSnackbar("", {
-        content: (key) => (
-          <Snackbar
-            type="error"
-            message={translator("edrs.failedToFetchEdr")}
-            onClose={() => {
-              closeSnackbar(key);
-            }}
-          />
-        ),
+      showSnackbar({
+        type: "error",
+        message: translator("edrs.failedToFetchEdr"),
+        persist: false,
       });
     }
   };
