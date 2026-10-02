@@ -14,6 +14,7 @@
     "typecheck": "tsc --noEmit",
     "test": "playwright test",
     "test:ui": "playwright test --ui",
+    "test:dcp": "E2E_COMPOSE_FILE=./docker-compose.dcp.yml playwright test",
     "security-scan": "trivy fs --scanners vuln,secret --severity MEDIUM,HIGH,CRITICAL .",
     "image-scan": "docker build -t mds-connector-ui:local-scan . && trivy image --severity MEDIUM,HIGH,CRITICAL mds-connector-ui:local-scan"
   },

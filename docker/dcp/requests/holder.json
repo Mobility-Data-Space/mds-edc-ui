@@ -1,0 +1,6 @@
+{
+  "did": "${DID}",
+  "holderId": "${DID}",
+  "name": "${CTX}",
+  "properties": { "active": true }
+}
