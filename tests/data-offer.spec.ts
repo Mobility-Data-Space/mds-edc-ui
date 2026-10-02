@@ -12,7 +12,7 @@ test.describe("Data Offer Tests", () => {
   });
 
   test.describe("List Functionality", () => {
-    test("Displays the data offers list on the first visit", async ({ page }) => {
+    test("Displays the data offers list on the first visit", async () => {
       // Verify the data offers list is visible
       const dataOffersList = await dataOfferPage.getDataOffersList();
       await expect(dataOffersList).toBeVisible();
@@ -25,7 +25,7 @@ test.describe("Data Offer Tests", () => {
   });
 
   test.describe("View Functionality", () => {
-    test("Displays data offer details when a data offer is selected", async ({ page }) => {
+    test("Displays data offer details when a data offer is selected", async () => {
       // Select a data offer
       const dataOfferCards = await dataOfferPage.getDataOfferCards();
       const dataOfferCard = dataOfferCards.first();
@@ -132,7 +132,7 @@ test.describe("Data Offer Tests", () => {
   });
 
   test.describe("Search Functionality", () => {
-    test("should display search input and trigger button", async ({ page }) => {
+    test("should display search input and trigger button", async () => {
       const searchInput = await dataOfferPage.getSearchInput();
       const searchTrigger = await dataOfferPage.getSearchTrigger();
 
@@ -140,7 +140,7 @@ test.describe("Data Offer Tests", () => {
       await expect(searchTrigger).toBeVisible();
     });
 
-    test("should search for data offers by ID", async ({ page }) => {
+    test("should search for data offers by ID", async () => {
       const initialDataOffers = await dataOfferPage.getDataOfferCards();
       // Wait for initial data offers to load before searching
       await initialDataOffers.first().waitFor({ state: 'visible', timeout: 30000 });
@@ -164,7 +164,7 @@ test.describe("Data Offer Tests", () => {
       }
     });
 
-    test("should clear search and show all data offers", async ({ page }) => {
+    test("should clear search and show all data offers", async () => {
       // First verify data offers are visible before searching
       const initialDataOffers = await dataOfferPage.getDataOfferCards();
       await initialDataOffers.first().waitFor({ state: 'visible', timeout: 30000 });
@@ -179,7 +179,7 @@ test.describe("Data Offer Tests", () => {
       await expect(allDataOffers.first()).toBeVisible();
     });
 
-    test("should handle empty search results", async ({ page }) => {
+    test("should handle empty search results", async () => {
       await dataOfferPage.searchDataOffers('nonexistentdataoffer12345');
 
       const searchResults = await dataOfferPage.getDataOfferCards();
@@ -190,12 +190,12 @@ test.describe("Data Offer Tests", () => {
   });
 
   test.describe("Pagination Functionality", () => {
-    test("should display pagination controls", async ({ page }) => {
+    test("should display pagination controls", async () => {
       const paginationInfo = await dataOfferPage.getPaginationInfo();
       await expect(paginationInfo).toBeVisible();
     });
 
-    test("should navigate to next page when available", async ({ page }) => {
+    test("should navigate to next page when available", async () => {
       const initialLastIndex = await dataOfferPage.getLastElementIndex();
       const isNextEnabled = await dataOfferPage.isNextPageEnabled();
 
@@ -210,7 +210,7 @@ test.describe("Data Offer Tests", () => {
       }
     });
 
-    test("should navigate to previous page when available", async ({ page }) => {
+    test("should navigate to previous page when available", async () => {
       const isNextEnabled = await dataOfferPage.isNextPageEnabled();
       if (isNextEnabled) {
         await dataOfferPage.goToNextPage();
@@ -230,7 +230,7 @@ test.describe("Data Offer Tests", () => {
       }
     });
 
-    test("should disable previous button on first page", async ({ page }) => {
+    test("should disable previous button on first page", async () => {
       const currentFirstIndex = await dataOfferPage.getFirstElementIndex();
 
       if (currentFirstIndex === 1) {
@@ -239,7 +239,7 @@ test.describe("Data Offer Tests", () => {
       }
     });
 
-    test("should disable next button on last page", async ({ page }) => {
+    test("should disable next button on last page", async () => {
       let pages = 0;
       while (await dataOfferPage.isNextPageEnabled() && pages < 50) {
         await dataOfferPage.goToNextPage();
@@ -250,7 +250,7 @@ test.describe("Data Offer Tests", () => {
       expect(isNextEnabled).toBeFalsy();
     });
 
-    test("should maintain search results across pagination", async ({ page }) => {
+    test("should maintain search results across pagination", async () => {
       await dataOfferPage.searchDataOffers('services-offer');
 
       const isNextEnabled = await dataOfferPage.isNextPageEnabled();

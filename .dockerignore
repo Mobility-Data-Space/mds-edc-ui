@@ -1,0 +1,38 @@
+# VCS / CI
+.git
+.github
+
+# dependencies and build output (rebuilt inside the image)
+**/node_modules
+.next
+out
+build
+**/*.tsbuildinfo
+next-env.d.ts
+
+# local env and secrets
+**/.env*
+**/.npmrc
+**/*.pem
+
+# tests
+tests
+playwright.config.ts
+playwright-report
+test-results
+blob-report
+
+# docs and tooling
+docs
+README.md
+License
+.trivyignore
+Dockerfile
+.dockerignore
+docker-compose*.yml
+.claude
+CLAUDE.md
+AGENTS.md
+**/.vscode
+**/.idea
+**/.DS_Store

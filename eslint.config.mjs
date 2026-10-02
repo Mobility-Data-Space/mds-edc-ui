@@ -1,4 +1,5 @@
 import nextConfig from "eslint-config-next/core-web-vitals";
+import nextTs from "eslint-config-next/typescript";
 import playwright from "eslint-plugin-playwright";
 
 const config = [
@@ -6,6 +7,7 @@ const config = [
     ignores: ["playwright-report/**", ".next/**", "node_modules/**"],
   },
   ...nextConfig,
+  ...nextTs,
   {
     ...playwright.configs["flat/recommended"],
     files: ["e2e/**/*.ts", "tests/**/*.ts", "**/*.spec.ts", "**/*.test.ts"],

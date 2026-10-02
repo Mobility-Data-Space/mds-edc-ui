@@ -20,8 +20,8 @@ export class DataOfferPage extends BaseListPage {
   }
 
   async openCreateDataOfferDialog() {
-    await this.page.click(this.createDataOfferButtonLocator);
-    await this.page.waitForSelector(this.createDataOfferDialogLocator);
+    await this.page.locator(this.createDataOfferButtonLocator).click();
+    await this.page.locator(this.createDataOfferDialogLocator).waitFor();
   }
 
   async fillContractId(contractId: string) {
@@ -57,7 +57,7 @@ export class DataOfferPage extends BaseListPage {
   }
 
   async submitCreateDataOfferForm() {
-    await this.page.click('[data-testid="create-button"]');
+    await this.page.locator('[data-testid="create-button"]').click();
   }
 
   // List page navigation

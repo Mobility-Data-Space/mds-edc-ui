@@ -18,7 +18,7 @@ test.describe("Transfer Processes Page Tests", () => {
   });
 
   test.describe("List Functionality", () => {
-    test("Displays the transfer processes list on the first visit", async ({ page }) => {
+    test("Displays the transfer processes list on the first visit", async () => {
       // Verify the transfer processes list is visible
       const transferProcessesList = await transferProcessesPage.getTransferProcessesList();
       await expect(transferProcessesList).toBeVisible();
@@ -30,7 +30,7 @@ test.describe("Transfer Processes Page Tests", () => {
   });
 
   test.describe("View Functionality", () => {
-    test("Displays transfer process details correctly", async ({ page }) => {
+    test("Displays transfer process details correctly", async () => {
       const transferProcessRows = await transferProcessesPage.getTransferProcessRows();
       const transferProcessRow = transferProcessRows.first();
       await transferProcessRow.getByTestId("show-transfer-process-details").click();
@@ -41,7 +41,7 @@ test.describe("Transfer Processes Page Tests", () => {
   });
 
   test.describe("Search Functionality", () => {
-    test("should display search input and trigger button", async ({ page }) => {
+    test("should display search input and trigger button", async () => {
       const searchInput = await transferProcessesPage.getSearchInput();
       const searchTrigger = await transferProcessesPage.getSearchTrigger();
 
@@ -49,7 +49,7 @@ test.describe("Transfer Processes Page Tests", () => {
       await expect(searchTrigger).toBeVisible();
     });
 
-    test("should search for transfer processes by ID", async ({ page }) => {
+    test("should search for transfer processes by ID", async () => {
       const initialTransferProcesses = await transferProcessesPage.getTransferProcessRows();
       const initialCount = await initialTransferProcesses.count();
 
@@ -70,7 +70,7 @@ test.describe("Transfer Processes Page Tests", () => {
       }
     });
 
-    test("should clear search and show all transfer processes", async ({ page }) => {
+    test("should clear search and show all transfer processes", async () => {
       await transferProcessesPage.searchTransferProcesses('test');
       await transferProcessesPage.clearTransferProcessSearch();
       const allTransferProcesses = await transferProcessesPage.getTransferProcessRows();
@@ -78,7 +78,7 @@ test.describe("Transfer Processes Page Tests", () => {
       await expect(allTransferProcesses.first()).toBeVisible();
     });
 
-    test("should handle empty search results", async ({ page }) => {
+    test("should handle empty search results", async () => {
       await transferProcessesPage.searchTransferProcesses('nonexistenttransferprocess12345');
       const searchResults = await transferProcessesPage.getTransferProcessRows();
       const resultCount = await searchResults.count();
@@ -88,12 +88,12 @@ test.describe("Transfer Processes Page Tests", () => {
   });
 
   test.describe("Pagination Functionality", () => {
-    test("should display pagination controls", async ({ page }) => {
+    test("should display pagination controls", async () => {
       const paginationInfo = await transferProcessesPage.getPaginationInfo();
       await expect(paginationInfo).toBeVisible();
     });
 
-    test("should navigate to next page when available", async ({ page }) => {
+    test("should navigate to next page when available", async () => {
       const initialItem = await transferProcessesPage.getFirstElementIndex();
       const isNextEnabled = await transferProcessesPage.isNextPageEnabled();
 
@@ -108,7 +108,7 @@ test.describe("Transfer Processes Page Tests", () => {
       }
     });
 
-    test("should navigate to previous page when available", async ({ page }) => {
+    test("should navigate to previous page when available", async () => {
       const isNextEnabled = await transferProcessesPage.isNextPageEnabled();
       if (isNextEnabled) {
         await transferProcessesPage.goToNextPage();
@@ -128,7 +128,7 @@ test.describe("Transfer Processes Page Tests", () => {
       }
     });
 
-    test("should disable previous button on first page", async ({ page }) => {
+    test("should disable previous button on first page", async () => {
       const currentFirstIndex = await transferProcessesPage.getFirstElementIndex();
 
       if (currentFirstIndex === 1) {
@@ -137,7 +137,7 @@ test.describe("Transfer Processes Page Tests", () => {
       }
     });
 
-    test("should disable next button on last page", async ({ page }) => {
+    test("should disable next button on last page", async () => {
       let pages = 0;
       while (await transferProcessesPage.isNextPageEnabled() && pages < 50) {
         await transferProcessesPage.goToNextPage();
@@ -148,7 +148,7 @@ test.describe("Transfer Processes Page Tests", () => {
       expect(isNextEnabled).toBeFalsy();
     });
 
-    test("should maintain search results across pagination", async ({ page }) => {
+    test("should maintain search results across pagination", async () => {
       await transferProcessesPage.searchTransferProcesses('test');
 
       const isNextEnabled = await transferProcessesPage.isNextPageEnabled();
@@ -172,7 +172,7 @@ test.describe("Transfer Processes Page Tests", () => {
         `${participantConfig.EDC_MANAGEMENT_URL}/v3/contractagreements/request`,
         { headers: managementHeaders, data: { "@context": EDC_CONTEXT, "@type": "QuerySpec" } },
       )).json();
-      const agreement = agreements.find((a: any) => a.consumerId === participantConfig.EDC_ID);
+      const agreement = agreements.find((a: { consumerId: string }) => a.consumerId === participantConfig.EDC_ID);
       expect(agreement).toBeDefined();
       assetId = agreement.assetId;
 

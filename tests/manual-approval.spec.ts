@@ -11,7 +11,7 @@ test.describe("Manual Approval Tests", () => {
     await manualApprovalPage.navigate();
   });
 
-  test("should display the approval list", async ({ page }) => {
+  test("should display the approval list", async () => {
     // Verify the approval list is visible
     const approvalList = await manualApprovalPage.getApprovalList();
     await expect(approvalList).toBeVisible();
@@ -24,7 +24,7 @@ test.describe("Manual Approval Tests", () => {
     await expect(page.getByText("with Counter Party ID")).toBeVisible();
   });
 
-  test("should display approve and reject buttons for each pending item", async ({ page }) => {
+  test("should display approve and reject buttons for each pending item", async () => {
     const approvalItems = await manualApprovalPage.getApprovalItems();
     await expect(approvalItems.first()).toBeVisible({ timeout: 15000 });
 

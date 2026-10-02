@@ -27,7 +27,7 @@ export class CatalogBrowserPage extends BaseListPage {
         response.status() < 400,
       { timeout: 60000 },
     );
-    await this.page.fill(this.catalogUrlInputLocator, url);
+    await this.page.locator(this.catalogUrlInputLocator).fill(url);
     await responsePromise;
     // Wait for items to actually render (handles HMR/Fast Refresh re-mounts)
     await this.page.locator(`${this.catalogListLocator} ${this.catalogItemLocator}`).first().waitFor({ state: 'visible', timeout: 30000 });

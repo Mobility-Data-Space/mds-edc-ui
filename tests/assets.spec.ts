@@ -12,7 +12,7 @@ test.describe("Assets Page Tests", () => {
   });
 
   test.describe("List Functionality", () => {
-    test("Displays the asset list on the first visit", async ({ page }) => {
+    test("Displays the asset list on the first visit", async () => {
       // Verify the asset list is visible
       const assetList = await assetsPage.getAssetList();
       await expect(assetList).toBeVisible();
@@ -62,7 +62,7 @@ test.describe("Assets Page Tests", () => {
     });
 
     test.describe("Asset Data Sources", () => {
-      test("Creates a new asset with GET HTTP and verifies its visibility in the list", async ({ page }) => {
+      test("Creates a new asset with GET HTTP and verifies its visibility in the list", async () => {
         await assetsPage.openCreateAssetModal();
 
         const randomNumber = `${Math.random()}`.replace("0.", "");
@@ -88,7 +88,7 @@ test.describe("Assets Page Tests", () => {
         await expect(successMessage).toBeVisible();
       });
 
-      test("Creates a new asset with POST HTTP and verifies its visibility in the list", async ({ page }) => {
+      test("Creates a new asset with POST HTTP and verifies its visibility in the list", async () => {
         await assetsPage.openCreateAssetModal();
 
         const randomNumber = `${Math.random()}`.replace("0.", "");
@@ -113,7 +113,7 @@ test.describe("Assets Page Tests", () => {
         await expect(successMessage).toBeVisible();
       });
 
-      test("Creates a new S3 asset for a single object and verifies its visibility in the list", async ({ page }) => {
+      test("Creates a new S3 asset for a single object and verifies its visibility in the list", async () => {
         await assetsPage.openCreateAssetModal();
 
         const randomNumber = `${Math.random()}`.replace("0.", "");
@@ -133,7 +133,7 @@ test.describe("Assets Page Tests", () => {
         await expect(successMessage).toBeVisible();
       });
 
-      test("Creates a new S3 asset for multiple objects and verifies its visibility in the list", async ({ page }) => {
+      test("Creates a new S3 asset for multiple objects and verifies its visibility in the list", async () => {
         await assetsPage.openCreateAssetModal();
 
         const randomNumber = `${Math.random()}`.replace("0.", "");
@@ -153,7 +153,7 @@ test.describe("Assets Page Tests", () => {
         await expect(successMessage).toBeVisible();
       });
 
-      test("Creates a new Azure asset for a single blob and verifies its visibility in the list", async ({ page }) => {
+      test("Creates a new Azure asset for a single blob and verifies its visibility in the list", async () => {
         await assetsPage.openCreateAssetModal();
 
         const randomNumber = `${Math.random()}`.replace("0.", "");
@@ -173,7 +173,7 @@ test.describe("Assets Page Tests", () => {
         await expect(successMessage).toBeVisible();
       });
 
-      test("Creates a new Azure asset for multiple blobs and verifies its visibility in the list", async ({ page }) => {
+      test("Creates a new Azure asset for multiple blobs and verifies its visibility in the list", async () => {
         await assetsPage.openCreateAssetModal();
 
         const randomNumber = `${Math.random()}`.replace("0.", "");
@@ -193,7 +193,7 @@ test.describe("Assets Page Tests", () => {
         await expect(successMessage).toBeVisible();
       });
 
-      test("Creates a new asset with a Custom JSON block and verifies its visibility in the list", async ({ page }) => {
+      test("Creates a new asset with a Custom JSON block and verifies its visibility in the list", async () => {
         await assetsPage.openCreateAssetModal();
 
         const randomNumber = `${Math.random()}`.replace("0.", "");
@@ -214,7 +214,7 @@ test.describe("Assets Page Tests", () => {
         await expect(successMessage).toBeVisible();
       });
 
-      test("Creates a new asset with an On Request type and verifies its visibility in the list", async ({ page }) => {
+      test("Creates a new asset with an On Request type and verifies its visibility in the list", async () => {
         await assetsPage.openCreateAssetModal();
 
         const randomNumber = `${Math.random()}`.replace("0.", "");
@@ -313,7 +313,7 @@ test.describe("Assets Page Tests", () => {
   });
 
   test.describe("Search Functionality", () => {
-    test("should display search input and trigger button", async ({ page }) => {
+    test("should display search input and trigger button", async () => {
       const searchInput = await assetsPage.getSearchInput();
       const searchTrigger = await assetsPage.getSearchTrigger();
 
@@ -321,7 +321,7 @@ test.describe("Assets Page Tests", () => {
       await expect(searchTrigger).toBeVisible();
     });
 
-    test("should search for assets by title", async ({ page }) => {
+    test("should search for assets by title", async () => {
       const initialAssets = await assetsPage.getAssetCards();
       const initialCount = await initialAssets.count();
 
@@ -343,7 +343,7 @@ test.describe("Assets Page Tests", () => {
       }
     });
 
-    test("should clear search and show all assets", async ({ page }) => {
+    test("should clear search and show all assets", async () => {
       await assetsPage.searchAssets('test');
 
       await assetsPage.clearSearch();
@@ -352,7 +352,7 @@ test.describe("Assets Page Tests", () => {
       await expect(allAssets.first()).toBeVisible();
     });
 
-    test("should handle empty search results", async ({ page }) => {
+    test("should handle empty search results", async () => {
       await assetsPage.searchAssets('nonexistentasset12345');
 
       const searchResults = await assetsPage.getSearchResults();
@@ -362,12 +362,12 @@ test.describe("Assets Page Tests", () => {
   });
 
   test.describe("Pagination Functionality", () => {
-    test("should display pagination controls", async ({ page }) => {
+    test("should display pagination controls", async () => {
       const paginationInfo = await assetsPage.getPaginationInfo();
       await expect(paginationInfo).toBeVisible();
     });
 
-    test("should navigate to next page when available", async ({ page }) => {
+    test("should navigate to next page when available", async () => {
       const initialLastIndex = await assetsPage.getLastElementIndex();
       const isNextEnabled = await assetsPage.isNextPageEnabled();
 
@@ -382,7 +382,7 @@ test.describe("Assets Page Tests", () => {
       }
     });
 
-    test("should navigate to previous page when available", async ({ page }) => {
+    test("should navigate to previous page when available", async () => {
       const isNextEnabled = await assetsPage.isNextPageEnabled();
       if (isNextEnabled) {
         await assetsPage.goToNextPage();
@@ -402,7 +402,7 @@ test.describe("Assets Page Tests", () => {
       }
     });
 
-    test("should disable previous button on first page", async ({ page }) => {
+    test("should disable previous button on first page", async () => {
       const currentFirstIndex = await assetsPage.getFirstElementIndex();
 
       if (currentFirstIndex === 1) {
@@ -411,7 +411,7 @@ test.describe("Assets Page Tests", () => {
       }
     });
 
-    test("should disable next button on last page", async ({ page }) => {
+    test("should disable next button on last page", async () => {
       let pages = 0;
       while (await assetsPage.isNextPageEnabled() && pages < 50) {
         await assetsPage.goToNextPage();
@@ -422,7 +422,7 @@ test.describe("Assets Page Tests", () => {
       expect(isNextEnabled).toBeFalsy();
     });
 
-    test("should maintain search results across pagination", async ({ page }) => {
+    test("should maintain search results across pagination", async () => {
       const searchTerm = "test asset" ;
       await assetsPage.searchAssets(searchTerm);
 
