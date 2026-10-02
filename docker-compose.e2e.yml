@@ -1,10 +1,12 @@
+name: mds-edc-ui-daps
+
 services:
   edc-1:
     image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
     platform: linux/amd64
     entrypoint: ["/app/bin/connector-inmemory", "--log-level=debug"]
     environment:
-      EDC_PARTICIPANT_ID: "MDSXXXXXXX.YYYYYYY"
+      EDC_PARTICIPANT_ID: "did:web:wallet-1%3A7083:edc-1"
       EDC_COMPONENT_ID: "participant_1_MDS_COMPONENT"
 
       WEB_HTTP_PATH: "/api"
@@ -56,7 +58,7 @@ services:
     platform: linux/amd64
     entrypoint: ["/app/bin/connector-inmemory", "--log-level=debug"]
     environment:
-      EDC_PARTICIPANT_ID: "MDSXXXXXXX.ZZZZZZZ"
+      EDC_PARTICIPANT_ID: "did:web:wallet-2%3A7083:edc-2"
       EDC_COMPONENT_ID: "participant_2_MDS_COMPONENT"
 
       WEB_HTTP_PATH: "/api"

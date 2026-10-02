@@ -11,7 +11,8 @@ import type { FieldShowProps } from "@/types/field-show";
 export function FieldShow({ icon, label, value, valueTitle, subLabel, openModalText, testDataId, copyTextIcon = false }: FieldShowProps): React.ReactElement {
   const { translator } = useTranslator();
   const nonNullValue = value || "";
-  const shouldNotTranslateValue = 0 === nonNullValue.indexOf('http') || (typeof nonNullValue === "string" && nonNullValue.match(/^\d/));
+  // DIDs contain ':' which i18next parses as a namespace separator, mangling the value
+  const shouldNotTranslateValue = 0 === nonNullValue.indexOf('http') || 0 === nonNullValue.indexOf('did:') || (typeof nonNullValue === "string" && nonNullValue.match(/^\d/));
   const [dialogIsOpen, setDialogIsOpen] = React.useState(false);
 
   return (

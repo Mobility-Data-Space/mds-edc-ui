@@ -1,8 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
-import { participantConfig as UiConfig } from './tests/utils/tests-config';
+import { participantConfig as UiConfig, COMPOSE_FILE } from './tests/utils/tests-config';
 
 export default defineConfig({
-  workers: '80%',
+  workers: process.env.CI ? 2 : '80%',
   testDir: './tests',
   testMatch: '**/*.spec.ts',
   fullyParallel: !process.env.CI,
@@ -44,6 +44,6 @@ export default defineConfig({
     },
     {
       name: "MDS EDC E2E Services",
-      command: 'docker compose -f ./docker-compose.e2e.yml up --pull always -d'
+      command: `docker compose -f ${COMPOSE_FILE} up --pull always -d`
     }]
 });
