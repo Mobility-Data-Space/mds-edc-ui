@@ -7,6 +7,7 @@ import {
 import {
   participantConfig,
   counterPartyParticipantConfig,
+  COMPOSE_FILE,
   SERVICES,
 } from "./tests-config.ts";
 import { type Participant } from "../../src/utilities/participant.ts";
@@ -14,7 +15,7 @@ import { type Participant } from "../../src/utilities/participant.ts";
 const checkApiReadiness = async (
   managementUrl: string,
   apiKey: string,
-  maxRetries = 30,
+  maxRetries = 90,
   intervalMs = 2000,
 ): Promise<boolean> => {
   for (let i = 0; i < maxRetries; i++) {
@@ -26,6 +27,8 @@ const checkApiReadiness = async (
           "X-Api-Key": apiKey,
         },
         body: JSON.stringify({}),
+        // A connection accepted during connector boot may never be answered; don't wait on it forever
+        signal: AbortSignal.timeout(5000),
       });
       if (response.ok || response.status === 400) {
         // 400 is acceptable - API is responding, just rejecting empty request
@@ -68,6 +71,25 @@ const checkInitStatus = (serviceName: string): boolean => {
   }
 };
 
+// One-shot services (e.g. dcp-seed) gate the connectors via depends_on; if one failed, the
+// connectors never start (or stale ones keep running), so fail instead of waiting forever.
+const assertNoFailedOneShots = () => {
+  const failed = execSync(
+    `docker compose -f ${COMPOSE_FILE} ps -a --format "{{.Service}} {{.State}} {{.ExitCode}}"`,
+  )
+    .toString()
+    .trim()
+    .split("\n")
+    .map((line) => line.split(" "))
+    .filter(([service, state, exitCode]) => !SERVICES.includes(service) && state === "exited" && exitCode !== "0")
+    .map(([service]) => service);
+  if (failed.length > 0) {
+    throw new Error(
+      `Compose service(s) ${failed.join(", ")} failed. See \`docker compose -f ${COMPOSE_FILE} logs ${failed.join(" ")}\`, then \`docker compose -f ${COMPOSE_FILE} down\` and retry.`,
+    );
+  }
+};
+
 async function globalSetup() {
   const interval = 5000; // 5 seconds
 
@@ -76,7 +98,7 @@ async function globalSetup() {
   if (!isCI) {
     console.log("Waiting for services to become healthy...");
     for (const service of SERVICES) {
-      while (!checkInitStatus(service)) {
+      while ((assertNoFailedOneShots(), !checkInitStatus(service))) {
         console.log(
           `Service ${service} is not healthy yet. Retrying in ${interval / 1000} seconds...`,
         );

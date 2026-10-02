@@ -32,93 +32,25 @@ jobs:
       - name: Typecheck
         run: yarn typecheck
 
-  # Test Phase - Run tests in parallel using matrix strategy
+  # Test Phase - Each identity stack (daps: in-memory connectors, dcp: wallets + issuer) runs
+  # the e2e suite split into Playwright shards: 2 stacks x 4 shards = 8 runs
   test:
+    name: test (${{ matrix.stack.name }}, shard ${{ matrix.shard }}/4)
     needs: lint
     runs-on: ubuntu-latest
+    # DCP is non-blocking until the catalog browser stops sending a dummy counterPartyId
+    continue-on-error: ${{ matrix.stack.name == 'dcp' }}
     strategy:
       fail-fast: false
       matrix:
-        test-group:
-          - name: "dashboard"
-            tests: "tests/dashboard.spec.ts"
-          - name: "assets"
-            tests: "tests/assets.spec.ts"
-          - name: "policies"
-            tests: "tests/policies.spec.ts"
-          - name: "data-offers"
-            tests: "tests/data-offer.spec.ts tests/create-data-offer.spec.ts"
-          - name: "contracts"
-            tests: "tests/contract-agreements.spec.ts tests/contract-negotiations.spec.ts"
-          - name: "transfer-catalog"
-            tests: "tests/transfer-process.spec.ts tests/catalog-browser.spec.ts tests/manual-approval.spec.ts"
-          - name: "utilities"
-            tests: "tests/utilities.spec.ts"
-          - name: "kafka-data-offer"
-            tests: "tests/kafka-data-offer.spec.ts"
-
-    services:
-      edc-1:
-        image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
-        ports:
-          - 8181:8181
-          - 8186:8186
-          - 8182:8182
-          - 8183:8183
-          - 8184:8184
-          - 8185:8185
-        env:
-          EDC_PARTICIPANT_ID: "MDSXXXXXXX.YYYYYYY"
-          EDC_COMPONENT_ID: "participant_1"
-          WEB_HTTP_PATH: "/api"
-          WEB_HTTP_PORT: "8181"
-          WEB_HTTP_CONTROL_PATH: "/api/control"
-          WEB_HTTP_CONTROL_PORT: "8186"
-          WEB_HTTP_MANAGEMENT_PATH: "/api/management"
-          WEB_HTTP_MANAGEMENT_PORT: "8182"
-          WEB_HTTP_MANAGEMENT_AUTH_TYPE: "tokenbased"
-          WEB_HTTP_MANAGEMENT_AUTH_KEY: "${{ secrets.TEST_API_KEY || 'default-test-api-key' }}"
-          WEB_HTTP_PROTOCOL_PATH: "/api/dsp"
-          WEB_HTTP_PROTOCOL_PORT: "8183"
-          WEB_HTTP_VERSION_PATH: "/api/version"
-          WEB_HTTP_VERSION_PORT: "8184"
-          WEB_HTTP_PUBLIC_PATH: "/public"
-          WEB_HTTP_PUBLIC_PORT: "8185"
-          EDC_DSP_CALLBACK_ADDRESS: "http://edc-1:8183/api/dsp"
-          EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: "transfer-proxy-token-signer-public-key"
-          EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: "transfer-proxy-token-signer-private-key"
-          EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "false"
-
-      edc-2:
-        image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
-        ports:
-          - 9181:8181
-          - 9186:8186
-          - 9182:8182
-          - 9183:8183
-          - 9184:8184
-          - 9185:8185
-        env:
-          EDC_PARTICIPANT_ID: "MDSXXXXXXX.ZZZZZZZ"
-          EDC_COMPONENT_ID: "participant_2"
-          WEB_HTTP_PATH: "/api"
-          WEB_HTTP_PORT: "8181"
-          WEB_HTTP_CONTROL_PATH: "/api/control"
-          WEB_HTTP_CONTROL_PORT: "8186"
-          WEB_HTTP_MANAGEMENT_PATH: "/api/management"
-          WEB_HTTP_MANAGEMENT_PORT: "8182"
-          WEB_HTTP_MANAGEMENT_AUTH_TYPE: "tokenbased"
-          WEB_HTTP_MANAGEMENT_AUTH_KEY: "${{ secrets.TEST_API_KEY || 'default-test-api-key' }}"
-          WEB_HTTP_PROTOCOL_PATH: "/api/dsp"
-          WEB_HTTP_PROTOCOL_PORT: "8183"
-          WEB_HTTP_VERSION_PATH: "/api/version"
-          WEB_HTTP_VERSION_PORT: "8184"
-          WEB_HTTP_PUBLIC_PATH: "/public"
-          WEB_HTTP_PUBLIC_PORT: "8185"
-          EDC_DSP_CALLBACK_ADDRESS: "http://edc-2:8183/api/dsp"
-          EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: "transfer-proxy-token-signer-public-key"
-          EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: "transfer-proxy-token-signer-private-key"
-          EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "false"
+        stack:
+          - name: daps
+            compose: docker-compose.e2e.yml
+          - name: dcp
+            compose: docker-compose.dcp.yml
+        shard: [1, 2, 3, 4]
+    env:
+      TEST_API_KEY: ${{ secrets.TEST_API_KEY || 'default-test-api-key' }}
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -130,24 +62,32 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run Playwright tests for ${{ matrix.test-group.name }}
+      - name: Start ${{ matrix.stack.name }} stack
+        run: docker compose -f ${{ matrix.stack.compose }} up -d --wait
+
+      - name: Run Playwright tests (shard ${{ matrix.shard }}/4)
         run: |
           docker run --rm \
             --network host \
             -v ${{ github.workspace }}:/app \
             -w /app \
             -e CI=true \
-            -e TEST_API_KEY=${{ secrets.TEST_API_KEY || 'default-test-api-key' }} \
+            -e TEST_API_KEY \
             mcr.microsoft.com/playwright:v1.62.1-jammy@sha256:b3251f7ff1a9fa559a28d1c67eaa15fc1a9800f7845e82756caea7842967f615 \
-            sh -c "yarn install --frozen-lockfile && yarn playwright test ${{ matrix.test-group.tests }}"
+            sh -c "yarn install --frozen-lockfile && yarn playwright test --shard=${{ matrix.shard }}/4"
+
+      - name: Collect stack logs
+        if: ${{ failure() }}
+        run: docker compose -f ${{ matrix.stack.compose }} logs --no-color > compose-logs.txt
 
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report-${{ matrix.test-group.name }}
+          name: playwright-report-${{ matrix.stack.name }}-${{ matrix.shard }}
           path: |
             playwright-report/
             test-results/
+            compose-logs.txt
           retention-days: 30
 
   # Build Phase - Runs alongside the tests once the gate passes

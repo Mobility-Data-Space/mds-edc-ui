@@ -1,0 +1,18 @@
+{
+  "participantContextId": "${ISSUER_CTX}",
+  "did": "${ISSUER_DID}",
+  "active": true,
+  "scopes": ["identity-api:admin issuer-admin-api:admin"],
+  "serviceEndpoints": [
+    {
+      "id": "mds-issuer-service-1",
+      "type": "IssuerService",
+      "serviceEndpoint": "http://issuer:7082/api/issuance/${ISSUER_API}/participants/${ISSUER_CTX}"
+    }
+  ],
+  "key": {
+    "keyId": "${ISSUER_DID}#key-1",
+    "privateKeyAlias": "${ISSUER_DID}#key-1",
+    "keyGeneratorParams": { "algorithm": "EC" }
+  }
+}

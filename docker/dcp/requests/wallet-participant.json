@@ -1,0 +1,17 @@
+{
+  "participantContextId": "${CTX}",
+  "did": "${DID}",
+  "active": true,
+  "serviceEndpoints": [
+    {
+      "id": "credential-service-1",
+      "type": "CredentialService",
+      "serviceEndpoint": "http://${WALLET}:7080/api/credentials/v1/participants/${CTX}"
+    }
+  ],
+  "key": {
+    "keyId": "${DID}#key-1",
+    "privateKeyAlias": "${DID}-privatekey-alias",
+    "keyGeneratorParams": { "algorithm": "EC" }
+  }
+}

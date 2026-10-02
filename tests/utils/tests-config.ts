@@ -1,5 +1,9 @@
 import { PROTOCOL_PATH } from "../../src/constants/catalog.ts";
 
+// Compose stack started/stopped for local runs; e.g. ./docker-compose.dcp.yml for DCP.
+export const COMPOSE_FILE =
+  process.env.E2E_COMPOSE_FILE ?? "./docker-compose.e2e.yml";
+
 export const SERVICES = ["edc-1", "edc-2"];
 
 const participantProtocolUrl =
@@ -9,7 +13,7 @@ const couterPartyparticipantProtocolUrl =
 
 export const participantConfig = {
   APP_URL: "http://127.0.0.1:3000",
-  EDC_ID: "MDSXXXXXXX.YYYYYYY",
+  EDC_ID: "did:web:wallet-1%3A7083:edc-1",
   EDC_NAME: "Think-it Test Connector 1",
   EDC_DESCRIPTION: "Think-it GmbH MDS EDC Test Connector 1",
   EDC_MANAGEMENT_URL: "http://localhost:8182/api/management",
@@ -26,7 +30,7 @@ export const participantConfig = {
 };
 
 export const counterPartyParticipantConfig = {
-  EDC_ID: "MDSXXXXXXX.ZZZZZZZ",
+  EDC_ID: "did:web:wallet-2%3A7083:edc-2",
   EDC_NAME: "Think-it Test Connector 2",
   EDC_DESCRIPTION: "Think-it GmbH MDS EDC Test Connector 2",
   EDC_MANAGEMENT_URL: "http://localhost:9182/api/management",
