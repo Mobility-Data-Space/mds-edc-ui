@@ -33,7 +33,7 @@
     "javascript-time-ago": "^2.5.12",
     "jsonld": "^9.0.0",
     "mui-chips-input": "^9.0.0",
-    "next": "16.3.6",
+    "next": "16.3.8",
     "notistack": "^3.0.2",
     "react": "19.3.0",
     "react-dom": "19.3.0",
