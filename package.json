@@ -27,7 +27,7 @@
     "@think-it-labs/edc-connector-client": "^0.9.5",
     "@think-it-labs/edc-connector-ui": "^0.2.11",
     "clsx": "^2.1.0",
-    "dayjs": "^1.11.21",
+    "dayjs": "^1.11.23",
     "formik": "^2.4.9",
     "i18next": "^26.4.2",
     "javascript-time-ago": "^2.5.12",
