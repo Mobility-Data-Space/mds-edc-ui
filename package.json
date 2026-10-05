@@ -22,7 +22,7 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.9",
     "@mui/material": "^7.3.9",
-    "@mui/x-date-pickers": "^8.27.2",
+    "@mui/x-date-pickers": "^9.14.0",
     "@tailwindcss/typography": "^0.5.20",
     "@think-it-labs/edc-connector-client": "^0.9.5",
     "@think-it-labs/edc-connector-ui": "^0.2.11",
