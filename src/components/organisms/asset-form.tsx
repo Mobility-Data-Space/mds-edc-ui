@@ -68,7 +68,7 @@ export default function AssetForm({ onClose }: AssetFormProps) {
 
   useEffect(() => {
     client.management.assets
-      .queryAll({ offset: 0 })
+      .queryAll({ "@type": "QuerySpec", offset: 0 })
       .then((assets) => setExistingIds(assets.map((asset) => asset["@id"])));
   }, [client]);
 
@@ -83,7 +83,7 @@ export default function AssetForm({ onClose }: AssetFormProps) {
   const dataAddressIsNotValid = () => {
     return (
       0 <
-      Object.entries(validateDataAddress(formData.dataAddress, translator))
+      Object.entries(validateDataAddress(formData.dataAddress!, translator))
         .length
     );
   };
@@ -179,7 +179,7 @@ export default function AssetForm({ onClose }: AssetFormProps) {
       properties: validateAdvancedInfo(
         validateGeneralInfo(formData.properties),
       ),
-      dataAddress: validateDataAddress(formData.dataAddress, translator),
+      dataAddress: validateDataAddress(formData.dataAddress!, translator),
     };
   };
 
@@ -321,7 +321,7 @@ export default function AssetForm({ onClose }: AssetFormProps) {
               <div data-testid="asset-create-data-address-step-content">
                 <FormDataAddressStep
                   translator={translator}
-                  formData={formData.dataAddress}
+                  formData={formData.dataAddress!}
                   onChange={dataAddressFormOnChange}
                   errors={errors.dataAddress}
                 />

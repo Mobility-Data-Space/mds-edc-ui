@@ -26,6 +26,7 @@ export const operatorIn = {
 export const idSelector = (id: string): CriterionInput[] => {
   return [
     {
+      "@type": "Criterion",
       operandLeft: EDC_ID_FIELD,
       operator: operatorIn.value,
       operandRight: id,
@@ -36,6 +37,7 @@ export const idSelector = (id: string): CriterionInput[] => {
 export const idMultipleSelector = (ids: string[]): CriterionInput[] => {
   return [
     {
+      "@type": "Criterion",
       operandLeft: EDC_ID_FIELD,
       operator: operatorIn.value,
       operandRight: transformIdsToString(ids),

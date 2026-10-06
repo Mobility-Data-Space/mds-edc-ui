@@ -142,8 +142,10 @@ export default function ContractAgreementDialog({
     }
     edcClient.management.transferProcesses
       .queryAll({
+        "@type": "QuerySpec",
         filterExpression: [
           {
+            "@type": "Criterion",
             operandLeft: "contractId",
             operator: "=",
             operandRight: contractAgreement.id,

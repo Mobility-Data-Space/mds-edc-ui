@@ -116,6 +116,7 @@ export default function ContractNegotiationsManualApprovalListPage() {
 
   const pendingFilter: CriterionInput[] = [
     {
+      "@type": "Criterion",
       operandLeft: "pending",
       operator: "=",
       operandRight: true,

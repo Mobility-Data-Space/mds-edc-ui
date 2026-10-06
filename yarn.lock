@@ -1112,19 +1112,19 @@
   resolved "https://registry.yarnpkg.com/@tanstack/virtual-core/-/virtual-core-3.13.19.tgz#ab7b5de0b7ba17f22530f4efda5bf2b771fbda9d"
   integrity sha512-/BMP7kNhzKOd7wnDeB8NrIRNLwkf5AhCYCvtfZV2GXWbBieFm/el0n6LOAXlTi6ZwHICSNnQcIxRCWHrLzDY+g==
 
-"@think-it-labs/edc-connector-client@^0.9.5":
-  version "0.9.5"
-  resolved "https://registry.yarnpkg.com/@think-it-labs/edc-connector-client/-/edc-connector-client-0.9.5.tgz#7849e1c548eff362f1395aa7052868a0711ddc47"
-  integrity sha512-YVzxhnA9ZTBx0Efoo3uF9OSCKhRhfm2rLvqdW7iTbNoant0oHbnmH6E9EFNGjm5NU5eFgaWUR5ZomMhqY4GNpA==
+"@think-it-labs/edc-connector-client@^0.10.1":
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/@think-it-labs/edc-connector-client/-/edc-connector-client-0.10.1.tgz#d0d54ef041c73300d4eaa5322ad78adb4f1bb918"
+  integrity sha512-ciIEnozI0SP958eQd5y9WhwvCkoas3y/kJICMC4oYNfO9mP5yjZGDStRuXWz2QGANe/JToXguzyRPhkEgrJmJA==
   dependencies:
     "@think-it-labs/typed-error" "^0.3.0"
     jsonld "^9.0.0"
     type-fest "^5.4.1"
 
-"@think-it-labs/edc-connector-ui@^0.2.11":
-  version "0.2.11"
-  resolved "https://registry.yarnpkg.com/@think-it-labs/edc-connector-ui/-/edc-connector-ui-0.2.11.tgz#0e73f2fed88d1a5f32cdbe0cd1cd4839515de47b"
-  integrity sha512-niDgsrbVZo74Su4RPWD+cFdWn3r39MLetgExUOF92xk0vkBYAHr8WgkxzIjuaJtB6XVD9NYNQSarjWknPgYV9g==
+"@think-it-labs/edc-connector-ui@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@think-it-labs/edc-connector-ui/-/edc-connector-ui-0.3.1.tgz#bfd01811add8f7580196e99ddbe42ef4826a9a77"
+  integrity sha512-qV0QovR6qDSjAg1I4sMlaHZqDquubyrYvll6Yisg0VxSVA0iNsUZrYGQXNhKpAnGb+3nvR9EUMkDXVcOjgFz7w==
 
 "@think-it-labs/typed-error@^0.3.0":
   version "0.3.0"

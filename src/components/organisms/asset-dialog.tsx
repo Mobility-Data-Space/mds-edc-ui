@@ -40,8 +40,14 @@ interface AssetDialogProps {
 const hasContract = async (client: EdcConnectorClient, assetId: string) => {
   try {
     const agreements = await client.management.contractAgreements.queryAll({
+      "@type": "QuerySpec",
       filterExpression: [
-        { operandLeft: "assetId", operator: "=", operandRight: assetId },
+        {
+          "@type": "Criterion",
+          operandLeft: "assetId",
+          operator: "=",
+          operandRight: assetId,
+        },
       ],
     });
     return agreements.length > 0;

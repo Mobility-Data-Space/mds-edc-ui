@@ -53,13 +53,13 @@ export class PoliciesPage extends BaseListPage {
 
   async clickCreateButton(expectedStatus?: number) {
     await this.page.locator(this.createButtonLocator).click();
-    await this.waitForApiResponse('/connector/management/v3/policydefinitions', {
+    await this.waitForApiResponse('/connector/management/v4/policydefinitions', {
       expectedStatus,
     });
   }
 
   async clickCreateButtonAndWaitForCreateResponse(expectedStatus?: number) {
-    const createEndpoint = '/connector/management/v3/policydefinitions';
+    const createEndpoint = '/connector/management/v4/policydefinitions';
     const responsePromise = this.page.waitForResponse(
       (response) => {
         const statusCheck = expectedStatus ? response.status() === expectedStatus : response.status() < 400;
@@ -81,7 +81,7 @@ export class PoliciesPage extends BaseListPage {
 
   async navigate() {
     await this.page.goto('/policy-definitions');
-    await this.waitForApiResponse('/connector/management/v3/policydefinitions');
+    await this.waitForApiResponse('/connector/management/v4/policydefinitions');
   }
 
   async getPoliciesList() {
@@ -101,18 +101,18 @@ export class PoliciesPage extends BaseListPage {
   }
 
   async searchPolicies(searchTerm: string) {
-    await this.searchItems(searchTerm, '/connector/management/v3/policydefinitions');
+    await this.searchItems(searchTerm, '/connector/management/v4/policydefinitions');
   }
 
   async clearPolicySearch() {
-    await this.clearSearch('/connector/management/v3/policydefinitions');
+    await this.clearSearch('/connector/management/v4/policydefinitions');
   }
 
   async goToNextPage() {
-    await super.goToNextPage('/connector/management/v3/policydefinitions');
+    await super.goToNextPage('/connector/management/v4/policydefinitions');
   }
 
   async goToPreviousPage() {
-    await super.goToPreviousPage('/connector/management/v3/policydefinitions');
+    await super.goToPreviousPage('/connector/management/v4/policydefinitions');
   }
 }

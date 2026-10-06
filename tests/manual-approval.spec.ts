@@ -45,7 +45,7 @@ test.describe("Manual Approval Tests", () => {
     await expect(approveButton).toBeVisible();
 
     const responsePromise = page.waitForResponse(
-      (response) => response.url().includes('/v3/contractnegotiations/') &&
+      (response) => response.url().includes('/v4/contractnegotiations/') &&
                     response.url().includes('/approve') &&
                     response.request().method() === 'POST'
     );
@@ -66,7 +66,7 @@ test.describe("Manual Approval Tests", () => {
     await expect(rejectButton).toBeVisible();
 
     const responsePromise = page.waitForResponse(
-      (response) => response.url().includes('/v3/contractnegotiations/') &&
+      (response) => response.url().includes('/v4/contractnegotiations/') &&
                     response.url().includes('/reject') &&
                     response.request().method() === 'POST'
     );

@@ -64,7 +64,7 @@ export class DataOfferPage extends BaseListPage {
   async navigate() {
     await this.page.goto('/data-offers');
     await this.page.waitForURL('/data-offers');
-    await this.page.waitForResponse((response) => response.url().includes('/connector/management/v3/contractdefinitions'));
+    await this.page.waitForResponse((response) => response.url().includes('/connector/management/v4/contractdefinitions'));
   }
 
   async getDataOffersList() {
@@ -85,18 +85,18 @@ export class DataOfferPage extends BaseListPage {
 
 
   async searchDataOffers(searchTerm: string) {
-    await this.searchItems(searchTerm, '/connector/management/v3/contractdefinitions');
+    await this.searchItems(searchTerm, '/connector/management/v4/contractdefinitions');
   }
 
   async clearDataOfferSearch() {
-    await this.clearSearch('/connector/management/v3/contractdefinitions');
+    await this.clearSearch('/connector/management/v4/contractdefinitions');
   }
 
   async goToNextPage() {
-    await super.goToNextPage('/connector/management/v3/contractdefinitions');
+    await super.goToNextPage('/connector/management/v4/contractdefinitions');
   }
 
   async goToPreviousPage() {
-    await super.goToPreviousPage('/connector/management/v3/contractdefinitions');
+    await super.goToPreviousPage('/connector/management/v4/contractdefinitions');
   }
 }

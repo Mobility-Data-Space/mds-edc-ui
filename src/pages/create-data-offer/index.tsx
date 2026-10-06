@@ -134,10 +134,12 @@ export default function CreateDataOfferPage() {
       setIsCheckingAssetId(true);
       try {
         const assets = await client.management.assets.queryAll({
+          "@type": "QuerySpec",
           offset: 0,
           limit: 1,
           filterExpression: [
             {
+              "@type": "Criterion",
               operandLeft: "https://w3id.org/edc/v0.0.1/ns/id",
               operator: "=",
               operandRight: assetId,

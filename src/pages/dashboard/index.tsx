@@ -35,7 +35,7 @@ export default function ConnectorPage() {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- setting loading state before async call is a valid pattern
     setIsLoadingTransferProcesses(true);
     edcClient.management.transferProcesses
-      .queryAll({ offset: 0 })
+      .queryAll({ "@type": "QuerySpec", offset: 0 })
       .then(setTransferProcesses)
       .finally(() => setIsLoadingTransferProcesses(false));
   }, [edcClient]);

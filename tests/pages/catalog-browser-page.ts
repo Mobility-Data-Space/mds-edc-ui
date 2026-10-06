@@ -23,7 +23,7 @@ export class CatalogBrowserPage extends BaseListPage {
   async fillCatalogUrlInput(url: string) {
     const responsePromise = this.page.waitForResponse(
       (response) =>
-        response.url().includes('/connector/management/v3/catalog') &&
+        response.url().includes('/connector/management/v4/catalog') &&
         response.status() < 400,
       { timeout: 60000 },
     );
@@ -47,19 +47,19 @@ export class CatalogBrowserPage extends BaseListPage {
   }
 
   async searchCatalog(searchTerm: string) {
-    await this.searchItems(searchTerm, '/connector/management/v3/catalog');
+    await this.searchItems(searchTerm, '/connector/management/v4/catalog');
   }
 
   async clearSearch() {
-    await super.clearSearch('/connector/management/v3/catalog');
+    await super.clearSearch('/connector/management/v4/catalog');
   }
 
   async goToNextPage() {
-    await super.goToNextPage('/connector/management/v3/catalog');
+    await super.goToNextPage('/connector/management/v4/catalog');
   }
 
   async goToPreviousPage() {
-    await super.goToPreviousPage('/connector/management/v3/catalog');
+    await super.goToPreviousPage('/connector/management/v4/catalog');
   }
 
   async getSearchResults() {

@@ -80,7 +80,7 @@ export default function DataOfferCreateDialog({
 
   useEffect(() => {
     edcClient.management.assets
-      .queryAll({ offset: 0 })
+      .queryAll({ "@type": "QuerySpec", offset: 0 })
       .then((result) => {
         setAssetIds(optionsGenerator(result));
         const assets: { [key: string]: Asset } = {};
@@ -95,7 +95,7 @@ export default function DataOfferCreateDialog({
       });
 
     edcClient.management.policyDefinitions
-      .queryAll({ offset: 0 })
+      .queryAll({ "@type": "QuerySpec", offset: 0 })
       .then((result) => setPolicyIds(optionsGenerator(result)))
       .catch((error) => setPolicyIds([]));
   }, [edcClient]);

@@ -1,7 +1,7 @@
-import { Tag } from "@/components/atoms/key-value-pair-input.tsx";
-import { FieldShowProps } from "@/components/molecules/field-show";
-import { ENGLISH_SELECT_DATA, LANGUAGES } from "@/constants/languages";
-import { DELIMITER, useTranslator } from "@/i18n";
+import {Tag} from "@/components/atoms/key-value-pair-input.tsx";
+import {FieldShowProps} from "@/components/molecules/field-show";
+import {ENGLISH_SELECT_DATA, LANGUAGES} from "@/constants/languages";
+import {DELIMITER, useTranslator} from "@/i18n";
 import {
   ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE,
   ASSET_ADVANCED_INFO_DATA_CATEGORY,
@@ -35,35 +35,17 @@ import {
   ASSET_TITLE,
   ASSET_VERSION,
 } from "@/jsonld/asset";
-import {
-  CONTEXT_DCAT,
-  CONTEXT_EDC,
-  contextWithNoPrefixToCompact,
-} from "@/jsonld/context";
-import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog.ts";
-import {
-  dataCategoryValueToText,
-  dataSubCategoryValueToText,
-} from "@/utilities/data-category.ts";
-import { EDC_ID_FIELD } from "@/utilities/data-offer.ts";
-import { removeEmptyFields } from "@/utilities/form";
-import {
-  extractArrayValues,
-  hasPort,
-  isEmail,
-  isUrl,
-  toTitleCase,
-  uid,
-} from "@/utilities/utilities";
-import {
-  Asset,
-  AssetInput,
-  DataAddress,
-} from "@think-it-labs/edc-connector-client";
-import { HttpDataAddress } from "@think-it-labs/edc-connector-client/dist/src/entities/data-address";
-import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
+import {CONTEXT_DCAT, CONTEXT_EDC, contextWithNoPrefixToCompact,} from "@/jsonld/context";
+import {removeJsonLdSchemaFromProperties} from "@/utilities/catalog.ts";
+import {dataCategoryValueToText, dataSubCategoryValueToText,} from "@/utilities/data-category.ts";
+import {EDC_ID_FIELD} from "@/utilities/data-offer.ts";
+import {removeEmptyFields} from "@/utilities/form";
+import {extractArrayValues, isEmail, isUrl, toTitleCase, uid,} from "@/utilities/utilities";
+import {Asset, AssetInput, DataAddress,} from "@think-it-labs/edc-connector-client";
+import {HttpDataAddress} from "@think-it-labs/edc-connector-client/dist/src/entities/data-address";
+import {readValue} from "@think-it-labs/edc-connector-ui/json-ld";
 import jsonld from "jsonld";
-import { useCallback } from "react";
+import {useCallback} from "react";
 import {
   AmazonS3DataAddress,
   AzureBlobDataAddress,
@@ -72,7 +54,7 @@ import {
   defaultHttpSourceDataAddress,
   OnRequestDataAddress,
 } from "./data-address";
-import { dateToISO, dateToString, isValidDate } from "./date";
+import {dateToISO, dateToString, isValidDate} from "./date";
 
 const temporalCoverageValue = ([start, end]: [string, string]) => {
   if (!start && !end) {
@@ -183,7 +165,7 @@ export const fromAssetForm = (
   }
 
   return {
-    "@type": "https://w3id.org/edc/v0.0.1/ns/Asset",
+    "@type": "Asset",
     "@id": cleanFormDataObject["@id"],
     properties: cleanFormDataObject.properties,
     privateProperties: cleanFormDataObject.privateProperties,

@@ -21,7 +21,7 @@ const checkApiReadiness = async (
 ): Promise<boolean> => {
   for (let i = 0; i < maxRetries; i++) {
     try {
-      const response = await fetch(`${managementUrl}/v3/assets/request`, {
+      const response = await fetch(`${managementUrl}/v4/assets/request`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

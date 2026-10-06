@@ -26,10 +26,12 @@ async function getNextSequenceNumber(datePrefix: string): Promise<number> {
   const client = getEdcClient();
   const existingTodayContracts =
     await client.management.contractDefinitions.queryAll({
+      "@type": "QuerySpec",
       offset: 0,
       limit: 1000,
       filterExpression: [
         {
+          "@type": "Criterion",
           operandLeft: "id",
           operator: "like",
           operandRight: `${datePrefix}_%`,
@@ -68,7 +70,7 @@ export async function createContractDefinitionWithRetry(
       "@id": contractId,
     };
 
-    const url = `${config.managementUrl}/v3/contractdefinitions`;
+    const url = `${config.managementUrl}/v4/contractdefinitions`;
     const proxy = await createProxyRequest(
       url,
       "POST",

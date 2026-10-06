@@ -80,7 +80,7 @@ export default function EditAssetPage() {
 
   const onChangeOfferType = (newOfferType: string) => {
     if (newOfferType === unchangedOfferType.value) {
-      setFormData({ ...formData, dataAddress: oldAssetData.dataAddress });
+      setFormData({ ...formData, dataAddress: oldAssetData.dataAddress! });
     }
     setOfferType(newOfferType);
   };
@@ -115,7 +115,7 @@ export default function EditAssetPage() {
   const dataAddressIsNotValid = () => {
     return (
       0 <
-      Object.entries(validateDataAddress(formData.dataAddress, translator))
+      Object.entries(validateDataAddress(formData.dataAddress!, translator))
         .length
     );
   };
@@ -241,7 +241,7 @@ export default function EditAssetPage() {
                 ) : (
                   <FormDataAddressStep
                     translator={translator}
-                    formData={formData.dataAddress}
+                    formData={formData.dataAddress!}
                     onChange={dataAddressFormOnChange}
                     errors={errors.dataAddress}
                     customDataAddressConfigRows={6}

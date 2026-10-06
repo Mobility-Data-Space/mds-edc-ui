@@ -13,7 +13,7 @@ export class ManualApprovalPage {
   async navigate() {
     await this.page.goto('/negotiation-manual-approval');
     await this.page.waitForResponse(
-      (response) => response.url().includes('/connector/management/v3/contractnegotiations')
+      (response) => response.url().includes('/connector/management/v4/contractnegotiations')
     );
   }
 
