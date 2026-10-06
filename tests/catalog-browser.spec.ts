@@ -4,6 +4,7 @@ import { CatalogBrowserPage } from './pages/catalog-browser-page';
 import { counterPartyParticipantConfig } from './utils/tests-config';
 
 const COUNTER_PARTY_ADDRESS = counterPartyParticipantConfig.EDC_PROTOCOL_URL;
+const COUNTER_PARTY_DID = counterPartyParticipantConfig.EDC_ID;
 
 const BOGUS_DSP_URL = "http://offline-host.invalid:9999/api/dsp";
 
@@ -40,11 +41,40 @@ test.describe("Catalog Browser Tests", () => {
     });
   });
 
+  test.describe('Participant DID discovery', () => {
+    test('Rejects identifiers that are not did:web', async ({ request }) => {
+      const response = await request.get('/connector/discovery?did=did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK');
+      expect(response.status()).toBe(400);
+    });
+
+    test('Rejects a did:web that points at a non-public address', async ({ request }) => {
+      for (const did of ['did:web:127.0.0.1', 'did:web:localhost%3A3000', 'did:web:169.254.169.254']) {
+        const response = await request.get(`/connector/discovery?did=${encodeURIComponent(did)}`);
+        expect(response.status(), did).toBe(400);
+      }
+    });
+
+    test('Rejects a did:web whose host segment smuggles a path', async ({ request }) => {
+      const response = await request.get(`/connector/discovery?did=${encodeURIComponent('did:web:example.com%2F..%2F')}`);
+      expect(response.status()).toBe(400);
+    });
+
+    test('Tells the user when a DID cannot be resolved', async ({ page }) => {
+      catalogPage = new CatalogBrowserPage(page);
+      await catalogPage.navigate();
+      await catalogPage.fillParticipantDidInput('did:web:does-not-exist.invalid');
+
+      await expect(page.getByText('Could not resolve this DID')).toBeVisible({ timeout: 30_000 });
+      await expect(page.locator(catalogPage.catalogUrlInputLocator)).toBeEditable();
+    });
+  });
+
   test.describe('With catalog URL filled', () => {
     test.beforeEach(async ({ page }) => {
       if (!COUNTER_PARTY_ADDRESS) throw new Error('EDC_PROTOCOL_URL environment variable must be set');
       catalogPage = new CatalogBrowserPage(page);
       await catalogPage.navigate();
+      await catalogPage.fillParticipantDidInput(COUNTER_PARTY_DID);
       await catalogPage.fillCatalogUrlInput(COUNTER_PARTY_ADDRESS);
     });
 
