@@ -442,6 +442,12 @@ export const en = {
         "I agree to the Data Offer Terms & Conditions",
       emptyCounterPartyUrl:
         "Please enter a connector endpoint to fetch its catalog.",
+      participantDid: "Participant DID",
+      advertisedConnectors: "Advertised Connectors",
+      noAdvertisedConnectors:
+        "This participant advertises no connectors in its DID document. Enter a connector endpoint.",
+      discoveryFailed:
+        "Could not resolve this DID. Enter a connector endpoint instead.",
     },
     contractAgreements: {
       title: "List all contract agreements",

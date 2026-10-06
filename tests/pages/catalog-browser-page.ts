@@ -6,6 +6,7 @@ export class CatalogBrowserPage extends BaseListPage {
   readonly catalogItemLocator = '[data-testid="catalog-item"]';
   readonly catalogDialogLocator = '[data-testid="data-offer-dialog"]';
   readonly catalogUrlInputLocator = '#catalog-url';
+  readonly participantDidInputLocator = '#catalog-participant-id';
   readonly searchInputLocator = 'input[placeholder*="Search"]';
   readonly searchTriggerLocator = 'button:has-text("Search")';
 
@@ -18,6 +19,12 @@ export class CatalogBrowserPage extends BaseListPage {
     await this.page.waitForLoadState('domcontentloaded');
     // Wait for the page to be interactive
     await this.page.locator(this.catalogUrlInputLocator).waitFor({ state: 'visible', timeout: 10000 });
+  }
+
+  // DCP providers only answer a catalog request whose counterPartyId is their
+  // DID, so it is entered before the endpoint.
+  async fillParticipantDidInput(did: string) {
+    await this.page.locator(this.participantDidInputLocator).fill(did);
   }
 
   async fillCatalogUrlInput(url: string) {
