@@ -38,8 +38,6 @@ jobs:
     name: test (${{ matrix.stack.name }}, shard ${{ matrix.shard }}/4)
     needs: lint
     runs-on: ubuntu-latest
-    # DCP is non-blocking until the catalog browser stops sending a dummy counterPartyId
-    continue-on-error: ${{ matrix.stack.name == 'dcp' }}
     strategy:
       fail-fast: false
       matrix:
