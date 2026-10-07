@@ -12,7 +12,7 @@ export class TransferProcessesPage extends BaseListPage {
 
   async navigate() {
     await this.page.goto('/transfer-processes');
-    await this.page.waitForResponse((response) => response.url().includes('/connector/management/v3/transferprocesses'));
+    await this.page.waitForResponse((response) => response.url().includes('/connector/management/v4/transferprocesses'));
   }
 
   async getTransferProcessesList() {
@@ -32,18 +32,18 @@ export class TransferProcessesPage extends BaseListPage {
   }
 
   async searchTransferProcesses(searchTerm: string) {
-    await this.searchItems(searchTerm, '/connector/management/v3/transferprocesses');
+    await this.searchItems(searchTerm, '/connector/management/v4/transferprocesses');
   }
 
   async clearTransferProcessSearch() {
-    await this.clearSearch('/connector/management/v3/transferprocesses');
+    await this.clearSearch('/connector/management/v4/transferprocesses');
   }
 
   async goToNextPage() {
-    await super.goToNextPage('/connector/management/v3/transferprocesses');
+    await super.goToNextPage('/connector/management/v4/transferprocesses');
   }
 
   async goToPreviousPage() {
-    await super.goToPreviousPage('/connector/management/v3/transferprocesses');
+    await super.goToPreviousPage('/connector/management/v4/transferprocesses');
   }
 }

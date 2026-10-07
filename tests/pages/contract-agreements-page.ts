@@ -68,7 +68,7 @@ export class ContractAgreementsPage extends BaseListPage {
 
   async navigate() {
     await this.page.goto('/contract-agreements');
-    await this.waitForApiResponse('/connector/management/v3/contractagreements');
+    await this.waitForApiResponse('/connector/management/v4/contractagreements');
   }
 
   async getAgreementsList() {
@@ -110,18 +110,18 @@ export class ContractAgreementsPage extends BaseListPage {
   }
 
   async searchAgreements(searchTerm: string) {
-    await this.searchItems(searchTerm, '/connector/management/v3/contractagreements');
+    await this.searchItems(searchTerm, '/connector/management/v4/contractagreements');
   }
 
   async clearAgreementSearch() {
-    await this.clearSearch('/connector/management/v3/contractagreements');
+    await this.clearSearch('/connector/management/v4/contractagreements');
   }
 
   async goToNextPage() {
-    await super.goToNextPage('/connector/management/v3/contractagreements');
+    await super.goToNextPage('/connector/management/v4/contractagreements');
   }
 
   async goToPreviousPage() {
-    await super.goToPreviousPage('/connector/management/v3/contractagreements');
+    await super.goToPreviousPage('/connector/management/v4/contractagreements');
   }
 }

@@ -169,7 +169,7 @@ test.describe("Transfer Processes Page Tests", () => {
 
     test.beforeAll(async ({ request }) => {
       const agreements = await (await request.post(
-        `${participantConfig.EDC_MANAGEMENT_URL}/v3/contractagreements/request`,
+        `${participantConfig.EDC_MANAGEMENT_URL}/v4/contractagreements/request`,
         { headers: managementHeaders, data: { "@context": EDC_CONTEXT, "@type": "QuerySpec" } },
       )).json();
       const agreement = agreements.find((a: { consumerId: string }) => a.consumerId === participantConfig.EDC_ID);
@@ -177,7 +177,7 @@ test.describe("Transfer Processes Page Tests", () => {
       assetId = agreement.assetId;
 
       const initiated = await request.post(
-        `${participantConfig.EDC_MANAGEMENT_URL}/v3/transferprocesses`,
+        `${participantConfig.EDC_MANAGEMENT_URL}/v4/transferprocesses`,
         {
           headers: managementHeaders,
           data: {
@@ -195,21 +195,21 @@ test.describe("Transfer Processes Page Tests", () => {
       transferProcessId = (await initiated.json())["@id"];
 
       const raw = await request.get(
-        `${participantConfig.EDC_MANAGEMENT_URL}/v3/transferprocesses/${transferProcessId}`,
+        `${participantConfig.EDC_MANAGEMENT_URL}/v4/transferprocesses/${transferProcessId}`,
         { headers: managementHeaders },
       );
       test.skip(!(await raw.text()).includes(secret), "Connector no longer exposes dataDestination");
     });
 
     test("does not forward the data destination through the proxy", async ({ request }) => {
-      const single = await request.get(`/connector/management/v3/transferprocesses/${transferProcessId}`);
+      const single = await request.get(`/connector/management/v4/transferprocesses/${transferProcessId}`);
       expect(single.ok()).toBeTruthy();
       const singleBody = await single.text();
       expect(singleBody).toContain(transferProcessId);
       expect(singleBody).not.toContain(secret);
       expect(singleBody).not.toContain("dataDestination");
 
-      const query = await request.post("/connector/management/v3/transferprocesses/request", {
+      const query = await request.post("/connector/management/v4/transferprocesses/request", {
         data: {
           "@context": EDC_CONTEXT,
           "@type": "QuerySpec",

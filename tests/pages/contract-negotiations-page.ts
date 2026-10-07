@@ -12,7 +12,7 @@ export class ContractNegotiationsPage extends BaseListPage {
 
   async navigate() {
     await this.page.goto('/contract-negotiations');
-    await this.waitForApiResponse('/connector/management/v3/contractnegotiations');
+    await this.waitForApiResponse('/connector/management/v4/contractnegotiations');
   }
 
   async getNegotiationsList() {
@@ -29,19 +29,19 @@ export class ContractNegotiationsPage extends BaseListPage {
   }
 
   async searchNegotiations(searchTerm: string) {
-    await this.searchItems(searchTerm, '/connector/management/v3/contractnegotiations');
+    await this.searchItems(searchTerm, '/connector/management/v4/contractnegotiations');
   }
 
   async clearSearch() {
-    await super.clearSearch('/connector/management/v3/contractnegotiations');
+    await super.clearSearch('/connector/management/v4/contractnegotiations');
   }
 
   async goToNextPage() {
-    await super.goToNextPage('/connector/management/v3/contractnegotiations');
+    await super.goToNextPage('/connector/management/v4/contractnegotiations');
   }
 
   async goToPreviousPage() {
-    await super.goToPreviousPage('/connector/management/v3/contractnegotiations');
+    await super.goToPreviousPage('/connector/management/v4/contractnegotiations');
   }
 
   async getSearchResults() {

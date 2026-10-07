@@ -14,9 +14,11 @@ import {
   Catalog,
   ContractAgreement,
   CriterionInput,
-  expand,
+  JsonLdService,
   QuerySpec,
 } from "@think-it-labs/edc-connector-client";
+
+const jsonLdService = new JsonLdService();
 
 export class UnsupportedOperatorError extends Error {
   constructor(operator: string) {
@@ -114,10 +116,12 @@ const fetchLocalAssetTitles = async (
   }
 
   const assets: Asset[] = await client.management.assets.queryAll({
+    "@type": "QuerySpec",
     limit: 100,
     offset: 0,
     filterExpression: [
       {
+        "@type": "Criterion",
         operandLeft: "id",
         operator: "in",
         operandRight: contractAgreements.map(
@@ -173,10 +177,12 @@ const fetchForeignAssetTitles = async (
           counterPartyId: dsp.id,
           counterPartyAddress: counterPartyAddressWithDsp2025_1(dsp.address),
           querySpec: {
+            "@type": "QuerySpec",
             limit: 1000,
             offset: 0,
             filterExpression: [
               {
+                "@type": "Criterion",
                 operandLeft: "id",
                 operator: "in",
                 operandRight: cas.map((ca) => ca.assetId),
@@ -218,7 +224,7 @@ const enrichContractAgreement = (
   contractAgreementInfo: Record<string, ContractAgreementInfo>,
   assetTitleMap: Map<string, string>,
 ) => {
-  return expand(
+  return jsonLdService.expand(
     {
       ...contractAgreement,
       [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.IS_TERMINATED]:
@@ -271,6 +277,7 @@ export async function queryEnrichedContractAgreements(
 
   // Should fetch only the needed ones
   const transferProcesses = await client.management.transferProcesses.queryAll({
+    "@type": "QuerySpec",
     offset: 0,
     limit: 10000,
   });
@@ -285,6 +292,7 @@ export async function queryEnrichedContractAgreements(
   // NOTE: has to specifically be true
   if (statusFilter && statusFilter.operandRight === true) {
     body.filterExpression?.push({
+      "@type": "Criterion",
       operandLeft: "id",
       operator: criterionOperatorIn,
       operandRight: retiredContractAgreementIds.length

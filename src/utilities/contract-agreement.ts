@@ -5,8 +5,8 @@ import {
   ContractAgreement,
   EdcConnectorClientContext,
   EdcController,
-  expandArray,
   JsonLdId,
+  JsonLdService,
 } from "@think-it-labs/edc-connector-client";
 import { Inner } from "@think-it-labs/edc-connector-client/dist/src/inner";
 
@@ -67,7 +67,8 @@ export class RetiredContractAgreement extends JsonLdId {
 }
 
 export class AgreementsRetirementController extends EdcController {
-  #basePath = "/v3/contractagreements/retirements";
+  #basePath = "/v4/contractagreements/retirements";
+  #jsonLdService = new JsonLdService();
 
   constructor(inner: Inner, context: EdcConnectorClientContext) {
     super(inner, context);
@@ -78,10 +79,13 @@ export class AgreementsRetirementController extends EdcController {
     const body = await this.inner.request(actualContext.management, {
       path: `${this.#basePath}/request`,
       method: "POST",
-      apiToken: actualContext.apiToken,
+      authorization: actualContext.authorization,
     });
 
-    return await expandArray(body, () => new RetiredContractAgreement());
+    return await this.#jsonLdService.expandArray(
+      body,
+      () => new RetiredContractAgreement(),
+    );
   }
 
   async retire(
@@ -93,7 +97,7 @@ export class AgreementsRetirementController extends EdcController {
     return await this.inner.request(actualContext.management, {
       path: `${this.#basePath}`,
       method: "POST",
-      apiToken: actualContext.apiToken,
+      authorization: actualContext.authorization,
       body: {
         "@context": {
           edc: CONTEXT_EDC.value,
@@ -111,7 +115,7 @@ export class AgreementsRetirementController extends EdcController {
     return await this.inner.request(actualContext.management, {
       path: `${this.#basePath}/${contractAgreementId}`,
       method: "DELETE",
-      apiToken: actualContext.apiToken,
+      authorization: actualContext.authorization,
     });
   }
 }

@@ -98,16 +98,16 @@ export const fromAssetForm = (
   }
 
   if (
-    cleanFormDataObject.dataAddress.type == DataAddressTypes.MDSOnRequestOffer
+    cleanFormDataObject.dataAddress!.type == DataAddressTypes.MDSOnRequestOffer
   ) {
     cleanFormDataObject.properties.additionalProperties = {
       ...cleanFormDataObject.properties.additionalProperties,
     };
     cleanFormDataObject.properties.additionalProperties.onrequest = "true";
     cleanFormDataObject.properties.additionalProperties.email =
-      cleanFormDataObject.dataAddress.email;
+      cleanFormDataObject.dataAddress!.email;
     cleanFormDataObject.properties.additionalProperties.preferred_subject =
-      cleanFormDataObject.dataAddress.preferred_subject;
+      cleanFormDataObject.dataAddress!.preferred_subject;
   }
 
   const temporalCoverage =
@@ -127,11 +127,11 @@ export const fromAssetForm = (
   }
 
   return {
-    "@type": "https://w3id.org/edc/v0.0.1/ns/Asset",
+    "@type": "Asset",
     "@id": cleanFormDataObject["@id"],
     properties: cleanFormDataObject.properties,
     privateProperties: cleanFormDataObject.privateProperties,
-    dataAddress: transformDataAddress(cleanFormDataObject.dataAddress),
+    dataAddress: transformDataAddress(cleanFormDataObject.dataAddress!),
   };
 };
 

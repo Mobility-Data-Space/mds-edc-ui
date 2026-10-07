@@ -38,7 +38,7 @@ export class MDSManualApprovalController {
 
   async approve(contractNegotiationId: string): Promise<void> {
     return this.#inner.request(this.#management, {
-      path: `/v3/contractnegotiations/${contractNegotiationId}/approve`,
+      path: `/v4/contractnegotiations/${contractNegotiationId}/approve`,
       method: "POST",
       body: {},
     });
@@ -46,7 +46,7 @@ export class MDSManualApprovalController {
 
   async reject(contractNegotiationId: string): Promise<void> {
     return this.#inner.request(this.#management, {
-      path: `/v3/contractnegotiations/${contractNegotiationId}/reject`,
+      path: `/v4/contractnegotiations/${contractNegotiationId}/reject`,
       method: "POST",
       body: {},
     });

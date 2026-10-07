@@ -10,7 +10,7 @@ import { createNegotiationRequest } from "@/utilities/contract-negotiations";
 import { extractEdcErrorMessage } from "@/utilities/edc-error";
 import { Button, Icon, Tooltip } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { compact, Constraint, Policy } from "@think-it-labs/edc-connector-client";
+import { Constraint, JsonLdService, Policy } from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
 import { useEffect, useState } from "react";
 
@@ -42,7 +42,7 @@ export default function DataOfferDetails({
     if (!offers) {
       return;
     }
-    compact(offers).then((compacted) =>
+    new JsonLdService().compact(offers).then((compacted) =>
       setCompactContractDefinitions(compacted as unknown as Policy[]),
     );
   }, [offers]);

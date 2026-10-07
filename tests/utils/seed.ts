@@ -127,6 +127,7 @@ export async function publish_offers(participant: Participant) {
       contractPolicyId: policyDefinitionId,
       assetsSelector: [
         {
+          "@type": "Criterion",
           operandLeft: "https://w3id.org/edc/v0.0.1/ns/id",
           operator: "in",
           operandRight: [
@@ -168,6 +169,7 @@ export async function create_pending_negotiations(
     contractPolicyId: "always-true",
     assetsSelector: [
       {
+        "@type": "Criterion",
         operandLeft: "https://w3id.org/edc/v0.0.1/ns/id",
         operator: "in",
         operandRight: ["asset-8-id", "asset-9-id", "asset-10-id"],
@@ -221,8 +223,14 @@ export async function create_pending_negotiations(
 
     const pendingNegotiations =
       await participantClient.management.contractNegotiations.queryAll({
+        "@type": "QuerySpec",
         filterExpression: [
-          { operandLeft: "pending", operator: "=", operandRight: true },
+          {
+            "@type": "Criterion",
+            operandLeft: "pending",
+            operator: "=",
+            operandRight: true,
+          },
         ],
       });
 
