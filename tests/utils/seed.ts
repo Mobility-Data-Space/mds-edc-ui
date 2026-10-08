@@ -6,7 +6,20 @@ import {
   IdResponse,
   PolicyBuilder,
 } from "@think-it-labs/edc-connector-client";
+import { withMdsManagementConfig } from "../../src/jsonld/mds-management-config.ts";
 import { randomUUID } from "node:crypto";
+
+// Build a management client configured like the app (see src/server/edc-client.ts):
+// the MDS management v4 config with the cached JSON-LD contexts so it expands
+// responses offline. Without this the connector responses reference contexts the
+// pinned `jsonld` loader cannot dereference and seeding fails.
+function buildClient(managementUrl: string): EdcConnectorClient {
+  return withMdsManagementConfig(
+    new EdcConnectorClient.Builder()
+      .managementUrl(managementUrl)
+      .apiToken(process.env.TEST_API_KEY || "default-test-api-key"),
+  ).build();
+}
 
 async function waitForNegotiationState(
   client: EdcConnectorClient,
@@ -35,10 +48,7 @@ async function waitForNegotiationState(
 }
 
 export async function publish_offers(participant: Participant) {
-  const client: EdcConnectorClient = new EdcConnectorClient.Builder()
-    .managementUrl(participant.managementUrl)
-    .apiToken(process.env.TEST_API_KEY || "default-test-api-key")
-    .build();
+  const client: EdcConnectorClient = buildClient(participant.managementUrl);
 
   // Create assets
   const assetCount = 10;
@@ -48,6 +58,7 @@ export async function publish_offers(participant: Participant) {
   for (let i = 0; i < assetCount; i++) {
     assetPromises.push(
       client.management.assets.create({
+        "@type": "Asset",
         "@id": `asset-${i + 1}-id`,
         properties: {
           "http://purl.org/dc/terms/title": `${participant.name} - Asset ${i + 1}`,
@@ -122,6 +133,7 @@ export async function publish_offers(participant: Participant) {
   const policyDefinitionId = "always-true";
   contractDefinitionPromises.push(
     client.management.contractDefinitions.create({
+      "@type": "ContractDefinition",
       "@id": randomUUID(),
       accessPolicyId: policyDefinitionId,
       contractPolicyId: policyDefinitionId,
@@ -152,18 +164,16 @@ export async function create_pending_negotiations(
   participant: Participant,
   counterPartyParticipant: Participant,
 ) {
-  const participantClient: EdcConnectorClient = new EdcConnectorClient.Builder()
-    .managementUrl(participant.managementUrl)
-    .apiToken(process.env.TEST_API_KEY || "default-test-api-key")
-    .build();
+  const participantClient: EdcConnectorClient = buildClient(
+    participant.managementUrl,
+  );
 
-  const counterPartyClient: EdcConnectorClient =
-    new EdcConnectorClient.Builder()
-      .managementUrl(counterPartyParticipant.managementUrl)
-      .apiToken(process.env.TEST_API_KEY || "default-test-api-key")
-      .build();
+  const counterPartyClient: EdcConnectorClient = buildClient(
+    counterPartyParticipant.managementUrl,
+  );
 
   await participantClient.management.contractDefinitions.create({
+    "@type": "ContractDefinition",
     "@id": "manual-approval-contract-def",
     accessPolicyId: "always-true",
     contractPolicyId: "always-true",
@@ -250,10 +260,7 @@ export async function initiate_transfers(
   participant: Participant,
   counterPartyParticipant: Participant,
 ) {
-  const client: EdcConnectorClient = new EdcConnectorClient.Builder()
-    .managementUrl(participant.managementUrl)
-    .apiToken(process.env.TEST_API_KEY || "default-test-api-key")
-    .build();
+  const client: EdcConnectorClient = buildClient(participant.managementUrl);
 
   // Initiate negotiation and transfer process
   console.log(

@@ -42,6 +42,30 @@ export const CONTEXT_EDC = {
   prefix: "edc:",
   value: "https://w3id.org/edc/v0.0.1/ns/",
 } as const;
+
+// MDS management JSON-LD context URL. Management v4 requests must declare this
+// context so the connector answers with contexts the bundled `jsonld` can
+// expand offline; otherwise responses reference the dspace context, which the
+// pinned loader cannot dereference. Pair it with the cached document in
+// `mds-management-v1.json` via `cachedJsonLdContext`.
+export const MDS_MANAGEMENT_V1_CONTEXT_URL =
+  "https://w3id.org/mobility-dataspace/connector/management/v1";
+
+// EDC management context. The MDS context above `@import`s it and management v4
+// responses list it in their `@context`, so it must be cached too.
+export const EDC_MANAGEMENT_V2_CONTEXT_URL =
+  "https://w3id.org/edc/connector/management/v2";
+
+// DSP ODRL profile. The EDC management context above pulls it in through a
+// scoped `@import`, so the client needs it cached to expand responses offline.
+export const DSPACE_ODRL_PROFILE_CONTEXT_URL =
+  "https://w3id.org/dspace/2025/1/odrl-profile.jsonld";
+
+// DSP contexts. Catalog and other dataspace-protocol responses carry these in
+// their `@context`, so they must be cached alongside the management contexts.
+export const DSPACE_CONTEXT_URL =
+  "https://w3id.org/dspace/2025/1/context.jsonld";
+export const EDC_DSPACE_CONTEXT_URL = "https://w3id.org/edc/dspace/v0.0.1";
 const contextsList = [
   CONTEXT_DCT,
   CONTEXT_DCAT,

@@ -13,6 +13,8 @@ export const fromPolicyDefinitionForm = (formData: Constraint[], id:string) : Po
   }).build() ;
 
   const policyDefinition: PolicyDefinitionInput = {
+    // Management v4 rejects create bodies without an explicit @type.
+    "@type": "PolicyDefinition",
     policy: policy
   };
 
