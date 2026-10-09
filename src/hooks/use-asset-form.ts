@@ -59,10 +59,16 @@ export function useAssetForm({
       setIsCheckingId(true);
       try {
         const assets = await client.management.assets.queryAll({
+          "@type": "QuerySpec",
           offset: 0,
           limit: 1,
           filterExpression: [
-            { operandLeft: EDC_ID_FIELD, operator: criterionOperatorEqual, operandRight: id },
+            {
+              "@type": "Criterion",
+              operandLeft: EDC_ID_FIELD,
+              operator: criterionOperatorEqual,
+              operandRight: id,
+            },
           ],
         });
         setIdIsTaken(assets.length > 0);
@@ -116,7 +122,7 @@ export function useAssetForm({
     const newErrors = {
       properties: validateGeneralInfo(asset.properties),
       advancedInfo: validateAdvancedInfo(asset.properties),
-      dataAddress: validateDataAddress(asset.dataAddress, translator),
+      dataAddress: validateDataAddress(asset.dataAddress!, translator),
     };
     setErrors(newErrors);
     return newErrors;
@@ -127,7 +133,7 @@ export function useAssetForm({
     idIsTaken ||
     hasErrors(validateGeneralInfo(asset.properties)) ||
     hasErrors(validateAdvancedInfo(asset.properties)) ||
-    hasErrors(validateDataAddress(asset.dataAddress, translator));
+    hasErrors(validateDataAddress(asset.dataAddress!, translator));
 
   const propertiesErrors = useMemo(
     () =>

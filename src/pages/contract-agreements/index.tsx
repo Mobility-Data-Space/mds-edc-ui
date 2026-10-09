@@ -44,11 +44,13 @@ export default function ContractAgreementsListPage() {
     () => ({
       [StatusFilter.All]: undefined,
       [StatusFilter.Active]: {
+        "@type": "Criterion" as const,
         operandLeft: "isTerminated",
         operator: criterionOperatorEqual,
         operandRight: false,
       },
       [StatusFilter.Terminated]: {
+        "@type": "Criterion" as const,
         operandLeft: "isTerminated",
         operator: criterionOperatorEqual,
         operandRight: true,
@@ -95,6 +97,7 @@ export default function ContractAgreementsListPage() {
     if (connector?.id) {
       if (selectedOwnershipFilter === "provider") {
         filters.push({
+          "@type": "Criterion",
           operandLeft: "providerId",
           operator: "=",
           operandRight: connector?.id,
@@ -103,6 +106,7 @@ export default function ContractAgreementsListPage() {
 
       if (selectedOwnershipFilter === "consumer") {
         filters.push({
+          "@type": "Criterion",
           operandLeft: "consumerId",
           operator: "=",
           operandRight: connector?.id,

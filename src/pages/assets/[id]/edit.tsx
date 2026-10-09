@@ -38,7 +38,7 @@ export default function EditAssetPage() {
 
   const onChangeOfferType = (newOfferType: string) => {
     if (newOfferType === unchangedOfferType.value) {
-      setAsset({ ...asset, dataAddress: oldAssetData.dataAddress });
+      setAsset({ ...asset, dataAddress: oldAssetData.dataAddress! });
     }
     setOfferType(newOfferType);
   };
@@ -106,7 +106,7 @@ export default function EditAssetPage() {
             {offerType !== unchangedOfferType.value && (
               <FormDataAddressStep
                 translator={translator}
-                formData={asset.dataAddress}
+                formData={asset.dataAddress!}
                 onChange={form.onDataAddressChange}
                 errors={form.errors.dataAddress}
                 customDataAddressConfigRows={6}

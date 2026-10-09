@@ -192,7 +192,7 @@ export default function CreateDataOfferPage() {
           <FormSection titleKey="dataOffer.new.dataOfferTypeTitle" descriptionKey="dataOffer.new.dataOfferTypeDescription">
             <FormDataAddressStep
               translator={translator}
-              formData={asset.dataAddress}
+              formData={asset.dataAddress!}
               onChange={form.onDataAddressChange}
               errors={form.errors.dataAddress}
               customDataAddressConfigRows={6}

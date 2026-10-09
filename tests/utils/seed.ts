@@ -7,6 +7,18 @@ import {
   PolicyBuilder,
 } from "@think-it-labs/edc-connector-client";
 import { randomUUID } from "node:crypto";
+import { withCachedJsonLdContexts } from "../../src/jsonld/mds-management-config.ts";
+
+// Builds a seed client with the bundled JSON-LD contexts registered, so the
+// client's jsonld loader resolves the connector's w3id contexts offline (needed
+// even on v3 with client 0.10.x — see withCachedJsonLdContexts).
+function buildSeedClient(managementUrl: string): EdcConnectorClient {
+  return withCachedJsonLdContexts(
+    new EdcConnectorClient.Builder()
+      .managementUrl(managementUrl)
+      .apiToken(process.env.TEST_API_KEY || "default-test-api-key"),
+  ).build();
+}
 
 async function waitForNegotiationState(
   client: EdcConnectorClient,
@@ -35,10 +47,7 @@ async function waitForNegotiationState(
 }
 
 export async function publish_offers(participant: Participant) {
-  const client: EdcConnectorClient = new EdcConnectorClient.Builder()
-    .managementUrl(participant.managementUrl)
-    .apiToken(process.env.TEST_API_KEY || "default-test-api-key")
-    .build();
+  const client: EdcConnectorClient = buildSeedClient(participant.managementUrl);
 
   // Create assets
   const assetCount = 10;
@@ -127,6 +136,7 @@ export async function publish_offers(participant: Participant) {
       contractPolicyId: policyDefinitionId,
       assetsSelector: [
         {
+          "@type": "Criterion",
           operandLeft: "https://w3id.org/edc/v0.0.1/ns/id",
           operator: "in",
           operandRight: [
@@ -151,16 +161,10 @@ export async function create_pending_negotiations(
   participant: Participant,
   counterPartyParticipant: Participant,
 ) {
-  const participantClient: EdcConnectorClient = new EdcConnectorClient.Builder()
-    .managementUrl(participant.managementUrl)
-    .apiToken(process.env.TEST_API_KEY || "default-test-api-key")
-    .build();
+  const participantClient: EdcConnectorClient = buildSeedClient(participant.managementUrl);
 
   const counterPartyClient: EdcConnectorClient =
-    new EdcConnectorClient.Builder()
-      .managementUrl(counterPartyParticipant.managementUrl)
-      .apiToken(process.env.TEST_API_KEY || "default-test-api-key")
-      .build();
+    buildSeedClient(counterPartyParticipant.managementUrl);
 
   await participantClient.management.contractDefinitions.create({
     "@id": "manual-approval-contract-def",
@@ -168,6 +172,7 @@ export async function create_pending_negotiations(
     contractPolicyId: "always-true",
     assetsSelector: [
       {
+        "@type": "Criterion",
         operandLeft: "https://w3id.org/edc/v0.0.1/ns/id",
         operator: "in",
         operandRight: ["asset-8-id", "asset-9-id", "asset-10-id"],
@@ -221,8 +226,14 @@ export async function create_pending_negotiations(
 
     const pendingNegotiations =
       await participantClient.management.contractNegotiations.queryAll({
+        "@type": "QuerySpec",
         filterExpression: [
-          { operandLeft: "pending", operator: "=", operandRight: true },
+          {
+            "@type": "Criterion",
+            operandLeft: "pending",
+            operator: "=",
+            operandRight: true,
+          },
         ],
       });
 
@@ -242,10 +253,7 @@ export async function initiate_transfers(
   participant: Participant,
   counterPartyParticipant: Participant,
 ) {
-  const client: EdcConnectorClient = new EdcConnectorClient.Builder()
-    .managementUrl(participant.managementUrl)
-    .apiToken(process.env.TEST_API_KEY || "default-test-api-key")
-    .build();
+  const client: EdcConnectorClient = buildSeedClient(participant.managementUrl);
 
   // Initiate negotiation and transfer process
   console.log(

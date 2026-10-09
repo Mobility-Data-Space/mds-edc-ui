@@ -3,6 +3,8 @@ import { T, TranslatorProvider } from "@/i18n";
 import "@/styles/globals.css";
 import ThemeProvider from "@/theme/theme-provider";
 import type { TitledPage } from "@/types/page";
+import { edcConnectorClientFactory } from "@/utilities/edc-client-factory";
+import { EdcConnectorClientProvider } from "@think-it-labs/edc-connector-ui/use-edc-connector";
 import { JsonLdContextProvider } from "@think-it-labs/edc-connector-ui/json-ld-context-provider";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en";
@@ -19,20 +21,22 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <TranslatorProvider>
-      <JsonLdContextProvider
-        additionalJsonLdContext={{
-          "dct": "http://purl.org/dc/terms/",
-          "dcat": "http://www.w3.org/ns/dcat#",
-        }}
-      >
-        <ThemeProvider>
-          <SnackbarProvider autoHideDuration={5000} anchorOrigin={{ vertical: "top", horizontal: "right" }} >
-            <SideDrawer title={titleKey && <T string={titleKey} />}>
-              <Component {...pageProps} />
-            </SideDrawer>
-          </SnackbarProvider>
-        </ThemeProvider>
-      </JsonLdContextProvider>
+      <EdcConnectorClientProvider factory={edcConnectorClientFactory}>
+        <JsonLdContextProvider
+          additionalJsonLdContext={{
+            "dct": "http://purl.org/dc/terms/",
+            "dcat": "http://www.w3.org/ns/dcat#",
+          }}
+        >
+            <ThemeProvider>
+            <SnackbarProvider autoHideDuration={5000} anchorOrigin={{ vertical: "top", horizontal: "right" }} >
+              <SideDrawer title={titleKey && <T string={titleKey} />}>
+                <Component {...pageProps} />
+              </SideDrawer>
+            </SnackbarProvider>
+          </ThemeProvider>
+        </JsonLdContextProvider>
+      </EdcConnectorClientProvider>
     </TranslatorProvider>
   );
 }

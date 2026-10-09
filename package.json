@@ -25,8 +25,8 @@
     "@mui/material": "^7.3.9",
     "@mui/x-date-pickers": "^8.27.2",
     "@tailwindcss/typography": "^0.5.20",
-    "@think-it-labs/edc-connector-client": "^0.9.5",
-    "@think-it-labs/edc-connector-ui": "^0.2.11",
+    "@think-it-labs/edc-connector-client": "^0.10.2",
+    "@think-it-labs/edc-connector-ui": "^0.3.2",
     "clsx": "^2.1.0",
     "dayjs": "^1.11.23",
     "formik": "^2.4.9",
@@ -47,12 +47,15 @@
     "server-only": "^0.0.1"
   },
   "resolutions": {
+    "baseline-browser-mapping": ">=2.11.0",
     "i18next-fs-backend": ">=2.6.4",
     "lodash": ">=4.18.0",
     "lodash-es": ">=4.18.0",
     "nanoid": "^3.3.17",
     "postcss": ">=8.5.18",
-    "sharp": ">=0.35.4",
+    "postcss-selector-parser": ">=7.1.6",
+    "sharp": ">=0.35.5",
+    "source-map-js": ">=1.2.2",
     "undici": ">=8.10.2",
     "yaml": ">=1.10.3"
   },

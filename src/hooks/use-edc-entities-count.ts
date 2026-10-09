@@ -40,7 +40,7 @@ export const useEdcEntitiesCount = (): EdcEntitiesCount => {
   useEffect(() => {
     endpoints.forEach(([countEntryName, endpoint]) => {
       edcClient.management[endpoint]
-        .queryAll({ offset: 0 })
+        .queryAll({ "@type": "QuerySpec", offset: 0 })
         .then((result: unknown[]) =>
           setCount((count) => ({ ...count, [countEntryName]: result.length })),
         )
