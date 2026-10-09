@@ -16,5 +16,8 @@ export EDC_MAINTAINER_ORGANIZATION="Think-it GmbH",
 export EDC_MAINTAINER_URL="https://think-it.io",
 export MDS_DAPS_URL="https://daps.mobility-dataspace.eu"
 export MDS_DAPS_JWKS_URL="https://daps.mobility-dataspace.eu/.well-known/jwks.json"
+// Participant DID discovery (catalog browser). Optional: DID documents are only
+// fetched from public addresses unless this is set.
+export DID_RESOLUTION_ALLOW_PRIVATE_NETWORKS="false"
 // Test Config
 export TEST_API_KEY="TEST_API_KEY"
