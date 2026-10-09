@@ -60,7 +60,7 @@ export default function AssetForm({ onClose }: AssetFormProps) {
 
   useEffect(() => {
     client.management.assets
-      .queryAll({ offset: 0 })
+      .queryAll({ "@type": "QuerySpec", offset: 0 })
       .then((assets) => setExistingIds(assets.map((asset) => asset["@id"])));
   }, [client]);
 
@@ -222,7 +222,7 @@ export default function AssetForm({ onClose }: AssetFormProps) {
               <div data-testid="asset-create-data-address-step-content">
                 <FormDataAddressStep
                   translator={translator}
-                  formData={asset.dataAddress}
+                  formData={asset.dataAddress!}
                   onChange={form.onDataAddressChange}
                   errors={errors.dataAddress}
                 />

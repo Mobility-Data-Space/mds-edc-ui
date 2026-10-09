@@ -58,6 +58,7 @@ const AssetName = ({ item }: { item: ContractNegotiation }) => {
 
 const PENDING_FILTER: CriterionInput[] = [
   {
+    "@type": "Criterion",
     operandLeft: "pending",
     operator: "=",
     operandRight: true,

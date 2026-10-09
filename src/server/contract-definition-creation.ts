@@ -26,10 +26,12 @@ async function getNextSequenceNumber(datePrefix: string): Promise<number> {
   const client = getEdcClient();
   const existingTodayContracts =
     await client.management.contractDefinitions.queryAll({
+      "@type": "QuerySpec",
       offset: 0,
       limit: 1000,
       filterExpression: [
         {
+          "@type": "Criterion",
           operandLeft: "id",
           operator: "like",
           operandRight: `${datePrefix}_%`,

@@ -9,6 +9,7 @@ export const criterionOperatorIn = "in";
 export const idSelector = (id: string): CriterionInput[] => {
   return [
     {
+      "@type": "Criterion",
       operandLeft: EDC_ID_FIELD,
       operator: criterionOperatorIn,
       operandRight: id,
@@ -19,6 +20,7 @@ export const idSelector = (id: string): CriterionInput[] => {
 export const idMultipleSelector = (ids: string[]): CriterionInput[] => {
   return [
     {
+      "@type": "Criterion",
       operandLeft: EDC_ID_FIELD,
       operator: criterionOperatorIn,
       operandRight: transformIdsToString(ids),

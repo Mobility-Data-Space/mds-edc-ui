@@ -10,9 +10,9 @@ import { createNegotiationRequest } from "@/utilities/contract-negotiations";
 import { extractEdcErrorMessage } from "@/utilities/edc-error";
 import { Button, Icon, Tooltip } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { compact, Constraint, Policy } from "@think-it-labs/edc-connector-client";
+import { Constraint, Policy } from "@think-it-labs/edc-connector-client";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface DataOfferDetailsProps {
   offers?: Policy[];
@@ -33,19 +33,6 @@ export default function DataOfferDetails({
 }: DataOfferDetailsProps) {
   const { translator } = useTranslator();
   const { showSnackbar } = useAppSnackbar();
-
-  const [, setCompactContractDefinitions] = useState<
-    Policy[]
-  >([]);
-
-  useEffect(() => {
-    if (!offers) {
-      return;
-    }
-    compact(offers).then((compacted) =>
-      setCompactContractDefinitions(compacted as unknown as Policy[]),
-    );
-  }, [offers]);
 
   const [negotiateContractIsOpen, setNegotiateContractIsOpen] = useState<
     Record<string, boolean>

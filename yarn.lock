@@ -974,19 +974,19 @@
   dependencies:
     postcss-selector-parser "6.0.10"
 
-"@think-it-labs/edc-connector-client@^0.9.5":
-  version "0.9.5"
-  resolved "https://registry.yarnpkg.com/@think-it-labs/edc-connector-client/-/edc-connector-client-0.9.5.tgz#7849e1c548eff362f1395aa7052868a0711ddc47"
-  integrity sha512-YVzxhnA9ZTBx0Efoo3uF9OSCKhRhfm2rLvqdW7iTbNoant0oHbnmH6E9EFNGjm5NU5eFgaWUR5ZomMhqY4GNpA==
+"@think-it-labs/edc-connector-client@^0.10.2":
+  version "0.10.2"
+  resolved "https://registry.yarnpkg.com/@think-it-labs/edc-connector-client/-/edc-connector-client-0.10.2.tgz#e6847717f44f2c3e9bf8fc696f0dc3000da63c27"
+  integrity sha512-OIZKs/xuj4JMO9P4J/BAUVyJueImhSifrT0aVgXPH13dOp+I8wB6Tp7BEWiDE0k0vKFfyyHTF/R+fI0OI8RrYQ==
   dependencies:
     "@think-it-labs/typed-error" "^0.3.0"
     jsonld "^9.0.0"
     type-fest "^5.4.1"
 
-"@think-it-labs/edc-connector-ui@^0.2.11":
-  version "0.2.11"
-  resolved "https://registry.yarnpkg.com/@think-it-labs/edc-connector-ui/-/edc-connector-ui-0.2.11.tgz#0e73f2fed88d1a5f32cdbe0cd1cd4839515de47b"
-  integrity sha512-niDgsrbVZo74Su4RPWD+cFdWn3r39MLetgExUOF92xk0vkBYAHr8WgkxzIjuaJtB6XVD9NYNQSarjWknPgYV9g==
+"@think-it-labs/edc-connector-ui@^0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@think-it-labs/edc-connector-ui/-/edc-connector-ui-0.3.2.tgz#c1675a779ea1a7b752b9eb04cf71f0ec3bbb8548"
+  integrity sha512-dOeHAJk66O3uf9Zfmc0ieedo44hNty1ZbVUhqMlXpTVBH/KxszL8JtNobqXMcTYmdbWLT0ZDfxXIMw9/hGl02Q==
 
 "@think-it-labs/typed-error@^0.3.0":
   version "0.3.0"
