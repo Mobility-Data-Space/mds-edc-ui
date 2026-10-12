@@ -72,7 +72,7 @@ test.describe("Policy Definitions Page Tests", () => {
       await policiesPage.fillParticipantId("ConsumerParticipant002");
 
       // Attempt to create the policy
-      const listener =  page.waitForResponse((response) => response.url().includes('/connector/management/v3/policydefinitions/request'));
+      const listener =  page.waitForResponse((response) => response.url().includes('/connector/management/v4/policydefinitions/request'));
       await policiesPage.clickCreateButton();
       const response = await listener;
       expect(response.status()).toBe(200);
@@ -98,7 +98,7 @@ test.describe("Policy Definitions Page Tests", () => {
 
       // Attempt to create the policy
 
-      const listener =  page.waitForResponse((response) => response.url().includes('/connector/management/v3/policydefinitions/request'));
+      const listener =  page.waitForResponse((response) => response.url().includes('/connector/management/v4/policydefinitions/request'));
       await policiesPage.clickCreateButton();
 
       const successMessageLocator = await policiesPage.waitForToastMessage('success');
@@ -150,7 +150,7 @@ test.describe("Policy Definitions Page Tests", () => {
       await policiesPage.fillPolicyId(policyId);
 
       // Attempt to create the policy
-      const listerner = page.waitForResponse((response) => response.url().includes('/connector/management/v3/policydefinitions/request'));
+      const listerner = page.waitForResponse((response) => response.url().includes('/connector/management/v4/policydefinitions/request'));
       policiesPage.clickCreateButton();
       const response = await listerner;
       expect(response.status()).toBe(200);

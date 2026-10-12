@@ -13,6 +13,7 @@ export const fromPolicyDefinitionForm = (formData: Constraint[], id:string) : Po
   }).build() ;
 
   const policyDefinition: PolicyDefinitionInput = {
+    "@type": "PolicyDefinition",
     policy: policy
   };
 
