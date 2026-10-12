@@ -9,7 +9,7 @@ x-wallet: &wallet
     vault-init:
       condition: service_completed_successfully
   healthcheck:
-    test: ["CMD", "wget", "-qO-", "http://localhost:7079/api/check/health"]
+    test: ["CMD", "wget", "-qO-", "http://localhost:7079/api/check/readiness"]
     interval: 10s
     timeout: 5s
     retries: 30
@@ -175,7 +175,7 @@ services:
       - "19083:7083" # Issuer admin
       - "19085:7085" # DID
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:7080/api/check/health"]
+      test: ["CMD", "wget", "-qO-", "http://localhost:7080/api/check/readiness"]
       interval: 10s
       timeout: 5s
       retries: 30
