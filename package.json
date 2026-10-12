@@ -29,6 +29,7 @@
     "@think-it-labs/edc-connector-ui": "^0.3.2",
     "clsx": "^2.1.0",
     "dayjs": "^1.11.23",
+    "did-resolver": "^6.0.0",
     "formik": "^2.4.9",
     "i18next": "^26.4.2",
     "javascript-time-ago": "^2.5.12",
@@ -44,7 +45,8 @@
     "recharts": "^3.10.1",
     "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.1",
-    "server-only": "^0.0.1"
+    "server-only": "^0.0.1",
+    "web-did-resolver": "^3.1.0"
   },
   "resolutions": {
     "baseline-browser-mapping": ">=2.11.0",
