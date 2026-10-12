@@ -74,9 +74,18 @@ export default function CatalogPage() {
   }, 1_200);
 
   const { debounce: debouncedSetCounterPartyId } = useDebounce((did: string) => {
+    const nextDid = did.trim();
+    if (nextDid === counterPartyId) {
+      return;
+    }
     updateQueryParams({ page: String(0) });
-    setCounterPartyId(did.trim());
-  }, 1_200);
+    // An endpoint filled from the previous DID's document belongs to that DID;
+    // one the user typed is kept.
+    if (discoveredConnectors.some((entry) => entry.protocolAddress === counterPartyAddress)) {
+      setCounterPartyAddress("");
+    }
+    setCounterPartyId(nextDid);
+  }, 500);
 
   useEffect(() => {
     setDiscoveredConnectors([]);
