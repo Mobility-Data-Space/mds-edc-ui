@@ -137,9 +137,13 @@ export default function CatalogPage() {
 
   const effectiveCounterPartyId = counterPartyId || ADDRESS_ONLY_COUNTERPARTY_ID;
 
-  const client = useEdcConnectorClient({
-    management: proxyConnectorManagement,
-  });
+  const client = useEdcConnectorClient(
+    {
+      management: proxyConnectorManagement,
+    },
+    undefined,
+    "v4",
+  );
 
   useEffect(() => {
     async function showCatalog(counterPartyAddress: string) {
@@ -205,6 +209,7 @@ export default function CatalogPage() {
       <div className="h-[70vh]">
         <ContractOffersList
           managementUrl={proxyConnectorManagement}
+          managementApiVersion="v4"
           counterPartyAddress={counterPartyAddressWithDsp2025_1(
             counterPartyAddress,
           )}
