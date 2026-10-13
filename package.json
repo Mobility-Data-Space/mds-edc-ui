@@ -31,7 +31,7 @@
     "dayjs": "^1.11.23",
     "did-resolver": "^6.0.0",
     "formik": "^2.4.9",
-    "i18next": "^26.4.2",
+    "i18next": "^26.4.3",
     "javascript-time-ago": "^2.5.12",
     "jsonld": "^9.0.0",
     "mui-chips-input": "^9.0.0",
