@@ -53,7 +53,7 @@ test.describe("Data Offer Tests", () => {
 
       // Submit the form
       await dataOfferPage.submitCreateDataOfferForm();
-      await page.waitForResponse((response) => response.url().includes('/connector/management/v3/contractdefinitions/request'));
+      await page.waitForResponse((response) => response.url().includes('/connector/management/v4/contractdefinitions/request'));
 
       // Verify contract offer was added. The list re-renders asynchronously
       // after the create response resolves, so poll instead of a one-shot count()
@@ -77,7 +77,7 @@ test.describe("Data Offer Tests", () => {
 
       // Submit the form
       await dataOfferPage.submitCreateDataOfferForm();
-      await page.waitForResponse((response) => response.url().includes('/connector/management/v3/contractdefinitions/request'));
+      await page.waitForResponse((response) => response.url().includes('/connector/management/v4/contractdefinitions/request'));
 
       // Verify contract offer was added. The list re-renders asynchronously
       // after the create response resolves, so poll instead of a one-shot count()
@@ -100,7 +100,7 @@ test.describe("Data Offer Tests", () => {
       await dataOfferPage.closeAssetSelector();
 
       await dataOfferPage.submitCreateDataOfferForm();
-      await page.waitForResponse((response) => response.url().includes('/connector/management/v3/contractdefinitions/request'));
+      await page.waitForResponse((response) => response.url().includes('/connector/management/v4/contractdefinitions/request'));
 
       // Find and click the created data offer card
       const dataOfferCards = await dataOfferPage.getDataOfferCards();

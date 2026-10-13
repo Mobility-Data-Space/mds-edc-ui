@@ -1,11 +1,12 @@
 import { getConnectorConfig } from "@/server/connector-config";
-import { getEdcClient } from "@/server/edc-client";
+import { getEdcClientV4 } from "@/server/edc-client";
 import { createProxyRequest, setResponseHeaders } from "@/server/proxy";
 import { NextResponse } from "next/server";
 
 const MAX_RETRIES = 5;
 
 export interface ContractDefinitionBody {
+  "@type"?: string;
   "@id"?: string;
   accessPolicyId: string;
   contractPolicyId: string;
@@ -23,7 +24,7 @@ function generateDatePrefix(): string {
 }
 
 async function getNextSequenceNumber(datePrefix: string): Promise<number> {
-  const client = getEdcClient();
+  const client = getEdcClientV4();
   const existingTodayContracts =
     await client.management.contractDefinitions.queryAll({
       "@type": "QuerySpec",
@@ -70,7 +71,7 @@ export async function createContractDefinitionWithRetry(
       "@id": contractId,
     };
 
-    const url = `${config.managementUrl}/v3/contractdefinitions`;
+    const url = `${config.managementUrl}/v4/contractdefinitions`;
     const proxy = await createProxyRequest(
       url,
       "POST",

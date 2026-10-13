@@ -8,8 +8,11 @@ export type MdsContractDefinitionInput = ContractDefinitionInput & {
 export const fromContractDefinitionForm = (
   formData: MdsContractDefinitionInput,
 ): MdsContractDefinitionInput => {
-  const cleanFormDataObject = removeEmptyFields(formData);
-  return cleanFormDataObject as MdsContractDefinitionInput;
+  const cleanFormDataObject = removeEmptyFields(formData) as MdsContractDefinitionInput;
+  return {
+    ...cleanFormDataObject,
+    "@type": "ContractDefinition",
+  };
 };
 
 export const defaultCreateContractDefinitionFormData: MdsContractDefinitionInput =

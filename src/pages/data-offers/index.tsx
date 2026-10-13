@@ -25,9 +25,13 @@ export default function DataOffersPage() {
   const { connector } = useParticipantConnectorState();
   const { translator } = useTranslator();
   const { showSnackbar } = useAppSnackbar();
-  const edcClient = useEdcConnectorClient({
-    management: proxyConnectorManagement,
-  });
+  const edcClient = useEdcConnectorClient(
+    {
+      management: proxyConnectorManagement,
+    },
+    undefined,
+    "v4",
+  );
 
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
@@ -94,6 +98,7 @@ export default function DataOffersPage() {
       />
       <ContractDefinitionsList
         managementUrl={proxyConnectorManagement}
+        managementApiVersion="v4"
         usePagination
         navigate={navigate}
         currentPage={currentPage}

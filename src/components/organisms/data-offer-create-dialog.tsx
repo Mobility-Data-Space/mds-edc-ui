@@ -191,6 +191,7 @@ export default function DataOfferCreateDialog({
       >
         <ContractDefinitionFormWrapper
           managementUrl={managementUrl}
+          managementApiVersion="v4"
           formData={() => fromContractDefinitionForm(formData)}
           onSuccess={handleContractDefinitionSuccess}
           onFailure={onFormSubmitFail}
