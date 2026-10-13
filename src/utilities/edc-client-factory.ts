@@ -12,15 +12,20 @@ import {
  * `useEdcConnectorClient()` call builds its client through here instead of the
  * library's built-in default (which hardcodes v4).
  *
- * v4 rollout (issue #666): the migration is per-endpoint, so the second argument
- * selects the **management API version** for a given call site. The app never
- * sets a DSP protocol version in the browser, so repurposing this slot does not
- * collide with that meaning. It defaults to `"v3"`, which keeps every
- * not-yet-migrated call site on v3; an endpoint wave opts a call site into v4 by
- * passing `"v4"` to `useEdcConnectorClient(addresses, "v4")`.
+ * v4 rollout (issue #666): the migration is per-endpoint. The library forwards
+ * the call site's `managementApiVersion` (edc-connector-ui >= 0.3.4) here as the
+ * third argument, so a call site opts into v4 with
+ * `useEdcConnectorClient(addresses, undefined, "v4")` (or the `managementApiVersion`
+ * prop on the list/form components). It defaults to `"v3"` — keeping every
+ * not-yet-migrated call site on v3 — when the call site passes nothing.
+ *
+ * The second argument is the DSP `protocolVersion`, which the app never sets in
+ * the browser; it is an unused positional placeholder so `managementApiVersion`
+ * lands as the third argument the library passes.
  */
 export function edcConnectorClientFactory(
   addresses: Addresses,
+  _protocolVersion: string | undefined,
   managementApiVersion: string = "v3",
 ): EdcConnectorClient {
   const builder = new EdcConnectorClient.Builder();

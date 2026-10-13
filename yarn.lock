@@ -983,10 +983,10 @@
     jsonld "^9.0.0"
     type-fest "^5.4.1"
 
-"@think-it-labs/edc-connector-ui@^0.3.2":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@think-it-labs/edc-connector-ui/-/edc-connector-ui-0.3.2.tgz#c1675a779ea1a7b752b9eb04cf71f0ec3bbb8548"
-  integrity sha512-dOeHAJk66O3uf9Zfmc0ieedo44hNty1ZbVUhqMlXpTVBH/KxszL8JtNobqXMcTYmdbWLT0ZDfxXIMw9/hGl02Q==
+"@think-it-labs/edc-connector-ui@^0.3.4":
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/@think-it-labs/edc-connector-ui/-/edc-connector-ui-0.3.4.tgz#04bd12d13c66304c88fb1d03f0bbaa5d24a2225e"
+  integrity sha512-zQAsGxjmt4PuEoCThaH/BfX9MHtGU+YnxKB0umnYQRDk6pFGeV3/J8OyBaSbkI9RVs05o1lA+rxP8drwfDt/Yg==
 
 "@think-it-labs/typed-error@^0.3.0":
   version "0.3.0"

@@ -58,6 +58,16 @@ export default function CreateDataOfferPage() {
   const client = useEdcConnectorClient({
     management: proxyConnectorManagement,
   });
+  // Policy definitions are migrated to management API v4 (issue #712); assets and
+  // contract definitions stay on v3 until their own waves, so the policy calls go
+  // through a dedicated v4 client.
+  const policyClient = useEdcConnectorClient(
+    {
+      management: proxyConnectorManagement,
+    },
+    undefined,
+    "v4",
+  );
 
   const policyExpressionIsNotValid = useCallback(
     (policyExpressionArg: (AtomicConstraint | MultiplicityConstraint)[]) => {
@@ -110,7 +120,7 @@ export default function CreateDataOfferPage() {
     let policyId = UNRESTRICTED_POLICY_ID;
     try {
       if (publishMode === PUBLISH_MODE_PUBLISH_RESTRICTED.value) {
-        const policy = await client.management.policyDefinitions.create(
+        const policy = await policyClient.management.policyDefinitions.create(
           fromPolicyDefinitionForm(policyExpression, ""),
         );
         policyId = policy["@id"];
@@ -127,7 +137,7 @@ export default function CreateDataOfferPage() {
     } catch (error) {
       // Roll back what was created so the user can retry with the same asset id.
       if (policyId !== UNRESTRICTED_POLICY_ID) {
-        await client.management.policyDefinitions
+        await policyClient.management.policyDefinitions
           .delete(policyId)
           .catch(() => undefined);
       }
