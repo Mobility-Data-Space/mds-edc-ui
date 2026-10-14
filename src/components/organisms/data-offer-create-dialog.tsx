@@ -77,10 +77,7 @@ export default function DataOfferCreateDialog({
 
   const [idError, setIdError] = useState<string | boolean>(false);
 
-  const edcClient = useEdcConnectorClient({ management: managementUrl });
-  // Policy definitions are migrated to management API v4 (issue #712); assets stay
-  // on v3 until their own wave, so the policy query goes through a v4 client.
-  const policyClient = useEdcConnectorClient(
+  const edcClient = useEdcConnectorClient(
     { management: managementUrl },
     undefined,
     "v4",
@@ -103,11 +100,11 @@ export default function DataOfferCreateDialog({
         setAssetsById({});
       });
 
-    policyClient.management.policyDefinitions
+    edcClient.management.policyDefinitions
       .queryAll({ "@type": "QuerySpec", offset: 0 })
       .then((result) => setPolicyIds(optionsGenerator(result)))
       .catch(() => setPolicyIds([]));
-  }, [edcClient, policyClient]);
+  }, [edcClient]);
 
   const [formData, setFormData] = useState<MdsContractDefinitionInput>(
     defaultCreateContractDefinitionFormData,

@@ -72,6 +72,7 @@ export default function AssetListPage() {
 
       <AssetsList
         managementUrl={proxyConnectorManagement}
+        managementApiVersion="v4"
         usePagination
         navigate={navigate}
         currentPage={currentPage}

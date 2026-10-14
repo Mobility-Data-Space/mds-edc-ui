@@ -55,11 +55,7 @@ export default function CreateDataOfferPage() {
     PUBLISH_MODE_PUBLISH_UNRESTRICTED.value as string,
   );
 
-  const client = useEdcConnectorClient({
-    management: proxyConnectorManagement,
-  });
-
-  const v4Client = useEdcConnectorClient(
+  const edcClient = useEdcConnectorClient(
     {
       management: proxyConnectorManagement,
     },
@@ -108,7 +104,7 @@ export default function CreateDataOfferPage() {
     form.isInvalid() || policyExpressionIsNotValid(policyExpression);
 
   const createDataOffer = async () => {
-    const createdAsset = await client.management.assets.create(
+    const createdAsset = await edcClient.management.assets.create(
       fromAssetForm(asset, connector?.curatorName ?? ""),
     );
     if (publishMode === PUBLISH_MODE_DO_NOT_PUBLISH.value) {
@@ -118,13 +114,13 @@ export default function CreateDataOfferPage() {
     let policyId = UNRESTRICTED_POLICY_ID;
     try {
       if (publishMode === PUBLISH_MODE_PUBLISH_RESTRICTED.value) {
-        const policy = await v4Client.management.policyDefinitions.create(
+        const policy = await edcClient.management.policyDefinitions.create(
           fromPolicyDefinitionForm(policyExpression, ""),
         );
         policyId = policy["@id"];
       }
 
-      await v4Client.management.contractDefinitions.create(
+      await edcClient.management.contractDefinitions.create(
         fromContractDefinitionForm({
           ...contract,
           assetsSelector: idSelector(createdAsset["@id"]),
@@ -135,11 +131,11 @@ export default function CreateDataOfferPage() {
     } catch (error) {
       // Roll back what was created so the user can retry with the same asset id.
       if (policyId !== UNRESTRICTED_POLICY_ID) {
-        await v4Client.management.policyDefinitions
+        await edcClient.management.policyDefinitions
           .delete(policyId)
           .catch(() => undefined);
       }
-      await client.management.assets
+      await edcClient.management.assets
         .delete(createdAsset["@id"])
         .catch(() => undefined);
       throw error;

@@ -127,7 +127,7 @@ export const fromAssetForm = (
   }
 
   return {
-    "@type": "https://w3id.org/edc/v0.0.1/ns/Asset",
+    "@type": "Asset",
     "@id": cleanFormDataObject["@id"],
     properties: cleanFormDataObject.properties,
     privateProperties: cleanFormDataObject.privateProperties,
