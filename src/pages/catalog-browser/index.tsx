@@ -160,9 +160,13 @@ export default function CatalogPage() {
   // The endpoint is typed only when the DID does not advertise a connector.
   const showEndpointInput = !isDiscovering && discoveredConnectors.length === 0;
 
-  const client = useEdcConnectorClient({
-    management: proxyConnectorManagement,
-  });
+  const client = useEdcConnectorClient(
+    {
+      management: proxyConnectorManagement,
+    },
+    undefined,
+    "v4",
+  );
 
   useEffect(() => {
     async function showCatalog(counterPartyAddress: string) {
@@ -228,6 +232,7 @@ export default function CatalogPage() {
       <div className="h-[70vh]">
         <ContractOffersList
           managementUrl={proxyConnectorManagement}
+          managementApiVersion="v4"
           counterPartyAddress={counterPartyAddressWithDsp2025_1(
             counterPartyAddress,
           )}
