@@ -62,6 +62,7 @@ export default function CatalogPage() {
     DiscoveredConnector[]
   >([]);
   const [discoveryError, setDiscoveryError] = useState("");
+  const [isDiscovering, setIsDiscovering] = useState(false);
 
   useEffect(() => {
     setCounterPartyAddressToSearch(counterPartyAddress);
@@ -74,9 +75,18 @@ export default function CatalogPage() {
   }, 1_200);
 
   const { debounce: debouncedSetCounterPartyId } = useDebounce((did: string) => {
+    const nextDid = did.trim();
+    if (nextDid === counterPartyId) {
+      return;
+    }
     updateQueryParams({ page: String(0) });
-    setCounterPartyId(did.trim());
-  }, 1_200);
+    // An endpoint filled from the previous DID's document belongs to that DID;
+    // one the user typed is kept.
+    if (discoveredConnectors.some((entry) => entry.protocolAddress === counterPartyAddress)) {
+      setCounterPartyAddress("");
+    }
+    setCounterPartyId(nextDid);
+  }, 500);
 
   useEffect(() => {
     setDiscoveredConnectors([]);
@@ -85,6 +95,7 @@ export default function CatalogPage() {
       return;
     }
 
+    setIsDiscovering(true);
     const controller = new AbortController();
     async function discover(did: string) {
       try {
@@ -103,15 +114,25 @@ export default function CatalogPage() {
           setDiscoveryError(translator("catalog.noAdvertisedConnectors"));
         } else if (connectors.length === 1) {
           setCounterPartyAddress(connectors[0].protocolAddress);
+        } else if (!connectors.some((entry) => entry.protocolAddress === counterPartyAddress)) {
+          // The endpoint is picked from the advertised connectors.
+          setCounterPartyAddress("");
         }
       } catch {
         if (!controller.signal.aborted) {
           setDiscoveryError(translator("catalog.discoveryFailed"));
         }
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsDiscovering(false);
+        }
       }
     }
     discover(counterPartyId);
-    return () => controller.abort();
+    return () => {
+      controller.abort();
+      setIsDiscovering(false);
+    };
     // setCounterPartyAddress is recreated on every render; the effect should
     // only run when the DID changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -136,6 +157,8 @@ export default function CatalogPage() {
   );
 
   const effectiveCounterPartyId = counterPartyId || ADDRESS_ONLY_COUNTERPARTY_ID;
+  // The endpoint is typed only when the DID does not advertise a connector.
+  const showEndpointInput = !isDiscovering && discoveredConnectors.length === 0;
 
   const client = useEdcConnectorClient({
     management: proxyConnectorManagement,
@@ -239,7 +262,7 @@ export default function CatalogPage() {
                 debouncedSetCounterPartyId(event.target.value);
               }}
             />
-            {discoveredConnectors.length > 1 && (
+            {discoveredConnectors.length > 0 && (
               <TextField
                 select
                 id="catalog-discovered-connector"
@@ -270,9 +293,7 @@ export default function CatalogPage() {
                 ))}
               </TextField>
             )}
-          </div>
-          <div className="w-full grid grid-rows-1 grid-cols-5 gap-x-3.5 py-4 items-center">
-            <div className="col-span-2">
+            {showEndpointInput && (
               <Input
                 id="catalog-url"
                 fullWidth
@@ -308,8 +329,10 @@ export default function CatalogPage() {
                   debouncedSetCounterPartyAddress(event.target.value);
                 }}
               />
-            </div>
-            <div className="col-span-2">
+            )}
+          </div>
+          <div className="w-full grid grid-rows-1 grid-cols-5 gap-x-3.5 py-4 items-center">
+            <div className="col-span-4">
               <SearchBar
                 searchTarget="http://purl.org/dc/terms/title"
                 placeholder={translator("catalog.searchPlaceholder")}

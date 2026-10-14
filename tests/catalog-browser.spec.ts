@@ -67,6 +67,51 @@ test.describe("Catalog Browser Tests", () => {
       await expect(page.getByText('Could not resolve this DID')).toBeVisible({ timeout: 30_000 });
       await expect(page.locator(catalogPage.catalogUrlInputLocator)).toBeEditable();
     });
+
+    test('Picks the endpoint from the connectors the DID advertises', async ({ page }) => {
+      const otherDid = 'did:web:other.example';
+      await page.route('**/connector/discovery?*', async (route) => {
+        const did = new URL(route.request().url()).searchParams.get('did');
+        const connectors = did === COUNTER_PARTY_DID
+          ? [{ id: `${did}#dsp-edc-2`, serviceEndpoint: `${COUNTER_PARTY_ADDRESS}/.well-known/dspace-version`, protocolAddress: COUNTER_PARTY_ADDRESS }]
+          : [
+            { id: `${did}#dsp-a`, serviceEndpoint: 'https://a.other.example/api/dsp/.well-known/dspace-version', protocolAddress: 'https://a.other.example/api/dsp' },
+            { id: `${did}#dsp-b`, serviceEndpoint: 'https://b.other.example/api/dsp/.well-known/dspace-version', protocolAddress: 'https://b.other.example/api/dsp' },
+          ];
+        await route.fulfill({ json: { did, connectors } });
+      });
+      catalogPage = new CatalogBrowserPage(page);
+      await catalogPage.navigate();
+      const urlInput = page.locator(catalogPage.catalogUrlInputLocator);
+      const connectorSelect = page.getByTestId('catalog-discovered-connector');
+
+      await catalogPage.fillParticipantDidInput(COUNTER_PARTY_DID);
+      await expect(connectorSelect).toContainText('dsp-edc-2', { timeout: 10_000 });
+      await expect(urlInput).toBeHidden();
+      await expect(page.locator(catalogPage.catalogItemLocator).first()).toBeVisible({ timeout: 30_000 });
+
+      // The endpoint found for the previous DID is not reused for the new one.
+      await catalogPage.fillParticipantDidInput(otherDid);
+      await expect(connectorSelect).not.toContainText('dsp-edc-2', { timeout: 10_000 });
+      await expect(urlInput).toBeHidden();
+      await expect(page.locator(catalogPage.catalogItemLocator)).toHaveCount(0);
+      await expect(page.getByText('Failed to load Catalog')).toBeHidden();
+
+      await connectorSelect.click();
+      await expect(page.getByRole('option')).toHaveCount(2);
+    });
+
+    test('Keeps a typed endpoint when the DID changes', async ({ page }) => {
+      await page.route('**/connector/discovery?*', (route) => route.fulfill({ json: { connectors: [] } }));
+      catalogPage = new CatalogBrowserPage(page);
+      await catalogPage.navigate();
+      const urlInput = page.locator(catalogPage.catalogUrlInputLocator);
+
+      await urlInput.fill(COUNTER_PARTY_ADDRESS);
+      await catalogPage.fillParticipantDidInput('did:web:other.example');
+      await expect(page.getByText('advertises no connectors')).toBeVisible({ timeout: 10_000 });
+      await expect(urlInput).toHaveValue(COUNTER_PARTY_ADDRESS);
+    });
   });
 
   test.describe('With catalog URL filled', () => {
