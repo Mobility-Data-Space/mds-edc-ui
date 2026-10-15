@@ -77,7 +77,11 @@ export default function ContractAgreementDialog({
   const [counterPartyAddress, setCounterPartyAddress] =
     useState(connectorEndpoint);
 
-  const edcClient = useEdcConnectorClient({ management: managementUrl });
+  const edcClient = useEdcConnectorClient(
+    { management: managementUrl },
+    undefined,
+    "v4",
+  );
   useEffect(() => {
     if (!contractAgreement.assetId) {
       return;
@@ -179,6 +183,7 @@ export default function ContractAgreementDialog({
         }}
         translator={translator}
         counterPartyAddress={counterPartyAddress}
+        counterPartyId={contractAgreement.providerId}
       />
       <ContractAgreementTerminateDialog
         contractAgreement={contractAgreement}
