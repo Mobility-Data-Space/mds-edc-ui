@@ -65,7 +65,7 @@ export class AssetsPage extends BaseListPage {
   }
 
   async navigate() {
-    const listerner = this.page.waitForResponse((response) => response.url().includes('/connector/management/v3/assets'));
+    const listerner = this.page.waitForResponse((response) => response.url().includes('/connector/management/v4/assets'));
     await this.page.goto('/assets');
 
     await listerner;
@@ -205,19 +205,19 @@ export class AssetsPage extends BaseListPage {
   }
 
   async searchAssets(searchTerm: string) {
-    await this.searchItems(searchTerm, '/connector/management/v3/assets');
+    await this.searchItems(searchTerm, '/connector/management/v4/assets');
   }
 
   async clearSearch() {
-    await super.clearSearch('/connector/management/v3/assets');
+    await super.clearSearch('/connector/management/v4/assets');
   }
 
   async goToNextPage() {
-    await super.goToNextPage('/connector/management/v3/assets');
+    await super.goToNextPage('/connector/management/v4/assets');
   }
 
   async goToPreviousPage() {
-    await super.goToPreviousPage('/connector/management/v3/assets');
+    await super.goToPreviousPage('/connector/management/v4/assets');
   }
 
   async getSearchResults() {

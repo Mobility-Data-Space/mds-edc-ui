@@ -1,7 +1,7 @@
-import { expect, test } from '@playwright/test';
-import { AssetsPage } from './pages/assets-page';
-import { MAX_ITEMS } from '@/constants/lists';
-import { participantConfig } from './utils/tests-config';
+import {expect, test} from '@playwright/test';
+import {AssetsPage} from './pages/assets-page';
+import {MAX_ITEMS} from '@/constants/lists';
+import {participantConfig} from './utils/tests-config';
 
 test.describe("Assets Page Tests", () => {
   let assetsPage: AssetsPage;
@@ -253,7 +253,7 @@ test.describe("Assets Page Tests", () => {
       await editButton.click() ;
 
       await page.waitForURL("assets/**/edit") ;
-      await page.waitForResponse((response) => response.url().includes('/connector/management/v3/assets'))
+      await page.waitForResponse((response) => response.url().includes('/connector/management/v4/assets'))
 
       // Wait for form hydration — title field should be populated with existing asset title
       const titleInput = page.getByRole('textbox', { name: 'Title' });
@@ -263,8 +263,8 @@ test.describe("Assets Page Tests", () => {
 
       // Set up response listener BEFORE clicking submit to avoid race condition
       const updateResponsePromise = page.waitForResponse(
-        (response) => response.url().includes('/connector/management/v3/assets') &&
-                      !response.url().includes('/connector/management/v3/assets/') &&
+        (response) => response.url().includes('/connector/management/v4/assets') &&
+                      !response.url().includes('/connector/management/v4/assets/') &&
                       response.request().method() === 'PUT'
       );
       await assetsPage.submitEditAssetForm();
@@ -430,8 +430,7 @@ test.describe("Assets Page Tests", () => {
       if (isNextEnabled) {
         await assetsPage.goToNextPage();
 
-        const searchInput = await assetsPage.getSearchInput();
-        const searchValue = searchInput;
+        const searchValue = await assetsPage.getSearchInput();
         await expect(searchValue).toHaveValue(searchTerm);
       }
     });
