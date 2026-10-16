@@ -21,9 +21,13 @@ export default function ConnectorPage() {
   const entitiesCount = useEdcEntitiesCount();
   const edcFields = useEdcFields();
   const versionFields = useVersionFields();
-  const edcClient = useEdcConnectorClient({
-    management: proxyConnectorManagement,
-  });
+  const edcClient = useEdcConnectorClient(
+    {
+      management: proxyConnectorManagement,
+    },
+    undefined,
+    "v4",
+  );
   const [transferProcesses, setTransferProcesses] = useState<TransferProcess[]>(
     [],
   );

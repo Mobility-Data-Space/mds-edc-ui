@@ -32,9 +32,13 @@ const endpoints: [string, CountedEndpoint][] = Object.entries({
 });
 
 export const useEdcEntitiesCount = (): EdcEntitiesCount => {
-  const edcClient = useEdcConnectorClient({
-    management: proxyConnectorManagement,
-  });
+  const edcClient = useEdcConnectorClient(
+    {
+      management: proxyConnectorManagement,
+    },
+    undefined,
+    "v4",
+  );
   const [count, setCount] = useState<EdcEntitiesCount>(defaultEdcEntitiesCount);
 
   useEffect(() => {
