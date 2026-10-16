@@ -202,14 +202,14 @@ test.describe("Transfer Processes Page Tests", () => {
     });
 
     test("does not forward the data destination through the proxy", async ({ request }) => {
-      const single = await request.get(`/connector/management/v3/transferprocesses/${transferProcessId}`);
+      const single = await request.get(`/connector/management/v4/transferprocesses/${transferProcessId}`);
       expect(single.ok()).toBeTruthy();
       const singleBody = await single.text();
       expect(singleBody).toContain(transferProcessId);
       expect(singleBody).not.toContain(secret);
       expect(singleBody).not.toContain("dataDestination");
 
-      const query = await request.post("/connector/management/v3/transferprocesses/request", {
+      const query = await request.post("/connector/management/v4/transferprocesses/request", {
         data: {
           "@context": EDC_CONTEXT,
           "@type": "QuerySpec",
