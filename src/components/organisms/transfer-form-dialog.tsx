@@ -29,6 +29,7 @@ export interface TransferFormDialogProps {
   translator: (key: string) => string;
   contractAgreementId: ContractAgreement;
   counterPartyAddress: string;
+  counterPartyId: string;
 }
 
 export function TransferFormDialog({
@@ -38,6 +39,7 @@ export function TransferFormDialog({
   onSuccess = () => { },
   translator,
   counterPartyAddress,
+  counterPartyId,
 }: TransferFormDialogProps): React.ReactElement {
   const [formData, setFormData] = useState<DataAddress>(
     defaultHttpDestinationDataAddress,
@@ -48,9 +50,13 @@ export function TransferFormDialog({
   const { showSnackbar } = useAppSnackbar();
   const contractAgreement =
     removeJsonLdSchemaFromProperties(contractAgreementId);
-  const edcClient = useEdcConnectorClient({
-    management: proxyConnectorManagement,
-  });
+  const edcClient = useEdcConnectorClient(
+    {
+      management: proxyConnectorManagement,
+    },
+    undefined,
+    "v4",
+  );
   const formRef = useRef<HTMLFormElement>(null);
 
   const handleClose = useCallback(()=> {
@@ -65,6 +71,7 @@ export function TransferFormDialog({
       agreement as ContractAgreement,
       formData,
       counterPartyAddress,
+      counterPartyId,
     );
     edcClient.management.transferProcesses
       .initiate(transfer)

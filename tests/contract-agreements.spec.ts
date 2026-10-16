@@ -238,7 +238,7 @@ test.describe("Contract Agreements Page Tests", () => {
   test.describe("Status Filter Functionality", () => {
     test("Navigates to active contracts and checks all are active", async ({ page }) => {
       await page.getByRole('button', { name: 'Active Contracts' }).click();
-      await agreementsPage.waitForApiResponse('/connector/management/v3/contractagreements');
+      await agreementsPage.waitForApiResponse('/connector/management/v4/contractagreements');
       await agreementsPage.waitForListRender();
       await agreementsPage.waitForAgreementCardsLoaded();
       const agreementCards = await agreementsPage.getLoadedAgreementCards();
@@ -251,7 +251,7 @@ test.describe("Contract Agreements Page Tests", () => {
 
     test("Navigates to terminated contracts and checks all are terminated", async ({ page }) => {
       await page.getByRole('button', { name: 'Terminated Contracts' }).click();
-      await agreementsPage.waitForApiResponse('/connector/management/v3/contractagreements');
+      await agreementsPage.waitForApiResponse('/connector/management/v4/contractagreements');
       await agreementsPage.waitForListRender();
       const agreementCards = await agreementsPage.getAgreementCards();
       const count = await agreementCards.count();

@@ -28,6 +28,7 @@ export const createTransferProcessRequest = (
   agreement: ContractAgreement,
   dataDestination: DataAddress,
   counterPartyAddress: string,
+  counterPartyId: string,
 ): TransferProcessInput => {
   const transferProcess: TransferProcessInputWithCallback =
     {} as TransferProcessInputWithCallback;
@@ -37,11 +38,19 @@ export const createTransferProcessRequest = (
     (dataDestination.isPull ? TRANSFER_TYPE_PULL : TRANSFER_TYPE_PUSH);
 
   transferProcess.counterPartyAddress = counterPartyAddress;
+  // v4 requires the counterparty participant id on the transfer request.
+  transferProcess.counterPartyId = counterPartyId;
   transferProcess.contractId = agreement.contractId;
   transferProcess.transferType = transferType;
 
   if (!dataDestination.isPull) {
-    transferProcess.dataDestination = transformDataAddress(dataDestination);
+    // v4's TransferRequest scope maps `dataDestination` without a nested
+    // context, so the inner `type` is only recognised when the address carries
+    // its own `@type:"DataAddress"`.
+    transferProcess.dataDestination = {
+      "@type": "DataAddress",
+      ...transformDataAddress(dataDestination),
+    };
   }
 
   if (transferType === DataAddressTypes.Kafka + TRANSFER_TYPE_PULL) {

@@ -35,7 +35,11 @@ export default function TransferProcessTableRow({
   const cleanedTransferProcess =
     removeJsonLdSchemaFromProperties(transferProcess);
   const stateTimestamp = readValue(cleanedTransferProcess, "stateTimestamp");
-  const edcClient = useEdcConnectorClient({ management: managementUrl });
+  const edcClient = useEdcConnectorClient(
+    { management: managementUrl },
+    undefined,
+    "v4",
+  );
   const [assetDialogIsOpen, setAssetDialogIsOpen] = useState(false);
   const [transferProcessDialogIsOpen, setTransferProcessDialogIsOpen] =
     useState(false);

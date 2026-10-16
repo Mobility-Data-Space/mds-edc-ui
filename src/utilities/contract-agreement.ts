@@ -67,7 +67,7 @@ export class RetiredContractAgreement extends JsonLdId {
 }
 
 export class AgreementsRetirementController extends EdcController {
-  #basePath = "/v3/contractagreements/retirements";
+  #basePath = "/v4/contractagreements/retirements";
 
   constructor(inner: Inner, context: EdcConnectorClientContext) {
     super(inner, context);
@@ -100,6 +100,7 @@ export class AgreementsRetirementController extends EdcController {
         "@context": {
           edc: CONTEXT_EDC.value,
         },
+        "@type": "AgreementsRetirementEntry",
         [`${CONTEXT_EDC.value}agreementId`]: contractAgreementId,
         [`${CONTEXT_EDC.value}reason`]: reason,
       },
