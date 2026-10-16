@@ -88,7 +88,6 @@ const routes: ReactElement<{ href?: string; className?: string }>[] = [
     icon="assignment"
   />,
 
-  <RouteNode key="edrs" href="/edr" title="navigation.edrs" icon="moving" />,
   <h3
     key="devider-1"
     className="mt-8 mx-5 mb-3 text-xs font-semibold text-gray-500 uppercase"
