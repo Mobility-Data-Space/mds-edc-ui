@@ -5134,10 +5134,10 @@ victory-vendor@^37.0.2:
     d3-time "^3.0.0"
     d3-timer "^3.0.1"
 
-web-did-resolver@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/web-did-resolver/-/web-did-resolver-3.1.0.tgz#40bef90feac4f9e9d94c47c1818517536f2325b4"
-  integrity sha512-jFfIqKi8TOcPnFI5PY+ffm/Dhayik6lG3Pl+Poj6i73ipLAD4eQlGAOIS/z8Hs8lZgaNShyu3VsAOxa9G1QEdQ==
+web-did-resolver@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/web-did-resolver/-/web-did-resolver-3.2.0.tgz#7b724d25e284579ff4341224225d42d1397640b1"
+  integrity sha512-DclShDbyFGnUuk17Is+hdBPsBbQRiZfcp6sEBS+4y8DeYN+sXnxYJPpdcgbLoNZHGYNoj12MR7MgO/j4VUrdFw==
   dependencies:
     did-resolver "^6.0.0"
 
