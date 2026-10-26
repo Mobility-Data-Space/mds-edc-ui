@@ -6,6 +6,9 @@
     "mdsEdcVersion": "2.0.0"
   },
   "type": "module",
+  "engines": {
+    "node": ">=26.12.1"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -25,8 +28,8 @@
     "@mui/material": "^7.3.9",
     "@mui/x-date-pickers": "^8.27.2",
     "@tailwindcss/typography": "^0.5.20",
-    "@think-it-labs/edc-connector-client": "^0.10.2",
-    "@think-it-labs/edc-connector-ui": "^0.3.4",
+    "@think-it-labs/edc-connector-client": "^0.10.4",
+    "@think-it-labs/edc-connector-ui": "^0.3.5",
     "clsx": "^2.1.0",
     "dayjs": "^1.11.23",
     "did-resolver": "^6.0.0",
@@ -35,7 +38,7 @@
     "javascript-time-ago": "^2.5.12",
     "jsonld": "^9.0.0",
     "mui-chips-input": "^9.0.0",
-    "next": "16.3.8",
+    "next": "16.4.3",
     "notistack": "^3.0.2",
     "react": "19.3.1",
     "react-dom": "19.3.1",
@@ -50,7 +53,11 @@
   },
   "resolutions": {
     "baseline-browser-mapping": ">=2.11.0",
+    "browserslist": ">=4.28.7 <5",
+    "eslint-plugin-react-hooks": "7.0.1",
+    "flatted": ">=3.4.2 <4",
     "i18next-fs-backend": ">=2.6.4",
+    "js-yaml": ">=4.3.2 <5",
     "lodash": ">=4.18.0",
     "lodash-es": ">=4.18.0",
     "nanoid": "^3.3.17",
@@ -58,8 +65,9 @@
     "postcss-selector-parser": ">=7.1.6",
     "sharp": ">=0.35.5",
     "source-map-js": ">=1.2.2",
-    "undici": ">=8.10.2",
-    "yaml": ">=1.10.3"
+    "undici": ">=8.12.2",
+    "yaml": ">=1.10.3",
+    "zod": ">=4.6.6 <5"
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1",

@@ -1,7 +1,7 @@
 name: mds-edc-ui-dcp
 
 x-wallet: &wallet
-  image: ghcr.io/mobility-data-space/mds-edc/wallet:${MDS_EDC_TAG:-latest}
+  image: ghcr.io/mobility-data-space/mds-edc/wallet:${MDS_EDC_TAG:-2.6.2}
   platform: linux/amd64
   depends_on:
     postgres:
@@ -40,7 +40,7 @@ x-wallet-env: &wallet-env
   EDC_DATASOURCE_DEFAULT_PASSWORD: "password"
 
 x-connector: &connector
-  image: ghcr.io/mobility-data-space/mds-edc/connector-vault-postgresql-dcp:${MDS_EDC_TAG:-latest}
+  image: ghcr.io/mobility-data-space/mds-edc/connector-vault-postgresql-dcp:${MDS_EDC_TAG:-2.6.2}
   platform: linux/amd64
   entrypoint: ["/app/bin/connector-vault-postgresql-dcp", "--log-level=debug"]
   depends_on:
@@ -131,7 +131,7 @@ services:
     entrypoint: ["sh", "/vault-init.sh"]
 
   issuer:
-    image: ghcr.io/mobility-data-space/mds-identity-issuer/issuer:${MDS_ISSUER_TAG:-latest}
+    image: ghcr.io/mobility-data-space/mds-identity-issuer/issuer:${MDS_ISSUER_TAG:-0.3.0}
     platform: linux/amd64
     depends_on:
       postgres:
@@ -211,7 +211,7 @@ services:
       wallet-2:
         condition: service_healthy
     environment:
-      ISSUER_API_VERSION: "${ISSUER_API_VERSION:-v1}"
+      ISSUER_API_VERSION: "${ISSUER_API_VERSION:-v1beta}"
     volumes:
       - ./docker/dcp:/dcp:ro
     entrypoint: ["sh", "/dcp/seed.sh"]
