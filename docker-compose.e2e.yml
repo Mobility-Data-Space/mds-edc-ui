@@ -2,7 +2,7 @@ name: mds-edc-ui-daps
 
 services:
   edc-1:
-    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
+    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:2.6.2
     platform: linux/amd64
     entrypoint: ["/app/bin/connector-inmemory", "--log-level=debug"]
     environment:
@@ -54,7 +54,7 @@ services:
       start_period: 30s
 
   edc-2:
-    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:latest
+    image: ghcr.io/mobility-data-space/mds-edc/connector-inmemory:2.6.2
     platform: linux/amd64
     entrypoint: ["/app/bin/connector-inmemory", "--log-level=debug"]
     environment:
