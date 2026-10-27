@@ -1,7 +1,7 @@
 name: mds-edc-ui-dcp
 
 x-wallet: &wallet
-  image: ghcr.io/mobility-data-space/mds-edc/wallet:${MDS_EDC_TAG:-2.6.2}
+  image: ghcr.io/mobility-data-space/mds-edc/wallet:${MDS_EDC_TAG:-latest}
   platform: linux/amd64
   depends_on:
     postgres:
@@ -30,6 +30,7 @@ x-wallet-env: &wallet-env
   EDC_IAM_DID_WEB_USE_HTTPS: "false"
   EDC_IDENTITYHUB_SUPERUSER_ID: "super-user"
   EDC_IDENTITYHUB_SUPERUSER_API_KEY: "c3VwZXItdXNlcg==.e2e-wallet-key"
+  EDC_IAM_CREDENTIAL_REVOCATION_MIMETYPE: "application/json"
   EDC_ENCRYPTION_STRICT: "false"
   EDC_SQL_SCHEMA_AUTOCREATE: "false"
   EU_DATASPACE_WALLET_POSTGRESQL_MIGRATION_SCHEMA: "public"
@@ -40,7 +41,7 @@ x-wallet-env: &wallet-env
   EDC_DATASOURCE_DEFAULT_PASSWORD: "password"
 
 x-connector: &connector
-  image: ghcr.io/mobility-data-space/mds-edc/connector-vault-postgresql-dcp:${MDS_EDC_TAG:-2.6.2}
+  image: ghcr.io/mobility-data-space/mds-edc/connector-vault-postgresql-dcp:${MDS_EDC_TAG:-latest}
   platform: linux/amd64
   entrypoint: ["/app/bin/connector-vault-postgresql-dcp", "--log-level=debug"]
   depends_on:
@@ -68,6 +69,8 @@ x-connector-env: &connector-env
   WEB_HTTP_VERSION_PORT: "8184"
   WEB_HTTP_PUBLIC_PATH: "/public"
   WEB_HTTP_PUBLIC_PORT: "8185"
+  WEB_HTTP_SIGNALING_PATH: "/api/signaling"
+  WEB_HTTP_SIGNALING_PORT: "8187"
 
   EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: "transfer-proxy-token-signer-public-key"
   EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: "transfer-proxy-token-signer-private-key"
@@ -131,7 +134,7 @@ services:
     entrypoint: ["sh", "/vault-init.sh"]
 
   issuer:
-    image: ghcr.io/mobility-data-space/mds-identity-issuer/issuer:${MDS_ISSUER_TAG:-0.3.0}
+    image: ghcr.io/mobility-data-space/mds-identity-issuer/issuer:${MDS_ISSUER_TAG:-latest}
     platform: linux/amd64
     depends_on:
       postgres:
@@ -211,7 +214,7 @@ services:
       wallet-2:
         condition: service_healthy
     environment:
-      ISSUER_API_VERSION: "${ISSUER_API_VERSION:-v1beta}"
+      ISSUER_API_VERSION: "${ISSUER_API_VERSION:-v1}"
     volumes:
       - ./docker/dcp:/dcp:ro
     entrypoint: ["sh", "/dcp/seed.sh"]

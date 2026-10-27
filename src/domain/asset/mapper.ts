@@ -155,6 +155,33 @@ const fromKeyValueInput = (value: {
   }
 };
 
+// Reads the data address from the `dataplaneMetadata` shape introduced in
+// connector 2.7.0's v4 asset responses. Returns short-keyed fields (`type`,
+// `method`, `baseUrl`, …) or an empty object when there is no such metadata.
+const dataAddressFromDataplaneMetadata = (
+  removedJsonLd: Record<string, unknown>,
+): Record<string, unknown> => {
+  const EDC = CONTEXT_EDC.value;
+  const metadata = removedJsonLd[`${EDC}dataplaneMetadata`] as
+    | Record<string, unknown>
+    | undefined;
+  const properties = metadata?.[`${EDC}properties`] as
+    | { "@value"?: Record<string, unknown> }
+    | undefined;
+  const value = properties?.["@value"];
+  if (!value) {
+    return {};
+  }
+  return Object.fromEntries(
+    Object.entries(value).map(([key, val]) => [
+      key.startsWith(CONTEXT_EDC.prefix)
+        ? key.slice(CONTEXT_EDC.prefix.length)
+        : key,
+      val,
+    ]),
+  );
+};
+
 export const assetToAssetInput = async (asset: Asset) => {
   const removedJsonLd = await jsonld.compact(
     asset,
@@ -174,11 +201,25 @@ export const assetToAssetInput = async (asset: Asset) => {
       string,
       unknown
     >),
+    // Support both data-address shapes so the transition is smooth. A v4 asset
+    // still carries a top-level `dataAddress` when one was provided on input,
+    // but that field is being phased out: connector 2.7.0 returns the address as
+    // a `dataplaneMetadata` `@json` literal instead (keys `edc:`-prefixed, e.g.
+    // `edc:baseUrl`). The two never coexist in one asset, so whichever is present
+    // hydrates the form; this spread reads `dataplaneMetadata` (stripping the
+    // prefix) when the top-level `dataAddress` is absent.
+    ...dataAddressFromDataplaneMetadata(removedJsonLd),
   };
   const dataAddress = {} as DataAddress;
 
   const regex = /^https?:\/\/.*[#\/]([^\/#]+)$/;
   for (const prop in auxDataAddress) {
+    // Never carry the data address `@type` into the form: connector 2.7.0 throws
+    // a 500 on an update whose `dataAddress` declares a `@type`, and the create
+    // path never sends one, so leave it off here too for a consistent round-trip.
+    if (prop === "@type") {
+      continue;
+    }
     const match = prop.match(regex);
     if (!match) {
       dataAddress[prop] = auxDataAddress[prop];
