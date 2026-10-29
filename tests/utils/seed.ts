@@ -314,3 +314,51 @@ export async function initiate_transfers(
     transferResponse.id,
   );
 }
+
+/**
+ * Drives `consumer` to negotiate and start a PULL transfer against a *real, reachable*
+ * `provider`. Unlike {@link initiate_transfers} (which addresses the participant itself
+ * to only populate the transfer-process list), this reaches the provider, so the
+ * consumer's embedded data plane actually creates a DataFlow — used to seed the
+ * DFRS data-flows view. Returns the consumer-side transfer process id (== data flow id).
+ */
+export async function initiate_consumer_transfer(
+  consumer: Participant,
+  provider: Participant,
+): Promise<string> {
+  const client: EdcConnectorClient = buildSeedClient(consumer.managementUrl);
+
+  const catalog = await client.management.catalog.request({
+    counterPartyId: provider.id,
+    counterPartyAddress: provider.protocolUrl,
+  });
+
+  const dataset = catalog.datasets[0];
+  const offer = dataset.offers[0];
+  const policy = new PolicyBuilder()
+    .type("Offer")
+    .raw({ ...offer, assigner: provider.id, target: dataset.id })
+    .build();
+
+  const negotiation = await client.management.contractNegotiations.initiate({
+    counterPartyId: provider.id,
+    counterPartyAddress: provider.protocolUrl,
+    policy,
+  });
+
+  await waitForNegotiationState(client, negotiation.id, "FINALIZED");
+
+  const contractNegotiation =
+    await client.management.contractNegotiations.get(negotiation.id);
+  const contractAgreement = await client.management.contractAgreements.get(
+    contractNegotiation.contractAgreementId,
+  );
+
+  const transfer = await client.management.transferProcesses.initiate({
+    counterPartyAddress: provider.protocolUrl,
+    contractId: contractAgreement.id,
+    transferType: "HttpData-PULL",
+  } as TransferProcessInput);
+
+  return transfer.id;
+}
