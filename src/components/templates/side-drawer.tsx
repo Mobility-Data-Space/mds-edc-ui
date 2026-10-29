@@ -68,6 +68,24 @@ const routes: ReactElement<{ href?: string; className?: string }>[] = [
     title="navigation.dashboard"
     icon="data_usage"
   />,
+  <h3
+    key="devider-dfrs"
+    className="mt-8 mx-5 mb-3 text-xs font-semibold text-gray-500 uppercase"
+  >
+    <T string="navigation.dfrs" />
+  </h3>,
+  <RouteNode
+    key="data-flows"
+    href="/data-flows"
+    title="navigation.dataFlows"
+    icon="sync_alt"
+  />,
+  <h3
+    key="devider-consume"
+    className="mt-8 mx-5 mb-3 text-xs font-semibold text-gray-500 uppercase"
+  >
+    <T string="navigation.consume" />
+  </h3>,
   <RouteNode
     key="catalog"
     href="/catalog-browser"
@@ -80,14 +98,12 @@ const routes: ReactElement<{ href?: string; className?: string }>[] = [
     title="navigation.contractAgreements"
     icon="assignment_turned_in"
   />,
-
   <RouteNode
     key="transfer-processes"
     href="/transfer-processes"
     title="navigation.transferProcesses"
     icon="assignment"
   />,
-
   <RouteNode key="edrs" href="/edr" title="navigation.edrs" icon="moving" />,
   <h3
     key="devider-1"
