@@ -974,10 +974,10 @@
   dependencies:
     postcss-selector-parser "6.0.10"
 
-"@think-it-labs/edc-connector-client@^0.10.4":
-  version "0.10.4"
-  resolved "https://registry.yarnpkg.com/@think-it-labs/edc-connector-client/-/edc-connector-client-0.10.4.tgz#af6b0ea80e81306a512ac3249b2358e8533fb903"
-  integrity sha512-RlFU3lY41zd57oNhKvIJ5e63RxXdwmti+OJkZbz/mWCc19LtJLi/DmQ2eIHidTv21HKepRexxLffLRhLml613Q==
+"@think-it-labs/edc-connector-client@^0.10.5":
+  version "0.10.5"
+  resolved "https://registry.yarnpkg.com/@think-it-labs/edc-connector-client/-/edc-connector-client-0.10.5.tgz#ab1cac8163eeca4d4d5a54d04155e8faf82e0595"
+  integrity sha512-j88KILR147Sowj1i/hdYp71/5sAfcXSCrZ8MVnxoHUO1cMLTSshKcNsWV1SPmnIlj5lzHrNvvvwbs4OfGIR9Qg==
   dependencies:
     "@think-it-labs/typed-error" "^0.3.0"
     jsonld "^9.0.0"
