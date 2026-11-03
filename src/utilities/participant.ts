@@ -1,3 +1,5 @@
+import { IdentityMode } from "@/utilities/identity-mode";
+
 export interface Participant {
   id: string;
   name: string;
@@ -11,5 +13,6 @@ export interface Participant {
   maintainerName: string,
   maintainerUrl: string,
   dapsUrl: string,
-  dapsJwksUrl: string
+  dapsJwksUrl: string,
+  identityMode: IdentityMode
 }

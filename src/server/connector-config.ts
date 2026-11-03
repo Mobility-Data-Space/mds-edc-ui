@@ -1,5 +1,6 @@
 import "server-only";
 
+import { resolveIdentityMode } from "@/utilities/identity-mode";
 import { Participant } from "@/utilities/participant";
 
 function getConnectorFromEnv(): Participant & { apiKey: string } {
@@ -58,6 +59,7 @@ function getConnectorFromEnv(): Participant & { apiKey: string } {
     dapsUrl: optional.MDS_DAPS_URL || "",
     dapsJwksUrl: optional.MDS_DAPS_JWKS_URL || "",
     apiKey: required.EDC_MANAGEMENT_API_KEY!,
+    identityMode: resolveIdentityMode(process.env.EDC_IDENTITY_MODE, required.EDC_ID!),
   };
 }
 
