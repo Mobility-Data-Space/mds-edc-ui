@@ -1,3 +1,4 @@
+import { IDENTITY_MODE } from "../utils/tests-config";
 import { Page } from '@playwright/test';
 import { BaseListPage } from './base-list-page';
 
@@ -22,8 +23,9 @@ export class CatalogBrowserPage extends BaseListPage {
   }
 
   // DCP providers only answer a catalog request whose counterPartyId is their
-  // DID, so it is entered before the endpoint.
+  // DID, so it is entered before the endpoint. DAPS connectors have no DID field.
   async fillParticipantDidInput(did: string) {
+    if (IDENTITY_MODE !== "dcp") return;
     await this.page.locator(this.participantDidInputLocator).fill(did);
   }
 
