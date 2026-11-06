@@ -62,7 +62,7 @@ test.describe("Assets Page Tests", () => {
     });
 
     test.describe("Asset Data Sources", () => {
-      test("Creates a new asset with GET HTTP and verifies its visibility in the list", async () => {
+      test("Creates a new asset with GET HTTP and verifies its visibility in the list", async ({ page }) => {
         await assetsPage.openCreateAssetModal();
 
         const randomNumber = `${Math.random()}`.replace("0.", "");
@@ -81,6 +81,17 @@ test.describe("Assets Page Tests", () => {
         await assetsPage.addQueryParams();
         await assetsPage.addAuthHeaders();
         await assetsPage.addAdditionalHeaders();
+
+        const authCode = page.locator('#data-address-auth-code');
+        await expect(authCode).toHaveAttribute('type', 'password');
+        await page.getByRole('button', { name: 'Show Sensitive Values' }).first().click();
+        await expect(authCode).toHaveAttribute('type', 'text');
+
+        const headers = page.getByTestId('data-address-http-headers');
+        const headerValue = headers.getByLabel('Value', { exact: true });
+        await expect(headerValue).toHaveAttribute('type', 'password');
+        await headers.getByRole('button', { name: 'Show Sensitive Values' }).click();
+        await expect(headerValue).toHaveAttribute('type', 'text');
 
         await assetsPage.submitCreateAssetForm();
 
@@ -193,7 +204,7 @@ test.describe("Assets Page Tests", () => {
         await expect(successMessage).toBeVisible();
       });
 
-      test("Creates a new asset with a Custom JSON block and verifies its visibility in the list", async () => {
+      test("Creates a new asset with a Custom JSON block and verifies its visibility in the list", async ({ page }) => {
         await assetsPage.openCreateAssetModal();
 
         const randomNumber = `${Math.random()}`.replace("0.", "");
@@ -207,6 +218,7 @@ test.describe("Assets Page Tests", () => {
 
         await assetsPage.selectCustomJsonType();
         await assetsPage.fillCustomJsonDatasource();
+        await expect(page.getByRole('button', { name: 'Show Sensitive Values' })).toHaveCount(0);
 
         await assetsPage.submitCreateAssetForm();
 

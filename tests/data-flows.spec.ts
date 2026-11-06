@@ -76,13 +76,42 @@ test.describe('Data Flows Page Tests', () => {
     await expect(rows).not.toHaveCount(0);
   });
 
-  test('opens the data flow details dialog', async () => {
+  test('opens the data flow details dialog', async ({ page }) => {
+    const secret = 'e2e-sensitive-value';
+    await page.route(`**${DATA_FLOWS_REQUEST}`, async (route) => {
+      const response = await route.fetch();
+      const [first, ...rest] = await response.json();
+      await route.fulfill({
+        response,
+        json: [
+          {
+            ...first,
+            source: { type: 'HttpData', baseUrl: 'https://example.com', authCode: secret },
+            destination: {
+              type: 'AmazonS3',
+              accessKeyId: secret,
+              secretAccessKey: secret,
+              'https://w3id.org/edc/v0.0.1/ns/secret': secret,
+              'header:Authorization': secret,
+            },
+          },
+          ...rest,
+        ],
+      });
+    });
+    await dataFlowsPage.navigate();
+
     const rows = await dataFlowsPage.getDataFlowRows();
     await rows.first().getByTestId('show-data-flow-details').click();
 
     const dialog = await dataFlowsPage.getDetailsDialog();
     await expect(dialog).toBeVisible();
     await expect(dialog).toContainText('DataFlow');
+
+    await expect(dialog).toContainText('https://example.com');
+    await expect(dialog).not.toContainText(secret);
+    await dialog.getByText('Show Sensitive Values').click();
+    await expect(dialog).toContainText(secret);
   });
 
   test('surfaces the data address outcome without crashing', async ({

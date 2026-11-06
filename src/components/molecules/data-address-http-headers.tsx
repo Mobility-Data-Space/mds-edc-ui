@@ -17,7 +17,7 @@ export interface DataAddressHttpHeadersProps {
 export function DataAddressHttpHeaders({ translator, formData, onChange, errors }: DataAddressHttpHeadersProps): React.ReactElement {
 
   return (
-    <div className="flex flex-col gap-y-5 items-start">
+    <div className="flex flex-col gap-y-5 items-start" data-testid="data-address-http-headers">
       <label
         htmlFor="data-address-http-headers"
         className="inline-block text-sm text-gray-800 mt-2.5"
@@ -29,6 +29,7 @@ export function DataAddressHttpHeaders({ translator, formData, onChange, errors 
         addText={translator("assets.new.fieldDataAddressHttpHeadersAddText")}
         keyPlaceholder={translator("assets.new.fieldDataAddressHttpHeaderNamePlaceholder")}
         valuePlaceholder={"..."}
+        maskValues
         name="headers"
         id="data-address-http-headers"
         type="text"

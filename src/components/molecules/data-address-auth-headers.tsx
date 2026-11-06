@@ -1,10 +1,9 @@
-import React from "react";
-
-
+import React, { useState } from "react";
 
 import { Input } from "@/components/atoms/input";
 import { MuiSelect } from "@/components/atoms/mui-select";
 import { RadioButton } from "@/components/atoms/radio-button";
+import { SensitiveValueToggle } from "@/components/atoms/sensitive-value-toggle";
 import { T } from "@/i18n";
 import {
   ASSET_DATA_ADDRESS_HTTP_AUTH_HEADER_TYPE_SELECT_OPTIONS,
@@ -23,6 +22,7 @@ export interface AssetDataSamplesProps {
 
 export function DataAddressAuthHeaders({ translator, formData, onChange, errors }: AssetDataSamplesProps): React.ReactElement {
   const isVaultSecret = resolveAuthHeaderType(formData) === AUTH_HEADER_TYPE_VAULT_SECRET;
+  const [showSensitive, setShowSensitive] = useState(false);
 
   return (
     <div className="flex flex-col gap-y-5 items-start w-full">
@@ -62,7 +62,18 @@ export function DataAddressAuthHeaders({ translator, formData, onChange, errors 
             className="sm:col-span-2"
             name="authCode"
             id="data-address-auth-code"
-            type="text"
+            type={showSensitive ? "text" : "password"}
+            autoComplete="new-password"
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <SensitiveValueToggle
+                    shown={showSensitive}
+                    onToggle={() => setShowSensitive((value) => !value)}
+                  />
+                ),
+              },
+            }}
             label={<T
               string={`assets.new.fieldDataAddressAuthHeader${isVaultSecret ? "Vault" : ""}Value`} />}
             placeholder={isVaultSecret ? "Mysecret123" : "Bearer ..."}
