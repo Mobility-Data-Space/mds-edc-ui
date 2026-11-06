@@ -1,5 +1,7 @@
 import { TextFieldProps } from "@mui/material/TextField";
 import { Button, FormHelperText, TextField } from "@mui/material";
+import { useState } from "react";
+import { SensitiveValueToggle } from "@/components/atoms/sensitive-value-toggle";
 import { isUrl } from "@/utilities/utilities";
 
 export type Tag = {
@@ -12,6 +14,7 @@ export type KeyValuePairInputProps = Omit<TextFieldProps, "onChange"> & {
   onRemove: (event: React.MouseEvent<HTMLButtonElement>) => void;
   value: Tag;
   ensureValueIsALink?: boolean;
+  maskValue?: boolean;
   removeText?: string;
   errorText?: string;
   keyLabel?: string;
@@ -34,8 +37,10 @@ export function KeyValuePairInput({
   valuePlaceholder = "Value",
   valueOnly = false,
   ensureValueIsALink,
+  maskValue = false,
   valid,
 }: KeyValuePairInputProps) {
+  const [showValue, setShowValue] = useState(false);
   const regex = /^[a-zA-Z0-9][a-zA-Z0-9-_\.]{0,49}$/;
 
   function textInputHandler(text: string, label: string) {
@@ -69,6 +74,22 @@ export function KeyValuePairInput({
           className={valueOnly ? "col-span-8" : "col-span-6"}
           fullWidth
           required={valueOnly}
+          type={maskValue && !showValue ? "password" : "text"}
+          autoComplete={maskValue ? "new-password" : undefined}
+          slotProps={
+            maskValue
+              ? {
+                  input: {
+                    endAdornment: (
+                      <SensitiveValueToggle
+                        shown={showValue}
+                        onToggle={() => setShowValue((value) => !value)}
+                      />
+                    ),
+                  },
+                }
+              : undefined
+          }
           label={valueLabel}
           placeholder={valuePlaceholder}
           value={value?.value}

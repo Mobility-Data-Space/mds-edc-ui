@@ -3,6 +3,10 @@ import { useAppSnackbar } from "@/hooks/use-app-snackbar";
 import { T, useTranslator } from "@/i18n";
 import { contextToCompact } from "@/jsonld/context";
 import {
+  containsSensitiveData,
+  maskSensitiveData,
+} from "@/utilities/sensitive-data";
+import {
   Button,
   Checkbox,
   Dialog,
@@ -30,42 +34,7 @@ export interface JsonLdDialogProps {
   deleteConfirmationMessage?: string;
   deleteFailMessage?: string;
   deleteButtonTestId?: string;
-  sensitiveFields?: Set<string>;
 }
-
-const isSensitiveKey = (key: string, fields: Set<string>): boolean => {
-  for (const field of fields) {
-    if (
-      key === field ||
-      key.endsWith(`/${field}`) ||
-      key.endsWith(`:${field}`)
-    ) {
-      return true;
-    }
-  }
-  return false;
-};
-
-const maskSensitiveData = (value: unknown, fields: Set<string>): unknown => {
-  if (!value || typeof value !== "object") return value;
-  const obj = value as Record<string, unknown>;
-
-  if (Array.isArray(value)) {
-    return value.map((item) => maskSensitiveData(item, fields));
-  }
-
-  const masked: Record<string, unknown> = {};
-  for (const key in obj) {
-    if (isSensitiveKey(key, fields)) {
-      masked[key] = "••••••••";
-    } else if (typeof obj[key] === "object" && obj[key] !== null) {
-      masked[key] = maskSensitiveData(obj[key], fields);
-    } else {
-      masked[key] = obj[key];
-    }
-  }
-  return masked;
-};
 
 export function JsonLdDialog({
   isOpen,
@@ -78,7 +47,6 @@ export function JsonLdDialog({
   deleteConfirmationMessage,
   deleteFailMessage,
   deleteButtonTestId,
-  sensitiveFields = new Set<string>(),
 }: JsonLdDialogProps): React.ReactElement {
   const { translator } = useTranslator();
   const [ReactJson, setReactJson] =
@@ -118,6 +86,8 @@ export function JsonLdDialog({
     }
   }, []);
 
+  const displayedJson = jsonIsCleaned ? cleanJson : jsonLdObject;
+
   return (
     <>
       <DeleteDialog
@@ -154,13 +124,7 @@ export function JsonLdDialog({
         <DialogContent style={{ maxWidth: "80vw", width: "800px" }}>
           {ReactJson && (
             <ReactJson
-              src={(() => {
-                const baseJson = jsonIsCleaned ? cleanJson : jsonLdObject;
-                if (sensitiveFields.size > 0 && !showSensitive) {
-                  return maskSensitiveData(baseJson, sensitiveFields) as object;
-                }
-                return baseJson as object;
-              })()}
+              src={(showSensitive ? displayedJson : maskSensitiveData(displayedJson)) as object}
               displayObjectSize={false}
               displayDataTypes={false}
               enableClipboard={false}
@@ -180,7 +144,7 @@ export function JsonLdDialog({
                   />
                 }
               />
-              {sensitiveFields.size > 0 && (
+              {containsSensitiveData(displayedJson) && (
                 <FormControlLabel
                   label={<T string="common.showSensitiveValues" />}
                   control={

@@ -39,13 +39,14 @@ export class AssetsPage extends BaseListPage {
     await this.page.getByRole('combobox').filter({ hasText: 'Header With Vault Secret' }).click();
     await this.page.getByRole('option', { name: 'Header With Value' }).click();
     await this.page.getByRole('textbox', { name: 'Auth Header Name' }).fill('Authorization');
-    await this.page.getByRole('textbox', { name: 'Auth Header Value' }).fill('Bearer token123');
+    await this.page.locator('#data-address-auth-code').fill('Bearer token123');
   }
 
   async addAdditionalHeaders() {
     await this.page.getByRole('button', { name: 'Add Additional Headers' }).click() ;
-    await this.page.getByRole('textbox', { name: 'Key' }).fill('Custom-Header');
-    await this.page.getByRole('textbox', { name: 'Value' }).nth(3).fill('HeaderValue');
+    const headers = this.page.getByTestId('data-address-http-headers');
+    await headers.getByLabel('Key').fill('Custom-Header');
+    await headers.getByLabel('Value', { exact: true }).fill('HeaderValue');
   }
 
   async enableProxyBody() {

@@ -15,6 +15,7 @@ export type KeyValuePairInputListProps = Omit<TextFieldProps, "onChange"> & {
   valueOnly?: boolean;
   additionalActions?: React.ReactElement[];
   ensureValueIsALink?: boolean
+  maskValues?: boolean;
   value: TagsList;
   onChange: (tagList: TagsList) => void;
 };
@@ -76,6 +77,7 @@ export function KeyValuePairInputList({
   valuePlaceholder = "Value",
   valueOnly = false,
   ensureValueIsALink,
+  maskValues,
   additionalActions = [],
   value,
   onChange
@@ -89,6 +91,7 @@ export function KeyValuePairInputList({
           valueLabel={valueLabel}
           valuePlaceholder={valuePlaceholder}
           ensureValueIsALink={ensureValueIsALink}
+          maskValue={maskValues}
           key={tagInput.id || index}
           onChange={({ input, valid }) => {
             onChange(withUpdatedTag(value, { input, valid }, tagInput, index));

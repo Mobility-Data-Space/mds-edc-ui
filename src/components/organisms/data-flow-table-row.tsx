@@ -9,22 +9,6 @@ import { formatDateTime, formatDateTimeAgo } from "@/utilities/date";
 import { Icon, Tooltip } from "@mui/material";
 import { useState } from "react";
 
-// The resolved data address can carry a secret; mask it until explicitly revealed.
-// (authKey/baseUrl are header name / URL, not secrets, so they are left visible.)
-const SENSITIVE_FIELDS = new Set([
-  "authorization",
-  "authCode",
-  "secret",
-  "secretName",
-  "token",
-  "tokenEndpoint",
-  "password",
-  "sharedKey",
-  "secretKey",
-  "clientSecret",
-  "kafkaConsumerProperties",
-]);
-
 const directionIcon = (direction: DataFlow["direction"]) => {
   if (direction === "PULL") return "download";
   if (direction === "PUSH") return "upload";
@@ -75,7 +59,6 @@ export default function DataFlowTableRow({ dataFlow }: { dataFlow: DataFlow }) {
         isOpen={isAddressDialogOpen}
         onClose={() => setIsAddressDialogOpen(false)}
         jsonLdObject={dataAddress}
-        sensitiveFields={SENSITIVE_FIELDS}
       />
 
       <JsonLdDialog
