@@ -40,14 +40,6 @@ export default function EdrTableRow({ edr }: { edr: Edr }) {
         isOpen={isEdrDialogOpen}
         onClose={() => setIsEdrDialogOpen(false)}
         jsonLdObject={edrDataAddress}
-        sensitiveFields={
-          new Set([
-            "endpoint",
-            "authorization",
-            "tokenEndpoint",
-            "kafkaConsumerProperties",
-          ])
-        }
       />
 
       <Table.Row className="edr-row">

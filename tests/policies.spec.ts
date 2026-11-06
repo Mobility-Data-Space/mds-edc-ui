@@ -34,6 +34,7 @@ test.describe("Policy Definitions Page Tests", () => {
       // Verify details are displayed
       const policyDialog = await policiesPage.getPolicyDialog();
       await expect(policyDialog).toBeVisible();
+      await expect(policyDialog.getByText("Show Sensitive Values")).toHaveCount(0);
     });
   });
 

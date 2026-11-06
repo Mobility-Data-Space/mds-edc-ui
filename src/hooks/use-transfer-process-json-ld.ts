@@ -2,9 +2,6 @@ import {TransferProcess} from "@think-it-labs/edc-connector-client/dist/src/enti
 import {ContractNegotiation} from "@think-it-labs/edc-connector-client";
 import {useMemo} from "react";
 
-const isDataDestinationKey = (key: string) =>
-  key === "dataDestination" || key.endsWith(":dataDestination") || key.endsWith("/dataDestination");
-
 export const useTransferProcessJsonLd = (transferProcess: TransferProcess, contractNegotiation: ContractNegotiation) => {
   return useMemo(() => {
     const additionalTransferProcessFields: Record<string, unknown> = {};
@@ -19,7 +16,7 @@ export const useTransferProcessJsonLd = (transferProcess: TransferProcess, contr
       ...additionalTransferProcessFields,
     };
     const jsonLdObject: Record<string, unknown> = {};
-    Object.keys(auxJsonLdObject).filter((key) => !isDataDestinationKey(key)).sort().forEach(async (key) => {
+    Object.keys(auxJsonLdObject).sort().forEach(async (key) => {
       jsonLdObject[key] = auxJsonLdObject[key];
     });
 
