@@ -1,26 +1,17 @@
 const MASK = "••••••••";
 
-// Lower-cased last segment of a key, so plain, prefixed (`edc:secret`) and
-// expanded (`https://w3id.org/edc/v0.0.1/ns/secret`) forms all match.
-const SENSITIVE_FIELDS = new Set([
-  "accesskeyid",
-  "authcode",
-  "authorization",
-  "clientsecret",
-  "endpoint",
-  "kafkaconsumerproperties",
-  "password",
-  "secret",
-  "secretaccesskey",
-  "secretkey",
-  "secretname",
-  "sharedkey",
-  "token",
-  "tokenendpoint",
+// A data address is sensitive as a whole. Keys match on their lower-cased last
+// segment, so plain, prefixed (`edc:dataAddress`) and expanded forms all count.
+const DATA_ADDRESS_KEYS = new Set([
+  "dataaddress",
+  "datadestination",
+  "dataplanemetadata",
+  "destination",
+  "source",
 ]);
 
 const isSensitiveKey = (key: string): boolean =>
-  SENSITIVE_FIELDS.has(key.split(/[/:#]/).pop()!.toLowerCase());
+  DATA_ADDRESS_KEYS.has(key.split(/[/:#]/).pop()!.toLowerCase());
 
 export const maskSensitiveData = (value: unknown): unknown => {
   if (Array.isArray(value)) {
