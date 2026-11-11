@@ -38,13 +38,7 @@ export default function DataOfferDetails({
     Record<string, boolean>
   >({});
 
-  const edcClient = useEdcConnectorClient(
-    {
-      management: proxyConnectorManagement,
-    },
-    undefined,
-    "v4",
-  );
+  const edcClient = useEdcConnectorClient({ management: proxyConnectorManagement });
 
   const onNegotiateConfirm = (offer: Policy) => {
     const negotiation = createNegotiationRequest(

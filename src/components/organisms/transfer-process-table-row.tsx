@@ -8,6 +8,7 @@ import { useTransferProcessJsonLd } from "@/hooks/use-transfer-process-json-ld";
 import { T } from "@/i18n";
 import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog";
 import { formatDateTime, formatDateTimeAgo } from "@/utilities/date";
+import { fetchNegotiationCounterparty } from "@/utilities/negotiation-counterparty";
 import { Icon, Tooltip } from "@mui/material";
 import {
   Asset,
@@ -35,11 +36,7 @@ export default function TransferProcessTableRow({
   const cleanedTransferProcess =
     removeJsonLdSchemaFromProperties(transferProcess);
   const stateTimestamp = readValue(cleanedTransferProcess, "stateTimestamp");
-  const edcClient = useEdcConnectorClient(
-    { management: managementUrl },
-    undefined,
-    "v4",
-  );
+  const edcClient = useEdcConnectorClient({ management: managementUrl });
   const [assetDialogIsOpen, setAssetDialogIsOpen] = useState(false);
   const [transferProcessDialogIsOpen, setTransferProcessDialogIsOpen] =
     useState(false);
@@ -56,17 +53,16 @@ export default function TransferProcessTableRow({
       return;
     }
 
-    edcClient.management.contractAgreements
-      .getNegotiation(transferProcess.contractId)
-      .then((negotiation) => {
-        const cleanNegotiation = removeJsonLdSchemaFromProperties(negotiation);
+    Promise.all([
+      edcClient.management.contractAgreements.getNegotiation(
+        transferProcess.contractId,
+      ),
+      fetchNegotiationCounterparty(managementUrl, transferProcess.contractId),
+    ])
+      .then(([negotiation, counterparty]) => {
         setContractNegotiation({
           ...negotiation,
-          counterPartyId: readValue(cleanNegotiation, "counterPartyId"),
-          counterPartyAddress: readValue(
-            cleanNegotiation,
-            "counterPartyAddress",
-          ),
+          ...counterparty,
         } as unknown as ContractNegotiation);
       })
       .catch(() => setContractNegotiation({} as ContractNegotiation));
@@ -75,7 +71,7 @@ export default function TransferProcessTableRow({
       .get(transferProcess.contractId)
       .then(setContractAgreement)
       .catch(() => setContractAgreement({} as ContractAgreement));
-  }, [edcClient, transferProcess.contractId]);
+  }, [edcClient, managementUrl, transferProcess.contractId]);
 
   useEffect(() => {
     if (!transferProcess.assetId) {

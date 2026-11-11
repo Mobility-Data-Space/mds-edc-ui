@@ -21,7 +21,6 @@ export default function TransferProcessesListPage() {
   return (
     <TransferProcessesList
       managementUrl={proxyConnectorManagement}
-      managementApiVersion="v4"
       usePagination
       navigate={navigate}
       currentPage={currentPage}

@@ -7,13 +7,12 @@ import {
   PolicyBuilder,
 } from "@think-it-labs/edc-connector-client";
 import { randomUUID } from "node:crypto";
-import { withCachedJsonLdContexts } from "../../src/jsonld/mds-management-config.ts";
+import { withMdsManagementConfig } from "../../src/jsonld/mds-management-config.ts";
 
-// Builds a seed client with the bundled JSON-LD contexts registered, so the
-// client's jsonld loader resolves the connector's w3id contexts offline (needed
-// even on v3 with client 0.10.x — see withCachedJsonLdContexts).
+// Builds a management v4 seed client with the same MDS configuration as the app
+// (bundled JSON-LD contexts, MDS context) — see withMdsManagementConfig.
 function buildSeedClient(managementUrl: string): EdcConnectorClient {
-  return withCachedJsonLdContexts(
+  return withMdsManagementConfig(
     new EdcConnectorClient.Builder()
       .managementUrl(managementUrl)
       .apiToken(process.env.TEST_API_KEY || "default-test-api-key"),
@@ -57,6 +56,7 @@ export async function publish_offers(participant: Participant) {
   for (let i = 0; i < assetCount; i++) {
     assetPromises.push(
       client.management.assets.create({
+        "@type": "Asset",
         "@id": `asset-${i + 1}-id`,
         properties: {
           "http://purl.org/dc/terms/title": `${participant.name} - Asset ${i + 1}`,
@@ -131,6 +131,7 @@ export async function publish_offers(participant: Participant) {
   const policyDefinitionId = "always-true";
   contractDefinitionPromises.push(
     client.management.contractDefinitions.create({
+      "@type": "ContractDefinition",
       "@id": randomUUID(),
       accessPolicyId: policyDefinitionId,
       contractPolicyId: policyDefinitionId,
@@ -167,6 +168,7 @@ export async function create_pending_negotiations(
     buildSeedClient(counterPartyParticipant.managementUrl);
 
   await participantClient.management.contractDefinitions.create({
+    "@type": "ContractDefinition",
     "@id": "manual-approval-contract-def",
     accessPolicyId: "always-true",
     contractPolicyId: "always-true",
@@ -299,6 +301,7 @@ export async function initiate_transfers(
   );
 
   const transferProcessInput = {
+    counterPartyId: participant.id,
     counterPartyAddress: participant.protocolUrl,
     contractId: contractAgreement.id,
     transferType: "HttpData-PULL",
@@ -355,6 +358,7 @@ export async function initiate_consumer_transfer(
   );
 
   const transfer = await client.management.transferProcesses.initiate({
+    counterPartyId: provider.id,
     counterPartyAddress: provider.protocolUrl,
     contractId: contractAgreement.id,
     transferType: "HttpData-PULL",

@@ -169,7 +169,7 @@ test.describe("Transfer Processes Page Tests", () => {
 
     test.beforeAll(async ({ request }) => {
       const agreements = await (await request.post(
-        `${participantConfig.EDC_MANAGEMENT_URL}/v3/contractagreements/request`,
+        `${participantConfig.EDC_MANAGEMENT_URL}/v4/contractagreements/request`,
         { headers: managementHeaders, data: { "@context": EDC_CONTEXT, "@type": "QuerySpec" } },
       )).json();
       const agreement = agreements.find((a: { consumerId: string }) => a.consumerId === participantConfig.EDC_ID);
@@ -177,17 +177,18 @@ test.describe("Transfer Processes Page Tests", () => {
       assetId = agreement.assetId;
 
       const initiated = await request.post(
-        `${participantConfig.EDC_MANAGEMENT_URL}/v3/transferprocesses`,
+        `${participantConfig.EDC_MANAGEMENT_URL}/v4/transferprocesses`,
         {
           headers: managementHeaders,
           data: {
             "@context": EDC_CONTEXT,
             "@type": "TransferRequest",
             protocol: "dataspace-protocol-http:2025-1",
+            counterPartyId: counterPartyParticipantConfig.EDC_ID,
             counterPartyAddress: counterPartyParticipantConfig.EDC_PROTOCOL_URL,
             contractId: agreement["@id"],
             transferType: "HttpData-PUSH",
-            dataDestination: { type: "HttpData", baseUrl: "http://example.com", secret },
+            dataDestination: { "@type": "DataAddress", type: "HttpData", baseUrl: "http://example.com", secret },
           },
         },
       );
@@ -195,7 +196,7 @@ test.describe("Transfer Processes Page Tests", () => {
       transferProcessId = (await initiated.json())["@id"];
 
       const raw = await request.get(
-        `${participantConfig.EDC_MANAGEMENT_URL}/v3/transferprocesses/${transferProcessId}`,
+        `${participantConfig.EDC_MANAGEMENT_URL}/v4/transferprocesses/${transferProcessId}`,
         { headers: managementHeaders },
       );
       test.skip(!(await raw.text()).includes(secret), "Connector no longer exposes dataDestination");

@@ -146,7 +146,6 @@ export default function ContractNegotiationsManualApprovalListPage() {
       />
       <ContractNegotiationsList
         managementUrl={proxyConnectorManagement}
-        managementApiVersion="v4"
         usePagination
         navigate={navigate}
         currentPage={currentPage}

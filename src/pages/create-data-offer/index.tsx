@@ -55,13 +55,7 @@ export default function CreateDataOfferPage() {
     PUBLISH_MODE_PUBLISH_UNRESTRICTED.value as string,
   );
 
-  const edcClient = useEdcConnectorClient(
-    {
-      management: proxyConnectorManagement,
-    },
-    undefined,
-    "v4",
-  );
+  const edcClient = useEdcConnectorClient({ management: proxyConnectorManagement });
 
   const policyExpressionIsNotValid = useCallback(
     (policyExpressionArg: (AtomicConstraint | MultiplicityConstraint)[]) => {

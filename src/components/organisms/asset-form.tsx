@@ -54,13 +54,7 @@ export default function AssetForm({ onClose }: AssetFormProps) {
   const form = useAssetForm({ generateIdFromTitle: true, existingIds, onEdit: clearFormError });
   const { asset, errors, setErrors, validateGeneralInfo } = form;
 
-  const client = useEdcConnectorClient(
-    {
-      management: proxyConnectorManagement,
-    },
-    undefined,
-    "v4",
-  );
+  const client = useEdcConnectorClient({ management: proxyConnectorManagement });
 
   useEffect(() => {
     client.management.assets
@@ -143,7 +137,6 @@ export default function AssetForm({ onClose }: AssetFormProps) {
 
       <AssetFormWrapper
         managementUrl={proxyConnectorManagement}
-        managementApiVersion="v4"
         onSuccess={() => {
           showSnackbar({
             type: "success",

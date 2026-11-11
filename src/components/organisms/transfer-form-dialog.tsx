@@ -50,13 +50,7 @@ export function TransferFormDialog({
   const { showSnackbar } = useAppSnackbar();
   const contractAgreement =
     removeJsonLdSchemaFromProperties(contractAgreementId);
-  const edcClient = useEdcConnectorClient(
-    {
-      management: proxyConnectorManagement,
-    },
-    undefined,
-    "v4",
-  );
+  const edcClient = useEdcConnectorClient({ management: proxyConnectorManagement });
   const formRef = useRef<HTMLFormElement>(null);
 
   const handleClose = useCallback(()=> {

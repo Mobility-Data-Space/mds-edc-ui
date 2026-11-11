@@ -1,5 +1,5 @@
 import { getConnectorConfig } from "@/server/connector-config";
-import { getEdcClientV4 } from "@/server/edc-client";
+import { getEdcClient } from "@/server/edc-client";
 import { createProxyRequest, setResponseHeaders } from "@/server/proxy";
 import { NextResponse } from "next/server";
 
@@ -24,7 +24,7 @@ function generateDatePrefix(): string {
 }
 
 async function getNextSequenceNumber(datePrefix: string): Promise<number> {
-  const client = getEdcClientV4();
+  const client = getEdcClient();
   const existingTodayContracts =
     await client.management.contractDefinitions.queryAll({
       "@type": "QuerySpec",

@@ -17,12 +17,10 @@ export const MDS_MANAGEMENT_V1_URL =
  * The transitive set of JSON-LD `@context` documents the connector references,
  * bundled so the client's `jsonld` loader resolves them **offline**.
  *
- * This is required even on management **v3**: client 0.10.2 expands responses
- * against the DSP `2025-1` context (the default protocol version) and its loader
- * cannot dereference these w3id URLs at runtime — the pinned `undici` breaks
- * jsonld's HTTP loader (redirect / Link-header / CORS), so without these cached
- * entries even v3 reads/writes throw `Dereferencing a URL did not result in a
- * valid JSON-LD object`.
+ * Client 0.10.x cannot dereference these w3id URLs at runtime — the pinned
+ * `undici` breaks jsonld's HTTP loader (redirect / Link-header / CORS), so
+ * without these cached entries reads/writes throw `Dereferencing a URL did not
+ * result in a valid JSON-LD object`.
  */
 const CACHED_JSONLD_CONTEXTS: ReadonlyArray<readonly [string, object]> = [
   [MDS_MANAGEMENT_V1_URL, mdsManagementV1],
@@ -35,33 +33,21 @@ const CACHED_JSONLD_CONTEXTS: ReadonlyArray<readonly [string, object]> = [
 type EdcClientBuilder = InstanceType<typeof EdcConnectorClient.Builder>;
 
 /**
- * Registers the bundled JSON-LD contexts on a client builder so expansion works
- * offline. Applied to **every** client the app builds (v3 and v4, server and
- * browser, plus the e2e seed), since the loader limitation affects both versions.
+ * Applies the MDS-specific configuration needed to talk to the EDC management
+ * API **v4**: the v4 path segment, the MDS JSON-LD context, and the cached
+ * contexts.
+ *
+ * Shared by the server client ({@link ../server/edc-client}), the browser
+ * client factory ({@link ../utilities/edc-client-factory}) and the e2e seed so
+ * they all agree on how a client is built.
  */
-export function withCachedJsonLdContexts<B extends EdcClientBuilder>(
+export function withMdsManagementConfig<B extends EdcClientBuilder>(
   builder: B,
 ): B {
   return CACHED_JSONLD_CONTEXTS.reduce(
     (b, [url, context]) => b.cachedJsonLdContext(url, context),
     builder,
-  );
-}
-
-/**
- * Applies the MDS-specific configuration needed to talk to the EDC management
- * API **v4**: the v4 path segment, the MDS JSON-LD context, and the cached
- * contexts.
- *
- * Shared by the server client ({@link ../server/edc-client}) and the browser
- * client factory ({@link ../utilities/edc-client-factory}) so both agree on how
- * a v4 client is built. The v4 rollout (issue #666) moves endpoints onto this
- * configuration one wave at a time.
- */
-export function withMdsManagementConfig<B extends EdcClientBuilder>(
-  builder: B,
-): B {
-  return withCachedJsonLdContexts(builder)
+  )
     .managementApiVersion("v4")
     .managementJsonLdContext(MDS_MANAGEMENT_V1_URL) as B;
 }

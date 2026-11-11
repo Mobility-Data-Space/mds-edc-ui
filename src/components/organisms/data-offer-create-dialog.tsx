@@ -77,11 +77,7 @@ export default function DataOfferCreateDialog({
 
   const [idError, setIdError] = useState<string | boolean>(false);
 
-  const edcClient = useEdcConnectorClient(
-    { management: managementUrl },
-    undefined,
-    "v4",
-  );
+  const edcClient = useEdcConnectorClient({ management: managementUrl });
   const { connector } = useParticipantConnectorState();
 
   useEffect(() => {
@@ -188,7 +184,6 @@ export default function DataOfferCreateDialog({
       >
         <ContractDefinitionFormWrapper
           managementUrl={managementUrl}
-          managementApiVersion="v4"
           formData={() => fromContractDefinitionForm(formData)}
           onSuccess={handleContractDefinitionSuccess}
           onFailure={onFormSubmitFail}
