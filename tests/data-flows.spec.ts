@@ -108,9 +108,10 @@ test.describe('Data Flows Page Tests', () => {
     await expect(dialog).toBeVisible();
     await expect(dialog).toContainText('DataFlow');
 
-    await expect(dialog).toContainText('https://example.com');
+    await expect(dialog).not.toContainText('https://example.com');
     await expect(dialog).not.toContainText(secret);
     await dialog.getByText('Show Sensitive Values').click();
+    await expect(dialog).toContainText('https://example.com');
     await expect(dialog).toContainText(secret);
   });
 

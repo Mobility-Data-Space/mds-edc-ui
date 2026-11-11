@@ -34,6 +34,8 @@ export interface JsonLdDialogProps {
   deleteConfirmationMessage?: string;
   deleteFailMessage?: string;
   deleteButtonTestId?: string;
+  // The whole content is a data address, so all of it is masked.
+  sensitive?: boolean;
 }
 
 export function JsonLdDialog({
@@ -47,6 +49,7 @@ export function JsonLdDialog({
   deleteConfirmationMessage,
   deleteFailMessage,
   deleteButtonTestId,
+  sensitive = false,
 }: JsonLdDialogProps): React.ReactElement {
   const { translator } = useTranslator();
   const [ReactJson, setReactJson] =
@@ -87,6 +90,9 @@ export function JsonLdDialog({
   }, []);
 
   const displayedJson = jsonIsCleaned ? cleanJson : jsonLdObject;
+  const maskedJson = maskSensitiveData(
+    sensitive ? { dataAddress: displayedJson } : displayedJson,
+  );
 
   return (
     <>
@@ -124,7 +130,7 @@ export function JsonLdDialog({
         <DialogContent style={{ maxWidth: "80vw", width: "800px" }}>
           {ReactJson && (
             <ReactJson
-              src={(showSensitive ? displayedJson : maskSensitiveData(displayedJson)) as object}
+              src={(showSensitive ? displayedJson : maskedJson) as object}
               displayObjectSize={false}
               displayDataTypes={false}
               enableClipboard={false}
@@ -144,7 +150,7 @@ export function JsonLdDialog({
                   />
                 }
               />
-              {containsSensitiveData(displayedJson) && (
+              {(sensitive || containsSensitiveData(displayedJson)) && (
                 <FormControlLabel
                   label={<T string="common.showSensitiveValues" />}
                   control={

@@ -59,6 +59,7 @@ export default function DataFlowTableRow({ dataFlow }: { dataFlow: DataFlow }) {
         isOpen={isAddressDialogOpen}
         onClose={() => setIsAddressDialogOpen(false)}
         jsonLdObject={dataAddress}
+        sensitive
       />
 
       <JsonLdDialog
