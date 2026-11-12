@@ -159,7 +159,6 @@ export default function ContractAgreementsListPage() {
 
       <ContractAgreementsList
         managementUrl={proxyConnectorManagement}
-        managementApiVersion="v4"
         usePagination={true}
         navigate={navigate}
         currentPage={currentPage}

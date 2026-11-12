@@ -22,13 +22,7 @@ export default function PolicyDefinitionListPage() {
   const { push } = useParticipantConnectorState();
   const { translator } = useTranslator();
   const { showSnackbar }= useAppSnackbar();
-  const edcClient = useEdcConnectorClient(
-    {
-      management: proxyConnectorManagement,
-    },
-    undefined,
-    "v4",
-  );
+  const edcClient = useEdcConnectorClient({ management: proxyConnectorManagement });
 
   const [policyListKey, setPolicyListKey] = useState(0);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
@@ -88,7 +82,6 @@ export default function PolicyDefinitionListPage() {
         currentPage={currentPage}
         firstPage={0}
         managementUrl={proxyConnectorManagement}
-        managementApiVersion="v4"
         key={policyListKey}
 
       >

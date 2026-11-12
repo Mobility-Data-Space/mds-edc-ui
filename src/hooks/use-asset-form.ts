@@ -38,11 +38,7 @@ export function useAssetForm({
 }: UseAssetFormOptions = {}) {
   const { translator } = useTranslator();
   const validateGeneralInfo = useValidateGeneralInfo(existingIds);
-  const client = useEdcConnectorClient(
-    { management: proxyConnectorManagement },
-    undefined,
-    "v4",
-  );
+  const client = useEdcConnectorClient({ management: proxyConnectorManagement });
 
   const [asset, setAsset] = useState<AssetInput>(defaultCreateAssetFormData);
   const [errors, setErrors] = useState<AssetFormErrors>({

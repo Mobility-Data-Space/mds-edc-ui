@@ -27,13 +27,7 @@ export default function EditAssetPage() {
   const [offerType, setOfferType] = useState(unchangedOfferType.value);
   const [oldAssetData, setOldAssetData] = useState({} as AssetInput);
   const { push, connector } = useParticipantConnectorState();
-  const client = useEdcConnectorClient(
-    {
-      management: proxyConnectorManagement,
-    },
-    undefined,
-    "v4",
-  );
+  const client = useEdcConnectorClient({ management: proxyConnectorManagement });
   const { showSnackbar } = useAppSnackbar();
   const { translator } = useTranslator();
 

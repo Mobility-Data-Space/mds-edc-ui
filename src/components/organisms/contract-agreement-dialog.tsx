@@ -5,10 +5,8 @@ import { TransferFormDialog } from "@/components/organisms/transfer-form-dialog"
 import { TERMINATION_REASON_BY_USER } from "@/constants/contract-agreement";
 import { T } from "@/i18n";
 import { EnrichedContractAgreement } from "@/types/enriched-contract-agreement";
-import {
-  datasetToAsset,
-  removeJsonLdSchemaFromProperties,
-} from "@/utilities/catalog";
+import { datasetToAsset } from "@/utilities/catalog";
+import { fetchNegotiationCounterparty } from "@/utilities/negotiation-counterparty";
 import {
   Button,
   Dialog,
@@ -26,7 +24,6 @@ import {
 } from "@think-it-labs/edc-connector-client";
 import { TransferProcess } from "@think-it-labs/edc-connector-client/dist/src/entities";
 import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
-import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
 import { Timestamp } from "@think-it-labs/edc-connector-ui/timestamp";
 import { useCallback, useEffect, useState } from "react";
 import { useAppSnackbar } from "@/hooks/use-app-snackbar";
@@ -77,11 +74,7 @@ export default function ContractAgreementDialog({
   const [counterPartyAddress, setCounterPartyAddress] =
     useState(connectorEndpoint);
 
-  const edcClient = useEdcConnectorClient(
-    { management: managementUrl },
-    undefined,
-    "v4",
-  );
+  const edcClient = useEdcConnectorClient({ management: managementUrl });
   useEffect(() => {
     if (!contractAgreement.assetId) {
       return;
@@ -103,20 +96,12 @@ export default function ContractAgreementDialog({
         );
     } else {
       const fetchConsumerAsset = async () => {
-        const negotiation =
-          await edcClient.management.contractAgreements.getNegotiation(
-            contractAgreement.id,
-          );
-        const cleanedNegotiation =
-          removeJsonLdSchemaFromProperties(negotiation);
-
-        const providerCounterPartyAddress = readValue(
-          cleanedNegotiation,
-          "counterPartyAddress",
-        );
-        const providerCounterPartyId = readValue(
-          cleanedNegotiation,
-          "counterPartyId",
+        const {
+          counterPartyId: providerCounterPartyId,
+          counterPartyAddress: providerCounterPartyAddress,
+        } = await fetchNegotiationCounterparty(
+          managementUrl,
+          contractAgreement.id,
         );
 
         setCounterPartyAddress(providerCounterPartyAddress);
@@ -133,10 +118,17 @@ export default function ContractAgreementDialog({
         setAsset(datasetToAsset(dataset));
       };
 
-      fetchConsumerAsset();
+      fetchConsumerAsset().catch(() =>
+        showSnackbar({
+          type: "error",
+          message: translator("assets.[id].fetchError"),
+          persist: false,
+        }),
+      );
     }
   }, [
     edcClient,
+    managementUrl,
     _contractAgreement,
     participantId,
     connectorEndpoint,

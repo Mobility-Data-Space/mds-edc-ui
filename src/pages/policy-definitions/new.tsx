@@ -62,7 +62,6 @@ export default function CreatePolicyDefinitionPage() {
     <div>
       <PolicyDefinitionFormWrapper
         managementUrl={proxyConnectorManagement}
-        managementApiVersion="v4"
         formData={() => fromPolicyDefinitionForm(formData, policyId)}
         onSuccess={() => {
 

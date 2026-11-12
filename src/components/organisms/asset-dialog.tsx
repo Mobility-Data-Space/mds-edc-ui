@@ -70,9 +70,7 @@ export default function AssetDialog({
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const { translator } = useTranslator();
 
-  const client = useEdcConnectorClient({
-    management: proxyConnectorManagement,
-  });
+  const client = useEdcConnectorClient({ management: proxyConnectorManagement });
   const {showSnackbar} = useAppSnackbar();
   const onDeleteConfirm = async () => {
     try {
