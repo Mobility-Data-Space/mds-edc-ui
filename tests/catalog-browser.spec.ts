@@ -1,7 +1,7 @@
 import { MAX_ITEMS } from '@/constants/lists';
 import { expect, test } from '@playwright/test';
 import { CatalogBrowserPage } from './pages/catalog-browser-page';
-import { counterPartyParticipantConfig } from './utils/tests-config';
+import { counterPartyParticipantConfig, IDENTITY_MODE } from './utils/tests-config';
 
 const COUNTER_PARTY_ADDRESS = counterPartyParticipantConfig.EDC_PROTOCOL_URL;
 const COUNTER_PARTY_DID = counterPartyParticipantConfig.EDC_ID;
@@ -41,7 +41,40 @@ test.describe("Catalog Browser Tests", () => {
     });
   });
 
+  test.describe('DAPS connector', () => {
+    test.skip(IDENTITY_MODE !== 'daps', 'DAPS stack only');
+
+    test('Reports the DAPS identity mode', async ({ request }) => {
+      const response = await request.get('/connector/config');
+      expect(response.ok()).toBeTruthy();
+      expect((await response.json()).identityMode).toBe('daps');
+    });
+
+    test('Hides DID discovery and browses by endpoint alone', async ({ page }) => {
+      catalogPage = new CatalogBrowserPage(page);
+      await catalogPage.navigate();
+      await expect(page.locator(catalogPage.participantDidInputLocator)).toHaveCount(0);
+      await expect(page.getByTestId('catalog-discovered-connector')).toHaveCount(0);
+
+      await catalogPage.fillCatalogUrlInput(COUNTER_PARTY_ADDRESS);
+      await expect(page.locator(catalogPage.catalogItemLocator).first()).toBeVisible({ timeout: 30_000 });
+    });
+
+    test('Refuses DID discovery', async ({ request }) => {
+      const response = await request.get(`/connector/discovery?did=${encodeURIComponent(COUNTER_PARTY_DID)}`);
+      expect(response.status()).toBe(404);
+    });
+  });
+
   test.describe('Participant DID discovery', () => {
+    test.skip(IDENTITY_MODE !== 'dcp', 'DID discovery is DCP-only');
+
+    test('Reports the DCP identity mode', async ({ request }) => {
+      const response = await request.get('/connector/config');
+      expect(response.ok()).toBeTruthy();
+      expect((await response.json()).identityMode).toBe('dcp');
+    });
+
     test('Rejects identifiers that are not did:web', async ({ request }) => {
       const response = await request.get('/connector/discovery?did=did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK');
       expect(response.status()).toBe(400);

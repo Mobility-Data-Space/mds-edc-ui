@@ -5,6 +5,7 @@ import {
   publish_offers,
 } from "./seed.ts";
 import {
+  IDENTITY_MODE,
   participantConfig,
   counterPartyParticipantConfig,
   COMPOSE_FILE,
@@ -152,6 +153,7 @@ async function globalSetup() {
       maintainerUrl: participantConfig.EDC_MAINTAINER_URL,
       dapsUrl: participantConfig.MDS_DAPS_URL,
       dapsJwksUrl: participantConfig.MDS_DAPS_JWKS_URL,
+      identityMode: IDENTITY_MODE,
     };
 
     const counterPartyParticipant: Participant = {
@@ -168,6 +170,7 @@ async function globalSetup() {
       maintainerUrl: counterPartyParticipantConfig.EDC_MAINTAINER_URL,
       dapsUrl: counterPartyParticipantConfig.MDS_DAPS_URL,
       dapsJwksUrl: counterPartyParticipantConfig.MDS_DAPS_JWKS_URL,
+      identityMode: IDENTITY_MODE,
     };
 
     await publish_offers(participant);
