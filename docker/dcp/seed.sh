@@ -36,7 +36,7 @@ render() {
 # post <url> <api-key> <template> <description> -> response body on stdout; fails on non-2xx.
 post() {
   body=$(render "$3")
-  code=$(curl -sS -o /tmp/resp -w '%{http_code}' -X POST "$1" \
+  code=$(curl -sS -o /tmp/resp -D /tmp/headers -w '%{http_code}' -X POST "$1" \
     -H "x-api-key: $2" -H 'content-type: application/json' -d "$body")
   case "$code" in
     2*) echo "  ok ($code): $4" >&2; cat /tmp/resp ;;
@@ -58,19 +58,21 @@ echo "$PARTICIPANTS" | while read -r CTX WALLET DID alias; do
 
   post "http://issuer:7083/api/admin/$ISSUER_API/participants/$ISSUER_CTX/holders" "$ISSUER_KEY" holder.json "issuer holder" >/dev/null
 
-  CLIENT_SECRET=$(post "http://$WALLET:7081/api/identity/v1beta/participants" "$WALLET_KEY" wallet-participant.json "wallet participant context" | jq -er .clientSecret)
+  CLIENT_SECRET=$(post "http://$WALLET:7081/api/identity/v1/participants" "$WALLET_KEY" wallet-participant.json "wallet participant context" | jq -er .clientSecret)
   export CLIENT_SECRET
   curl -fsS -X POST -H "X-Vault-Token: root" -H 'content-type: application/json' \
     "$VAULT/v1/secret/data/$CTX/$alias" -d "$(render vault-secret.json)" >/dev/null
   echo "  ok: STS client secret stored at secret/$CTX/$alias"
 
-  export HOLDER_PID="$CTX-membership"
-  post "http://$WALLET:7081/api/identity/v1beta/participants/$CTX/credentials/request" "$WALLET_KEY" credential-request.json "credential request" >/dev/null
+  # The wallet assigns the request id and returns it only in the Location header.
+  post "http://$WALLET:7081/api/identity/v1/participants/$CTX/credentials/request" "$WALLET_KEY" credential-request.json "credential request" >/dev/null
+  HOLDER_PID=$(sed -n 's#^[Ll]ocation: .*/##p' /tmp/headers | tr -d '\r')
+  [ -n "$HOLDER_PID" ] || { echo "  FAIL: credential request returned no Location header" >&2; exit 1; }
 
   status=""
   for _ in $(seq 1 60); do
     status=$(curl -sS -H "x-api-key: $WALLET_KEY" \
-      "http://$WALLET:7081/api/identity/v1beta/participants/$CTX/credentials/request/$HOLDER_PID" | jq -r '.status // empty')
+      "http://$WALLET:7081/api/identity/v1/participants/$CTX/credentials/request/$HOLDER_PID" | jq -r '.status // empty')
     [ "$status" = "ISSUED" ] && break
     sleep 2
   done
