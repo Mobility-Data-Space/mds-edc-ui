@@ -31,6 +31,7 @@ const asParticipant = (
     maintainerUrl: c.EDC_MAINTAINER_URL,
     dapsUrl: c.MDS_DAPS_URL,
     dapsJwksUrl: c.MDS_DAPS_JWKS_URL,
+    identityMode: c.EDC_IDENTITY_MODE,
   }) as Participant;
 
 test.describe('Data Flows Page Tests', () => {

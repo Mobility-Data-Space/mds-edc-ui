@@ -17,6 +17,7 @@ async function handler(): Promise<NextResponse> {
     maintainerUrl,
     dapsUrl,
     dapsJwksUrl,
+    identityMode,
   } = getConnectorConfig();
 
   const response = NextResponse.json({
@@ -33,6 +34,7 @@ async function handler(): Promise<NextResponse> {
     maintainerUrl,
     dapsUrl,
     dapsJwksUrl,
+    identityMode,
   });
   response.headers.set("Allow", "GET");
   return response;

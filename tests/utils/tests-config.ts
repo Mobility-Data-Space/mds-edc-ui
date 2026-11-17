@@ -6,6 +6,13 @@ export const COMPOSE_FILE =
 
 export const SERVICES = ["edc-1", "edc-2"];
 
+// Both stacks use DID participant ids, so the UI is told the stack's identity mode explicitly
+// (CI passes the matrix stack name).
+export const IDENTITY_MODE: "dcp" | "daps" =
+  (process.env.E2E_IDENTITY_MODE ?? (COMPOSE_FILE.includes("dcp") ? "dcp" : "daps")) === "dcp"
+    ? "dcp"
+    : "daps";
+
 const participantProtocolUrl =
   "http://" + SERVICES[0] + ":8183/api/dsp" + PROTOCOL_PATH;
 const couterPartyparticipantProtocolUrl =
@@ -27,6 +34,7 @@ export const participantConfig = {
   EDC_MAINTAINER_URL: "https://think-it.io",
   MDS_DAPS_URL: "https://daps.mobility-dataspace.eu",
   MDS_DAPS_JWKS_URL: "https://daps.mobility-dataspace.eu/.well-known/jwks.json",
+  EDC_IDENTITY_MODE: IDENTITY_MODE,
 };
 
 export const counterPartyParticipantConfig = {
@@ -44,4 +52,5 @@ export const counterPartyParticipantConfig = {
   EDC_MAINTAINER_URL: "https://think-it.io",
   MDS_DAPS_URL: "https://daps.mobility-dataspace.eu",
   MDS_DAPS_JWKS_URL: "https://daps.mobility-dataspace.eu/.well-known/jwks.json",
+  EDC_IDENTITY_MODE: IDENTITY_MODE,
 };

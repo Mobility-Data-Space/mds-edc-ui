@@ -63,6 +63,8 @@ export default function CatalogPage() {
   >([]);
   const [discoveryError, setDiscoveryError] = useState("");
   const [isDiscovering, setIsDiscovering] = useState(false);
+  // DID discovery is DCP-only: DAPS connectors browse a catalog by endpoint alone.
+  const isDcp = connector?.identityMode === "dcp";
 
   useEffect(() => {
     setCounterPartyAddressToSearch(counterPartyAddress);
@@ -91,7 +93,7 @@ export default function CatalogPage() {
   useEffect(() => {
     setDiscoveredConnectors([]);
     setDiscoveryError("");
-    if (!counterPartyId.startsWith("did:web:")) {
+    if (!isDcp || !counterPartyId.startsWith("did:web:")) {
       return;
     }
 
@@ -136,7 +138,7 @@ export default function CatalogPage() {
     // setCounterPartyAddress is recreated on every render; the effect should
     // only run when the DID changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [counterPartyId, translator]);
+  }, [counterPartyId, isDcp, translator]);
 
   useEffect(() => {
     const handleBeforeUnload = () => {
@@ -156,7 +158,8 @@ export default function CatalogPage() {
     {} as Dataset,
   );
 
-  const effectiveCounterPartyId = counterPartyId || ADDRESS_ONLY_COUNTERPARTY_ID;
+  const effectiveCounterPartyId =
+    (isDcp && counterPartyId) || ADDRESS_ONLY_COUNTERPARTY_ID;
   // The endpoint is typed only when the DID does not advertise a connector.
   const showEndpointInput = !isDiscovering && discoveredConnectors.length === 0;
 
@@ -190,10 +193,10 @@ export default function CatalogPage() {
       }
     }
 
-    if (counterPartyAddress) {
+    if (connector && counterPartyAddress) {
       showCatalog(counterPartyAddress);
     }
-  }, [counterPartyAddress, effectiveCounterPartyId, client, translator, showSnackbar]);
+  }, [connector, counterPartyAddress, effectiveCounterPartyId, client, translator, showSnackbar]);
 
   const openDataOfferDialog = (dataset: Dataset) => {
     setIsDataOfferDialogOpen(true);
@@ -234,33 +237,35 @@ export default function CatalogPage() {
           navigate={navigate}
           currentPage={currentPage}
           firstPage={0}
-          shouldFetch={!!counterPartyAddress}
+          shouldFetch={!!connector && !!counterPartyAddress}
         >
-          <div className="w-full grid grid-cols-2 gap-x-3.5 pt-4 items-start">
-            <Input
-              id="catalog-participant-id"
-              fullWidth
-              data-testid="catalog-participant-id"
-              type="text"
-              label={<T string="catalog.participantDid" />}
-              placeholder="did:web:provider.example.com"
-              value={counterPartyIdToSearch || null}
-              error={discoveryError}
-              slotProps={{
-                inputLabel: {
-                  shrink: true,
-                },
-                input: {
-                  classes: { root: "flex-grow" },
-                  startAdornment: <Icon className="mr-2">badge</Icon>,
-                },
-              }}
-              onChange={(event) => {
-                setCounterPartyIdToSearch(event.target.value);
-                debouncedSetCounterPartyId(event.target.value);
-              }}
-            />
-            {discoveredConnectors.length > 0 && (
+          <div className={`w-full grid ${isDcp ? "grid-cols-2" : "grid-cols-1"} gap-x-3.5 pt-4 items-start`}>
+            {isDcp && (
+              <Input
+                id="catalog-participant-id"
+                fullWidth
+                data-testid="catalog-participant-id"
+                type="text"
+                label={<T string="catalog.participantDid" />}
+                placeholder="did:web:provider.example.com"
+                value={counterPartyIdToSearch || null}
+                error={discoveryError}
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                  input: {
+                    classes: { root: "flex-grow" },
+                    startAdornment: <Icon className="mr-2">badge</Icon>,
+                  },
+                }}
+                onChange={(event) => {
+                  setCounterPartyIdToSearch(event.target.value);
+                  debouncedSetCounterPartyId(event.target.value);
+                }}
+              />
+            )}
+            {isDcp && discoveredConnectors.length > 0 && (
               <TextField
                 select
                 id="catalog-discovered-connector"
