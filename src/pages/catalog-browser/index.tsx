@@ -199,10 +199,10 @@ export default function CatalogPage() {
       }
     }
 
-    if (counterPartyAddress) {
+    if (connector && counterPartyAddress) {
       showCatalog(counterPartyAddress);
     }
-  }, [counterPartyAddress, effectiveCounterPartyId, client, translator, showSnackbar]);
+  }, [connector, counterPartyAddress, effectiveCounterPartyId, client, translator, showSnackbar]);
 
   const openDataOfferDialog = (dataset: Dataset) => {
     setIsDataOfferDialogOpen(true);
@@ -244,7 +244,7 @@ export default function CatalogPage() {
           navigate={navigate}
           currentPage={currentPage}
           firstPage={0}
-          shouldFetch={!!counterPartyAddress}
+          shouldFetch={!!connector && !!counterPartyAddress}
         >
           <div className={`w-full grid ${isDcp ? "grid-cols-2" : "grid-cols-1"} gap-x-3.5 pt-4 items-start`}>
             {isDcp && (
