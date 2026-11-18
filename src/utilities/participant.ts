@@ -14,5 +14,6 @@ export interface Participant {
   maintainerUrl: string,
   dapsUrl: string,
   dapsJwksUrl: string,
-  identityMode: IdentityMode
+  identityMode: IdentityMode,
+  connectorVersion?: string
 }

@@ -19,6 +19,9 @@ export MDS_DAPS_JWKS_URL="https://daps.mobility-dataspace.eu/.well-known/jwks.js
 // Identity mode: "dcp" or "daps". Optional: when unset it is inferred from EDC_ID
 // (a did: participant id means DCP). DID discovery in the catalog browser is DCP-only.
 export EDC_IDENTITY_MODE="daps"
+// MDS EDC version of the connector, shown in the connector properties. Optional:
+// when unset the UI shows "unknown".
+export CONNECTOR_VERSION="2.8.0"
 // Participant DID discovery (catalog browser). Optional: DID documents are only
 // fetched from public addresses unless this is set.
 export DID_RESOLUTION_ALLOW_PRIVATE_NETWORKS="false"

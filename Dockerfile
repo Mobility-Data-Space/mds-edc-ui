@@ -27,6 +27,11 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
+# Version reported by /version; injected from the git tag by the publish workflow
+# so it cannot drift from the published image tag.
+ARG APP_VERSION
+ENV APP_VERSION=$APP_VERSION
+
 # `node server.js` needs no package manager at runtime; strip npm/yarn/corepack so their bundled deps can't trigger image CVEs.
 RUN rm -rf \
     /usr/local/lib/node_modules/npm \
