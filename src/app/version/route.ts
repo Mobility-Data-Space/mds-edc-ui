@@ -1,6 +1,5 @@
 import { getConnectorConfig } from "@/server/connector-config";
 import { NextResponse } from "next/server";
-import packageJson from "../../../package.json";
 
 interface VersionInfo {
   mdsEdcUiVersion: string;
@@ -9,11 +8,8 @@ interface VersionInfo {
 
 function getVersionInfo(): VersionInfo {
   return {
-    mdsEdcUiVersion: process.env.APP_VERSION || packageJson.version,
-    mdsEdcVersion:
-      getConnectorConfig().edcVersion ||
-      packageJson.config?.mdsEdcVersion ||
-      "unknown",
+    mdsEdcUiVersion: process.env.APP_VERSION || "unknown",
+    mdsEdcVersion: getConnectorConfig().connectorVersion || "unknown",
   };
 }
 

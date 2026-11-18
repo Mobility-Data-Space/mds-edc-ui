@@ -15,5 +15,5 @@ export interface Participant {
   dapsUrl: string,
   dapsJwksUrl: string,
   identityMode: IdentityMode,
-  edcVersion?: string
+  connectorVersion?: string
 }

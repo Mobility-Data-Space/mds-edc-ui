@@ -60,7 +60,7 @@ function getConnectorFromEnv(): Participant & { apiKey: string } {
     dapsJwksUrl: optional.MDS_DAPS_JWKS_URL || "",
     apiKey: required.EDC_MANAGEMENT_API_KEY!,
     identityMode: resolveIdentityMode(process.env.EDC_IDENTITY_MODE, required.EDC_ID!),
-    edcVersion: process.env.EDC_VERSION || "",
+    connectorVersion: process.env.CONNECTOR_VERSION || "",
   };
 }
 
