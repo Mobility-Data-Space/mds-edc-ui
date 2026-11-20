@@ -42,7 +42,7 @@ export default function ContractAgreementCard({
 
   const isConsumer = contractAgreement.consumerId === connector?.id;
   const Icon =
-    contractIcons[contractAgreement.isTerminated ? "terminated" : "active"][
+    contractIcons[contractAgreement.retired ? "terminated" : "active"][
     isConsumer ? "consumer" : "provider"
     ];
 
@@ -122,7 +122,7 @@ export default function ContractAgreementCard({
                 <div className="flex items-center">
                   <Icon
                     fontSize="large"
-                    color={contractAgreement.isTerminated ? "error" : "inherit"}
+                    color={contractAgreement.retired ? "error" : "inherit"}
                   />
                 </div>
                 <div>
@@ -189,10 +189,10 @@ export default function ContractAgreementCard({
                   </Typography>
                   <Typography
                     variant="body2"
-                    color={contractAgreement.isTerminated ? "error" : "inherit"}
+                    color={contractAgreement.retired ? "error" : "inherit"}
                   >
                     <T
-                      string={`contractAgreements.[id].status${contractAgreement.isTerminated ? "Terminated" : "Active"}`}
+                      string={`contractAgreements.[id].status${contractAgreement.retired ? "Terminated" : "Active"}`}
                     />
                   </Typography>
                 </div>

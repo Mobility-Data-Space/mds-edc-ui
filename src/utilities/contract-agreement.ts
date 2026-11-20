@@ -1,9 +1,9 @@
 import type { FieldShowProps } from "@/types/field-show";
 import { formatDateTime } from "@/utilities/date";
-import { ContractAgreement } from "@think-it-labs/edc-connector-client";
+import { EnrichedContractAgreement } from "@/types/enriched-contract-agreement";
 
 export const contractAgreementFieldsToShow = (
-  contractAgreement: ContractAgreement,
+  contractAgreement: EnrichedContractAgreement,
   participantId: string,
   counterPartyAddress: string,
 ): FieldShowProps[] => {
@@ -38,7 +38,7 @@ export const contractAgreementFieldsToShow = (
     },
     {
       label: "contractAgreements.status",
-      value: `contractAgreements.[id].status${contractAgreement.isTerminated ? "Terminated" : "Active"}`,
+      value: `contractAgreements.[id].status${contractAgreement.retired ? "Terminated" : "Active"}`,
       icon: "sync",
     },
   ];

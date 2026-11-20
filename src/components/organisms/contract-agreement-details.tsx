@@ -1,6 +1,7 @@
 import React from "react";
 import { T } from "@/i18n";
-import { Asset, Constraint, ContractAgreement } from "@think-it-labs/edc-connector-client";
+import { Asset, Constraint } from "@think-it-labs/edc-connector-client";
+import { EnrichedContractAgreement } from "@/types/enriched-contract-agreement";
 import { Icon } from "@mui/material";
 import { TitleWithIcon } from "@/components/atoms/title-with-icon";
 import { removeJsonLdSchemaFromProperties } from "@/utilities/catalog";
@@ -17,7 +18,7 @@ import { TransferProcess } from "@think-it-labs/edc-connector-client/dist/src/en
 import TransferProcessList from "@/components/molecules/transfer-process-list";
 
 interface ContractAgreementDetailsProps {
-  contractAgreement: ContractAgreement;
+  contractAgreement: EnrichedContractAgreement;
   participantId: string;
   asset: Asset;
   transferProcesses: TransferProcess[];

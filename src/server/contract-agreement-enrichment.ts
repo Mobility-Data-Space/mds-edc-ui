@@ -11,17 +11,9 @@ import {
   Asset,
   Catalog,
   ContractAgreement,
-  CriterionInput,
   JsonLdService,
   QuerySpec,
 } from "@think-it-labs/edc-connector-client";
-
-export class UnsupportedOperatorError extends Error {
-  constructor(operator: string) {
-    super(`Operator ${operator} not supported`);
-    this.name = "UnsupportedOperatorError";
-  }
-}
 
 // Rejects with a timeout error if `promise` doesn't settle within `timeoutMs`.
 const withTimeout = <T>(
@@ -39,18 +31,6 @@ const withTimeout = <T>(
   return Promise.race([promise, timeout]).finally(() =>
     clearTimeout(timer),
   ) as Promise<T>;
-};
-
-const extractStatusFilter = (body: QuerySpec): CriterionInput | null => {
-  const statusFilterIndex = body.filterExpression?.findIndex(
-    (filterExpression) => filterExpression.operandLeft === "isTerminated",
-  );
-
-  if (statusFilterIndex !== undefined && statusFilterIndex !== -1) {
-    return body.filterExpression!.splice(statusFilterIndex, 1)[0];
-  }
-
-  return null;
 };
 
 const buildContractAgreementInfoMap = (
@@ -195,42 +175,18 @@ const fetchForeignAssetTitles = async (
   );
 };
 
-// EDC >= 1.0 (MDS EDC >= 2.8.0) carries the retirement on the agreement itself;
-// `retirementDate` is in epoch seconds.
-const retirementOf = (contractAgreement: ContractAgreement) => {
-  const retired =
-    contractAgreement.optionalValue<boolean>("edc", "retired") === true;
-  return {
-    retired,
-    retiredAt: retired
-      ? (contractAgreement.optionalValue<number>("edc", "retirementDate") ?? 0) *
-        1000
-      : 0,
-    reason: retired
-      ? (contractAgreement.optionalValue<string>("edc", "retirementReason") ??
-        "")
-      : "",
-  };
-};
-
 const enrichContractAgreement = (
   contractAgreement: ContractAgreement,
   contractAgreementInfo: Record<string, ContractAgreementInfo>,
   assetTitleMap: Map<string, string>,
 ) => {
-  const retirement = retirementOf(contractAgreement);
   return new JsonLdService().expand(
     {
       ...contractAgreement,
-      [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.IS_TERMINATED]: retirement.retired,
       [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.IS_RUNNING]:
         contractAgreementInfo[contractAgreement.id]?.isRunning || false,
       [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.TRANSFER_COUNT]:
         contractAgreementInfo[contractAgreement.id]?.transfersCount || 0,
-      [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.IS_TERMINATED_AT]:
-        retirement.retiredAt,
-      [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.TERMINATION_REASON]:
-        retirement.reason,
       [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.ASSET_TITLE]:
         assetTitleMap.get(contractAgreement.assetId) || null,
     },
@@ -244,13 +200,6 @@ export async function queryEnrichedContractAgreements(
   const config = getConnectorConfig();
   const client = getEdcClient();
 
-  const statusFilter = extractStatusFilter(body);
-
-  // Don't use optional chaining here, statusFilter needs to exist first
-  if (statusFilter && statusFilter.operator !== "=") {
-    throw new UnsupportedOperatorError(statusFilter.operator);
-  }
-
   // Should fetch only the needed ones
   const transferProcesses = await client.management.transferProcesses.queryAll({
     "@type": "QuerySpec",
@@ -259,20 +208,6 @@ export async function queryEnrichedContractAgreements(
   });
 
   const contractAgreementInfo = buildContractAgreementInfoMap(transferProcesses);
-
-  // The UI's `isTerminated` status filter maps onto the agreement's own
-  // `retired` flag, which the connector can filter on directly.
-  if (statusFilter) {
-    body.filterExpression = [
-      ...(body.filterExpression ?? []),
-      {
-        "@type": "Criterion",
-        operandLeft: "retired",
-        operator: "=",
-        operandRight: statusFilter.operandRight === true,
-      },
-    ];
-  }
 
   const contractAgreements =
     await client.management.contractAgreements.queryAll(body);
