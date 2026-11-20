@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { T } from "@/i18n";
-import {
-  ContractAgreement,
-  EdcConnectorClient,
-} from "@think-it-labs/edc-connector-client";
+import { ContractAgreement } from "@think-it-labs/edc-connector-client";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
 import {
   Button,
   Dialog,
@@ -19,7 +17,6 @@ import {
   TERMINATION_REASON_BY_USER,
 } from "@/constants/contract-agreement";
 import { Checkbox } from "@/components/atoms/checkbox";
-import { AgreementsRetirementController } from "@/utilities/contract-agreement";
 import { proxyConnectorManagement } from "@/constants/proxy";
 import { useAppSnackbar } from "@/hooks/use-app-snackbar";
 import { extractEdcErrorMessage } from "@/utilities/edc-error";
@@ -47,11 +44,6 @@ function calculateDetailedReasonValidationError(
   return false;
 }
 
-const client = new EdcConnectorClient.Builder()
-  .managementUrl(proxyConnectorManagement)
-  .use("retirement", AgreementsRetirementController)
-  .build();
-
 export default function ContractAgreementTerminateDialog({
   contractAgreement,
   open,
@@ -60,6 +52,9 @@ export default function ContractAgreementTerminateDialog({
   translator,
 }: ContractAgreementTerminateDialogProps) {
   const { showSnackbar } = useAppSnackbar();
+  const edcClient = useEdcConnectorClient({
+    management: proxyConnectorManagement,
+  });
   const [formData, setFormData] = useState({
     reason: TERMINATION_REASON_BY_USER,
     detailedReason: "",
@@ -75,7 +70,7 @@ export default function ContractAgreementTerminateDialog({
     `${formData.detailedReason.length}/${TERMINATION_DETAILED_REASON_MAX_LENGTH} characters`;
 
   const onClick = () => {
-    client.retirement
+    edcClient.management.contractAgreements
       .retire(contractAgreement.id, formData.detailedReason)
       .then(() => {
         onSuccess();

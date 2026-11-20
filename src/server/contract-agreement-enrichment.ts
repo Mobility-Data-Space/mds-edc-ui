@@ -4,8 +4,6 @@ import { EnrichedContractAgreement } from "@/types/enriched-contract-agreement";
 import { cache, CacheValue } from "@/server/cache";
 import { counterPartyAddressWithDsp2025_1 } from "@/utilities/catalog";
 import { getConnectorConfig } from "@/server/connector-config";
-import { RetiredContractAgreement } from "@/utilities/contract-agreement";
-import { criterionOperatorIn } from "@/utilities/data-offer";
 import { getEdcClient } from "@/server/edc-client";
 import { isTransferProcessRunning } from "@/utilities/transfer-process-state";
 import { getLiteral } from "@/jsonld/accessors";
@@ -13,17 +11,9 @@ import {
   Asset,
   Catalog,
   ContractAgreement,
-  CriterionInput,
   JsonLdService,
   QuerySpec,
 } from "@think-it-labs/edc-connector-client";
-
-export class UnsupportedOperatorError extends Error {
-  constructor(operator: string) {
-    super(`Operator ${operator} not supported`);
-    this.name = "UnsupportedOperatorError";
-  }
-}
 
 // Rejects with a timeout error if `promise` doesn't settle within `timeoutMs`.
 const withTimeout = <T>(
@@ -43,31 +33,6 @@ const withTimeout = <T>(
   ) as Promise<T>;
 };
 
-const extractStatusFilter = (body: QuerySpec): CriterionInput | null => {
-  const statusFilterIndex = body.filterExpression?.findIndex(
-    (filterExpression) => filterExpression.operandLeft === "isTerminated",
-  );
-
-  if (statusFilterIndex !== undefined && statusFilterIndex !== -1) {
-    return body.filterExpression!.splice(statusFilterIndex, 1)[0];
-  }
-
-  return null;
-};
-
-const fetchRetiredAgreementsMap = async (
-  client: ReturnType<typeof getEdcClient>,
-): Promise<Map<string, RetiredContractAgreement>> => {
-  const retiredAgreements = await client.retirement.request();
-
-  return new Map(
-    retiredAgreements.map(
-      (retiredAgreement) =>
-        [retiredAgreement.agreementId, retiredAgreement] as const,
-    ),
-  );
-};
-
 const buildContractAgreementInfoMap = (
   transferProcesses: Awaited<
     ReturnType<
@@ -76,13 +41,10 @@ const buildContractAgreementInfoMap = (
       >["management"]["transferProcesses"]["queryAll"]
     >
   >,
-  retiredAgreementMap: Map<string, RetiredContractAgreement>,
 ): Record<string, ContractAgreementInfo> => {
   const infoMap = transferProcesses.reduce((acc, transferProcess) => {
     const contractAgreementId = transferProcess.contractId;
     const existingInfo = acc.get(contractAgreementId);
-    const retiredContractAgreement =
-      retiredAgreementMap.get(contractAgreementId);
 
     if (existingInfo) {
       return acc.set(contractAgreementId, {
@@ -94,10 +56,7 @@ const buildContractAgreementInfoMap = (
     }
 
     return acc.set(contractAgreementId, {
-      isTerminated: retiredAgreementMap.has(contractAgreementId),
       isRunning: isTransferProcessRunning(transferProcess),
-      isTerminatedAt: retiredContractAgreement?.agreementRetirementDate ?? 0,
-      retirementReason: retiredContractAgreement?.reason ?? "",
       transfersCount: 1,
     });
   }, new Map<string, ContractAgreementInfo>());
@@ -218,44 +177,21 @@ const fetchForeignAssetTitles = async (
 
 const enrichContractAgreement = (
   contractAgreement: ContractAgreement,
-  retiredContractAgreementMap: Map<string, RetiredContractAgreement>,
   contractAgreementInfo: Record<string, ContractAgreementInfo>,
   assetTitleMap: Map<string, string>,
 ) => {
   return new JsonLdService().expand(
     {
       ...contractAgreement,
-      [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.IS_TERMINATED]:
-        retiredContractAgreementMap.has(contractAgreement.id) || false,
       [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.IS_RUNNING]:
         contractAgreementInfo[contractAgreement.id]?.isRunning || false,
       [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.TRANSFER_COUNT]:
         contractAgreementInfo[contractAgreement.id]?.transfersCount || 0,
-      [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.IS_TERMINATED_AT]:
-        contractAgreementInfo[contractAgreement.id]?.isTerminatedAt ||
-        retiredContractAgreementMap.get(contractAgreement.id)
-          ?.agreementRetirementDate ||
-        0,
-      [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.TERMINATION_REASON]:
-        contractAgreementInfo[contractAgreement.id]?.retirementReason ||
-        retiredContractAgreementMap.get(contractAgreement.id)?.reason ||
-        "",
       [CONTRACT_AGREEMENT_EDC_NAMESPACE_KEYS.ASSET_TITLE]:
         assetTitleMap.get(contractAgreement.assetId) || null,
     },
     () => new EnrichedContractAgreement(),
   );
-};
-
-const shouldIncludeAgreement = (
-  contractAgreement: EnrichedContractAgreement,
-  statusFilter: CriterionInput | null,
-) => {
-  //NOTE: this is inefficient and should be replaced when this is closed https://github.com/eclipse-edc/Connector/issues/5132
-  if (statusFilter && !statusFilter.operandRight) {
-    return !contractAgreement.isTerminated;
-  }
-  return true;
 };
 
 export async function queryEnrichedContractAgreements(
@@ -264,15 +200,6 @@ export async function queryEnrichedContractAgreements(
   const config = getConnectorConfig();
   const client = getEdcClient();
 
-  const statusFilter = extractStatusFilter(body);
-
-  // Don't use optional chaining here, statusFilter needs to exist first
-  if (statusFilter && statusFilter.operator !== "=") {
-    throw new UnsupportedOperatorError(statusFilter.operator);
-  }
-
-  const retiredAgreementMap = await fetchRetiredAgreementsMap(client);
-
   // Should fetch only the needed ones
   const transferProcesses = await client.management.transferProcesses.queryAll({
     "@type": "QuerySpec",
@@ -280,42 +207,18 @@ export async function queryEnrichedContractAgreements(
     limit: 10000,
   });
 
-  const contractAgreementInfo = buildContractAgreementInfoMap(
-    transferProcesses,
-    retiredAgreementMap,
-  );
-
-  const retiredContractAgreementIds = Array.from(retiredAgreementMap.keys());
-
-  // NOTE: has to specifically be true
-  if (statusFilter && statusFilter.operandRight === true) {
-    body.filterExpression?.push({
-      "@type": "Criterion",
-      operandLeft: "id",
-      operator: criterionOperatorIn,
-      operandRight: retiredContractAgreementIds.length
-        ? retiredContractAgreementIds
-        : [""],
-    });
-  }
+  const contractAgreementInfo = buildContractAgreementInfoMap(transferProcesses);
 
   const contractAgreements =
     await client.management.contractAgreements.queryAll(body);
 
   const assetTitleMap = await fetchLocalAssetTitles(client, contractAgreements);
 
-  const enrichedAgreements = (
-    await Promise.all(
-      contractAgreements.map((agreement) =>
-        enrichContractAgreement(
-          agreement,
-          retiredAgreementMap,
-          contractAgreementInfo,
-          assetTitleMap,
-        ),
-      ),
-    )
-  ).filter((agreement) => shouldIncludeAgreement(agreement, statusFilter));
+  const enrichedAgreements = await Promise.all(
+    contractAgreements.map((agreement) =>
+      enrichContractAgreement(agreement, contractAgreementInfo, assetTitleMap),
+    ),
+  );
 
   // enrich foreign contracts with asset titles from remote catalogs
   const catalogConnectorMap = await fetchForeignAssetTitles(

@@ -8,7 +8,6 @@
     "mobilitydcatap": "https://w3id.org/mobilitydcat-ap/",
     "mobilitydcatap-theme": "https://w3id.org/mobilitydcat-ap/mobility-theme/",
     "adms": "http://www.w3.org/ns/adms#",
-    "edc": "https://w3id.org/edc/v0.0.1/ns/",
     "skos": "http://www.w3.org/2004/02/skos/core#",
     "rdf": "http://www.w3.org/2000/01/rdf-schema#",
     "AgreementsRetirementEntry": {
@@ -17,6 +16,38 @@
         "agreementId": "edc:agreementId",
         "reason": "edc:reason",
         "agreementRetirementDate": "edc:agreementRetirementDate"
+      }
+    },
+    "DataFlow": {
+      "@id": "edc:DataFlow",
+      "@context": {
+        "state": "edc:state",
+        "stateTimestamp": "edc:stateTimestamp",
+        "createdAt": "edc:createdAt",
+        "updatedAt": "edc:updatedAt",
+        "assetId": "edc:assetId",
+        "agreementId": "edc:agreementId",
+        "participantId": "edc:participantId",
+        "transferType": "edc:transferType",
+        "runtimeId": "edc:runtimeId",
+        "errorDetail": "edc:errorDetail",
+        "source": "edc:source",
+        "destination": "edc:destination"
+      }
+    },
+    "DataSource": {
+      "@id": "edc:DataSource",
+      "@context": {
+        "name": "edc:name",
+        "type": "edc:type",
+        "createdAt": "edc:createdAt",
+        "updatedAt": "edc:updatedAt",
+        "properties": {
+          "@id": "edc:properties",
+          "@context": {
+            "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
+          }
+        }
       }
     },
     "REFERRING_CONNECTOR": "edc:REFERRING_CONNECTOR",

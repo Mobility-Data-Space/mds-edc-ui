@@ -5,7 +5,6 @@ import ContractNegotiationDialog from "@/components/organisms/contract-negotiati
 import { proxyConnectorManagement } from "@/constants/proxy";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
-import { MDSManualApprovalController } from "@/utilities/contract-negotiations";
 import { formatDateTime, formatDateTimeAgo } from "@/utilities/date";
 import { Button, Icon, Tooltip } from "@mui/material";
 import {
@@ -14,8 +13,9 @@ import {
 } from "@think-it-labs/edc-connector-client";
 import { ContractNegotiationsList } from "@think-it-labs/edc-connector-ui/contract-negotiations-list";
 import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
+import { useEdcConnectorClient } from "@think-it-labs/edc-connector-ui/use-edc-connector";
 import { useRouter } from "next/router";
-import { MouseEvent, useMemo, useRef, useState } from "react";
+import { MouseEvent, useRef, useState } from "react";
 import { ErrorPopup } from "@/components/molecules/error-popup";
 import { useAppSnackbar } from "@/hooks/use-app-snackbar";
 import { MAX_ITEMS } from "@/constants/lists";
@@ -81,10 +81,9 @@ export default function ContractNegotiationsManualApprovalListPage() {
       contractNegotiation: {} as ContractNegotiation,
     });
 
-  const mdsManualApprovalController = useMemo(
-    () => new MDSManualApprovalController(proxyConnectorManagement),
-    [],
-  );
+  const edcClient = useEdcConnectorClient({
+    management: proxyConnectorManagement,
+  });
 
   const openDetailsModal = (contractNegotiation: ContractNegotiation) => {
     setIsDetailsModalOpen(true);
@@ -111,7 +110,7 @@ export default function ContractNegotiationsManualApprovalListPage() {
     submittingIdsRef.current.add(id);
     setSubmittingIds(new Set(submittingIdsRef.current));
 
-    mdsManualApprovalController[decision](id)
+    edcClient.management.contractNegotiations[decision](id)
       .then(() => {
         showSnackbar({
           type: "success",
