@@ -1,8 +1,8 @@
 import {
   ContractAgreement,
   DataAddress,
-  TransferProcessInput,
 } from "@think-it-labs/edc-connector-client";
+import { MdsTransferProcessInput } from "@/utilities/management-api-inputs";
 import { DataAddressTypes } from "@/utilities/data-address";
 import { transformDataAddress } from "@/domain/asset/mapper";
 import {
@@ -15,38 +15,23 @@ import { theme } from "@/theme/theme-provider";
 const TRANSFER_TYPE_PULL = "-PULL";
 const TRANSFER_TYPE_PUSH = "-PUSH";
 
-type TransferProcessInputWithCallback = TransferProcessInput & {
-  callbackAddresses: {
-    "@type": "CallbackAddress";
-    transactional: boolean;
-    uri: string;
-    events: string;
-  }[];
-};
 
 export const createTransferProcessRequest = (
   agreement: ContractAgreement,
   dataDestination: DataAddress,
   counterPartyAddress: string,
-  counterPartyId: string,
-): TransferProcessInput => {
-  const transferProcess: TransferProcessInputWithCallback =
-    {} as TransferProcessInputWithCallback;
+): MdsTransferProcessInput => {
+  const transferProcess = {} as MdsTransferProcessInput;
 
   const transferType =
     dataDestination.type +
     (dataDestination.isPull ? TRANSFER_TYPE_PULL : TRANSFER_TYPE_PUSH);
 
   transferProcess.counterPartyAddress = counterPartyAddress;
-  // v4 requires the counterparty participant id on the transfer request.
-  transferProcess.counterPartyId = counterPartyId;
   transferProcess.contractId = agreement.contractId;
   transferProcess.transferType = transferType;
 
   if (!dataDestination.isPull) {
-    // v4's TransferRequest scope maps `dataDestination` without a nested
-    // context, so the inner `type` is only recognised when the address carries
-    // its own `@type:"DataAddress"`.
     transferProcess.dataDestination = {
       "@type": "DataAddress",
       ...transformDataAddress(dataDestination),
@@ -60,7 +45,7 @@ export const createTransferProcessRequest = (
           "@type": "CallbackAddress",
           transactional: dataDestination.isTransactional,
           uri: dataDestination.uri,
-          events: "transfer.process.start",
+          events: ["transfer.process.start"],
         },
       ];
     }

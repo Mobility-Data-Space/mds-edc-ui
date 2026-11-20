@@ -210,7 +210,6 @@ export async function create_pending_negotiations(
       .build();
 
     await counterPartyClient.management.contractNegotiations.initiate({
-      counterPartyId: participant.id,
       counterPartyAddress: participant.protocolUrl,
       policy,
     });
@@ -283,7 +282,6 @@ export async function initiate_transfers(
 
   const negotiationResponse =
     await client.management.contractNegotiations.initiate({
-      counterPartyId: counterPartyParticipant.id,
       counterPartyAddress: counterPartyParticipant.protocolUrl,
       policy: p,
     });
@@ -301,11 +299,10 @@ export async function initiate_transfers(
   );
 
   const transferProcessInput = {
-    counterPartyId: participant.id,
     counterPartyAddress: participant.protocolUrl,
     contractId: contractAgreement.id,
     transferType: "HttpData-PULL",
-  } as TransferProcessInput;
+  } satisfies TransferProcessInput;
 
   const transferResponse =
     await client.management.transferProcesses.initiate(transferProcessInput);
@@ -344,7 +341,6 @@ export async function initiate_consumer_transfer(
     .build();
 
   const negotiation = await client.management.contractNegotiations.initiate({
-    counterPartyId: provider.id,
     counterPartyAddress: provider.protocolUrl,
     policy,
   });
@@ -358,11 +354,10 @@ export async function initiate_consumer_transfer(
   );
 
   const transfer = await client.management.transferProcesses.initiate({
-    counterPartyId: provider.id,
     counterPartyAddress: provider.protocolUrl,
     contractId: contractAgreement.id,
     transferType: "HttpData-PULL",
-  } as TransferProcessInput);
+  });
 
   return transfer.id;
 }

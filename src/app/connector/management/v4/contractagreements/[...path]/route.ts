@@ -1,6 +1,6 @@
 // Contract agreements are served on v4 (issues #716, #735). The query is
-// enriched server-side (foreign asset titles, provider addresses); retirements
-// pass straight through.
+// enriched server-side (foreign asset titles, provider addresses); every other
+// POST (e.g. `/{id}/retire`, `/{id}/unretire`) passes straight through.
 import {
   queryEnrichedContractAgreements,
   UnsupportedOperatorError,
@@ -31,7 +31,7 @@ const handlePost = async (req: NextRequest): Promise<NextResponse> => {
   const { pathname } = req.nextUrl;
   const pathParam = pathname.split("/contractagreements")[1] || "";
 
-  if (pathParam.startsWith("/retirements")) {
+  if (pathParam !== "/request") {
     return proxyPost(req);
   }
 

@@ -175,7 +175,6 @@ export default function ContractAgreementDialog({
         }}
         translator={translator}
         counterPartyAddress={counterPartyAddress}
-        counterPartyId={contractAgreement.providerId}
       />
       <ContractAgreementTerminateDialog
         contractAgreement={contractAgreement}

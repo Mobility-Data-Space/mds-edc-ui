@@ -3,7 +3,6 @@ import {
   Policy,
   PolicyBuilder,
 } from "@think-it-labs/edc-connector-client";
-import { Inner } from "@think-it-labs/edc-connector-client/dist/src/inner";
 
 export const createNegotiationRequest = (
   offer: Policy,
@@ -11,8 +10,7 @@ export const createNegotiationRequest = (
   counterPartyId: string,
   assetId: string,
 ): ContractNegotiationRequest => {
-  const negotiation: ContractNegotiationRequest = {
-    counterPartyId: counterPartyId,
+  return {
     counterPartyAddress: counterPartyAddress,
     policy: new PolicyBuilder()
       .type("Offer")
@@ -23,32 +21,4 @@ export const createNegotiationRequest = (
       })
       .build(),
   };
-  return negotiation;
 };
-
-export class MDSManualApprovalController {
-  #inner: Inner;
-  #management: string;
-  protocol: string = "dataspace-protocol-http:2025-1";
-
-  constructor(management: string) {
-    this.#inner = new Inner();
-    this.#management = management;
-  }
-
-  async approve(contractNegotiationId: string): Promise<void> {
-    return this.#inner.request(this.#management, {
-      path: `/v4/contractnegotiations/${contractNegotiationId}/approve`,
-      method: "POST",
-      body: {},
-    });
-  }
-
-  async reject(contractNegotiationId: string): Promise<void> {
-    return this.#inner.request(this.#management, {
-      path: `/v4/contractnegotiations/${contractNegotiationId}/reject`,
-      method: "POST",
-      body: {},
-    });
-  }
-}
