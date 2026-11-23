@@ -26,6 +26,10 @@ services:
       WEB_HTTP_SIGNALING_PATH: "/api/signaling"
       WEB_HTTP_SIGNALING_PORT: "8187"
 
+      # Hold negotiations whose contract definition has the `manualApproval`
+      # private property (required since MDS EDC 2.8.0).
+      EDC_NEGOTIATION_APPROVAL_ENABLED: "true"
+
       EDC_DSP_CALLBACK_ADDRESS: "http://edc-1:8183/api/dsp"
 
       # Transfer Proxy Configuration
@@ -79,6 +83,10 @@ services:
       WEB_HTTP_PUBLIC_PORT: "8185"
       WEB_HTTP_SIGNALING_PATH: "/api/signaling"
       WEB_HTTP_SIGNALING_PORT: "8187"
+
+      # Hold negotiations whose contract definition has the `manualApproval`
+      # private property (required since MDS EDC 2.8.0).
+      EDC_NEGOTIATION_APPROVAL_ENABLED: "true"
 
       EDC_DSP_CALLBACK_ADDRESS: "http://edc-2:8183/api/dsp"
 
