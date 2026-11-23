@@ -1,8 +1,8 @@
 import {
   ContractAgreement,
   DataAddress,
+  TransferProcessInput,
 } from "@think-it-labs/edc-connector-client";
-import { MdsTransferProcessInput } from "@/utilities/management-api-inputs";
 import { DataAddressTypes } from "@/utilities/data-address";
 import { transformDataAddress } from "@/domain/asset/mapper";
 import {
@@ -15,13 +15,26 @@ import { theme } from "@/theme/theme-provider";
 const TRANSFER_TYPE_PULL = "-PULL";
 const TRANSFER_TYPE_PUSH = "-PUSH";
 
+// EDC 1.0 removed `dataDestination` from the transfer request: the consumer
+// passes the destination as `dataplaneMetadata.properties` (an `@json` literal,
+// so keys go through as-is), and the connector turns it into the destination
+// data address during the prepare phase. The address type comes from the
+// transfer type when no `edc:type` key is present.
+const toDataplaneMetadata = (dataDestination: DataAddress) => {
+  const properties = Object.fromEntries(
+    Object.entries(transformDataAddress(dataDestination)).filter(
+      ([key]) => !key.startsWith("@"),
+    ),
+  );
+  return { "@type": "DataplaneMetadata", properties };
+};
 
 export const createTransferProcessRequest = (
   agreement: ContractAgreement,
   dataDestination: DataAddress,
   counterPartyAddress: string,
-): MdsTransferProcessInput => {
-  const transferProcess = {} as MdsTransferProcessInput;
+): TransferProcessInput => {
+  const transferProcess = {} as TransferProcessInput;
 
   const transferType =
     dataDestination.type +
@@ -32,10 +45,7 @@ export const createTransferProcessRequest = (
   transferProcess.transferType = transferType;
 
   if (!dataDestination.isPull) {
-    transferProcess.dataDestination = {
-      "@type": "DataAddress",
-      ...transformDataAddress(dataDestination),
-    };
+    transferProcess.dataplaneMetadata = toDataplaneMetadata(dataDestination);
   }
 
   if (transferType === DataAddressTypes.Kafka + TRANSFER_TYPE_PULL) {
