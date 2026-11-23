@@ -1,7 +1,7 @@
 name: mds-edc-ui-dcp
 
 x-wallet: &wallet
-  image: ghcr.io/mobility-data-space/mds-edc/wallet:${MDS_EDC_TAG:-2.8.1}
+  image: ghcr.io/mobility-data-space/mds-edc/wallet:${MDS_EDC_TAG:-latest}
   platform: linux/amd64
   depends_on:
     postgres:
@@ -41,7 +41,7 @@ x-wallet-env: &wallet-env
   EDC_DATASOURCE_DEFAULT_PASSWORD: "password"
 
 x-connector: &connector
-  image: ghcr.io/mobility-data-space/mds-edc/connector-vault-postgresql-dcp:${MDS_EDC_TAG:-2.8.1}
+  image: ghcr.io/mobility-data-space/mds-edc/connector-vault-postgresql-dcp:${MDS_EDC_TAG:-latest}
   platform: linux/amd64
   entrypoint: ["/app/bin/connector-vault-postgresql-dcp", "--log-level=debug"]
   depends_on:
@@ -71,10 +71,6 @@ x-connector-env: &connector-env
   WEB_HTTP_PUBLIC_PORT: "8185"
   WEB_HTTP_SIGNALING_PATH: "/api/signaling"
   WEB_HTTP_SIGNALING_PORT: "8187"
-
-  # Hold negotiations whose contract definition has the `manualApproval`
-  # private property (required since MDS EDC 2.8.0).
-  EDC_NEGOTIATION_APPROVAL_ENABLED: "true"
 
   EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: "transfer-proxy-token-signer-public-key"
   EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: "transfer-proxy-token-signer-private-key"
