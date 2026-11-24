@@ -91,6 +91,9 @@ x-connector-env: &connector-env
   EDC_IAM_TRUSTEDISSUER_ISSUER_ID: "did:web:issuer%3A7085"
   EDC_IAM_TRUSTEDISSUER_ISSUER_SUPPORTEDTYPES: '["MembershipCredential"]'
   EDC_IAM_CREDENTIAL_REVOCATION_MIMETYPE: "application/json"
+  EDC_IAM_DCP_SCOPES_MEMBERSHIP_ID: "membership"
+  EDC_IAM_DCP_SCOPES_MEMBERSHIP_TYPE: "DEFAULT"
+  EDC_IAM_DCP_SCOPES_MEMBERSHIP_VALUE: "org.eclipse.dspace.dcp.vc.type:MembershipCredential:read"
 
 services:
   postgres:
