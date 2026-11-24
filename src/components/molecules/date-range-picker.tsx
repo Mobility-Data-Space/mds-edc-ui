@@ -6,16 +6,16 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs, { Dayjs } from "dayjs";
 import { DATE_FORMAT, dateToString, DateType } from "@/utilities/date";
 import {
-  DateRangePickerTextFieldSlot,
-  DateRangePickerTextFieldSlotProps,
-} from "@/components/molecules/date-range-picker-text-field";
+  DateRangePickerFieldSlot,
+  DateRangePickerFieldSlotProps,
+} from "@/components/molecules/date-range-picker-field";
 import {
   DatePickerDaySlot,
   DaySlotCustomProps,
 } from "@/components/atoms/date-picker-day-slot";
 
 type SlotProps = {
-  textField: Partial<DateRangePickerTextFieldSlotProps>;
+  field: Partial<DateRangePickerFieldSlotProps>;
   day: Partial<DaySlotCustomProps>;
   actionBar?: Partial<PickersActionBarProps>;
 };
@@ -77,7 +77,7 @@ export default function DateRangePicker({
   };
 
   const slotProps: SlotProps = {
-    textField: {
+    field: {
       id,
       hasError: error,
       helperText,
@@ -105,7 +105,6 @@ export default function DateRangePicker({
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
         name={name}
-        enableAccessibleFieldDOMStructure={false}
         value={dayjs(startDate, DATE_FORMAT)}
         defaultValue={dayjs(new Date())}
         format={DATE_FORMAT}
@@ -115,7 +114,7 @@ export default function DateRangePicker({
         onChange={datePickerOnChange}
         closeOnSelect={false}
         slots={{
-          textField: DateRangePickerTextFieldSlot,
+          field: DateRangePickerFieldSlot,
           day: DatePickerDaySlot
         }}
         slotProps={slotProps}
