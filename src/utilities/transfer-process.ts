@@ -15,42 +15,37 @@ import { theme } from "@/theme/theme-provider";
 const TRANSFER_TYPE_PULL = "-PULL";
 const TRANSFER_TYPE_PUSH = "-PUSH";
 
-type TransferProcessInputWithCallback = TransferProcessInput & {
-  callbackAddresses: {
-    "@type": "CallbackAddress";
-    transactional: boolean;
-    uri: string;
-    events: string;
-  }[];
+// EDC 1.0 removed `dataDestination` from the transfer request: the consumer
+// passes the destination as `dataplaneMetadata.properties` (an `@json` literal,
+// so keys go through as-is), and the connector turns it into the destination
+// data address during the prepare phase. The address type comes from the
+// transfer type when no `edc:type` key is present.
+const toDataplaneMetadata = (dataDestination: DataAddress) => {
+  const properties = Object.fromEntries(
+    Object.entries(transformDataAddress(dataDestination)).filter(
+      ([key]) => !key.startsWith("@"),
+    ),
+  );
+  return { "@type": "DataplaneMetadata", properties };
 };
 
 export const createTransferProcessRequest = (
   agreement: ContractAgreement,
   dataDestination: DataAddress,
   counterPartyAddress: string,
-  counterPartyId: string,
 ): TransferProcessInput => {
-  const transferProcess: TransferProcessInputWithCallback =
-    {} as TransferProcessInputWithCallback;
+  const transferProcess = {} as TransferProcessInput;
 
   const transferType =
     dataDestination.type +
     (dataDestination.isPull ? TRANSFER_TYPE_PULL : TRANSFER_TYPE_PUSH);
 
   transferProcess.counterPartyAddress = counterPartyAddress;
-  // v4 requires the counterparty participant id on the transfer request.
-  transferProcess.counterPartyId = counterPartyId;
   transferProcess.contractId = agreement.contractId;
   transferProcess.transferType = transferType;
 
   if (!dataDestination.isPull) {
-    // v4's TransferRequest scope maps `dataDestination` without a nested
-    // context, so the inner `type` is only recognised when the address carries
-    // its own `@type:"DataAddress"`.
-    transferProcess.dataDestination = {
-      "@type": "DataAddress",
-      ...transformDataAddress(dataDestination),
-    };
+    transferProcess.dataplaneMetadata = toDataplaneMetadata(dataDestination);
   }
 
   if (transferType === DataAddressTypes.Kafka + TRANSFER_TYPE_PULL) {
@@ -60,7 +55,7 @@ export const createTransferProcessRequest = (
           "@type": "CallbackAddress",
           transactional: dataDestination.isTransactional,
           uri: dataDestination.uri,
-          events: "transfer.process.start",
+          events: ["transfer.process.start"],
         },
       ];
     }

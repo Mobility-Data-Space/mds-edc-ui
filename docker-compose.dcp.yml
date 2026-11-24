@@ -72,6 +72,10 @@ x-connector-env: &connector-env
   WEB_HTTP_SIGNALING_PATH: "/api/signaling"
   WEB_HTTP_SIGNALING_PORT: "8187"
 
+  # Hold negotiations whose contract definition has the `manualApproval`
+  # private property (required since MDS EDC 2.8.0).
+  EDC_NEGOTIATION_APPROVAL_ENABLED: "true"
+
   EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: "transfer-proxy-token-signer-public-key"
   EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: "transfer-proxy-token-signer-private-key"
   EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "false"

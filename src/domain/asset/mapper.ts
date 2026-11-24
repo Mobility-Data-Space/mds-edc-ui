@@ -19,7 +19,7 @@ import {
 } from "@/jsonld/asset";
 import { CONTEXT_EDC, contextWithNoPrefixToCompact } from "@/jsonld/context";
 import { EDC_ID_FIELD } from "@/utilities/data-offer";
-import { removeEmptyFields } from "@/utilities/form";
+import { removeEmptyCollections, removeEmptyFields } from "@/utilities/form";
 import { uid } from "@/utilities/utilities";
 import {
   Asset,
@@ -127,9 +127,9 @@ export const fromAssetForm = (
   }
 
   return {
-    "@type": "Asset",
+    "@type": "Asset" as const,
     "@id": cleanFormDataObject["@id"],
-    properties: cleanFormDataObject.properties,
+    properties: removeEmptyCollections(cleanFormDataObject.properties),
     privateProperties: cleanFormDataObject.privateProperties,
     dataAddress: transformDataAddress(cleanFormDataObject.dataAddress!),
   };
@@ -307,6 +307,7 @@ export const assetToAssetInput = async (asset: Asset) => {
       currReferences.map(toKeyValueInput);
   }
   return {
+    "@type": "Asset",
     "@id": removedJsonLd["@id"],
     properties: { ...properties, "@id": removedJsonLd["@id"] },
     dataAddress,

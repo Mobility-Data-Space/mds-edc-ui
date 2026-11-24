@@ -1,10 +1,7 @@
 // Contract agreements are served on v4 (issues #716, #735). The query is
-// enriched server-side (foreign asset titles, provider addresses); retirements
-// pass straight through.
-import {
-  queryEnrichedContractAgreements,
-  UnsupportedOperatorError,
-} from "@/server/contract-agreement-enrichment";
+// enriched server-side (foreign asset titles, provider addresses); every other
+// POST (e.g. `/{id}/retire`, `/{id}/unretire`) passes straight through.
+import { queryEnrichedContractAgreements } from "@/server/contract-agreement-enrichment";
 import {
   proxyDelete,
   proxyGet,
@@ -31,7 +28,7 @@ const handlePost = async (req: NextRequest): Promise<NextResponse> => {
   const { pathname } = req.nextUrl;
   const pathParam = pathname.split("/contractagreements")[1] || "";
 
-  if (pathParam.startsWith("/retirements")) {
+  if (pathParam !== "/request") {
     return proxyPost(req);
   }
 
@@ -50,9 +47,6 @@ const handlePost = async (req: NextRequest): Promise<NextResponse> => {
     const result = await queryEnrichedContractAgreements(body);
     return new NextResponse(JSON.stringify(result), { status: 200 });
   } catch (error) {
-    if (error instanceof UnsupportedOperatorError) {
-      return new NextResponse(error.message, { status: 501 });
-    }
     if (error instanceof EdcConnectorClientError) {
       const status = EDC_ERROR_STATUS[error.type];
       if (status) {

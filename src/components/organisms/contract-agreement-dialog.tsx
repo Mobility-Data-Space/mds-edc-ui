@@ -60,8 +60,8 @@ export default function ContractAgreementDialog({
 
   const canTransfer =
     participantId !== contractAgreement.providerId &&
-    !contractAgreement.isTerminated;
-  const canTerminate = !contractAgreement.isTerminated;
+    !contractAgreement.retired;
+  const canTerminate = !contractAgreement.retired;
 
   const { showSnackbar } = useAppSnackbar();
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
@@ -175,7 +175,6 @@ export default function ContractAgreementDialog({
         }}
         translator={translator}
         counterPartyAddress={counterPartyAddress}
-        counterPartyId={contractAgreement.providerId}
       />
       <ContractAgreementTerminateDialog
         contractAgreement={contractAgreement}
@@ -198,12 +197,12 @@ export default function ContractAgreementDialog({
             icon={
               <Icon
                 fontSize="large"
-                color={contractAgreement.isTerminated ? "error" : "inherit"}
+                color={contractAgreement.retired ? "error" : "inherit"}
               >
                 {(contractAgreement.consumerId === participantId
                   ? "file_download"
                   : "file_upload") +
-                  (contractAgreement.isTerminated ? "_off" : "")}
+                  (contractAgreement.retired ? "_off" : "")}
               </Icon>
             }
             title={contractAgreement.assetTitle}
@@ -214,7 +213,7 @@ export default function ContractAgreementDialog({
           <div className="flex flex-col gapy-y-3">
             {contractAgreement.isRunning && <LinearProgress className="my-3" />}
 
-            {contractAgreement.isTerminated && (
+            {contractAgreement.retired && (
               <div className="flex gap-x-3 p-4 mb-3 rounded bg-red-50">
                 <svg
                   viewBox="0 0 20 20"
@@ -232,15 +231,15 @@ export default function ContractAgreementDialog({
                   <Typography variant="subtitle1" className="text-red-800">
                     {TERMINATION_REASON_BY_USER}
                   </Typography>
-                  {contractAgreement.terminationReason && (
+                  {contractAgreement.retirementReason && (
                     <Typography variant="body2" className="text-red-800">
-                      {contractAgreement.terminationReason}
+                      {contractAgreement.retirementReason}
                     </Typography>
                   )}
-                  {!!contractAgreement.isTerminatedAt && (
+                  {!!contractAgreement.retirementDate && (
                     <Typography variant="body2" className="text-red-800">
                       <Timestamp
-                        milliseconds={contractAgreement.isTerminatedAt}
+                        seconds={contractAgreement.retirementDate}
                         year="numeric"
                         month="2-digit"
                         day="2-digit"

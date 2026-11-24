@@ -45,13 +45,13 @@ export default function ContractAgreementsListPage() {
       [StatusFilter.All]: undefined,
       [StatusFilter.Active]: {
         "@type": "Criterion" as const,
-        operandLeft: "isTerminated",
+        operandLeft: "retired",
         operator: criterionOperatorEqual,
         operandRight: false,
       },
       [StatusFilter.Terminated]: {
         "@type": "Criterion" as const,
-        operandLeft: "isTerminated",
+        operandLeft: "retired",
         operator: criterionOperatorEqual,
         operandRight: true,
       },

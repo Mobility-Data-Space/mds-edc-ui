@@ -41,6 +41,7 @@ export type KeyValueInput = {
 };
 
 export const defaultCreateAssetFormData: AssetInput = {
+  "@type": "Asset",
   "@id": "",
   properties: {
     "@id": "",
