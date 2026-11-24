@@ -1,5 +1,5 @@
 "use client";
-import { createInstance } from "i18next";
+import { createInstance, TFunction } from "i18next";
 import { useRouter } from "next/router.js";
 import React, {
   createContext,
@@ -15,11 +15,9 @@ import {
 } from "react-i18next";
 import { en } from "@/i18n/translations/en";
 
-type TranslatorFn = (key: string, values?: Record<string, string>) => string;
-
 interface TranslatorContextType {
-  translator: TranslatorFn;
-  globalTranslator: TranslatorFn;
+  translator: TFunction;
+  globalTranslator: (key: string) => string;
 }
 
 const TranslatorContext = createContext<TranslatorContextType>(
