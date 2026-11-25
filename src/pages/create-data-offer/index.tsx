@@ -11,7 +11,7 @@ import {
   PUBLISH_MODES,
 } from "@/constants/data-address-types";
 import { proxyConnectorManagement } from "@/constants/proxy";
-import { fromAssetForm } from "@/domain/asset/mapper";
+import { assetFormDataplaneProperties, fromAssetForm } from "@/domain/asset/mapper";
 import { useAppSnackbar } from "@/hooks/use-app-snackbar";
 import { useAssetForm } from "@/hooks/use-asset-form";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
@@ -190,9 +190,9 @@ export default function CreateDataOfferPage() {
           <FormSection titleKey="dataOffer.new.dataOfferTypeTitle" descriptionKey="dataOffer.new.dataOfferTypeDescription">
             <FormDataAddressStep
               translator={translator}
-              formData={asset.dataAddress!}
-              onChange={form.onDataAddressChange}
-              errors={form.errors.dataAddress}
+              formData={assetFormDataplaneProperties(asset)}
+              onChange={form.onDataplanePropertiesChange}
+              errors={form.errors.dataplaneMetadata}
               customDataAddressConfigRows={6}
             />
           </FormSection>

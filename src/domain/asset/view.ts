@@ -1,4 +1,5 @@
 import type { FieldShowProps } from "@/types/field-show";
+import { assetDataplaneProperty } from "@/domain/asset/mapper";
 import { LANGUAGES } from "@/constants/languages";
 import { DELIMITER } from "@/i18n";
 import {
@@ -346,9 +347,7 @@ export const assetFieldsToShow = (
 };
 
 export const assetDataAddressFieldsTitle = (asset: Asset) => {
-  const dataAddress = removeJsonLdSchemaFromProperties(asset.dataAddress);
-  const type = readValue(dataAddress, "type");
-  if (type === DataAddressTypes.MDSOnRequestOffer) {
+  if (assetDataplaneProperty(asset, "type") === DataAddressTypes.MDSOnRequestOffer) {
     return "dataOffer.contactInformation";
   }
 

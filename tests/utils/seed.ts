@@ -111,9 +111,13 @@ export async function publish_offers(participant: Participant) {
             "https://teamabc.departmentxyz.sample/b",
           ],
         },
-        dataAddress: {
-          type: "HttpData",
-          baseUrl: "https://jsonplaceholder.typicode.com/users",
+        dataplaneMetadata: {
+          "@type": "DataplaneMetadata",
+          properties: {
+            "https://w3id.org/edc/v0.0.1/ns/type": "HttpData",
+            "https://w3id.org/edc/v0.0.1/ns/baseUrl":
+              "https://jsonplaceholder.typicode.com/users",
+          },
         },
         privateProperties: {
           notes: "Some safe notes",

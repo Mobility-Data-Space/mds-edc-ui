@@ -1,4 +1,8 @@
 import { proxyConnectorManagement } from "@/constants/proxy";
+import {
+  assetFormDataplaneProperties,
+  withAssetFormDataplaneProperties,
+} from "@/domain/asset/mapper";
 import { AssetProperties, defaultCreateAssetFormData, generateId } from "@/domain/asset/model";
 import { validateAdvancedInfo, validateDataAddress } from "@/domain/asset/validation";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -15,7 +19,7 @@ type FieldErrors = Record<string, boolean | string>;
 export interface AssetFormErrors {
   properties: FieldErrors;
   advancedInfo: FieldErrors;
-  dataAddress: FieldErrors;
+  dataplaneMetadata: FieldErrors;
 }
 
 interface UseAssetFormOptions {
@@ -44,7 +48,7 @@ export function useAssetForm({
   const [errors, setErrors] = useState<AssetFormErrors>({
     properties: {},
     advancedInfo: {},
-    dataAddress: {},
+    dataplaneMetadata: {},
   });
   const [idIsTaken, setIdIsTaken] = useState(false);
   const [isCheckingId, setIsCheckingId] = useState(false);
@@ -113,16 +117,16 @@ export function useAssetForm({
     update({ ...asset, properties });
   };
 
-  const onDataAddressChange = (dataAddress: DataAddress) => {
-    setErrors((oldErrors) => ({ ...oldErrors, dataAddress: validateDataAddress(dataAddress, translator) }));
-    update({ ...asset, dataAddress });
+  const onDataplanePropertiesChange = (properties: DataAddress) => {
+    setErrors((oldErrors) => ({ ...oldErrors, dataplaneMetadata: validateDataAddress(properties, translator) }));
+    update(withAssetFormDataplaneProperties(asset, properties));
   };
 
   const validateAll = () => {
     const newErrors = {
       properties: validateGeneralInfo(asset.properties),
       advancedInfo: validateAdvancedInfo(asset.properties),
-      dataAddress: validateDataAddress(asset.dataAddress!, translator),
+      dataplaneMetadata: validateDataAddress(assetFormDataplaneProperties(asset), translator),
     };
     setErrors(newErrors);
     return newErrors;
@@ -133,7 +137,7 @@ export function useAssetForm({
     idIsTaken ||
     hasErrors(validateGeneralInfo(asset.properties)) ||
     hasErrors(validateAdvancedInfo(asset.properties)) ||
-    hasErrors(validateDataAddress(asset.dataAddress!, translator));
+    hasErrors(validateDataAddress(assetFormDataplaneProperties(asset), translator));
 
   const propertiesErrors = useMemo(
     () =>
@@ -152,7 +156,7 @@ export function useAssetForm({
     validateGeneralInfo,
     onGeneralInfoChange,
     onAdvancedInfoChange,
-    onDataAddressChange,
+    onDataplanePropertiesChange,
     validateAll,
     isInvalid,
   };

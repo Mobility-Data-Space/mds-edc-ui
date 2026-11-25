@@ -2,16 +2,17 @@ import { Icon, IconProps } from "@mui/material";
 import React from "react";
 
 import { Asset } from "@think-it-labs/edc-connector-client";
-import { readValue } from "@think-it-labs/edc-connector-ui/json-ld";
 
 import { DataAddressTypes } from "@/utilities/data-address";
+import { assetDataplaneProperty } from "@/domain/asset/mapper";
 
 export function AssetIcon({ asset, ...rest }: { asset: Asset } & IconProps): React.ReactElement {
   let icon;
+  const type = assetDataplaneProperty(asset, "type");
 
-  if (readValue(asset.dataAddress, "type") === DataAddressTypes.MDSOnRequestOffer) {
+  if (type === DataAddressTypes.MDSOnRequestOffer) {
     icon = "contact";
-  } else if (readValue(asset.dataAddress, "type") === DataAddressTypes.HttpData) {
+  } else if (type === DataAddressTypes.HttpData) {
     icon = "upload";
   } else {
     icon = "sim_card"

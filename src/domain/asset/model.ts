@@ -88,7 +88,10 @@ export const defaultCreateAssetFormData: AssetInput = {
     [ASSET_ADVANCED_INFO_CONDITIONS_FOR_USE]: "",
   },
   privateProperties: {},
-  dataAddress: defaultHttpSourceDataAddress,
+  dataplaneMetadata: {
+    "@type": "DataplaneMetadata",
+    properties: defaultHttpSourceDataAddress,
+  },
 };
 
 export type AssetProperties = typeof defaultCreateAssetFormData.properties;

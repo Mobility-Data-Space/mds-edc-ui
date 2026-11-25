@@ -4,7 +4,11 @@ import { AssetFormSections } from "@/components/organisms/asset-form-sections";
 import { FormDataAddressStep } from "@/components/organisms/form-data-address-step";
 import { DATA_OFFER_TYPE_DATA_SOURCE } from "@/constants/data-address-types";
 import { proxyConnectorManagement } from "@/constants/proxy";
-import { assetToAssetInput, fromAssetForm } from "@/domain/asset/mapper";
+import {
+  assetFormDataplaneProperties,
+  assetToAssetInput,
+  fromAssetForm,
+} from "@/domain/asset/mapper";
 import { useAppSnackbar } from "@/hooks/use-app-snackbar";
 import { useAssetForm } from "@/hooks/use-asset-form";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
@@ -36,7 +40,7 @@ export default function EditAssetPage() {
 
   const onChangeOfferType = (newOfferType: string) => {
     if (newOfferType === unchangedOfferType.value) {
-      setAsset({ ...asset, dataAddress: oldAssetData.dataAddress! });
+      setAsset({ ...asset, dataplaneMetadata: oldAssetData.dataplaneMetadata });
     }
     setOfferType(newOfferType);
   };
@@ -104,9 +108,9 @@ export default function EditAssetPage() {
             {offerType !== unchangedOfferType.value && (
               <FormDataAddressStep
                 translator={translator}
-                formData={asset.dataAddress!}
-                onChange={form.onDataAddressChange}
-                errors={form.errors.dataAddress}
+                formData={assetFormDataplaneProperties(asset)}
+                onChange={form.onDataplanePropertiesChange}
+                errors={form.errors.dataplaneMetadata}
                 customDataAddressConfigRows={6}
               />
             )}
