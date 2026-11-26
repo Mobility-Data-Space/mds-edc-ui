@@ -13,7 +13,6 @@ import {
   ASSET_ADVANCED_INFO_TEMPORAL_COVERAGE_START,
   ASSET_KEYWORDS,
   ASSET_ORGANIZATION,
-  ASSET_QUERY_PARAMS,
   AUTH_HEADER_TYPE_VAULT_SECRET,
   resolveAuthHeaderType,
 } from "@/jsonld/asset";
@@ -97,17 +96,16 @@ export const fromAssetForm = (
     ];
   }
 
-  if (
-    cleanFormDataObject.dataAddress!.type == DataAddressTypes.MDSOnRequestOffer
-  ) {
+  const dataplaneProperties = assetFormDataplaneProperties(cleanFormDataObject);
+  if (dataplaneProperties.type == DataAddressTypes.MDSOnRequestOffer) {
     cleanFormDataObject.properties.additionalProperties = {
       ...cleanFormDataObject.properties.additionalProperties,
     };
     cleanFormDataObject.properties.additionalProperties.onrequest = "true";
     cleanFormDataObject.properties.additionalProperties.email =
-      cleanFormDataObject.dataAddress!.email;
+      dataplaneProperties.email;
     cleanFormDataObject.properties.additionalProperties.preferred_subject =
-      cleanFormDataObject.dataAddress!.preferred_subject;
+      dataplaneProperties.preferred_subject;
   }
 
   const temporalCoverage =
@@ -131,7 +129,9 @@ export const fromAssetForm = (
     "@id": cleanFormDataObject["@id"],
     properties: removeEmptyCollections(cleanFormDataObject.properties),
     privateProperties: cleanFormDataObject.privateProperties,
-    dataAddress: transformDataAddress(cleanFormDataObject.dataAddress!),
+    dataplaneMetadata: toDataplaneMetadata(
+      transformDataAddress(dataplaneProperties),
+    ),
   };
 };
 
@@ -155,31 +155,56 @@ const fromKeyValueInput = (value: {
   }
 };
 
-// Reads the data address from the `dataplaneMetadata` shape introduced in
-// connector 2.7.0's v4 asset responses. Returns short-keyed fields (`type`,
-// `method`, `baseUrl`, …) or an empty object when there is no such metadata.
-const dataAddressFromDataplaneMetadata = (
-  removedJsonLd: Record<string, unknown>,
-): Record<string, unknown> => {
-  const EDC = CONTEXT_EDC.value;
-  const metadata = removedJsonLd[`${EDC}dataplaneMetadata`] as
-    | Record<string, unknown>
-    | undefined;
-  const properties = metadata?.[`${EDC}properties`] as
-    | { "@value"?: Record<string, unknown> }
-    | undefined;
-  const value = properties?.["@value"];
-  if (!value) {
-    return {};
+// EDC 1.0 removed `dataAddress` (asset) and `dataDestination` (transfer): the
+// address is carried as `dataplaneMetadata.properties`, an `@json` literal the
+// connector stores verbatim. Keys are expanded the way JSON-LD expanded the old
+// `dataAddress` under the EDC `@vocab` (what the connector's own migration and
+// legacy-input patch store): bare keys get the EDC namespace, `edc:x` is
+// expanded, other prefixed or absolute keys (`header:Authorization`) are kept.
+// The connector reads the address type from the expanded `type` key, so bare
+// keys would make it fall back to the transfer type.
+const expandDataplaneKey = (key: string) => {
+  if (key.startsWith(CONTEXT_EDC.prefix)) {
+    return CONTEXT_EDC.value + key.slice(CONTEXT_EDC.prefix.length);
   }
-  return Object.fromEntries(
-    Object.entries(value).map(([key, val]) => [
-      key.startsWith(CONTEXT_EDC.prefix)
-        ? key.slice(CONTEXT_EDC.prefix.length)
-        : key,
-      val,
-    ]),
-  );
+  return key.includes(":") ? key : CONTEXT_EDC.value + key;
+};
+
+const compactDataplaneKey = (key: string) => {
+  if (key.startsWith(CONTEXT_EDC.value)) {
+    return key.slice(CONTEXT_EDC.value.length);
+  }
+  return key.startsWith(CONTEXT_EDC.prefix)
+    ? key.slice(CONTEXT_EDC.prefix.length)
+    : key;
+};
+
+export const toDataplaneMetadata = (dataAddress: Record<string, unknown>) => ({
+  "@type": "DataplaneMetadata",
+  properties: Object.fromEntries(
+    Object.entries(dataAddress)
+      .filter(([key]) => !key.startsWith("@"))
+      .map(([key, value]) => [expandDataplaneKey(key), value]),
+  ),
+});
+
+// The asset form edits `dataplaneMetadata.properties` with short keys (`type`,
+// `baseUrl`, …); `toDataplaneMetadata` expands them on submit.
+export const assetFormDataplaneProperties = (asset: AssetInput): DataAddress =>
+  (asset.dataplaneMetadata?.properties ?? {}) as DataAddress;
+
+export const withAssetFormDataplaneProperties = (
+  asset: AssetInput,
+  properties: DataAddress,
+): AssetInput => ({
+  ...asset,
+  dataplaneMetadata: { "@type": "DataplaneMetadata", properties },
+});
+
+// One field of an asset's `dataplaneMetadata.properties`, by its short key.
+export const assetDataplaneProperty = (asset: Asset, key: string) => {
+  const properties = asset.dataplaneMetadata?.properties ?? {};
+  return properties[expandDataplaneKey(key)] ?? properties[key];
 };
 
 export const assetToAssetInput = async (asset: Asset) => {
@@ -195,42 +220,21 @@ export const assetToAssetInput = async (asset: Asset) => {
       "https://w3id.org/edc/v0.0.1/ns/properties"
     ] as Partial<AssetProperties>),
   };
-  const auxDataAddress: Record<string, unknown> = {
-    ...defaults.dataAddress,
-    ...(removedJsonLd["https://w3id.org/edc/v0.0.1/ns/dataAddress"] as Record<
-      string,
-      unknown
-    >),
-    // Support both data-address shapes so the transition is smooth. A v4 asset
-    // still carries a top-level `dataAddress` when one was provided on input,
-    // but that field is being phased out: connector 2.7.0 returns the address as
-    // a `dataplaneMetadata` `@json` literal instead (keys `edc:`-prefixed, e.g.
-    // `edc:baseUrl`). The two never coexist in one asset, so whichever is present
-    // hydrates the form; this spread reads `dataplaneMetadata` (stripping the
-    // prefix) when the top-level `dataAddress` is absent.
-    ...dataAddressFromDataplaneMetadata(removedJsonLd),
-  };
-  const dataAddress = {} as DataAddress;
-
-  const regex = /^https?:\/\/.*[#\/]([^\/#]+)$/;
-  for (const prop in auxDataAddress) {
-    // Never carry the data address `@type` into the form: connector 2.7.0 throws
-    // a 500 on an update whose `dataAddress` declares a `@type`, and the create
-    // path never sends one, so leave it off here too for a consistent round-trip.
-    if (prop === "@type") {
-      continue;
+  // Short keys for the form; the connector stores them EDC-expanded.
+  const dataplaneProperties = {
+    ...defaults.dataplaneMetadata?.properties,
+  } as DataAddress;
+  for (const [key, value] of Object.entries(
+    asset.dataplaneMetadata?.properties ?? {},
+  )) {
+    // JSON-LD keywords are not address fields (`toDataplaneMetadata` drops them).
+    if (!key.startsWith("@")) {
+      dataplaneProperties[compactDataplaneKey(key)] = value;
     }
-    const match = prop.match(regex);
-    if (!match) {
-      dataAddress[prop] = auxDataAddress[prop];
-      continue;
-    }
-    const firstMatch = match[1];
-    dataAddress[firstMatch] = auxDataAddress[prop];
   }
 
-  if (typeof auxDataAddress[ASSET_QUERY_PARAMS] === "string") {
-    dataAddress.queryParams = (auxDataAddress[ASSET_QUERY_PARAMS] as string)
+  if (typeof dataplaneProperties.queryParams === "string") {
+    dataplaneProperties.queryParams = dataplaneProperties.queryParams
       .split("&")
       .map((queryParam: string) => {
         const [key, value] = queryParam.split("=");
@@ -310,7 +314,10 @@ export const assetToAssetInput = async (asset: Asset) => {
     "@type": "Asset",
     "@id": removedJsonLd["@id"],
     properties: { ...properties, "@id": removedJsonLd["@id"] },
-    dataAddress,
+    dataplaneMetadata: {
+      "@type": "DataplaneMetadata",
+      properties: dataplaneProperties,
+    },
   } as AssetInput;
 };
 

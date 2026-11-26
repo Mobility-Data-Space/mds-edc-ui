@@ -3,6 +3,21 @@ import { CreateDataOfferPage } from './pages/create-data-offer-page';
 
 const unrestrictedSuccessMsg = 'Data offer was published successfully!';
 
+const EDC = "https://w3id.org/edc/v0.0.1/ns/";
+
+// The asset address travels as `dataplaneMetadata.properties`, keys expanded to
+// the EDC namespace; strip it back to short keys for readable assertions.
+const dataplaneAddress = (body: {
+  dataplaneMetadata?: { "@type"?: string; properties?: Record<string, unknown> };
+}) => {
+  expect(body).not.toHaveProperty("dataAddress");
+  expect(body.dataplaneMetadata?.["@type"]).toBe("DataplaneMetadata");
+  return Object.fromEntries(
+    Object.entries(body.dataplaneMetadata?.properties ?? {})
+      .map(([key, value]) => [key.startsWith(EDC) ? key.slice(EDC.length) : key, value]),
+  );
+};
+
 test.describe('Create and Update Kafka Data Offer Tests', () => {
   let createDataOfferPage: CreateDataOfferPage;
 
@@ -53,9 +68,7 @@ test.describe('Create and Update Kafka Data Offer Tests', () => {
     const requestBody = JSON.parse(response.request().postData() || "{}");
 
     // Verify payload contains expected keys
-    expect(requestBody).toHaveProperty("dataAddress");
-
-    const dataAddress = requestBody.dataAddress;
+    const dataAddress = dataplaneAddress(requestBody);
     expect(dataAddress).toEqual({
       type: "Kafka",
       topic: "test topic",
@@ -113,9 +126,7 @@ test.describe('Create and Update Kafka Data Offer Tests', () => {
     const response = await responsePromise;
     const requestBody = JSON.parse(response.request().postData() || "{}");
 
-    expect(requestBody).toHaveProperty("dataAddress");
-
-    const dataAddress = requestBody.dataAddress;
+    const dataAddress = dataplaneAddress(requestBody);
     expect(dataAddress).toEqual({
       type: "Kafka",
       topic: "test topic",
@@ -208,9 +219,7 @@ test.describe('Create and Update Kafka Data Offer Tests', () => {
     const editREponse = await response;
 
     const editBody = JSON.parse(editREponse.request().postData() || "{}");
-    expect(editBody).toHaveProperty("dataAddress");
-
-    const editBodyAddress = editBody.dataAddress;
+    const editBodyAddress = dataplaneAddress(editBody);
     expect(editBodyAddress).toEqual({
       type: "Kafka",
       topic: "new topic",

@@ -20,7 +20,7 @@ import { AssetFormGeneralInfoStepContent } from "@/components/organisms/asset-fo
 import { Snackbar } from "@/components/molecules/snackbar";
 import { useParticipantConnectorState } from "@/hooks/use-participant-connector-state";
 import { T, useTranslator } from "@/i18n";
-import { fromAssetForm } from "@/domain/asset/mapper";
+import { assetFormDataplaneProperties, fromAssetForm } from "@/domain/asset/mapper";
 import { validateAdvancedInfo } from "@/domain/asset/validation";
 import { useAssetForm } from "@/hooks/use-asset-form";
 import { proxyConnectorManagement } from "@/constants/proxy";
@@ -220,9 +220,9 @@ export default function AssetForm({ onClose }: AssetFormProps) {
               <div data-testid="asset-create-data-address-step-content">
                 <FormDataAddressStep
                   translator={translator}
-                  formData={asset.dataAddress!}
-                  onChange={form.onDataAddressChange}
-                  errors={errors.dataAddress}
+                  formData={assetFormDataplaneProperties(asset)}
+                  onChange={form.onDataplanePropertiesChange}
+                  errors={errors.dataplaneMetadata}
                 />
               </div>
             </StepContent>
