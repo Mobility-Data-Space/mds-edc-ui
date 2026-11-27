@@ -4,6 +4,7 @@ import { EnrichedContractAgreement } from "@/types/enriched-contract-agreement";
 import { cache, CacheValue } from "@/server/cache";
 import { counterPartyAddressWithDsp2025_1 } from "@/utilities/catalog";
 import { getConnectorConfig } from "@/server/connector-config";
+import { criterionOperatorIn } from "@/utilities/data-offer";
 import { getEdcClient } from "@/server/edc-client";
 import { isTransferProcessRunning } from "@/utilities/transfer-process-state";
 import { getLiteral } from "@/jsonld/accessors";
@@ -200,17 +201,28 @@ export async function queryEnrichedContractAgreements(
   const config = getConnectorConfig();
   const client = getEdcClient();
 
-  // Should fetch only the needed ones
-  const transferProcesses = await client.management.transferProcesses.queryAll({
-    "@type": "QuerySpec",
-    offset: 0,
-    limit: 10000,
-  });
-
-  const contractAgreementInfo = buildContractAgreementInfoMap(transferProcesses);
-
   const contractAgreements =
     await client.management.contractAgreements.queryAll(body);
+
+  // Only the transfers of the agreements on this page: loading every transfer process
+  // first made the page time out on connectors with many transfers.
+  const transferProcesses = contractAgreements.length
+    ? await client.management.transferProcesses.queryAll({
+        "@type": "QuerySpec",
+        offset: 0,
+        limit: 10000,
+        filterExpression: [
+          {
+            "@type": "Criterion",
+            operandLeft: "contractId",
+            operator: criterionOperatorIn,
+            operandRight: contractAgreements.map((agreement) => agreement.id),
+          },
+        ],
+      })
+    : [];
+
+  const contractAgreementInfo = buildContractAgreementInfoMap(transferProcesses);
 
   const assetTitleMap = await fetchLocalAssetTitles(client, contractAgreements);
 
